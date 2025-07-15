@@ -1,6 +1,6 @@
 module github.com/dtcenter/METstat2json
 
-go 1.23.3
+go 1.24.0
 
 retract [v1.0.0, v1.0.4] // Published accidentally
 
