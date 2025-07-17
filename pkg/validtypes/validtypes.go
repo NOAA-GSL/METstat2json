@@ -145,3 +145,84 @@ func (vf ValidFloat) String() string {
 	}
 	return strconv.FormatFloat(vf.Value, 'f', -1, 64)
 }
+
+// ValidString represents a string that tracks whether it has been explicitly set.
+// The zero value of ValidString is when Valid=false. ValidString.IsZero is used as an easy
+// way to detect that the ValidString hasn't been explicitly set.
+// It treats "NA" as an invalid/unset value.
+// Fields that are unset can be omitted when marshalling to JSON by using the omitzero tag.
+type ValidString struct {
+	Value string
+	Valid bool
+}
+
+// NewValidString creates a ValidString with a value.
+// It treats "NA" as an invalid value.
+func NewValidString(value string) ValidString {
+	if value == "NA" {
+		return ValidString{}
+	}
+	return ValidString{Value: value, Valid: true}
+}
+
+// Set assigns a value and marks it as valid.
+// It treats "NA" as a signal to reset the value to its invalid state.
+func (vs *ValidString) Set(value string) {
+	if value == "NA" {
+		vs.Reset()
+		return
+	}
+	vs.Value = value
+	vs.Valid = true
+}
+
+// Get returns the underlying value and validity.
+func (vs ValidString) Get() (string, bool) {
+	return vs.Value, vs.Valid
+}
+
+// IsZero is used by omitzero, and returns true if the value is not valid.
+func (vs ValidString) IsZero() bool {
+	return !vs.Valid
+}
+
+// Reset marks the value as invalid.
+func (vs *ValidString) Reset() {
+	vs.Valid = false
+	vs.Value = ""
+}
+
+// MarshalJSON implements json.Marshaler.
+func (vs ValidString) MarshalJSON() ([]byte, error) {
+	if !vs.Valid {
+		return []byte("null"), nil
+	}
+	return json.Marshal(vs.Value)
+}
+
+// UnmarshalJSON implements json.Unmarshaler.
+// It treats a JSON string "NA" as a null/invalid value.
+func (vs *ValidString) UnmarshalJSON(data []byte) error {
+	s := string(data)
+	if s == "null" || s == `"NA"` {
+		vs.Reset()
+		return nil
+	}
+
+	var value string
+	if err := json.Unmarshal(data, &value); err != nil {
+		return err
+	}
+
+	vs.Value = value
+	vs.Valid = true
+	return nil
+}
+
+// String returns string representation.
+func (vs ValidString) String() string {
+	if !vs.Valid {
+		return ""
+	}
+	return vs.Value
+}
