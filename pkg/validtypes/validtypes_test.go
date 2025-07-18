@@ -599,7 +599,7 @@ func TestString(t *testing.T) {
 			expectedString string
 		}{
 			{
-				name:           "unset ValidInt returns empty string",
+				name:           "unset ValidFloat returns empty string",
 				input:          ValidFloat{}, // zero value
 				expectedString: "",
 			},
@@ -763,7 +763,7 @@ func TestNewValidType(t *testing.T) {
 				expectedValid: true,
 			},
 			{
-				name:          "max int",
+				name:          "fractional value",
 				value:         123.4567890,
 				expectedValue: 123.456789,
 				expectedValid: true,

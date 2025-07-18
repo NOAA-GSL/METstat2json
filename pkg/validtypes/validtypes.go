@@ -122,7 +122,7 @@ func (vf ValidFloat) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON implements json.Unmarshaler.
 func (vf *ValidFloat) UnmarshalJSON(data []byte) error {
-	if data == nil || string(data) == "null" {
+	if string(data) == "null" {
 		vf.Valid = false
 		vf.Value = 0.0
 		return nil
