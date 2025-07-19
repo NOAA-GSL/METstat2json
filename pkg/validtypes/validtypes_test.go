@@ -570,9 +570,9 @@ func TestUnmarshalText(t *testing.T) {
 				err := vi.UnmarshalText(tc.input)
 
 				if tc.expectErr {
-					assert.Error(t, err)
+					require.Error(t, err)
 				} else {
-					assert.NoError(t, err)
+					require.NoError(t, err)
 				}
 				assert.Equal(t, tc.expected, vi)
 			})
@@ -602,9 +602,9 @@ func TestUnmarshalText(t *testing.T) {
 				err := vf.UnmarshalText(tc.input)
 
 				if tc.expectErr {
-					assert.Error(t, err)
+					require.Error(t, err)
 				} else {
-					assert.NoError(t, err)
+					require.NoError(t, err)
 				}
 				assert.Equal(t, tc.expected, vf)
 			})
@@ -631,9 +631,9 @@ func TestUnmarshalText(t *testing.T) {
 				err := vs.UnmarshalText(tc.input)
 
 				if tc.expectErr {
-					assert.Error(t, err)
+					require.Error(t, err)
 				} else {
-					assert.NoError(t, err)
+					require.NoError(t, err)
 				}
 				assert.Equal(t, tc.expected, vs)
 			})
