@@ -19,3 +19,20 @@ jobs:
           go-version-file: "go.mod"
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v8
+
+  test:
+    name: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: "go.mod"
+      - name: Build
+        run: go build -v ./...
+      - name: Test
+        run: go test -short -v -shuffle=on -cover ./...
+      - name: Test for flaky tests
+        run: go test -short -count 100 ./...
+      - name: Test for race conditions
+        run: go test -short -race ./...

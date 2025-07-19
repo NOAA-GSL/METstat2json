@@ -129,6 +129,9 @@ func ReadJsonFromGzipFile(filename string) (map[string]interface{}, error) {
 }
 
 func TestGetMissingExternalDocForId(t *testing.T) {
+	if testing.Short() {
+		t.Skip("Skipping integration tests in short mode")
+	}
 	headerLine := "VERSION MODEL DESC FCST_LEAD FCST_VALID_BEG  FCST_VALID_END  OBS_LEAD OBS_VALID_BEG   OBS_VALID_END   FCST_VAR  FCST_UNITS FCST_LEV OBS_VAR   OBS_UNITS OBS_LEV  OBTYPE VX_MASK INTERP_MTHD INTERP_PNTS FCST_THRESH OBS_THRESH COV_THRESH ALPHA LINE_TYPE"
 	dataLine := "V12.0.0 FCST  NA   120000    20120409_120000 20120409_120000 000000   20120409_113000 20120409_123000 UGRD_VGRD m/s        Z10      UGRD_VGRD NA        Z10      ADPSFC LAND_L0 NEAREST     1           NA          NA         NA         NA    VAL1L2    4114    0.022881     -0.055846      -0.23975       0.11316       1.40894     2.39774     6.07755      1.35071    2.1488    4114           12.11241   65.18733  6744.28012"
 	fName := "grid_stat_GFS_TMP_vs_ANLYS_TMP_Z2_900000L_20241104_180000V.stat"
@@ -140,6 +143,9 @@ func TestGetMissingExternalDocForId(t *testing.T) {
 }
 
 func TestUnsupportedVersion(t *testing.T) {
+	if testing.Short() {
+		t.Skip("Skipping integration tests in short mode")
+	}
 	headerLine := "VERSION MODEL DESC FCST_LEAD FCST_VALID_BEG FCST_VALID_END OBS_LEAD OBS_VALID_BEG OBS_VALID_END FCST_VAR FCST_UNITS FCST_LEV OBS_VAR OBS_UNITS OBS_LEV OBTYPE VX_MASK INTERP_MTHD INTERP_PNTS FCST_THRESH OBS_THRESH COV_THRESH ALPHA LINE_TYPE"
 	dataLine := "V9.0 FCST NA 120000 20120409_120000 20120409_120000 000000 20120409_113000 20120409_123000 UGRD_VGRD m/s Z10 UGRD_VGRD NA Z10 ADPSFC LAND_L0 NEAREST 1 NA NA NA NA VAL1L2 4114 0.022881 -0.055846 -0.23975 0.11316 1.40894 2.39774 6.07755 1.35071 2.1488 4114 12.11241 65.18733 6744.28012"
 	fName := "grid_stat_NO_WEIGHT_240000L_20120410_000000V.stat"
@@ -154,6 +160,9 @@ func TestUnsupportedVersion(t *testing.T) {
 }
 
 func TestGetExistingExternalDocForId(t *testing.T) {
+	if testing.Short() {
+		t.Skip("Skipping integration tests in short mode")
+	}
 	headerLine := "VERSION MODEL DESC FCST_LEAD FCST_VALID_BEG  FCST_VALID_END  OBS_LEAD OBS_VALID_BEG   OBS_VALID_END   FCST_VAR  FCST_UNITS FCST_LEV OBS_VAR   OBS_UNITS OBS_LEV  OBTYPE VX_MASK INTERP_MTHD INTERP_PNTS FCST_THRESH OBS_THRESH COV_THRESH ALPHA LINE_TYPE"
 	dataLine := "V12.0.0 FCST  NA   120000    20120409_120000 20120409_120000 000000   20120409_113000 20120409_123000 UGRD_VGRD m/s        Z10      UGRD_VGRD NA        Z10      ADPSFC LAND_L0 NEAREST     1           NA          NA         NA         NA    VAL1L2    4114    0.022881     -0.055846      -0.23975       0.11316       1.40894     2.39774     6.07755      1.35071    2.1488    4114           12.11241   65.18733  6744.28012"
 	fName := "grid_stat_GFS_TMP_vs_ANLYS_TMP_Z2_900000L_20241104_180000V.stat"
@@ -165,6 +174,9 @@ func TestGetExistingExternalDocForId(t *testing.T) {
 }
 
 func TestParseVAL1L2(t *testing.T) {
+	if testing.Short() {
+		t.Skip("Skipping integration tests in short mode")
+	}
 	/* two of these data lines (dataLine and dataLine2) are the same. Only one of them should show up in the doc. The dataLine3 and dataLine4 only differ by their desc.*/
 	headerLine := "VERSION MODEL DESC FCST_LEAD FCST_VALID_BEG  FCST_VALID_END  OBS_LEAD OBS_VALID_BEG   OBS_VALID_END   FCST_VAR  FCST_UNITS FCST_LEV OBS_VAR   OBS_UNITS OBS_LEV  OBTYPE VX_MASK INTERP_MTHD INTERP_PNTS FCST_THRESH OBS_THRESH COV_THRESH ALPHA LINE_TYPE"
 	dataLine := "V12.0.0 FCST  NA   120000    20120409_120000 20120409_120000 000000   20120409_113000 20120409_123000 UGRD_VGRD m/s        Z10      UGRD_VGRD NA        Z10      ADPSFC LAND_L0 NEAREST     1           NA          NA         NA         NA    VAL1L2    4114    0.022881     -0.055846      -0.23975       0.11316       1.40894     2.39774     6.07755      1.35071    2.1488    4114           12.11241   65.18733  6744.28012"
@@ -206,7 +218,7 @@ func TestParseVAL1L2(t *testing.T) {
 	}
 
 	assert.NotNil(t, parsedDoc)
-	assert.Equal(t, 3, len(parsedDoc), "expected 3 but got %d", len(parsedDoc)) // two top level elements
+	assert.Len(t, parsedDoc, 3, "expected 3 but got %d", len(parsedDoc)) // two top level elements
 	doc0 := doc["MET:DD:MET:test:V12.0.0:FCST:1333972800:1333972800:000000:1333971000:1333974600:UGRD_VGRD:m/s:Z10:UGRD_VGRD:Z10:ADPSFC:LAND_L0:NEAREST:1:VAL1L2"].(map[string]interface{})
 	doc2 := doc["MET:DD:MET:test:V12.0.0:FCST:this_is_a_:1333972800:1333972800:000000:1333971000:1333974600:UGRD_VGRD:m/s:Z10:UGRD_VGRD:Z10:ADPSFC:LMV:NEAREST:1:VAL1L2"].(map[string]interface{})
 	doc0Data := doc0["data"].(map[string]v12_0.STAT_VAL1L2)
@@ -237,6 +249,9 @@ func TestParseVAL1L2(t *testing.T) {
 This test tests a data field dataKey.
 */
 func TestParseMODE_OBJ(t *testing.T) {
+	if testing.Short() {
+		t.Skip("Skipping integration tests in short mode")
+	}
 	headerLine := "VERSION MODEL N_VALID GRID_RES DESC FCST_LEAD FCST_VALID      FCST_ACCUM OBS_LEAD OBS_VALID       OBS_ACCUM FCST_RAD FCST_THR OBS_RAD OBS_THR FCST_VAR FCST_UNITS FCST_LEV OBS_VAR OBS_UNITS OBS_LEV OBTYPE FIELD  TOTAL FY_OY FY_ON FN_OY FN_ON BASER   FMEAN    ACC     FBIAS  PODY       PODN    POFD     FAR     CSI        GSS       HK        HSS       ODDS      LODDS   ORSS     EDS      SEDS     EDI      SEDI     BAGSS"
 	dataLine := "V12.0.0 FCST  26026   9        NA   300000    20120410_180000 060000     120000   20050807_120000 120000    2        >=5.0    2       >=5.0   APCP_06  kg/m^2     A6       OBS     None      Surface STAGE4    RAW 26026    47  1356  5898 18725 0.22843 0.053908 0.72128 0.236  0.0079058  0.93247 0.067527 0.9665  0.0064375  -0.039178 -0.059621 -0.08155  0.11004   -2.2069 -0.80173 -0.53249 -0.3039  -0.28465 -0.28988 -0.11236"
 	dataLine2 := "V12.0.0 FCST  26026   9        this_is_a_long_description   300000    20120410_180000 060000     120000   20050807_120000 120000    2        >=5.0    2       >=5.0   APCP_06  kg/m^2     A6       OBS     None      Surface STAGE4 OBJECT 26026     4  1315  6322 18385 0.24306 0.05068  0.70656 0.2085 0.00063231 0.93325 0.066751 0.99697 0.00052349 -0.043249 -0.066119 -0.090409 0.0088459 -4.7278 -0.98246 -0.67783 -0.49927 -0.46256 -0.46613 -0.13686"
@@ -264,7 +279,7 @@ func TestParseMODE_OBJ(t *testing.T) {
 	}
 
 	assert.NotNil(t, parsedDoc)
-	assert.Equal(t, 2, len(parsedDoc), "expected 3 but got %d", len(parsedDoc)) // two top level elements
+	assert.Len(t, parsedDoc, 2, "expected 3 but got %d", len(parsedDoc)) // two top level elements
 	doc0 := doc["MET:DD:MET:test:V12.0.0:FCST:26026:9:20120410_180000:060000:120000:20050807_120000:120000:2:>=5.0:2:>=5.0:APCP_06:kg/m^2:A6:OBS:None:Surface:STAGE4"].(map[string]interface{})
 	doc2 := doc["MET:DD:MET:test:V12.0.0:FCST:26026:9:this_is_a_:20120410_180000:060000:120000:20050807_120000:120000:2:>=5.0:2:>=5.0:APCP_06:kg/m^2:A6:OBS:None:Surface:STAGE4"].(map[string]interface{})
 	doc0Data := doc0["data"].(map[string]v12_0.MODE_CTS)
@@ -290,6 +305,9 @@ func TestParseMODE_OBJ(t *testing.T) {
 
 // V11.1.0  ./MODE_compref/20241201-13/mode_compref_010000L_20241201_130000V_000000A_R1_T2_obj.txt
 func TestParseMODE_OBJ_V11_1_0(t *testing.T) {
+	if testing.Short() {
+		t.Skip("Skipping integration tests in short mode")
+	}
 	headerLine := "VERSION MODEL N_VALID GRID_RES DESC FCST_LEAD FCST_VALID FCST_ACCUM OBS_LEAD OBS_VALID OBS_ACCUM FCST_RAD FCST_THR OBS_RAD OBS_THR FCST_VAR FCST_UNITS FCST_LEV OBS_VAR OBS_UNITS OBS_LEV OBTYPE OBJECT_ID OBJECT_CAT CENTROID_X CENTROID_Y CENTROID_LAT CENTROID_LON AXIS_ANG LENGTH WIDTH AREA AREA_THRESH CURVATURE CURVATURE_X CURVATURE_Y COMPLEXITY INTENSITY_10 INTENSITY_25 INTENSITY_50 INTENSITY_75 INTENSITY_90 INTENSITY_95 INTENSITY_SUM CENTROID_DIST BOUNDARY_DIST CONVEX_HULL_DIST ANGLE_DIFF ASPECT_DIFF AREA_RATIO INTERSECTION_AREA UNION_AREA SYMMETRIC_DIFF INTERSECTION_OVER_AREA CURVATURE_RATIO COMPLEXITY_RATIO PERCENTILE_INTENSITY_RATIO INTEREST"
 	dataLine := "V11.1.0 HRRR_OPS 656523 3 E_CONUS 010000 20241201_130000 000000 000000 20241201_125839 000000 1 >=30 1 >=30 REFC dB L0 REFC dB R1 MRMS F001 CF000 1191.36111 848.40278 46.59842 -86.11741 -63.68914 18.78477 7.15138 39 38 1638.70076 1725.16372 1359.51523 0.53012 30.575 30.90625 31.75 34.375 39.1125 40.2 1286.1875 NA NA NA NA NA NA NA NA NA NA NA NA NA NA"
 	dataLine2 := "V11.1.0 HRRR_OPS 656523 3 E_CONUS 010000 20241201_130000 000000 000000 20241201_125839 000000 1 >=30 1 >=30 REFC dB L0 REFC dB R1 MRMS F002 CF000 1195.86842 834.47368 46.21429 -86.01102 -74.49824 9.74167 4.12176 24 24 1643.5243 1675.00455 1421.96375 0.15789 30.89375 31.4375 31.875 32.73438 33.73125 33.85625 770.875 NA NA NA NA NA NA NA NA NA NA NA NA NA NA"
@@ -318,20 +336,24 @@ func TestParseMODE_OBJ_V11_1_0(t *testing.T) {
 	}
 
 	assert.NotNil(t, parsedDoc)
-	assert.Equal(t, 1, len(parsedDoc), "expected 1 but got %d", len(parsedDoc)) // two top level elements
+	assert.Len(t, parsedDoc, 1, "expected 1 but got %d", len(parsedDoc)) // two top level elements
 	tmpDoc := doc["MET:DD:MET:test:V11.1.0:HRRR_OPS:656523:3:E_CONUS:20241201_130000:000000:000000:20241201_125839:000000:1:>=30:1:>=30:REFC:dB:L0:REFC:dB:R1:MRMS"].(map[string]interface{})
 	data := tmpDoc["data"].(map[string]v11_1.MODE_OBJ)
 	elem1Data := data["010000_F001"]
 	elem2Data := data["010000_F002"]
-	assert.Equal(t, elem1Data.CENTROID_X, 1191.36111, "expected data[\"010000_F001\"].CENTROID_X to be 1191.36111")
-	assert.Equal(t, elem2Data.CENTROID_X, 1195.86842, "expected data[\"010000_F002\"].CENTROID_X to be 1195.86842")
-	assert.Equal(t, elem1Data.CENTROID_Y, 848.40278, "expected data[\"010000_F001\"].CENTROID_Y to be 848.40278")
-	assert.Equal(t, elem2Data.CENTROID_Y, 834.47368, "expected data[\"010000_F002\"].CENTROID_Y to be 834.47368")
-	assert.Equal(t, elem1Data.CENTROID_LAT, 46.59842, "expected data[\"010000_F001\"].CENTROID_LAT to be 46.59842")
-	assert.Equal(t, elem2Data.CENTROID_LAT, 46.21429, "expected data[\"010000_F002\"].CENTROID_LAT to be 46.21429")
+	tolerance := 0.00001
+	assert.InDelta(t, 1191.36111, elem1Data.CENTROID_X, tolerance, "expected data[\"010000_F001\"].CENTROID_X to be 1191.36111")
+	assert.InDelta(t, 1195.86842, elem2Data.CENTROID_X, tolerance, "expected data[\"010000_F002\"].CENTROID_X to be 1195.86842")
+	assert.InDelta(t, 848.40278, elem1Data.CENTROID_Y, tolerance, "expected data[\"010000_F001\"].CENTROID_Y to be 848.40278")
+	assert.InDelta(t, 834.47368, elem2Data.CENTROID_Y, tolerance, "expected data[\"010000_F002\"].CENTROID_Y to be 834.47368")
+	assert.InDelta(t, 46.59842, elem1Data.CENTROID_LAT, tolerance, "expected data[\"010000_F001\"].CENTROID_LAT to be 46.59842")
+	assert.InDelta(t, 46.21429, elem2Data.CENTROID_LAT, tolerance, "expected data[\"010000_F002\"].CENTROID_LAT to be 46.21429")
 }
 
 func TestModeFile(t *testing.T) {
+	if testing.Short() {
+		t.Skip("Skipping integration tests in short mode")
+	}
 	var doc map[string]interface{}
 	tmpDir := t.TempDir()
 	dir, err := getTestDataDir()
@@ -390,6 +412,9 @@ func TestModeFile(t *testing.T) {
 }
 
 func TestMC_PCP_File(t *testing.T) {
+	if testing.Short() {
+		t.Skip("Skipping integration tests in short mode")
+	}
 	var doc map[string]interface{}
 	tmpDir := t.TempDir()
 	dir, err := getTestDataDir()
@@ -437,6 +462,9 @@ func TestMC_PCP_File(t *testing.T) {
 }
 
 func TestTC_CTS_File(t *testing.T) {
+	if testing.Short() {
+		t.Skip("Skipping integration tests in short mode")
+	}
 	var doc map[string]interface{}
 	tmpDir := t.TempDir()
 	dir, err := getTestDataDir()
@@ -484,6 +512,9 @@ func TestTC_CTS_File(t *testing.T) {
 }
 
 func TestMC_CTS_File(t *testing.T) {
+	if testing.Short() {
+		t.Skip("Skipping integration tests in short mode")
+	}
 	var doc map[string]interface{}
 	tmpDir := t.TempDir()
 	dir, err := getTestDataDir()
@@ -533,6 +564,9 @@ func TestMC_CTS_File(t *testing.T) {
 // tcst file
 // testdata/tcstfiles/al022013_interp12_fill.tcst
 func Test_TCST_File(t *testing.T) {
+	if testing.Short() {
+		t.Skip("Skipping integration tests in short mode")
+	}
 	var doc map[string]interface{}
 	tmpDir := t.TempDir()
 	dir, err := getTestDataDir()
@@ -582,6 +616,9 @@ func Test_TCST_File(t *testing.T) {
 // tc_data file
 // /ttc_data/CMC/2024081306/tc_pairs_ep05.dat_PROBRIRW.tcst
 func Test_TCDATA_File(t *testing.T) {
+	if testing.Short() {
+		t.Skip("Skipping integration tests in short mode")
+	}
 	var doc map[string]interface{}
 	tmpDir := t.TempDir()
 	dir, err := getTestDataDir()
@@ -630,6 +667,9 @@ func Test_TCDATA_File(t *testing.T) {
 
 // ./tc_data/GFSO/2023060912/tc_pairs_al02.dat.tcst
 func Test_TCDATA_File_V10_1_1_NA_VALS(t *testing.T) {
+	if testing.Short() {
+		t.Skip("Skipping integration tests in short mode")
+	}
 	var doc map[string]interface{}
 	tmpDir := t.TempDir()
 	dir, err := getTestDataDir()
@@ -679,6 +719,9 @@ func Test_TCDATA_File_V10_1_1_NA_VALS(t *testing.T) {
 
 // V10.1.1  ./tc_data/GFSO/2023091600/tc_pairs_al13.dat.tcst
 func Test_TCDATA_File_V10_1_1(t *testing.T) {
+	if testing.Short() {
+		t.Skip("Skipping integration tests in short mode")
+	}
 	var doc map[string]interface{}
 	tmpDir := t.TempDir()
 	dir, err := getTestDataDir()
@@ -727,6 +770,9 @@ func Test_TCDATA_File_V10_1_1(t *testing.T) {
 
 // tcpairs test
 func Test_TCPAIRS_File(t *testing.T) {
+	if testing.Short() {
+		t.Skip("Skipping integration tests in short mode")
+	}
 	var doc map[string]interface{}
 	tmpDir := t.TempDir()
 	dir, err := getTestDataDir()
@@ -774,6 +820,9 @@ func Test_TCPAIRS_File(t *testing.T) {
 }
 
 func TestMC_SAL1L2_File(t *testing.T) {
+	if testing.Short() {
+		t.Skip("Skipping integration tests in short mode")
+	}
 	var doc map[string]interface{}
 	tmpDir := t.TempDir()
 	dir, err := getTestDataDir()
@@ -821,6 +870,9 @@ func TestMC_SAL1L2_File(t *testing.T) {
 }
 
 func TestParseRegressionSuite(t *testing.T) {
+	if testing.Short() {
+		t.Skip("Skipping integration tests in short mode")
+	}
 	var doc map[string]interface{}
 	var err error
 	tmpDir := t.TempDir()
@@ -893,6 +945,9 @@ func TestParseRegressionSuite(t *testing.T) {
 }
 
 func TestParseG2G_v12_Suite(t *testing.T) {
+	if testing.Short() {
+		t.Skip("Skipping integration tests in short mode")
+	}
 	var doc map[string]interface{}
 	var err error
 	tmpDir := t.TempDir()
@@ -973,6 +1028,9 @@ func TestParseG2G_v12_Suite(t *testing.T) {
 }
 
 func TestParse_tc_data_Suite(t *testing.T) {
+	if testing.Short() {
+		t.Skip("Skipping integration tests in short mode")
+	}
 	var doc map[string]interface{}
 	var err error
 	tmpDir := t.TempDir()
@@ -1053,6 +1111,9 @@ func TestParse_tc_data_Suite(t *testing.T) {
 }
 
 func TestParse_tcst_Suite(t *testing.T) {
+	if testing.Short() {
+		t.Skip("Skipping integration tests in short mode")
+	}
 	var doc map[string]interface{}
 	var err error
 	tmpDir := t.TempDir()
@@ -1137,6 +1198,9 @@ func TestParse_tcst_Suite(t *testing.T) {
 }
 
 func TestParse_textfiles_Suite(t *testing.T) {
+	if testing.Short() {
+		t.Skip("Skipping integration tests in short mode")
+	}
 	var doc map[string]interface{}
 	var err error
 	tmpDir := t.TempDir()
