@@ -50,10 +50,12 @@ func (vi ValidInt) MarshalJSON() ([]byte, error) {
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
+// It treats JSON strings "NA" and "null" as a null/invalid value.
+// This superseeds UnmarshalText for JSON input.
 func (vi *ValidInt) UnmarshalJSON(data []byte) error {
-	if string(data) == "null" {
-		vi.Valid = false
-		vi.Value = 0
+	s := string(data)
+	if s == "null" || s == `"NA"` {
+		vi.Reset()
 		return nil
 	}
 
@@ -140,10 +142,12 @@ func (vf ValidFloat) MarshalJSON() ([]byte, error) {
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
+// It treats JSON strings "NA" and "null" as a null/invalid value.
+// This superseeds UnmarshalText for JSON input.
 func (vf *ValidFloat) UnmarshalJSON(data []byte) error {
-	if string(data) == "null" {
-		vf.Valid = false
-		vf.Value = 0.0
+	s := string(data)
+	if s == "null" || s == `"NA"` {
+		vf.Reset()
 		return nil
 	}
 
@@ -239,7 +243,8 @@ func (vs ValidString) MarshalJSON() ([]byte, error) {
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
-// It treats a JSON string "NA" as a null/invalid value.
+// It treats JSON strings "NA" and "null" as a null/invalid value.
+// This superseeds UnmarshalText for JSON input.
 func (vs *ValidString) UnmarshalJSON(data []byte) error {
 	s := string(data)
 	if s == "null" || s == `"NA"` {

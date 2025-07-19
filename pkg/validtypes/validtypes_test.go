@@ -356,8 +356,8 @@ func TestUnmarshalJSON(t *testing.T) {
 				expectErr: false,
 			},
 			{
-				name:     "JSON with null fields",
-				jsonData: `{"FIELD1":null,"FIELD2":null,"FIELD3":null,"FIELD4":null}`,
+				name:     "JSON with null & NA fields",
+				jsonData: `{"FIELD1":null,"FIELD2":null,"FIELD3":"NA","FIELD4":"NA"}`,
 				expected: SomeData{
 					Field1: ValidInt{},
 					Field2: ValidInt{}, // Stays invalid (omitted)
@@ -433,8 +433,8 @@ func TestUnmarshalJSON(t *testing.T) {
 				expectErr: false,
 			},
 			{
-				name:     "JSON with null fields",
-				jsonData: `{"FIELD1":null,"FIELD2":null,"FIELD3":null,"FIELD4":null}`,
+				name:     "JSON with null & NA fields",
+				jsonData: `{"FIELD1":null,"FIELD2":null,"FIELD3":"NA","FIELD4":"NA"}`,
 				expected: SomeData{
 					Field1: ValidFloat{},
 					Field2: ValidFloat{},
@@ -510,8 +510,8 @@ func TestUnmarshalJSON(t *testing.T) {
 				expectErr: false,
 			},
 			{
-				name:     "JSON with null fields",
-				jsonData: `{"FIELD1":null,"FIELD2":null}`,
+				name:     "JSON with null & NA fields",
+				jsonData: `{"FIELD1":null,"FIELD2":"NA"}`,
 				expected: SomeData{
 					Field1: ValidString{},
 					Field2: ValidString{},
