@@ -85,6 +85,7 @@ linters:
     # Test-related checks.
     - usetesting
     - testableexamples
+    - testifylint
     - thelper
     - tparallel
 
