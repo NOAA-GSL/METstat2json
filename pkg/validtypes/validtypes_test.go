@@ -543,6 +543,104 @@ func TestUnmarshalJSON(t *testing.T) {
 	})
 }
 
+// TestUnmarshalText tests the UnmarshalText method for each valid type.
+func TestUnmarshalText(t *testing.T) {
+	t.Parallel()
+
+	t.Run("ValidInt", func(t *testing.T) {
+		t.Parallel()
+		testCases := []struct {
+			name      string
+			input     []byte
+			expected  ValidInt
+			expectErr bool
+		}{
+			{"valid number", []byte("123"), NewValidInt(123), false},
+			{"zero", []byte("0"), NewValidInt(0), false},
+			{"negative number", []byte("-45"), NewValidInt(-45), false},
+			{"NA value", []byte("NA"), ValidInt{}, false},
+			{"empty string", []byte(""), ValidInt{}, false},
+			{"invalid number", []byte("abc"), ValidInt{}, true},
+		}
+
+		for _, tc := range testCases {
+			t.Run(tc.name, func(t *testing.T) {
+				t.Parallel()
+				var vi ValidInt
+				err := vi.UnmarshalText(tc.input)
+
+				if tc.expectErr {
+					assert.Error(t, err)
+				} else {
+					assert.NoError(t, err)
+				}
+				assert.Equal(t, tc.expected, vi)
+			})
+		}
+	})
+
+	t.Run("ValidFloat", func(t *testing.T) {
+		t.Parallel()
+		testCases := []struct {
+			name      string
+			input     []byte
+			expected  ValidFloat
+			expectErr bool
+		}{
+			{"valid float", []byte("123.45"), NewValidFloat(123.45), false},
+			{"zero", []byte("0.0"), NewValidFloat(0.0), false},
+			{"negative float", []byte("-45.6"), NewValidFloat(-45.6), false},
+			{"NA value", []byte("NA"), ValidFloat{}, false},
+			{"empty string", []byte(""), ValidFloat{}, false},
+			{"invalid float", []byte("abc"), ValidFloat{}, true},
+		}
+
+		for _, tc := range testCases {
+			t.Run(tc.name, func(t *testing.T) {
+				t.Parallel()
+				var vf ValidFloat
+				err := vf.UnmarshalText(tc.input)
+
+				if tc.expectErr {
+					assert.Error(t, err)
+				} else {
+					assert.NoError(t, err)
+				}
+				assert.Equal(t, tc.expected, vf)
+			})
+		}
+	})
+
+	t.Run("ValidString", func(t *testing.T) {
+		t.Parallel()
+		testCases := []struct {
+			name      string
+			input     []byte
+			expected  ValidString
+			expectErr bool
+		}{
+			{"valid string", []byte("hello"), NewValidString("hello"), false},
+			{"NA value", []byte("NA"), ValidString{}, false},
+			{"empty string", []byte(""), ValidString{}, false},
+		}
+
+		for _, tc := range testCases {
+			t.Run(tc.name, func(t *testing.T) {
+				t.Parallel()
+				var vs ValidString
+				err := vs.UnmarshalText(tc.input)
+
+				if tc.expectErr {
+					assert.Error(t, err)
+				} else {
+					assert.NoError(t, err)
+				}
+				assert.Equal(t, tc.expected, vs)
+			})
+		}
+	})
+}
+
 // TestString tests the String() method of the validtypes
 func TestString(t *testing.T) {
 	t.Run("ValidInt", func(t *testing.T) {

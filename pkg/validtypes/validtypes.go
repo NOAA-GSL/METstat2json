@@ -67,6 +67,25 @@ func (vi *ValidInt) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+// UnmarshalText sets ValidInt from text values (i.e. stat file input)
+// It treats "NA" and empty strings as a null/invalid value.
+func (vi *ValidInt) UnmarshalText(text []byte) error {
+	s := string(text)
+	if s == "" || s == "NA" {
+		vi.Reset()
+		return nil
+	}
+
+	val, err := strconv.Atoi(s)
+	if err != nil {
+		vi.Reset()
+		return err
+	}
+
+	vi.Set(val)
+	return nil
+}
+
 // String returns string representation.
 func (vi ValidInt) String() string {
 	if !vi.Valid {
@@ -135,6 +154,25 @@ func (vf *ValidFloat) UnmarshalJSON(data []byte) error {
 
 	vf.Value = value
 	vf.Valid = true
+	return nil
+}
+
+// UnmarshalText sets ValidFloat from text values (i.e. stat file input)
+// It treats "NA" and empty strings as a null/invalid value.
+func (vf *ValidFloat) UnmarshalText(text []byte) error {
+	s := string(text)
+	if s == "" || s == "NA" {
+		vf.Reset()
+		return nil
+	}
+
+	val, err := strconv.ParseFloat(s, 64)
+	if err != nil {
+		vf.Reset()
+		return err
+	}
+
+	vf.Set(val)
 	return nil
 }
 
@@ -216,6 +254,19 @@ func (vs *ValidString) UnmarshalJSON(data []byte) error {
 
 	vs.Value = value
 	vs.Valid = true
+	return nil
+}
+
+// UnmarshalText sets ValidString from text values (i.e. stat file input)
+// It treats "NA" and empty strings as a null/invalid value.
+func (vs *ValidString) UnmarshalText(text []byte) error {
+	s := string(text)
+	if s == "" || s == "NA" {
+		vs.Reset()
+		return nil
+	}
+
+	vs.Set(s)
 	return nil
 }
 
