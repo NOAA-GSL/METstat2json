@@ -1,10 +1,13 @@
 package v10_0
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"strconv"
-	"time"
+
+	"github.com/dtcenter/METstat2json/pkg/util"
+	"github.com/dtcenter/METstat2json/pkg/validtypes"
 )
 
 /*
@@ -14,7652 +17,4560 @@ cd  <repo_root>
 go run generator -version=v12.0 > pkg/linetypes/v12_0/linetypes.go
 */
 
-func GetLeadFromInitValid(data []string, dataFieldIndex int) string {
-	initTime, _ := time.Parse("20060102_150405", data[dataFieldIndex-1])
-	validTime, _ := time.Parse("20060102_150405", data[dataFieldIndex+1])
-	lead := validTime.Sub(initTime)
-	return strconv.FormatInt(int64(lead.Hours()), 10)
+// Document struct definitions
+type MODE_CTS struct {
+	util.VxMetadata
+	MODE_CTS_header
+	Data map[string]MODE_CTS_data `json:"data"`
 }
-
-func SetValueForField(doc *map[string]interface{}, fileType string, term string, i int, dataLen int, fields []string, fieldIndex int, dataType string) {
-	if term == "INIT" && fileType != "TCST" {
-		// do not assign any value to the INIT field for TCST files
-		// The INIT field needs to be moved from the header to the data section.
-		return
-	}
-	if term == "LEAD" && fileType == "TCST" {
-		// This is a special case for TCST files.
-		// if the TERM is LEAD and the lead is NA then we
-		// have to get the lead from the init and valid fields.
-		// INIT is the prior field and VALID is the next field from LEAD.
-		// the init and valid fields are in the format YYYYMMDD_HHMMSS
-		// the lead is the difference between the valid and the init
-		// in hours
-		(*doc)["LEAD"], _ = strconv.Atoi(GetLeadFromInitValid(fields, fieldIndex))
-		return
-	}
-	if i <= dataLen && fields[fieldIndex] != "" && fields[fieldIndex] != "NA" {
-		switch dataType {
-		case "int":
-			(*doc)[term], _ = strconv.Atoi(fields[fieldIndex])
-			return
-		case "float64":
-			(*doc)[term], _ = strconv.ParseFloat(fields[fieldIndex], 64)
-			return
-		case "string":
-			(*doc)[term] = fields[fieldIndex]
-			return
-		default:
-			(*doc)[term] = fields[fieldIndex]
-			return
-		}
-	}
+type MODE_OBJ struct {
+	util.VxMetadata
+	MODE_OBJ_header
+	Data map[string]MODE_OBJ_data `json:"data"`
+}
+type STAT_CNT struct {
+	util.VxMetadata
+	STAT_CNT_header
+	Data map[string]STAT_CNT_data `json:"data"`
+}
+type STAT_CTC struct {
+	util.VxMetadata
+	STAT_CTC_header
+	Data map[string]STAT_CTC_data `json:"data"`
+}
+type STAT_CTS struct {
+	util.VxMetadata
+	STAT_CTS_header
+	Data map[string]STAT_CTS_data `json:"data"`
+}
+type STAT_DMAP struct {
+	util.VxMetadata
+	STAT_DMAP_header
+	Data map[string]STAT_DMAP_data `json:"data"`
+}
+type STAT_ECLV struct {
+	util.VxMetadata
+	STAT_ECLV_header
+	Data map[string]STAT_ECLV_data `json:"data"`
+}
+type STAT_ECNT struct {
+	util.VxMetadata
+	STAT_ECNT_header
+	Data map[string]STAT_ECNT_data `json:"data"`
+}
+type STAT_FHO struct {
+	util.VxMetadata
+	STAT_FHO_header
+	Data map[string]STAT_FHO_data `json:"data"`
+}
+type STAT_GENMPR struct {
+	util.VxMetadata
+	STAT_GENMPR_header
+	Data map[string]STAT_GENMPR_data `json:"data"`
+}
+type STAT_GRAD struct {
+	util.VxMetadata
+	STAT_GRAD_header
+	Data map[string]STAT_GRAD_data `json:"data"`
+}
+type STAT_ISC struct {
+	util.VxMetadata
+	STAT_ISC_header
+	Data map[string]STAT_ISC_data `json:"data"`
+}
+type STAT_MCTC struct {
+	util.VxMetadata
+	STAT_MCTC_header
+	Data map[string]STAT_MCTC_data `json:"data"`
+}
+type STAT_MCTS struct {
+	util.VxMetadata
+	STAT_MCTS_header
+	Data map[string]STAT_MCTS_data `json:"data"`
+}
+type STAT_MPR struct {
+	util.VxMetadata
+	STAT_MPR_header
+	Data map[string]STAT_MPR_data `json:"data"`
+}
+type STAT_NBRCNT struct {
+	util.VxMetadata
+	STAT_NBRCNT_header
+	Data map[string]STAT_NBRCNT_data `json:"data"`
+}
+type STAT_NBRCTC struct {
+	util.VxMetadata
+	STAT_NBRCTC_header
+	Data map[string]STAT_NBRCTC_data `json:"data"`
+}
+type STAT_NBRCTS struct {
+	util.VxMetadata
+	STAT_NBRCTS_header
+	Data map[string]STAT_NBRCTS_data `json:"data"`
+}
+type STAT_ORANK struct {
+	util.VxMetadata
+	STAT_ORANK_header
+	Data map[string]STAT_ORANK_data `json:"data"`
+}
+type STAT_PCT struct {
+	util.VxMetadata
+	STAT_PCT_header
+	Data map[string]STAT_PCT_data `json:"data"`
+}
+type STAT_PHIST struct {
+	util.VxMetadata
+	STAT_PHIST_header
+	Data map[string]STAT_PHIST_data `json:"data"`
+}
+type STAT_PJC struct {
+	util.VxMetadata
+	STAT_PJC_header
+	Data map[string]STAT_PJC_data `json:"data"`
+}
+type STAT_PRC struct {
+	util.VxMetadata
+	STAT_PRC_header
+	Data map[string]STAT_PRC_data `json:"data"`
+}
+type STAT_PSTD struct {
+	util.VxMetadata
+	STAT_PSTD_header
+	Data map[string]STAT_PSTD_data `json:"data"`
+}
+type STAT_RELP struct {
+	util.VxMetadata
+	STAT_RELP_header
+	Data map[string]STAT_RELP_data `json:"data"`
+}
+type STAT_RHIST struct {
+	util.VxMetadata
+	STAT_RHIST_header
+	Data map[string]STAT_RHIST_data `json:"data"`
+}
+type STAT_RPS struct {
+	util.VxMetadata
+	STAT_RPS_header
+	Data map[string]STAT_RPS_data `json:"data"`
+}
+type STAT_SAL1L2 struct {
+	util.VxMetadata
+	STAT_SAL1L2_header
+	Data map[string]STAT_SAL1L2_data `json:"data"`
+}
+type STAT_SL1L2 struct {
+	util.VxMetadata
+	STAT_SL1L2_header
+	Data map[string]STAT_SL1L2_data `json:"data"`
+}
+type STAT_SSVAR struct {
+	util.VxMetadata
+	STAT_SSVAR_header
+	Data map[string]STAT_SSVAR_data `json:"data"`
+}
+type STAT_VAL1L2 struct {
+	util.VxMetadata
+	STAT_VAL1L2_header
+	Data map[string]STAT_VAL1L2_data `json:"data"`
+}
+type STAT_VCNT struct {
+	util.VxMetadata
+	STAT_VCNT_header
+	Data map[string]STAT_VCNT_data `json:"data"`
+}
+type STAT_VL1L2 struct {
+	util.VxMetadata
+	STAT_VL1L2_header
+	Data map[string]STAT_VL1L2_data `json:"data"`
+}
+type TCST_PROBRIRW struct {
+	util.VxMetadata
+	TCST_PROBRIRW_header
+	Data map[string]TCST_PROBRIRW_data `json:"data"`
+}
+type TCST_TCMPR struct {
+	util.VxMetadata
+	TCST_TCMPR_header
+	Data map[string]TCST_TCMPR_data `json:"data"`
 }
 
 // Header struct definitions
 type MODE_CTS_header struct {
-	VERSION    string  `json:"VERSION"`
-	MODEL      string  `json:"MODEL"`
-	N_VALID    int     `json:"N_VALID"`
-	GRID_RES   float64 `json:"GRID_RES"`
-	DESC       string  `json:"DESC"`
-	FCST_VALID string  `json:"FCST_VALID"`
-	FCST_ACCUM string  `json:"FCST_ACCUM"`
-	OBS_LEAD   int     `json:"OBS_LEAD"`
-	OBS_VALID  string  `json:"OBS_VALID"`
-	OBS_ACCUM  string  `json:"OBS_ACCUM"`
-	FCST_RAD   int     `json:"FCST_RAD"`
-	FCST_THR   string  `json:"FCST_THR"`
-	OBS_RAD    int     `json:"OBS_RAD"`
-	OBS_THR    string  `json:"OBS_THR"`
-	FCST_VAR   string  `json:"FCST_VAR"`
-	FCST_UNITS string  `json:"FCST_UNITS"`
-	FCST_LEV   string  `json:"FCST_LEV"`
-	OBS_VAR    string  `json:"OBS_VAR"`
-	OBS_UNITS  string  `json:"OBS_UNITS"`
-	OBS_LEV    string  `json:"OBS_LEV"`
-	OBTYPE     string  `json:"OBTYPE"`
-	LINE_TYPE  string  `json:"LINE_TYPE"`
+	VERSION    validtypes.ValidString `json:"VERSION"`
+	MODEL      validtypes.ValidString `json:"MODEL"`
+	N_VALID    validtypes.ValidInt    `json:"N_VALID"`
+	GRID_RES   validtypes.ValidFloat  `json:"GRID_RES"`
+	DESC       validtypes.ValidString `json:"DESC"`
+	FCST_VALID validtypes.ValidString `json:"FCST_VALID"`
+	FCST_ACCUM validtypes.ValidString `json:"FCST_ACCUM"`
+	OBS_LEAD   validtypes.ValidInt    `json:"OBS_LEAD"`
+	OBS_VALID  validtypes.ValidString `json:"OBS_VALID"`
+	OBS_ACCUM  validtypes.ValidString `json:"OBS_ACCUM"`
+	FCST_RAD   validtypes.ValidInt    `json:"FCST_RAD"`
+	FCST_THR   validtypes.ValidString `json:"FCST_THR"`
+	OBS_RAD    validtypes.ValidInt    `json:"OBS_RAD"`
+	OBS_THR    validtypes.ValidString `json:"OBS_THR"`
+	FCST_VAR   validtypes.ValidString `json:"FCST_VAR"`
+	FCST_UNITS validtypes.ValidString `json:"FCST_UNITS"`
+	FCST_LEV   validtypes.ValidString `json:"FCST_LEV"`
+	OBS_VAR    validtypes.ValidString `json:"OBS_VAR"`
+	OBS_UNITS  validtypes.ValidString `json:"OBS_UNITS"`
+	OBS_LEV    validtypes.ValidString `json:"OBS_LEV"`
+	OBTYPE     validtypes.ValidString `json:"OBTYPE"`
+	LINE_TYPE  validtypes.ValidString `json:"LINE_TYPE"`
 }
 
 type MODE_OBJ_header struct {
-	VERSION    string  `json:"VERSION"`
-	MODEL      string  `json:"MODEL"`
-	N_VALID    int     `json:"N_VALID"`
-	GRID_RES   float64 `json:"GRID_RES"`
-	DESC       string  `json:"DESC"`
-	FCST_VALID string  `json:"FCST_VALID"`
-	FCST_ACCUM string  `json:"FCST_ACCUM"`
-	OBS_LEAD   int     `json:"OBS_LEAD"`
-	OBS_VALID  string  `json:"OBS_VALID"`
-	OBS_ACCUM  string  `json:"OBS_ACCUM"`
-	FCST_RAD   int     `json:"FCST_RAD"`
-	FCST_THR   string  `json:"FCST_THR"`
-	OBS_RAD    int     `json:"OBS_RAD"`
-	OBS_THR    string  `json:"OBS_THR"`
-	FCST_VAR   string  `json:"FCST_VAR"`
-	FCST_UNITS string  `json:"FCST_UNITS"`
-	FCST_LEV   string  `json:"FCST_LEV"`
-	OBS_VAR    string  `json:"OBS_VAR"`
-	OBS_UNITS  string  `json:"OBS_UNITS"`
-	OBS_LEV    string  `json:"OBS_LEV"`
-	OBTYPE     string  `json:"OBTYPE"`
-	LINE_TYPE  string  `json:"LINE_TYPE"`
+	VERSION    validtypes.ValidString `json:"VERSION"`
+	MODEL      validtypes.ValidString `json:"MODEL"`
+	N_VALID    validtypes.ValidInt    `json:"N_VALID"`
+	GRID_RES   validtypes.ValidFloat  `json:"GRID_RES"`
+	DESC       validtypes.ValidString `json:"DESC"`
+	FCST_VALID validtypes.ValidString `json:"FCST_VALID"`
+	FCST_ACCUM validtypes.ValidString `json:"FCST_ACCUM"`
+	OBS_LEAD   validtypes.ValidInt    `json:"OBS_LEAD"`
+	OBS_VALID  validtypes.ValidString `json:"OBS_VALID"`
+	OBS_ACCUM  validtypes.ValidString `json:"OBS_ACCUM"`
+	FCST_RAD   validtypes.ValidInt    `json:"FCST_RAD"`
+	FCST_THR   validtypes.ValidString `json:"FCST_THR"`
+	OBS_RAD    validtypes.ValidInt    `json:"OBS_RAD"`
+	OBS_THR    validtypes.ValidString `json:"OBS_THR"`
+	FCST_VAR   validtypes.ValidString `json:"FCST_VAR"`
+	FCST_UNITS validtypes.ValidString `json:"FCST_UNITS"`
+	FCST_LEV   validtypes.ValidString `json:"FCST_LEV"`
+	OBS_VAR    validtypes.ValidString `json:"OBS_VAR"`
+	OBS_UNITS  validtypes.ValidString `json:"OBS_UNITS"`
+	OBS_LEV    validtypes.ValidString `json:"OBS_LEV"`
+	OBTYPE     validtypes.ValidString `json:"OBTYPE"`
+	LINE_TYPE  validtypes.ValidString `json:"LINE_TYPE"`
 }
 
 type STAT_CNT_header struct {
-	VERSION        string  `json:"VERSION"`
-	MODEL          string  `json:"MODEL"`
-	DESC           string  `json:"DESC"`
-	FCST_VALID_BEG int     `json:"FCST_VALID_BEG"`
-	FCST_VALID_END int     `json:"FCST_VALID_END"`
-	OBS_LEAD       int     `json:"OBS_LEAD"`
-	OBS_VALID_BEG  int     `json:"OBS_VALID_BEG"`
-	OBS_VALID_END  int     `json:"OBS_VALID_END"`
-	FCST_VAR       string  `json:"FCST_VAR"`
-	FCST_UNITS     string  `json:"FCST_UNITS"`
-	FCST_LEV       string  `json:"FCST_LEV"`
-	OBS_VAR        string  `json:"OBS_VAR"`
-	OBS_UNITS      string  `json:"OBS_UNITS"`
-	OBS_LEV        string  `json:"OBS_LEV"`
-	OBTYPE         string  `json:"OBTYPE"`
-	VX_MASK        string  `json:"VX_MASK"`
-	INTERP_MTHD    string  `json:"INTERP_MTHD"`
-	INTERP_PNTS    int     `json:"INTERP_PNTS"`
-	FCST_THRESH    string  `json:"FCST_THRESH"`
-	OBS_THRESH     string  `json:"OBS_THRESH"`
-	COV_THRESH     string  `json:"COV_THRESH"`
-	ALPHA          float64 `json:"ALPHA"`
-	LINE_TYPE      string  `json:"LINE_TYPE"`
+	VERSION        validtypes.ValidString `json:"VERSION"`
+	MODEL          validtypes.ValidString `json:"MODEL"`
+	DESC           validtypes.ValidString `json:"DESC"`
+	FCST_VALID_BEG validtypes.ValidInt    `json:"FCST_VALID_BEG"`
+	FCST_VALID_END validtypes.ValidInt    `json:"FCST_VALID_END"`
+	OBS_LEAD       validtypes.ValidInt    `json:"OBS_LEAD"`
+	OBS_VALID_BEG  validtypes.ValidInt    `json:"OBS_VALID_BEG"`
+	OBS_VALID_END  validtypes.ValidInt    `json:"OBS_VALID_END"`
+	FCST_VAR       validtypes.ValidString `json:"FCST_VAR"`
+	FCST_UNITS     validtypes.ValidString `json:"FCST_UNITS"`
+	FCST_LEV       validtypes.ValidString `json:"FCST_LEV"`
+	OBS_VAR        validtypes.ValidString `json:"OBS_VAR"`
+	OBS_UNITS      validtypes.ValidString `json:"OBS_UNITS"`
+	OBS_LEV        validtypes.ValidString `json:"OBS_LEV"`
+	OBTYPE         validtypes.ValidString `json:"OBTYPE"`
+	VX_MASK        validtypes.ValidString `json:"VX_MASK"`
+	INTERP_MTHD    validtypes.ValidString `json:"INTERP_MTHD"`
+	INTERP_PNTS    validtypes.ValidInt    `json:"INTERP_PNTS"`
+	FCST_THRESH    validtypes.ValidString `json:"FCST_THRESH"`
+	OBS_THRESH     validtypes.ValidString `json:"OBS_THRESH"`
+	COV_THRESH     validtypes.ValidString `json:"COV_THRESH"`
+	ALPHA          validtypes.ValidFloat  `json:"ALPHA"`
+	LINE_TYPE      validtypes.ValidString `json:"LINE_TYPE"`
 }
 
 type STAT_CTC_header struct {
-	VERSION        string  `json:"VERSION"`
-	MODEL          string  `json:"MODEL"`
-	DESC           string  `json:"DESC"`
-	FCST_VALID_BEG int     `json:"FCST_VALID_BEG"`
-	FCST_VALID_END int     `json:"FCST_VALID_END"`
-	OBS_LEAD       int     `json:"OBS_LEAD"`
-	OBS_VALID_BEG  int     `json:"OBS_VALID_BEG"`
-	OBS_VALID_END  int     `json:"OBS_VALID_END"`
-	FCST_VAR       string  `json:"FCST_VAR"`
-	FCST_UNITS     string  `json:"FCST_UNITS"`
-	FCST_LEV       string  `json:"FCST_LEV"`
-	OBS_VAR        string  `json:"OBS_VAR"`
-	OBS_UNITS      string  `json:"OBS_UNITS"`
-	OBS_LEV        string  `json:"OBS_LEV"`
-	OBTYPE         string  `json:"OBTYPE"`
-	VX_MASK        string  `json:"VX_MASK"`
-	INTERP_MTHD    string  `json:"INTERP_MTHD"`
-	INTERP_PNTS    int     `json:"INTERP_PNTS"`
-	FCST_THRESH    string  `json:"FCST_THRESH"`
-	OBS_THRESH     string  `json:"OBS_THRESH"`
-	COV_THRESH     string  `json:"COV_THRESH"`
-	ALPHA          float64 `json:"ALPHA"`
-	LINE_TYPE      string  `json:"LINE_TYPE"`
+	VERSION        validtypes.ValidString `json:"VERSION"`
+	MODEL          validtypes.ValidString `json:"MODEL"`
+	DESC           validtypes.ValidString `json:"DESC"`
+	FCST_VALID_BEG validtypes.ValidInt    `json:"FCST_VALID_BEG"`
+	FCST_VALID_END validtypes.ValidInt    `json:"FCST_VALID_END"`
+	OBS_LEAD       validtypes.ValidInt    `json:"OBS_LEAD"`
+	OBS_VALID_BEG  validtypes.ValidInt    `json:"OBS_VALID_BEG"`
+	OBS_VALID_END  validtypes.ValidInt    `json:"OBS_VALID_END"`
+	FCST_VAR       validtypes.ValidString `json:"FCST_VAR"`
+	FCST_UNITS     validtypes.ValidString `json:"FCST_UNITS"`
+	FCST_LEV       validtypes.ValidString `json:"FCST_LEV"`
+	OBS_VAR        validtypes.ValidString `json:"OBS_VAR"`
+	OBS_UNITS      validtypes.ValidString `json:"OBS_UNITS"`
+	OBS_LEV        validtypes.ValidString `json:"OBS_LEV"`
+	OBTYPE         validtypes.ValidString `json:"OBTYPE"`
+	VX_MASK        validtypes.ValidString `json:"VX_MASK"`
+	INTERP_MTHD    validtypes.ValidString `json:"INTERP_MTHD"`
+	INTERP_PNTS    validtypes.ValidInt    `json:"INTERP_PNTS"`
+	FCST_THRESH    validtypes.ValidString `json:"FCST_THRESH"`
+	OBS_THRESH     validtypes.ValidString `json:"OBS_THRESH"`
+	COV_THRESH     validtypes.ValidString `json:"COV_THRESH"`
+	ALPHA          validtypes.ValidFloat  `json:"ALPHA"`
+	LINE_TYPE      validtypes.ValidString `json:"LINE_TYPE"`
 }
 
 type STAT_CTS_header struct {
-	VERSION        string  `json:"VERSION"`
-	MODEL          string  `json:"MODEL"`
-	DESC           string  `json:"DESC"`
-	FCST_VALID_BEG int     `json:"FCST_VALID_BEG"`
-	FCST_VALID_END int     `json:"FCST_VALID_END"`
-	OBS_LEAD       int     `json:"OBS_LEAD"`
-	OBS_VALID_BEG  int     `json:"OBS_VALID_BEG"`
-	OBS_VALID_END  int     `json:"OBS_VALID_END"`
-	FCST_VAR       string  `json:"FCST_VAR"`
-	FCST_UNITS     string  `json:"FCST_UNITS"`
-	FCST_LEV       string  `json:"FCST_LEV"`
-	OBS_VAR        string  `json:"OBS_VAR"`
-	OBS_UNITS      string  `json:"OBS_UNITS"`
-	OBS_LEV        string  `json:"OBS_LEV"`
-	OBTYPE         string  `json:"OBTYPE"`
-	VX_MASK        string  `json:"VX_MASK"`
-	INTERP_MTHD    string  `json:"INTERP_MTHD"`
-	INTERP_PNTS    int     `json:"INTERP_PNTS"`
-	FCST_THRESH    string  `json:"FCST_THRESH"`
-	OBS_THRESH     string  `json:"OBS_THRESH"`
-	COV_THRESH     string  `json:"COV_THRESH"`
-	ALPHA          float64 `json:"ALPHA"`
-	LINE_TYPE      string  `json:"LINE_TYPE"`
+	VERSION        validtypes.ValidString `json:"VERSION"`
+	MODEL          validtypes.ValidString `json:"MODEL"`
+	DESC           validtypes.ValidString `json:"DESC"`
+	FCST_VALID_BEG validtypes.ValidInt    `json:"FCST_VALID_BEG"`
+	FCST_VALID_END validtypes.ValidInt    `json:"FCST_VALID_END"`
+	OBS_LEAD       validtypes.ValidInt    `json:"OBS_LEAD"`
+	OBS_VALID_BEG  validtypes.ValidInt    `json:"OBS_VALID_BEG"`
+	OBS_VALID_END  validtypes.ValidInt    `json:"OBS_VALID_END"`
+	FCST_VAR       validtypes.ValidString `json:"FCST_VAR"`
+	FCST_UNITS     validtypes.ValidString `json:"FCST_UNITS"`
+	FCST_LEV       validtypes.ValidString `json:"FCST_LEV"`
+	OBS_VAR        validtypes.ValidString `json:"OBS_VAR"`
+	OBS_UNITS      validtypes.ValidString `json:"OBS_UNITS"`
+	OBS_LEV        validtypes.ValidString `json:"OBS_LEV"`
+	OBTYPE         validtypes.ValidString `json:"OBTYPE"`
+	VX_MASK        validtypes.ValidString `json:"VX_MASK"`
+	INTERP_MTHD    validtypes.ValidString `json:"INTERP_MTHD"`
+	INTERP_PNTS    validtypes.ValidInt    `json:"INTERP_PNTS"`
+	FCST_THRESH    validtypes.ValidString `json:"FCST_THRESH"`
+	OBS_THRESH     validtypes.ValidString `json:"OBS_THRESH"`
+	COV_THRESH     validtypes.ValidString `json:"COV_THRESH"`
+	ALPHA          validtypes.ValidFloat  `json:"ALPHA"`
+	LINE_TYPE      validtypes.ValidString `json:"LINE_TYPE"`
 }
 
 type STAT_DMAP_header struct {
-	VERSION        string  `json:"VERSION"`
-	MODEL          string  `json:"MODEL"`
-	DESC           string  `json:"DESC"`
-	FCST_VALID_BEG int     `json:"FCST_VALID_BEG"`
-	FCST_VALID_END int     `json:"FCST_VALID_END"`
-	OBS_LEAD       int     `json:"OBS_LEAD"`
-	OBS_VALID_BEG  int     `json:"OBS_VALID_BEG"`
-	OBS_VALID_END  int     `json:"OBS_VALID_END"`
-	FCST_VAR       string  `json:"FCST_VAR"`
-	FCST_UNITS     string  `json:"FCST_UNITS"`
-	FCST_LEV       string  `json:"FCST_LEV"`
-	OBS_VAR        string  `json:"OBS_VAR"`
-	OBS_UNITS      string  `json:"OBS_UNITS"`
-	OBS_LEV        string  `json:"OBS_LEV"`
-	OBTYPE         string  `json:"OBTYPE"`
-	VX_MASK        string  `json:"VX_MASK"`
-	INTERP_MTHD    string  `json:"INTERP_MTHD"`
-	INTERP_PNTS    int     `json:"INTERP_PNTS"`
-	FCST_THRESH    string  `json:"FCST_THRESH"`
-	OBS_THRESH     string  `json:"OBS_THRESH"`
-	COV_THRESH     string  `json:"COV_THRESH"`
-	ALPHA          float64 `json:"ALPHA"`
-	LINE_TYPE      string  `json:"LINE_TYPE"`
+	VERSION        validtypes.ValidString `json:"VERSION"`
+	MODEL          validtypes.ValidString `json:"MODEL"`
+	DESC           validtypes.ValidString `json:"DESC"`
+	FCST_VALID_BEG validtypes.ValidInt    `json:"FCST_VALID_BEG"`
+	FCST_VALID_END validtypes.ValidInt    `json:"FCST_VALID_END"`
+	OBS_LEAD       validtypes.ValidInt    `json:"OBS_LEAD"`
+	OBS_VALID_BEG  validtypes.ValidInt    `json:"OBS_VALID_BEG"`
+	OBS_VALID_END  validtypes.ValidInt    `json:"OBS_VALID_END"`
+	FCST_VAR       validtypes.ValidString `json:"FCST_VAR"`
+	FCST_UNITS     validtypes.ValidString `json:"FCST_UNITS"`
+	FCST_LEV       validtypes.ValidString `json:"FCST_LEV"`
+	OBS_VAR        validtypes.ValidString `json:"OBS_VAR"`
+	OBS_UNITS      validtypes.ValidString `json:"OBS_UNITS"`
+	OBS_LEV        validtypes.ValidString `json:"OBS_LEV"`
+	OBTYPE         validtypes.ValidString `json:"OBTYPE"`
+	VX_MASK        validtypes.ValidString `json:"VX_MASK"`
+	INTERP_MTHD    validtypes.ValidString `json:"INTERP_MTHD"`
+	INTERP_PNTS    validtypes.ValidInt    `json:"INTERP_PNTS"`
+	FCST_THRESH    validtypes.ValidString `json:"FCST_THRESH"`
+	OBS_THRESH     validtypes.ValidString `json:"OBS_THRESH"`
+	COV_THRESH     validtypes.ValidString `json:"COV_THRESH"`
+	ALPHA          validtypes.ValidFloat  `json:"ALPHA"`
+	LINE_TYPE      validtypes.ValidString `json:"LINE_TYPE"`
 }
 
 type STAT_ECLV_header struct {
-	VERSION        string  `json:"VERSION"`
-	MODEL          string  `json:"MODEL"`
-	DESC           string  `json:"DESC"`
-	FCST_VALID_BEG int     `json:"FCST_VALID_BEG"`
-	FCST_VALID_END int     `json:"FCST_VALID_END"`
-	OBS_LEAD       int     `json:"OBS_LEAD"`
-	OBS_VALID_BEG  int     `json:"OBS_VALID_BEG"`
-	OBS_VALID_END  int     `json:"OBS_VALID_END"`
-	FCST_VAR       string  `json:"FCST_VAR"`
-	FCST_UNITS     string  `json:"FCST_UNITS"`
-	FCST_LEV       string  `json:"FCST_LEV"`
-	OBS_VAR        string  `json:"OBS_VAR"`
-	OBS_UNITS      string  `json:"OBS_UNITS"`
-	OBS_LEV        string  `json:"OBS_LEV"`
-	OBTYPE         string  `json:"OBTYPE"`
-	VX_MASK        string  `json:"VX_MASK"`
-	INTERP_MTHD    string  `json:"INTERP_MTHD"`
-	INTERP_PNTS    int     `json:"INTERP_PNTS"`
-	FCST_THRESH    string  `json:"FCST_THRESH"`
-	OBS_THRESH     string  `json:"OBS_THRESH"`
-	COV_THRESH     string  `json:"COV_THRESH"`
-	ALPHA          float64 `json:"ALPHA"`
-	LINE_TYPE      string  `json:"LINE_TYPE"`
+	VERSION        validtypes.ValidString `json:"VERSION"`
+	MODEL          validtypes.ValidString `json:"MODEL"`
+	DESC           validtypes.ValidString `json:"DESC"`
+	FCST_VALID_BEG validtypes.ValidInt    `json:"FCST_VALID_BEG"`
+	FCST_VALID_END validtypes.ValidInt    `json:"FCST_VALID_END"`
+	OBS_LEAD       validtypes.ValidInt    `json:"OBS_LEAD"`
+	OBS_VALID_BEG  validtypes.ValidInt    `json:"OBS_VALID_BEG"`
+	OBS_VALID_END  validtypes.ValidInt    `json:"OBS_VALID_END"`
+	FCST_VAR       validtypes.ValidString `json:"FCST_VAR"`
+	FCST_UNITS     validtypes.ValidString `json:"FCST_UNITS"`
+	FCST_LEV       validtypes.ValidString `json:"FCST_LEV"`
+	OBS_VAR        validtypes.ValidString `json:"OBS_VAR"`
+	OBS_UNITS      validtypes.ValidString `json:"OBS_UNITS"`
+	OBS_LEV        validtypes.ValidString `json:"OBS_LEV"`
+	OBTYPE         validtypes.ValidString `json:"OBTYPE"`
+	VX_MASK        validtypes.ValidString `json:"VX_MASK"`
+	INTERP_MTHD    validtypes.ValidString `json:"INTERP_MTHD"`
+	INTERP_PNTS    validtypes.ValidInt    `json:"INTERP_PNTS"`
+	FCST_THRESH    validtypes.ValidString `json:"FCST_THRESH"`
+	OBS_THRESH     validtypes.ValidString `json:"OBS_THRESH"`
+	COV_THRESH     validtypes.ValidString `json:"COV_THRESH"`
+	ALPHA          validtypes.ValidFloat  `json:"ALPHA"`
+	LINE_TYPE      validtypes.ValidString `json:"LINE_TYPE"`
 }
 
 type STAT_ECNT_header struct {
-	VERSION        string  `json:"VERSION"`
-	MODEL          string  `json:"MODEL"`
-	DESC           string  `json:"DESC"`
-	FCST_VALID_BEG int     `json:"FCST_VALID_BEG"`
-	FCST_VALID_END int     `json:"FCST_VALID_END"`
-	OBS_LEAD       int     `json:"OBS_LEAD"`
-	OBS_VALID_BEG  int     `json:"OBS_VALID_BEG"`
-	OBS_VALID_END  int     `json:"OBS_VALID_END"`
-	FCST_VAR       string  `json:"FCST_VAR"`
-	FCST_UNITS     string  `json:"FCST_UNITS"`
-	FCST_LEV       string  `json:"FCST_LEV"`
-	OBS_VAR        string  `json:"OBS_VAR"`
-	OBS_UNITS      string  `json:"OBS_UNITS"`
-	OBS_LEV        string  `json:"OBS_LEV"`
-	OBTYPE         string  `json:"OBTYPE"`
-	VX_MASK        string  `json:"VX_MASK"`
-	INTERP_MTHD    string  `json:"INTERP_MTHD"`
-	INTERP_PNTS    int     `json:"INTERP_PNTS"`
-	FCST_THRESH    string  `json:"FCST_THRESH"`
-	OBS_THRESH     string  `json:"OBS_THRESH"`
-	COV_THRESH     string  `json:"COV_THRESH"`
-	ALPHA          float64 `json:"ALPHA"`
-	LINE_TYPE      string  `json:"LINE_TYPE"`
+	VERSION        validtypes.ValidString `json:"VERSION"`
+	MODEL          validtypes.ValidString `json:"MODEL"`
+	DESC           validtypes.ValidString `json:"DESC"`
+	FCST_VALID_BEG validtypes.ValidInt    `json:"FCST_VALID_BEG"`
+	FCST_VALID_END validtypes.ValidInt    `json:"FCST_VALID_END"`
+	OBS_LEAD       validtypes.ValidInt    `json:"OBS_LEAD"`
+	OBS_VALID_BEG  validtypes.ValidInt    `json:"OBS_VALID_BEG"`
+	OBS_VALID_END  validtypes.ValidInt    `json:"OBS_VALID_END"`
+	FCST_VAR       validtypes.ValidString `json:"FCST_VAR"`
+	FCST_UNITS     validtypes.ValidString `json:"FCST_UNITS"`
+	FCST_LEV       validtypes.ValidString `json:"FCST_LEV"`
+	OBS_VAR        validtypes.ValidString `json:"OBS_VAR"`
+	OBS_UNITS      validtypes.ValidString `json:"OBS_UNITS"`
+	OBS_LEV        validtypes.ValidString `json:"OBS_LEV"`
+	OBTYPE         validtypes.ValidString `json:"OBTYPE"`
+	VX_MASK        validtypes.ValidString `json:"VX_MASK"`
+	INTERP_MTHD    validtypes.ValidString `json:"INTERP_MTHD"`
+	INTERP_PNTS    validtypes.ValidInt    `json:"INTERP_PNTS"`
+	FCST_THRESH    validtypes.ValidString `json:"FCST_THRESH"`
+	OBS_THRESH     validtypes.ValidString `json:"OBS_THRESH"`
+	COV_THRESH     validtypes.ValidString `json:"COV_THRESH"`
+	ALPHA          validtypes.ValidFloat  `json:"ALPHA"`
+	LINE_TYPE      validtypes.ValidString `json:"LINE_TYPE"`
 }
 
 type STAT_FHO_header struct {
-	VERSION        string  `json:"VERSION"`
-	MODEL          string  `json:"MODEL"`
-	DESC           string  `json:"DESC"`
-	FCST_VALID_BEG int     `json:"FCST_VALID_BEG"`
-	FCST_VALID_END int     `json:"FCST_VALID_END"`
-	OBS_LEAD       int     `json:"OBS_LEAD"`
-	OBS_VALID_BEG  int     `json:"OBS_VALID_BEG"`
-	OBS_VALID_END  int     `json:"OBS_VALID_END"`
-	FCST_VAR       string  `json:"FCST_VAR"`
-	FCST_UNITS     string  `json:"FCST_UNITS"`
-	FCST_LEV       string  `json:"FCST_LEV"`
-	OBS_VAR        string  `json:"OBS_VAR"`
-	OBS_UNITS      string  `json:"OBS_UNITS"`
-	OBS_LEV        string  `json:"OBS_LEV"`
-	OBTYPE         string  `json:"OBTYPE"`
-	VX_MASK        string  `json:"VX_MASK"`
-	INTERP_MTHD    string  `json:"INTERP_MTHD"`
-	INTERP_PNTS    int     `json:"INTERP_PNTS"`
-	FCST_THRESH    string  `json:"FCST_THRESH"`
-	OBS_THRESH     string  `json:"OBS_THRESH"`
-	COV_THRESH     string  `json:"COV_THRESH"`
-	ALPHA          float64 `json:"ALPHA"`
-	LINE_TYPE      string  `json:"LINE_TYPE"`
+	VERSION        validtypes.ValidString `json:"VERSION"`
+	MODEL          validtypes.ValidString `json:"MODEL"`
+	DESC           validtypes.ValidString `json:"DESC"`
+	FCST_VALID_BEG validtypes.ValidInt    `json:"FCST_VALID_BEG"`
+	FCST_VALID_END validtypes.ValidInt    `json:"FCST_VALID_END"`
+	OBS_LEAD       validtypes.ValidInt    `json:"OBS_LEAD"`
+	OBS_VALID_BEG  validtypes.ValidInt    `json:"OBS_VALID_BEG"`
+	OBS_VALID_END  validtypes.ValidInt    `json:"OBS_VALID_END"`
+	FCST_VAR       validtypes.ValidString `json:"FCST_VAR"`
+	FCST_UNITS     validtypes.ValidString `json:"FCST_UNITS"`
+	FCST_LEV       validtypes.ValidString `json:"FCST_LEV"`
+	OBS_VAR        validtypes.ValidString `json:"OBS_VAR"`
+	OBS_UNITS      validtypes.ValidString `json:"OBS_UNITS"`
+	OBS_LEV        validtypes.ValidString `json:"OBS_LEV"`
+	OBTYPE         validtypes.ValidString `json:"OBTYPE"`
+	VX_MASK        validtypes.ValidString `json:"VX_MASK"`
+	INTERP_MTHD    validtypes.ValidString `json:"INTERP_MTHD"`
+	INTERP_PNTS    validtypes.ValidInt    `json:"INTERP_PNTS"`
+	FCST_THRESH    validtypes.ValidString `json:"FCST_THRESH"`
+	OBS_THRESH     validtypes.ValidString `json:"OBS_THRESH"`
+	COV_THRESH     validtypes.ValidString `json:"COV_THRESH"`
+	ALPHA          validtypes.ValidFloat  `json:"ALPHA"`
+	LINE_TYPE      validtypes.ValidString `json:"LINE_TYPE"`
 }
 
 type STAT_GENMPR_header struct {
-	VERSION        string  `json:"VERSION"`
-	MODEL          string  `json:"MODEL"`
-	DESC           string  `json:"DESC"`
-	FCST_VALID_BEG int     `json:"FCST_VALID_BEG"`
-	FCST_VALID_END int     `json:"FCST_VALID_END"`
-	OBS_LEAD       int     `json:"OBS_LEAD"`
-	OBS_VALID_BEG  int     `json:"OBS_VALID_BEG"`
-	OBS_VALID_END  int     `json:"OBS_VALID_END"`
-	FCST_VAR       string  `json:"FCST_VAR"`
-	FCST_UNITS     string  `json:"FCST_UNITS"`
-	FCST_LEV       string  `json:"FCST_LEV"`
-	OBS_VAR        string  `json:"OBS_VAR"`
-	OBS_UNITS      string  `json:"OBS_UNITS"`
-	OBS_LEV        string  `json:"OBS_LEV"`
-	OBTYPE         string  `json:"OBTYPE"`
-	VX_MASK        string  `json:"VX_MASK"`
-	INTERP_MTHD    string  `json:"INTERP_MTHD"`
-	INTERP_PNTS    int     `json:"INTERP_PNTS"`
-	FCST_THRESH    string  `json:"FCST_THRESH"`
-	OBS_THRESH     string  `json:"OBS_THRESH"`
-	COV_THRESH     string  `json:"COV_THRESH"`
-	ALPHA          float64 `json:"ALPHA"`
-	LINE_TYPE      string  `json:"LINE_TYPE"`
+	VERSION        validtypes.ValidString `json:"VERSION"`
+	MODEL          validtypes.ValidString `json:"MODEL"`
+	DESC           validtypes.ValidString `json:"DESC"`
+	FCST_VALID_BEG validtypes.ValidInt    `json:"FCST_VALID_BEG"`
+	FCST_VALID_END validtypes.ValidInt    `json:"FCST_VALID_END"`
+	OBS_LEAD       validtypes.ValidInt    `json:"OBS_LEAD"`
+	OBS_VALID_BEG  validtypes.ValidInt    `json:"OBS_VALID_BEG"`
+	OBS_VALID_END  validtypes.ValidInt    `json:"OBS_VALID_END"`
+	FCST_VAR       validtypes.ValidString `json:"FCST_VAR"`
+	FCST_UNITS     validtypes.ValidString `json:"FCST_UNITS"`
+	FCST_LEV       validtypes.ValidString `json:"FCST_LEV"`
+	OBS_VAR        validtypes.ValidString `json:"OBS_VAR"`
+	OBS_UNITS      validtypes.ValidString `json:"OBS_UNITS"`
+	OBS_LEV        validtypes.ValidString `json:"OBS_LEV"`
+	OBTYPE         validtypes.ValidString `json:"OBTYPE"`
+	VX_MASK        validtypes.ValidString `json:"VX_MASK"`
+	INTERP_MTHD    validtypes.ValidString `json:"INTERP_MTHD"`
+	INTERP_PNTS    validtypes.ValidInt    `json:"INTERP_PNTS"`
+	FCST_THRESH    validtypes.ValidString `json:"FCST_THRESH"`
+	OBS_THRESH     validtypes.ValidString `json:"OBS_THRESH"`
+	COV_THRESH     validtypes.ValidString `json:"COV_THRESH"`
+	ALPHA          validtypes.ValidFloat  `json:"ALPHA"`
+	LINE_TYPE      validtypes.ValidString `json:"LINE_TYPE"`
 }
 
 type STAT_GRAD_header struct {
-	VERSION        string  `json:"VERSION"`
-	MODEL          string  `json:"MODEL"`
-	DESC           string  `json:"DESC"`
-	FCST_VALID_BEG int     `json:"FCST_VALID_BEG"`
-	FCST_VALID_END int     `json:"FCST_VALID_END"`
-	OBS_LEAD       int     `json:"OBS_LEAD"`
-	OBS_VALID_BEG  int     `json:"OBS_VALID_BEG"`
-	OBS_VALID_END  int     `json:"OBS_VALID_END"`
-	FCST_VAR       string  `json:"FCST_VAR"`
-	FCST_UNITS     string  `json:"FCST_UNITS"`
-	FCST_LEV       string  `json:"FCST_LEV"`
-	OBS_VAR        string  `json:"OBS_VAR"`
-	OBS_UNITS      string  `json:"OBS_UNITS"`
-	OBS_LEV        string  `json:"OBS_LEV"`
-	OBTYPE         string  `json:"OBTYPE"`
-	VX_MASK        string  `json:"VX_MASK"`
-	INTERP_MTHD    string  `json:"INTERP_MTHD"`
-	INTERP_PNTS    int     `json:"INTERP_PNTS"`
-	FCST_THRESH    string  `json:"FCST_THRESH"`
-	OBS_THRESH     string  `json:"OBS_THRESH"`
-	COV_THRESH     string  `json:"COV_THRESH"`
-	ALPHA          float64 `json:"ALPHA"`
-	LINE_TYPE      string  `json:"LINE_TYPE"`
+	VERSION        validtypes.ValidString `json:"VERSION"`
+	MODEL          validtypes.ValidString `json:"MODEL"`
+	DESC           validtypes.ValidString `json:"DESC"`
+	FCST_VALID_BEG validtypes.ValidInt    `json:"FCST_VALID_BEG"`
+	FCST_VALID_END validtypes.ValidInt    `json:"FCST_VALID_END"`
+	OBS_LEAD       validtypes.ValidInt    `json:"OBS_LEAD"`
+	OBS_VALID_BEG  validtypes.ValidInt    `json:"OBS_VALID_BEG"`
+	OBS_VALID_END  validtypes.ValidInt    `json:"OBS_VALID_END"`
+	FCST_VAR       validtypes.ValidString `json:"FCST_VAR"`
+	FCST_UNITS     validtypes.ValidString `json:"FCST_UNITS"`
+	FCST_LEV       validtypes.ValidString `json:"FCST_LEV"`
+	OBS_VAR        validtypes.ValidString `json:"OBS_VAR"`
+	OBS_UNITS      validtypes.ValidString `json:"OBS_UNITS"`
+	OBS_LEV        validtypes.ValidString `json:"OBS_LEV"`
+	OBTYPE         validtypes.ValidString `json:"OBTYPE"`
+	VX_MASK        validtypes.ValidString `json:"VX_MASK"`
+	INTERP_MTHD    validtypes.ValidString `json:"INTERP_MTHD"`
+	INTERP_PNTS    validtypes.ValidInt    `json:"INTERP_PNTS"`
+	FCST_THRESH    validtypes.ValidString `json:"FCST_THRESH"`
+	OBS_THRESH     validtypes.ValidString `json:"OBS_THRESH"`
+	COV_THRESH     validtypes.ValidString `json:"COV_THRESH"`
+	ALPHA          validtypes.ValidFloat  `json:"ALPHA"`
+	LINE_TYPE      validtypes.ValidString `json:"LINE_TYPE"`
 }
 
 type STAT_ISC_header struct {
-	VERSION        string  `json:"VERSION"`
-	MODEL          string  `json:"MODEL"`
-	DESC           string  `json:"DESC"`
-	FCST_VALID_BEG int     `json:"FCST_VALID_BEG"`
-	FCST_VALID_END int     `json:"FCST_VALID_END"`
-	OBS_LEAD       int     `json:"OBS_LEAD"`
-	OBS_VALID_BEG  int     `json:"OBS_VALID_BEG"`
-	OBS_VALID_END  int     `json:"OBS_VALID_END"`
-	FCST_VAR       string  `json:"FCST_VAR"`
-	FCST_UNITS     string  `json:"FCST_UNITS"`
-	FCST_LEV       string  `json:"FCST_LEV"`
-	OBS_VAR        string  `json:"OBS_VAR"`
-	OBS_UNITS      string  `json:"OBS_UNITS"`
-	OBS_LEV        string  `json:"OBS_LEV"`
-	OBTYPE         string  `json:"OBTYPE"`
-	VX_MASK        string  `json:"VX_MASK"`
-	INTERP_MTHD    string  `json:"INTERP_MTHD"`
-	INTERP_PNTS    int     `json:"INTERP_PNTS"`
-	FCST_THRESH    string  `json:"FCST_THRESH"`
-	OBS_THRESH     string  `json:"OBS_THRESH"`
-	COV_THRESH     string  `json:"COV_THRESH"`
-	ALPHA          float64 `json:"ALPHA"`
-	LINE_TYPE      string  `json:"LINE_TYPE"`
+	VERSION        validtypes.ValidString `json:"VERSION"`
+	MODEL          validtypes.ValidString `json:"MODEL"`
+	DESC           validtypes.ValidString `json:"DESC"`
+	FCST_VALID_BEG validtypes.ValidInt    `json:"FCST_VALID_BEG"`
+	FCST_VALID_END validtypes.ValidInt    `json:"FCST_VALID_END"`
+	OBS_LEAD       validtypes.ValidInt    `json:"OBS_LEAD"`
+	OBS_VALID_BEG  validtypes.ValidInt    `json:"OBS_VALID_BEG"`
+	OBS_VALID_END  validtypes.ValidInt    `json:"OBS_VALID_END"`
+	FCST_VAR       validtypes.ValidString `json:"FCST_VAR"`
+	FCST_UNITS     validtypes.ValidString `json:"FCST_UNITS"`
+	FCST_LEV       validtypes.ValidString `json:"FCST_LEV"`
+	OBS_VAR        validtypes.ValidString `json:"OBS_VAR"`
+	OBS_UNITS      validtypes.ValidString `json:"OBS_UNITS"`
+	OBS_LEV        validtypes.ValidString `json:"OBS_LEV"`
+	OBTYPE         validtypes.ValidString `json:"OBTYPE"`
+	VX_MASK        validtypes.ValidString `json:"VX_MASK"`
+	INTERP_MTHD    validtypes.ValidString `json:"INTERP_MTHD"`
+	INTERP_PNTS    validtypes.ValidInt    `json:"INTERP_PNTS"`
+	FCST_THRESH    validtypes.ValidString `json:"FCST_THRESH"`
+	OBS_THRESH     validtypes.ValidString `json:"OBS_THRESH"`
+	COV_THRESH     validtypes.ValidString `json:"COV_THRESH"`
+	ALPHA          validtypes.ValidFloat  `json:"ALPHA"`
+	LINE_TYPE      validtypes.ValidString `json:"LINE_TYPE"`
 }
 
 type STAT_MCTC_header struct {
-	VERSION        string  `json:"VERSION"`
-	MODEL          string  `json:"MODEL"`
-	DESC           string  `json:"DESC"`
-	FCST_VALID_BEG int     `json:"FCST_VALID_BEG"`
-	FCST_VALID_END int     `json:"FCST_VALID_END"`
-	OBS_LEAD       int     `json:"OBS_LEAD"`
-	OBS_VALID_BEG  int     `json:"OBS_VALID_BEG"`
-	OBS_VALID_END  int     `json:"OBS_VALID_END"`
-	FCST_VAR       string  `json:"FCST_VAR"`
-	FCST_UNITS     string  `json:"FCST_UNITS"`
-	FCST_LEV       string  `json:"FCST_LEV"`
-	OBS_VAR        string  `json:"OBS_VAR"`
-	OBS_UNITS      string  `json:"OBS_UNITS"`
-	OBS_LEV        string  `json:"OBS_LEV"`
-	OBTYPE         string  `json:"OBTYPE"`
-	VX_MASK        string  `json:"VX_MASK"`
-	INTERP_MTHD    string  `json:"INTERP_MTHD"`
-	INTERP_PNTS    int     `json:"INTERP_PNTS"`
-	FCST_THRESH    string  `json:"FCST_THRESH"`
-	OBS_THRESH     string  `json:"OBS_THRESH"`
-	COV_THRESH     string  `json:"COV_THRESH"`
-	ALPHA          float64 `json:"ALPHA"`
-	LINE_TYPE      string  `json:"LINE_TYPE"`
+	VERSION        validtypes.ValidString `json:"VERSION"`
+	MODEL          validtypes.ValidString `json:"MODEL"`
+	DESC           validtypes.ValidString `json:"DESC"`
+	FCST_VALID_BEG validtypes.ValidInt    `json:"FCST_VALID_BEG"`
+	FCST_VALID_END validtypes.ValidInt    `json:"FCST_VALID_END"`
+	OBS_LEAD       validtypes.ValidInt    `json:"OBS_LEAD"`
+	OBS_VALID_BEG  validtypes.ValidInt    `json:"OBS_VALID_BEG"`
+	OBS_VALID_END  validtypes.ValidInt    `json:"OBS_VALID_END"`
+	FCST_VAR       validtypes.ValidString `json:"FCST_VAR"`
+	FCST_UNITS     validtypes.ValidString `json:"FCST_UNITS"`
+	FCST_LEV       validtypes.ValidString `json:"FCST_LEV"`
+	OBS_VAR        validtypes.ValidString `json:"OBS_VAR"`
+	OBS_UNITS      validtypes.ValidString `json:"OBS_UNITS"`
+	OBS_LEV        validtypes.ValidString `json:"OBS_LEV"`
+	OBTYPE         validtypes.ValidString `json:"OBTYPE"`
+	VX_MASK        validtypes.ValidString `json:"VX_MASK"`
+	INTERP_MTHD    validtypes.ValidString `json:"INTERP_MTHD"`
+	INTERP_PNTS    validtypes.ValidInt    `json:"INTERP_PNTS"`
+	FCST_THRESH    validtypes.ValidString `json:"FCST_THRESH"`
+	OBS_THRESH     validtypes.ValidString `json:"OBS_THRESH"`
+	COV_THRESH     validtypes.ValidString `json:"COV_THRESH"`
+	ALPHA          validtypes.ValidFloat  `json:"ALPHA"`
+	LINE_TYPE      validtypes.ValidString `json:"LINE_TYPE"`
 }
 
 type STAT_MCTS_header struct {
-	VERSION        string  `json:"VERSION"`
-	MODEL          string  `json:"MODEL"`
-	DESC           string  `json:"DESC"`
-	FCST_VALID_BEG int     `json:"FCST_VALID_BEG"`
-	FCST_VALID_END int     `json:"FCST_VALID_END"`
-	OBS_LEAD       int     `json:"OBS_LEAD"`
-	OBS_VALID_BEG  int     `json:"OBS_VALID_BEG"`
-	OBS_VALID_END  int     `json:"OBS_VALID_END"`
-	FCST_VAR       string  `json:"FCST_VAR"`
-	FCST_UNITS     string  `json:"FCST_UNITS"`
-	FCST_LEV       string  `json:"FCST_LEV"`
-	OBS_VAR        string  `json:"OBS_VAR"`
-	OBS_UNITS      string  `json:"OBS_UNITS"`
-	OBS_LEV        string  `json:"OBS_LEV"`
-	OBTYPE         string  `json:"OBTYPE"`
-	VX_MASK        string  `json:"VX_MASK"`
-	INTERP_MTHD    string  `json:"INTERP_MTHD"`
-	INTERP_PNTS    int     `json:"INTERP_PNTS"`
-	FCST_THRESH    string  `json:"FCST_THRESH"`
-	OBS_THRESH     string  `json:"OBS_THRESH"`
-	COV_THRESH     string  `json:"COV_THRESH"`
-	ALPHA          float64 `json:"ALPHA"`
-	LINE_TYPE      string  `json:"LINE_TYPE"`
+	VERSION        validtypes.ValidString `json:"VERSION"`
+	MODEL          validtypes.ValidString `json:"MODEL"`
+	DESC           validtypes.ValidString `json:"DESC"`
+	FCST_VALID_BEG validtypes.ValidInt    `json:"FCST_VALID_BEG"`
+	FCST_VALID_END validtypes.ValidInt    `json:"FCST_VALID_END"`
+	OBS_LEAD       validtypes.ValidInt    `json:"OBS_LEAD"`
+	OBS_VALID_BEG  validtypes.ValidInt    `json:"OBS_VALID_BEG"`
+	OBS_VALID_END  validtypes.ValidInt    `json:"OBS_VALID_END"`
+	FCST_VAR       validtypes.ValidString `json:"FCST_VAR"`
+	FCST_UNITS     validtypes.ValidString `json:"FCST_UNITS"`
+	FCST_LEV       validtypes.ValidString `json:"FCST_LEV"`
+	OBS_VAR        validtypes.ValidString `json:"OBS_VAR"`
+	OBS_UNITS      validtypes.ValidString `json:"OBS_UNITS"`
+	OBS_LEV        validtypes.ValidString `json:"OBS_LEV"`
+	OBTYPE         validtypes.ValidString `json:"OBTYPE"`
+	VX_MASK        validtypes.ValidString `json:"VX_MASK"`
+	INTERP_MTHD    validtypes.ValidString `json:"INTERP_MTHD"`
+	INTERP_PNTS    validtypes.ValidInt    `json:"INTERP_PNTS"`
+	FCST_THRESH    validtypes.ValidString `json:"FCST_THRESH"`
+	OBS_THRESH     validtypes.ValidString `json:"OBS_THRESH"`
+	COV_THRESH     validtypes.ValidString `json:"COV_THRESH"`
+	ALPHA          validtypes.ValidFloat  `json:"ALPHA"`
+	LINE_TYPE      validtypes.ValidString `json:"LINE_TYPE"`
 }
 
 type STAT_MPR_header struct {
-	VERSION        string  `json:"VERSION"`
-	MODEL          string  `json:"MODEL"`
-	DESC           string  `json:"DESC"`
-	FCST_VALID_BEG int     `json:"FCST_VALID_BEG"`
-	FCST_VALID_END int     `json:"FCST_VALID_END"`
-	OBS_LEAD       int     `json:"OBS_LEAD"`
-	OBS_VALID_BEG  int     `json:"OBS_VALID_BEG"`
-	OBS_VALID_END  int     `json:"OBS_VALID_END"`
-	FCST_VAR       string  `json:"FCST_VAR"`
-	FCST_UNITS     string  `json:"FCST_UNITS"`
-	FCST_LEV       string  `json:"FCST_LEV"`
-	OBS_VAR        string  `json:"OBS_VAR"`
-	OBS_UNITS      string  `json:"OBS_UNITS"`
-	OBS_LEV        string  `json:"OBS_LEV"`
-	OBTYPE         string  `json:"OBTYPE"`
-	VX_MASK        string  `json:"VX_MASK"`
-	INTERP_MTHD    string  `json:"INTERP_MTHD"`
-	INTERP_PNTS    int     `json:"INTERP_PNTS"`
-	FCST_THRESH    string  `json:"FCST_THRESH"`
-	OBS_THRESH     string  `json:"OBS_THRESH"`
-	COV_THRESH     string  `json:"COV_THRESH"`
-	ALPHA          float64 `json:"ALPHA"`
-	LINE_TYPE      string  `json:"LINE_TYPE"`
+	VERSION        validtypes.ValidString `json:"VERSION"`
+	MODEL          validtypes.ValidString `json:"MODEL"`
+	DESC           validtypes.ValidString `json:"DESC"`
+	FCST_VALID_BEG validtypes.ValidInt    `json:"FCST_VALID_BEG"`
+	FCST_VALID_END validtypes.ValidInt    `json:"FCST_VALID_END"`
+	OBS_LEAD       validtypes.ValidInt    `json:"OBS_LEAD"`
+	OBS_VALID_BEG  validtypes.ValidInt    `json:"OBS_VALID_BEG"`
+	OBS_VALID_END  validtypes.ValidInt    `json:"OBS_VALID_END"`
+	FCST_VAR       validtypes.ValidString `json:"FCST_VAR"`
+	FCST_UNITS     validtypes.ValidString `json:"FCST_UNITS"`
+	FCST_LEV       validtypes.ValidString `json:"FCST_LEV"`
+	OBS_VAR        validtypes.ValidString `json:"OBS_VAR"`
+	OBS_UNITS      validtypes.ValidString `json:"OBS_UNITS"`
+	OBS_LEV        validtypes.ValidString `json:"OBS_LEV"`
+	OBTYPE         validtypes.ValidString `json:"OBTYPE"`
+	VX_MASK        validtypes.ValidString `json:"VX_MASK"`
+	INTERP_MTHD    validtypes.ValidString `json:"INTERP_MTHD"`
+	INTERP_PNTS    validtypes.ValidInt    `json:"INTERP_PNTS"`
+	FCST_THRESH    validtypes.ValidString `json:"FCST_THRESH"`
+	OBS_THRESH     validtypes.ValidString `json:"OBS_THRESH"`
+	COV_THRESH     validtypes.ValidString `json:"COV_THRESH"`
+	ALPHA          validtypes.ValidFloat  `json:"ALPHA"`
+	LINE_TYPE      validtypes.ValidString `json:"LINE_TYPE"`
 }
 
 type STAT_NBRCNT_header struct {
-	VERSION        string  `json:"VERSION"`
-	MODEL          string  `json:"MODEL"`
-	DESC           string  `json:"DESC"`
-	FCST_VALID_BEG int     `json:"FCST_VALID_BEG"`
-	FCST_VALID_END int     `json:"FCST_VALID_END"`
-	OBS_LEAD       int     `json:"OBS_LEAD"`
-	OBS_VALID_BEG  int     `json:"OBS_VALID_BEG"`
-	OBS_VALID_END  int     `json:"OBS_VALID_END"`
-	FCST_VAR       string  `json:"FCST_VAR"`
-	FCST_UNITS     string  `json:"FCST_UNITS"`
-	FCST_LEV       string  `json:"FCST_LEV"`
-	OBS_VAR        string  `json:"OBS_VAR"`
-	OBS_UNITS      string  `json:"OBS_UNITS"`
-	OBS_LEV        string  `json:"OBS_LEV"`
-	OBTYPE         string  `json:"OBTYPE"`
-	VX_MASK        string  `json:"VX_MASK"`
-	INTERP_MTHD    string  `json:"INTERP_MTHD"`
-	INTERP_PNTS    int     `json:"INTERP_PNTS"`
-	FCST_THRESH    string  `json:"FCST_THRESH"`
-	OBS_THRESH     string  `json:"OBS_THRESH"`
-	COV_THRESH     string  `json:"COV_THRESH"`
-	ALPHA          float64 `json:"ALPHA"`
-	LINE_TYPE      string  `json:"LINE_TYPE"`
+	VERSION        validtypes.ValidString `json:"VERSION"`
+	MODEL          validtypes.ValidString `json:"MODEL"`
+	DESC           validtypes.ValidString `json:"DESC"`
+	FCST_VALID_BEG validtypes.ValidInt    `json:"FCST_VALID_BEG"`
+	FCST_VALID_END validtypes.ValidInt    `json:"FCST_VALID_END"`
+	OBS_LEAD       validtypes.ValidInt    `json:"OBS_LEAD"`
+	OBS_VALID_BEG  validtypes.ValidInt    `json:"OBS_VALID_BEG"`
+	OBS_VALID_END  validtypes.ValidInt    `json:"OBS_VALID_END"`
+	FCST_VAR       validtypes.ValidString `json:"FCST_VAR"`
+	FCST_UNITS     validtypes.ValidString `json:"FCST_UNITS"`
+	FCST_LEV       validtypes.ValidString `json:"FCST_LEV"`
+	OBS_VAR        validtypes.ValidString `json:"OBS_VAR"`
+	OBS_UNITS      validtypes.ValidString `json:"OBS_UNITS"`
+	OBS_LEV        validtypes.ValidString `json:"OBS_LEV"`
+	OBTYPE         validtypes.ValidString `json:"OBTYPE"`
+	VX_MASK        validtypes.ValidString `json:"VX_MASK"`
+	INTERP_MTHD    validtypes.ValidString `json:"INTERP_MTHD"`
+	INTERP_PNTS    validtypes.ValidInt    `json:"INTERP_PNTS"`
+	FCST_THRESH    validtypes.ValidString `json:"FCST_THRESH"`
+	OBS_THRESH     validtypes.ValidString `json:"OBS_THRESH"`
+	COV_THRESH     validtypes.ValidString `json:"COV_THRESH"`
+	ALPHA          validtypes.ValidFloat  `json:"ALPHA"`
+	LINE_TYPE      validtypes.ValidString `json:"LINE_TYPE"`
 }
 
 type STAT_NBRCTC_header struct {
-	VERSION        string  `json:"VERSION"`
-	MODEL          string  `json:"MODEL"`
-	DESC           string  `json:"DESC"`
-	FCST_VALID_BEG int     `json:"FCST_VALID_BEG"`
-	FCST_VALID_END int     `json:"FCST_VALID_END"`
-	OBS_LEAD       int     `json:"OBS_LEAD"`
-	OBS_VALID_BEG  int     `json:"OBS_VALID_BEG"`
-	OBS_VALID_END  int     `json:"OBS_VALID_END"`
-	FCST_VAR       string  `json:"FCST_VAR"`
-	FCST_UNITS     string  `json:"FCST_UNITS"`
-	FCST_LEV       string  `json:"FCST_LEV"`
-	OBS_VAR        string  `json:"OBS_VAR"`
-	OBS_UNITS      string  `json:"OBS_UNITS"`
-	OBS_LEV        string  `json:"OBS_LEV"`
-	OBTYPE         string  `json:"OBTYPE"`
-	VX_MASK        string  `json:"VX_MASK"`
-	INTERP_MTHD    string  `json:"INTERP_MTHD"`
-	INTERP_PNTS    int     `json:"INTERP_PNTS"`
-	FCST_THRESH    string  `json:"FCST_THRESH"`
-	OBS_THRESH     string  `json:"OBS_THRESH"`
-	COV_THRESH     string  `json:"COV_THRESH"`
-	ALPHA          float64 `json:"ALPHA"`
-	LINE_TYPE      string  `json:"LINE_TYPE"`
+	VERSION        validtypes.ValidString `json:"VERSION"`
+	MODEL          validtypes.ValidString `json:"MODEL"`
+	DESC           validtypes.ValidString `json:"DESC"`
+	FCST_VALID_BEG validtypes.ValidInt    `json:"FCST_VALID_BEG"`
+	FCST_VALID_END validtypes.ValidInt    `json:"FCST_VALID_END"`
+	OBS_LEAD       validtypes.ValidInt    `json:"OBS_LEAD"`
+	OBS_VALID_BEG  validtypes.ValidInt    `json:"OBS_VALID_BEG"`
+	OBS_VALID_END  validtypes.ValidInt    `json:"OBS_VALID_END"`
+	FCST_VAR       validtypes.ValidString `json:"FCST_VAR"`
+	FCST_UNITS     validtypes.ValidString `json:"FCST_UNITS"`
+	FCST_LEV       validtypes.ValidString `json:"FCST_LEV"`
+	OBS_VAR        validtypes.ValidString `json:"OBS_VAR"`
+	OBS_UNITS      validtypes.ValidString `json:"OBS_UNITS"`
+	OBS_LEV        validtypes.ValidString `json:"OBS_LEV"`
+	OBTYPE         validtypes.ValidString `json:"OBTYPE"`
+	VX_MASK        validtypes.ValidString `json:"VX_MASK"`
+	INTERP_MTHD    validtypes.ValidString `json:"INTERP_MTHD"`
+	INTERP_PNTS    validtypes.ValidInt    `json:"INTERP_PNTS"`
+	FCST_THRESH    validtypes.ValidString `json:"FCST_THRESH"`
+	OBS_THRESH     validtypes.ValidString `json:"OBS_THRESH"`
+	COV_THRESH     validtypes.ValidString `json:"COV_THRESH"`
+	ALPHA          validtypes.ValidFloat  `json:"ALPHA"`
+	LINE_TYPE      validtypes.ValidString `json:"LINE_TYPE"`
 }
 
 type STAT_NBRCTS_header struct {
-	VERSION        string  `json:"VERSION"`
-	MODEL          string  `json:"MODEL"`
-	DESC           string  `json:"DESC"`
-	FCST_VALID_BEG int     `json:"FCST_VALID_BEG"`
-	FCST_VALID_END int     `json:"FCST_VALID_END"`
-	OBS_LEAD       int     `json:"OBS_LEAD"`
-	OBS_VALID_BEG  int     `json:"OBS_VALID_BEG"`
-	OBS_VALID_END  int     `json:"OBS_VALID_END"`
-	FCST_VAR       string  `json:"FCST_VAR"`
-	FCST_UNITS     string  `json:"FCST_UNITS"`
-	FCST_LEV       string  `json:"FCST_LEV"`
-	OBS_VAR        string  `json:"OBS_VAR"`
-	OBS_UNITS      string  `json:"OBS_UNITS"`
-	OBS_LEV        string  `json:"OBS_LEV"`
-	OBTYPE         string  `json:"OBTYPE"`
-	VX_MASK        string  `json:"VX_MASK"`
-	INTERP_MTHD    string  `json:"INTERP_MTHD"`
-	INTERP_PNTS    int     `json:"INTERP_PNTS"`
-	FCST_THRESH    string  `json:"FCST_THRESH"`
-	OBS_THRESH     string  `json:"OBS_THRESH"`
-	COV_THRESH     string  `json:"COV_THRESH"`
-	ALPHA          float64 `json:"ALPHA"`
-	LINE_TYPE      string  `json:"LINE_TYPE"`
+	VERSION        validtypes.ValidString `json:"VERSION"`
+	MODEL          validtypes.ValidString `json:"MODEL"`
+	DESC           validtypes.ValidString `json:"DESC"`
+	FCST_VALID_BEG validtypes.ValidInt    `json:"FCST_VALID_BEG"`
+	FCST_VALID_END validtypes.ValidInt    `json:"FCST_VALID_END"`
+	OBS_LEAD       validtypes.ValidInt    `json:"OBS_LEAD"`
+	OBS_VALID_BEG  validtypes.ValidInt    `json:"OBS_VALID_BEG"`
+	OBS_VALID_END  validtypes.ValidInt    `json:"OBS_VALID_END"`
+	FCST_VAR       validtypes.ValidString `json:"FCST_VAR"`
+	FCST_UNITS     validtypes.ValidString `json:"FCST_UNITS"`
+	FCST_LEV       validtypes.ValidString `json:"FCST_LEV"`
+	OBS_VAR        validtypes.ValidString `json:"OBS_VAR"`
+	OBS_UNITS      validtypes.ValidString `json:"OBS_UNITS"`
+	OBS_LEV        validtypes.ValidString `json:"OBS_LEV"`
+	OBTYPE         validtypes.ValidString `json:"OBTYPE"`
+	VX_MASK        validtypes.ValidString `json:"VX_MASK"`
+	INTERP_MTHD    validtypes.ValidString `json:"INTERP_MTHD"`
+	INTERP_PNTS    validtypes.ValidInt    `json:"INTERP_PNTS"`
+	FCST_THRESH    validtypes.ValidString `json:"FCST_THRESH"`
+	OBS_THRESH     validtypes.ValidString `json:"OBS_THRESH"`
+	COV_THRESH     validtypes.ValidString `json:"COV_THRESH"`
+	ALPHA          validtypes.ValidFloat  `json:"ALPHA"`
+	LINE_TYPE      validtypes.ValidString `json:"LINE_TYPE"`
 }
 
 type STAT_ORANK_header struct {
-	VERSION        string  `json:"VERSION"`
-	MODEL          string  `json:"MODEL"`
-	DESC           string  `json:"DESC"`
-	FCST_VALID_BEG int     `json:"FCST_VALID_BEG"`
-	FCST_VALID_END int     `json:"FCST_VALID_END"`
-	OBS_LEAD       int     `json:"OBS_LEAD"`
-	OBS_VALID_BEG  int     `json:"OBS_VALID_BEG"`
-	OBS_VALID_END  int     `json:"OBS_VALID_END"`
-	FCST_VAR       string  `json:"FCST_VAR"`
-	FCST_UNITS     string  `json:"FCST_UNITS"`
-	FCST_LEV       string  `json:"FCST_LEV"`
-	OBS_VAR        string  `json:"OBS_VAR"`
-	OBS_UNITS      string  `json:"OBS_UNITS"`
-	OBS_LEV        string  `json:"OBS_LEV"`
-	OBTYPE         string  `json:"OBTYPE"`
-	VX_MASK        string  `json:"VX_MASK"`
-	INTERP_MTHD    string  `json:"INTERP_MTHD"`
-	INTERP_PNTS    int     `json:"INTERP_PNTS"`
-	FCST_THRESH    string  `json:"FCST_THRESH"`
-	OBS_THRESH     string  `json:"OBS_THRESH"`
-	COV_THRESH     string  `json:"COV_THRESH"`
-	ALPHA          float64 `json:"ALPHA"`
-	LINE_TYPE      string  `json:"LINE_TYPE"`
+	VERSION        validtypes.ValidString `json:"VERSION"`
+	MODEL          validtypes.ValidString `json:"MODEL"`
+	DESC           validtypes.ValidString `json:"DESC"`
+	FCST_VALID_BEG validtypes.ValidInt    `json:"FCST_VALID_BEG"`
+	FCST_VALID_END validtypes.ValidInt    `json:"FCST_VALID_END"`
+	OBS_LEAD       validtypes.ValidInt    `json:"OBS_LEAD"`
+	OBS_VALID_BEG  validtypes.ValidInt    `json:"OBS_VALID_BEG"`
+	OBS_VALID_END  validtypes.ValidInt    `json:"OBS_VALID_END"`
+	FCST_VAR       validtypes.ValidString `json:"FCST_VAR"`
+	FCST_UNITS     validtypes.ValidString `json:"FCST_UNITS"`
+	FCST_LEV       validtypes.ValidString `json:"FCST_LEV"`
+	OBS_VAR        validtypes.ValidString `json:"OBS_VAR"`
+	OBS_UNITS      validtypes.ValidString `json:"OBS_UNITS"`
+	OBS_LEV        validtypes.ValidString `json:"OBS_LEV"`
+	OBTYPE         validtypes.ValidString `json:"OBTYPE"`
+	VX_MASK        validtypes.ValidString `json:"VX_MASK"`
+	INTERP_MTHD    validtypes.ValidString `json:"INTERP_MTHD"`
+	INTERP_PNTS    validtypes.ValidInt    `json:"INTERP_PNTS"`
+	FCST_THRESH    validtypes.ValidString `json:"FCST_THRESH"`
+	OBS_THRESH     validtypes.ValidString `json:"OBS_THRESH"`
+	COV_THRESH     validtypes.ValidString `json:"COV_THRESH"`
+	ALPHA          validtypes.ValidFloat  `json:"ALPHA"`
+	LINE_TYPE      validtypes.ValidString `json:"LINE_TYPE"`
 }
 
 type STAT_PCT_header struct {
-	VERSION        string  `json:"VERSION"`
-	MODEL          string  `json:"MODEL"`
-	DESC           string  `json:"DESC"`
-	FCST_VALID_BEG int     `json:"FCST_VALID_BEG"`
-	FCST_VALID_END int     `json:"FCST_VALID_END"`
-	OBS_LEAD       int     `json:"OBS_LEAD"`
-	OBS_VALID_BEG  int     `json:"OBS_VALID_BEG"`
-	OBS_VALID_END  int     `json:"OBS_VALID_END"`
-	FCST_VAR       string  `json:"FCST_VAR"`
-	FCST_UNITS     string  `json:"FCST_UNITS"`
-	FCST_LEV       string  `json:"FCST_LEV"`
-	OBS_VAR        string  `json:"OBS_VAR"`
-	OBS_UNITS      string  `json:"OBS_UNITS"`
-	OBS_LEV        string  `json:"OBS_LEV"`
-	OBTYPE         string  `json:"OBTYPE"`
-	VX_MASK        string  `json:"VX_MASK"`
-	INTERP_MTHD    string  `json:"INTERP_MTHD"`
-	INTERP_PNTS    int     `json:"INTERP_PNTS"`
-	FCST_THRESH    string  `json:"FCST_THRESH"`
-	OBS_THRESH     string  `json:"OBS_THRESH"`
-	COV_THRESH     string  `json:"COV_THRESH"`
-	ALPHA          float64 `json:"ALPHA"`
-	LINE_TYPE      string  `json:"LINE_TYPE"`
+	VERSION        validtypes.ValidString `json:"VERSION"`
+	MODEL          validtypes.ValidString `json:"MODEL"`
+	DESC           validtypes.ValidString `json:"DESC"`
+	FCST_VALID_BEG validtypes.ValidInt    `json:"FCST_VALID_BEG"`
+	FCST_VALID_END validtypes.ValidInt    `json:"FCST_VALID_END"`
+	OBS_LEAD       validtypes.ValidInt    `json:"OBS_LEAD"`
+	OBS_VALID_BEG  validtypes.ValidInt    `json:"OBS_VALID_BEG"`
+	OBS_VALID_END  validtypes.ValidInt    `json:"OBS_VALID_END"`
+	FCST_VAR       validtypes.ValidString `json:"FCST_VAR"`
+	FCST_UNITS     validtypes.ValidString `json:"FCST_UNITS"`
+	FCST_LEV       validtypes.ValidString `json:"FCST_LEV"`
+	OBS_VAR        validtypes.ValidString `json:"OBS_VAR"`
+	OBS_UNITS      validtypes.ValidString `json:"OBS_UNITS"`
+	OBS_LEV        validtypes.ValidString `json:"OBS_LEV"`
+	OBTYPE         validtypes.ValidString `json:"OBTYPE"`
+	VX_MASK        validtypes.ValidString `json:"VX_MASK"`
+	INTERP_MTHD    validtypes.ValidString `json:"INTERP_MTHD"`
+	INTERP_PNTS    validtypes.ValidInt    `json:"INTERP_PNTS"`
+	FCST_THRESH    validtypes.ValidString `json:"FCST_THRESH"`
+	OBS_THRESH     validtypes.ValidString `json:"OBS_THRESH"`
+	COV_THRESH     validtypes.ValidString `json:"COV_THRESH"`
+	ALPHA          validtypes.ValidFloat  `json:"ALPHA"`
+	LINE_TYPE      validtypes.ValidString `json:"LINE_TYPE"`
 }
 
 type STAT_PHIST_header struct {
-	VERSION        string  `json:"VERSION"`
-	MODEL          string  `json:"MODEL"`
-	DESC           string  `json:"DESC"`
-	FCST_VALID_BEG int     `json:"FCST_VALID_BEG"`
-	FCST_VALID_END int     `json:"FCST_VALID_END"`
-	OBS_LEAD       int     `json:"OBS_LEAD"`
-	OBS_VALID_BEG  int     `json:"OBS_VALID_BEG"`
-	OBS_VALID_END  int     `json:"OBS_VALID_END"`
-	FCST_VAR       string  `json:"FCST_VAR"`
-	FCST_UNITS     string  `json:"FCST_UNITS"`
-	FCST_LEV       string  `json:"FCST_LEV"`
-	OBS_VAR        string  `json:"OBS_VAR"`
-	OBS_UNITS      string  `json:"OBS_UNITS"`
-	OBS_LEV        string  `json:"OBS_LEV"`
-	OBTYPE         string  `json:"OBTYPE"`
-	VX_MASK        string  `json:"VX_MASK"`
-	INTERP_MTHD    string  `json:"INTERP_MTHD"`
-	INTERP_PNTS    int     `json:"INTERP_PNTS"`
-	FCST_THRESH    string  `json:"FCST_THRESH"`
-	OBS_THRESH     string  `json:"OBS_THRESH"`
-	COV_THRESH     string  `json:"COV_THRESH"`
-	ALPHA          float64 `json:"ALPHA"`
-	LINE_TYPE      string  `json:"LINE_TYPE"`
+	VERSION        validtypes.ValidString `json:"VERSION"`
+	MODEL          validtypes.ValidString `json:"MODEL"`
+	DESC           validtypes.ValidString `json:"DESC"`
+	FCST_VALID_BEG validtypes.ValidInt    `json:"FCST_VALID_BEG"`
+	FCST_VALID_END validtypes.ValidInt    `json:"FCST_VALID_END"`
+	OBS_LEAD       validtypes.ValidInt    `json:"OBS_LEAD"`
+	OBS_VALID_BEG  validtypes.ValidInt    `json:"OBS_VALID_BEG"`
+	OBS_VALID_END  validtypes.ValidInt    `json:"OBS_VALID_END"`
+	FCST_VAR       validtypes.ValidString `json:"FCST_VAR"`
+	FCST_UNITS     validtypes.ValidString `json:"FCST_UNITS"`
+	FCST_LEV       validtypes.ValidString `json:"FCST_LEV"`
+	OBS_VAR        validtypes.ValidString `json:"OBS_VAR"`
+	OBS_UNITS      validtypes.ValidString `json:"OBS_UNITS"`
+	OBS_LEV        validtypes.ValidString `json:"OBS_LEV"`
+	OBTYPE         validtypes.ValidString `json:"OBTYPE"`
+	VX_MASK        validtypes.ValidString `json:"VX_MASK"`
+	INTERP_MTHD    validtypes.ValidString `json:"INTERP_MTHD"`
+	INTERP_PNTS    validtypes.ValidInt    `json:"INTERP_PNTS"`
+	FCST_THRESH    validtypes.ValidString `json:"FCST_THRESH"`
+	OBS_THRESH     validtypes.ValidString `json:"OBS_THRESH"`
+	COV_THRESH     validtypes.ValidString `json:"COV_THRESH"`
+	ALPHA          validtypes.ValidFloat  `json:"ALPHA"`
+	LINE_TYPE      validtypes.ValidString `json:"LINE_TYPE"`
 }
 
 type STAT_PJC_header struct {
-	VERSION        string  `json:"VERSION"`
-	MODEL          string  `json:"MODEL"`
-	DESC           string  `json:"DESC"`
-	FCST_VALID_BEG int     `json:"FCST_VALID_BEG"`
-	FCST_VALID_END int     `json:"FCST_VALID_END"`
-	OBS_LEAD       int     `json:"OBS_LEAD"`
-	OBS_VALID_BEG  int     `json:"OBS_VALID_BEG"`
-	OBS_VALID_END  int     `json:"OBS_VALID_END"`
-	FCST_VAR       string  `json:"FCST_VAR"`
-	FCST_UNITS     string  `json:"FCST_UNITS"`
-	FCST_LEV       string  `json:"FCST_LEV"`
-	OBS_VAR        string  `json:"OBS_VAR"`
-	OBS_UNITS      string  `json:"OBS_UNITS"`
-	OBS_LEV        string  `json:"OBS_LEV"`
-	OBTYPE         string  `json:"OBTYPE"`
-	VX_MASK        string  `json:"VX_MASK"`
-	INTERP_MTHD    string  `json:"INTERP_MTHD"`
-	INTERP_PNTS    int     `json:"INTERP_PNTS"`
-	FCST_THRESH    string  `json:"FCST_THRESH"`
-	OBS_THRESH     string  `json:"OBS_THRESH"`
-	COV_THRESH     string  `json:"COV_THRESH"`
-	ALPHA          float64 `json:"ALPHA"`
-	LINE_TYPE      string  `json:"LINE_TYPE"`
+	VERSION        validtypes.ValidString `json:"VERSION"`
+	MODEL          validtypes.ValidString `json:"MODEL"`
+	DESC           validtypes.ValidString `json:"DESC"`
+	FCST_VALID_BEG validtypes.ValidInt    `json:"FCST_VALID_BEG"`
+	FCST_VALID_END validtypes.ValidInt    `json:"FCST_VALID_END"`
+	OBS_LEAD       validtypes.ValidInt    `json:"OBS_LEAD"`
+	OBS_VALID_BEG  validtypes.ValidInt    `json:"OBS_VALID_BEG"`
+	OBS_VALID_END  validtypes.ValidInt    `json:"OBS_VALID_END"`
+	FCST_VAR       validtypes.ValidString `json:"FCST_VAR"`
+	FCST_UNITS     validtypes.ValidString `json:"FCST_UNITS"`
+	FCST_LEV       validtypes.ValidString `json:"FCST_LEV"`
+	OBS_VAR        validtypes.ValidString `json:"OBS_VAR"`
+	OBS_UNITS      validtypes.ValidString `json:"OBS_UNITS"`
+	OBS_LEV        validtypes.ValidString `json:"OBS_LEV"`
+	OBTYPE         validtypes.ValidString `json:"OBTYPE"`
+	VX_MASK        validtypes.ValidString `json:"VX_MASK"`
+	INTERP_MTHD    validtypes.ValidString `json:"INTERP_MTHD"`
+	INTERP_PNTS    validtypes.ValidInt    `json:"INTERP_PNTS"`
+	FCST_THRESH    validtypes.ValidString `json:"FCST_THRESH"`
+	OBS_THRESH     validtypes.ValidString `json:"OBS_THRESH"`
+	COV_THRESH     validtypes.ValidString `json:"COV_THRESH"`
+	ALPHA          validtypes.ValidFloat  `json:"ALPHA"`
+	LINE_TYPE      validtypes.ValidString `json:"LINE_TYPE"`
 }
 
 type STAT_PRC_header struct {
-	VERSION        string  `json:"VERSION"`
-	MODEL          string  `json:"MODEL"`
-	DESC           string  `json:"DESC"`
-	FCST_VALID_BEG int     `json:"FCST_VALID_BEG"`
-	FCST_VALID_END int     `json:"FCST_VALID_END"`
-	OBS_LEAD       int     `json:"OBS_LEAD"`
-	OBS_VALID_BEG  int     `json:"OBS_VALID_BEG"`
-	OBS_VALID_END  int     `json:"OBS_VALID_END"`
-	FCST_VAR       string  `json:"FCST_VAR"`
-	FCST_UNITS     string  `json:"FCST_UNITS"`
-	FCST_LEV       string  `json:"FCST_LEV"`
-	OBS_VAR        string  `json:"OBS_VAR"`
-	OBS_UNITS      string  `json:"OBS_UNITS"`
-	OBS_LEV        string  `json:"OBS_LEV"`
-	OBTYPE         string  `json:"OBTYPE"`
-	VX_MASK        string  `json:"VX_MASK"`
-	INTERP_MTHD    string  `json:"INTERP_MTHD"`
-	INTERP_PNTS    int     `json:"INTERP_PNTS"`
-	FCST_THRESH    string  `json:"FCST_THRESH"`
-	OBS_THRESH     string  `json:"OBS_THRESH"`
-	COV_THRESH     string  `json:"COV_THRESH"`
-	ALPHA          float64 `json:"ALPHA"`
-	LINE_TYPE      string  `json:"LINE_TYPE"`
+	VERSION        validtypes.ValidString `json:"VERSION"`
+	MODEL          validtypes.ValidString `json:"MODEL"`
+	DESC           validtypes.ValidString `json:"DESC"`
+	FCST_VALID_BEG validtypes.ValidInt    `json:"FCST_VALID_BEG"`
+	FCST_VALID_END validtypes.ValidInt    `json:"FCST_VALID_END"`
+	OBS_LEAD       validtypes.ValidInt    `json:"OBS_LEAD"`
+	OBS_VALID_BEG  validtypes.ValidInt    `json:"OBS_VALID_BEG"`
+	OBS_VALID_END  validtypes.ValidInt    `json:"OBS_VALID_END"`
+	FCST_VAR       validtypes.ValidString `json:"FCST_VAR"`
+	FCST_UNITS     validtypes.ValidString `json:"FCST_UNITS"`
+	FCST_LEV       validtypes.ValidString `json:"FCST_LEV"`
+	OBS_VAR        validtypes.ValidString `json:"OBS_VAR"`
+	OBS_UNITS      validtypes.ValidString `json:"OBS_UNITS"`
+	OBS_LEV        validtypes.ValidString `json:"OBS_LEV"`
+	OBTYPE         validtypes.ValidString `json:"OBTYPE"`
+	VX_MASK        validtypes.ValidString `json:"VX_MASK"`
+	INTERP_MTHD    validtypes.ValidString `json:"INTERP_MTHD"`
+	INTERP_PNTS    validtypes.ValidInt    `json:"INTERP_PNTS"`
+	FCST_THRESH    validtypes.ValidString `json:"FCST_THRESH"`
+	OBS_THRESH     validtypes.ValidString `json:"OBS_THRESH"`
+	COV_THRESH     validtypes.ValidString `json:"COV_THRESH"`
+	ALPHA          validtypes.ValidFloat  `json:"ALPHA"`
+	LINE_TYPE      validtypes.ValidString `json:"LINE_TYPE"`
 }
 
 type STAT_PSTD_header struct {
-	VERSION        string  `json:"VERSION"`
-	MODEL          string  `json:"MODEL"`
-	DESC           string  `json:"DESC"`
-	FCST_VALID_BEG int     `json:"FCST_VALID_BEG"`
-	FCST_VALID_END int     `json:"FCST_VALID_END"`
-	OBS_LEAD       int     `json:"OBS_LEAD"`
-	OBS_VALID_BEG  int     `json:"OBS_VALID_BEG"`
-	OBS_VALID_END  int     `json:"OBS_VALID_END"`
-	FCST_VAR       string  `json:"FCST_VAR"`
-	FCST_UNITS     string  `json:"FCST_UNITS"`
-	FCST_LEV       string  `json:"FCST_LEV"`
-	OBS_VAR        string  `json:"OBS_VAR"`
-	OBS_UNITS      string  `json:"OBS_UNITS"`
-	OBS_LEV        string  `json:"OBS_LEV"`
-	OBTYPE         string  `json:"OBTYPE"`
-	VX_MASK        string  `json:"VX_MASK"`
-	INTERP_MTHD    string  `json:"INTERP_MTHD"`
-	INTERP_PNTS    int     `json:"INTERP_PNTS"`
-	FCST_THRESH    string  `json:"FCST_THRESH"`
-	OBS_THRESH     string  `json:"OBS_THRESH"`
-	COV_THRESH     string  `json:"COV_THRESH"`
-	ALPHA          float64 `json:"ALPHA"`
-	LINE_TYPE      string  `json:"LINE_TYPE"`
+	VERSION        validtypes.ValidString `json:"VERSION"`
+	MODEL          validtypes.ValidString `json:"MODEL"`
+	DESC           validtypes.ValidString `json:"DESC"`
+	FCST_VALID_BEG validtypes.ValidInt    `json:"FCST_VALID_BEG"`
+	FCST_VALID_END validtypes.ValidInt    `json:"FCST_VALID_END"`
+	OBS_LEAD       validtypes.ValidInt    `json:"OBS_LEAD"`
+	OBS_VALID_BEG  validtypes.ValidInt    `json:"OBS_VALID_BEG"`
+	OBS_VALID_END  validtypes.ValidInt    `json:"OBS_VALID_END"`
+	FCST_VAR       validtypes.ValidString `json:"FCST_VAR"`
+	FCST_UNITS     validtypes.ValidString `json:"FCST_UNITS"`
+	FCST_LEV       validtypes.ValidString `json:"FCST_LEV"`
+	OBS_VAR        validtypes.ValidString `json:"OBS_VAR"`
+	OBS_UNITS      validtypes.ValidString `json:"OBS_UNITS"`
+	OBS_LEV        validtypes.ValidString `json:"OBS_LEV"`
+	OBTYPE         validtypes.ValidString `json:"OBTYPE"`
+	VX_MASK        validtypes.ValidString `json:"VX_MASK"`
+	INTERP_MTHD    validtypes.ValidString `json:"INTERP_MTHD"`
+	INTERP_PNTS    validtypes.ValidInt    `json:"INTERP_PNTS"`
+	FCST_THRESH    validtypes.ValidString `json:"FCST_THRESH"`
+	OBS_THRESH     validtypes.ValidString `json:"OBS_THRESH"`
+	COV_THRESH     validtypes.ValidString `json:"COV_THRESH"`
+	ALPHA          validtypes.ValidFloat  `json:"ALPHA"`
+	LINE_TYPE      validtypes.ValidString `json:"LINE_TYPE"`
 }
 
 type STAT_RELP_header struct {
-	VERSION        string  `json:"VERSION"`
-	MODEL          string  `json:"MODEL"`
-	DESC           string  `json:"DESC"`
-	FCST_VALID_BEG int     `json:"FCST_VALID_BEG"`
-	FCST_VALID_END int     `json:"FCST_VALID_END"`
-	OBS_LEAD       int     `json:"OBS_LEAD"`
-	OBS_VALID_BEG  int     `json:"OBS_VALID_BEG"`
-	OBS_VALID_END  int     `json:"OBS_VALID_END"`
-	FCST_VAR       string  `json:"FCST_VAR"`
-	FCST_UNITS     string  `json:"FCST_UNITS"`
-	FCST_LEV       string  `json:"FCST_LEV"`
-	OBS_VAR        string  `json:"OBS_VAR"`
-	OBS_UNITS      string  `json:"OBS_UNITS"`
-	OBS_LEV        string  `json:"OBS_LEV"`
-	OBTYPE         string  `json:"OBTYPE"`
-	VX_MASK        string  `json:"VX_MASK"`
-	INTERP_MTHD    string  `json:"INTERP_MTHD"`
-	INTERP_PNTS    int     `json:"INTERP_PNTS"`
-	FCST_THRESH    string  `json:"FCST_THRESH"`
-	OBS_THRESH     string  `json:"OBS_THRESH"`
-	COV_THRESH     string  `json:"COV_THRESH"`
-	ALPHA          float64 `json:"ALPHA"`
-	LINE_TYPE      string  `json:"LINE_TYPE"`
+	VERSION        validtypes.ValidString `json:"VERSION"`
+	MODEL          validtypes.ValidString `json:"MODEL"`
+	DESC           validtypes.ValidString `json:"DESC"`
+	FCST_VALID_BEG validtypes.ValidInt    `json:"FCST_VALID_BEG"`
+	FCST_VALID_END validtypes.ValidInt    `json:"FCST_VALID_END"`
+	OBS_LEAD       validtypes.ValidInt    `json:"OBS_LEAD"`
+	OBS_VALID_BEG  validtypes.ValidInt    `json:"OBS_VALID_BEG"`
+	OBS_VALID_END  validtypes.ValidInt    `json:"OBS_VALID_END"`
+	FCST_VAR       validtypes.ValidString `json:"FCST_VAR"`
+	FCST_UNITS     validtypes.ValidString `json:"FCST_UNITS"`
+	FCST_LEV       validtypes.ValidString `json:"FCST_LEV"`
+	OBS_VAR        validtypes.ValidString `json:"OBS_VAR"`
+	OBS_UNITS      validtypes.ValidString `json:"OBS_UNITS"`
+	OBS_LEV        validtypes.ValidString `json:"OBS_LEV"`
+	OBTYPE         validtypes.ValidString `json:"OBTYPE"`
+	VX_MASK        validtypes.ValidString `json:"VX_MASK"`
+	INTERP_MTHD    validtypes.ValidString `json:"INTERP_MTHD"`
+	INTERP_PNTS    validtypes.ValidInt    `json:"INTERP_PNTS"`
+	FCST_THRESH    validtypes.ValidString `json:"FCST_THRESH"`
+	OBS_THRESH     validtypes.ValidString `json:"OBS_THRESH"`
+	COV_THRESH     validtypes.ValidString `json:"COV_THRESH"`
+	ALPHA          validtypes.ValidFloat  `json:"ALPHA"`
+	LINE_TYPE      validtypes.ValidString `json:"LINE_TYPE"`
 }
 
 type STAT_RHIST_header struct {
-	VERSION        string  `json:"VERSION"`
-	MODEL          string  `json:"MODEL"`
-	DESC           string  `json:"DESC"`
-	FCST_VALID_BEG int     `json:"FCST_VALID_BEG"`
-	FCST_VALID_END int     `json:"FCST_VALID_END"`
-	OBS_LEAD       int     `json:"OBS_LEAD"`
-	OBS_VALID_BEG  int     `json:"OBS_VALID_BEG"`
-	OBS_VALID_END  int     `json:"OBS_VALID_END"`
-	FCST_VAR       string  `json:"FCST_VAR"`
-	FCST_UNITS     string  `json:"FCST_UNITS"`
-	FCST_LEV       string  `json:"FCST_LEV"`
-	OBS_VAR        string  `json:"OBS_VAR"`
-	OBS_UNITS      string  `json:"OBS_UNITS"`
-	OBS_LEV        string  `json:"OBS_LEV"`
-	OBTYPE         string  `json:"OBTYPE"`
-	VX_MASK        string  `json:"VX_MASK"`
-	INTERP_MTHD    string  `json:"INTERP_MTHD"`
-	INTERP_PNTS    int     `json:"INTERP_PNTS"`
-	FCST_THRESH    string  `json:"FCST_THRESH"`
-	OBS_THRESH     string  `json:"OBS_THRESH"`
-	COV_THRESH     string  `json:"COV_THRESH"`
-	ALPHA          float64 `json:"ALPHA"`
-	LINE_TYPE      string  `json:"LINE_TYPE"`
+	VERSION        validtypes.ValidString `json:"VERSION"`
+	MODEL          validtypes.ValidString `json:"MODEL"`
+	DESC           validtypes.ValidString `json:"DESC"`
+	FCST_VALID_BEG validtypes.ValidInt    `json:"FCST_VALID_BEG"`
+	FCST_VALID_END validtypes.ValidInt    `json:"FCST_VALID_END"`
+	OBS_LEAD       validtypes.ValidInt    `json:"OBS_LEAD"`
+	OBS_VALID_BEG  validtypes.ValidInt    `json:"OBS_VALID_BEG"`
+	OBS_VALID_END  validtypes.ValidInt    `json:"OBS_VALID_END"`
+	FCST_VAR       validtypes.ValidString `json:"FCST_VAR"`
+	FCST_UNITS     validtypes.ValidString `json:"FCST_UNITS"`
+	FCST_LEV       validtypes.ValidString `json:"FCST_LEV"`
+	OBS_VAR        validtypes.ValidString `json:"OBS_VAR"`
+	OBS_UNITS      validtypes.ValidString `json:"OBS_UNITS"`
+	OBS_LEV        validtypes.ValidString `json:"OBS_LEV"`
+	OBTYPE         validtypes.ValidString `json:"OBTYPE"`
+	VX_MASK        validtypes.ValidString `json:"VX_MASK"`
+	INTERP_MTHD    validtypes.ValidString `json:"INTERP_MTHD"`
+	INTERP_PNTS    validtypes.ValidInt    `json:"INTERP_PNTS"`
+	FCST_THRESH    validtypes.ValidString `json:"FCST_THRESH"`
+	OBS_THRESH     validtypes.ValidString `json:"OBS_THRESH"`
+	COV_THRESH     validtypes.ValidString `json:"COV_THRESH"`
+	ALPHA          validtypes.ValidFloat  `json:"ALPHA"`
+	LINE_TYPE      validtypes.ValidString `json:"LINE_TYPE"`
 }
 
 type STAT_RPS_header struct {
-	VERSION        string  `json:"VERSION"`
-	MODEL          string  `json:"MODEL"`
-	DESC           string  `json:"DESC"`
-	FCST_VALID_BEG int     `json:"FCST_VALID_BEG"`
-	FCST_VALID_END int     `json:"FCST_VALID_END"`
-	OBS_LEAD       int     `json:"OBS_LEAD"`
-	OBS_VALID_BEG  int     `json:"OBS_VALID_BEG"`
-	OBS_VALID_END  int     `json:"OBS_VALID_END"`
-	FCST_VAR       string  `json:"FCST_VAR"`
-	FCST_UNITS     string  `json:"FCST_UNITS"`
-	FCST_LEV       string  `json:"FCST_LEV"`
-	OBS_VAR        string  `json:"OBS_VAR"`
-	OBS_UNITS      string  `json:"OBS_UNITS"`
-	OBS_LEV        string  `json:"OBS_LEV"`
-	OBTYPE         string  `json:"OBTYPE"`
-	VX_MASK        string  `json:"VX_MASK"`
-	INTERP_MTHD    string  `json:"INTERP_MTHD"`
-	INTERP_PNTS    int     `json:"INTERP_PNTS"`
-	FCST_THRESH    string  `json:"FCST_THRESH"`
-	OBS_THRESH     string  `json:"OBS_THRESH"`
-	COV_THRESH     string  `json:"COV_THRESH"`
-	ALPHA          float64 `json:"ALPHA"`
-	LINE_TYPE      string  `json:"LINE_TYPE"`
+	VERSION        validtypes.ValidString `json:"VERSION"`
+	MODEL          validtypes.ValidString `json:"MODEL"`
+	DESC           validtypes.ValidString `json:"DESC"`
+	FCST_VALID_BEG validtypes.ValidInt    `json:"FCST_VALID_BEG"`
+	FCST_VALID_END validtypes.ValidInt    `json:"FCST_VALID_END"`
+	OBS_LEAD       validtypes.ValidInt    `json:"OBS_LEAD"`
+	OBS_VALID_BEG  validtypes.ValidInt    `json:"OBS_VALID_BEG"`
+	OBS_VALID_END  validtypes.ValidInt    `json:"OBS_VALID_END"`
+	FCST_VAR       validtypes.ValidString `json:"FCST_VAR"`
+	FCST_UNITS     validtypes.ValidString `json:"FCST_UNITS"`
+	FCST_LEV       validtypes.ValidString `json:"FCST_LEV"`
+	OBS_VAR        validtypes.ValidString `json:"OBS_VAR"`
+	OBS_UNITS      validtypes.ValidString `json:"OBS_UNITS"`
+	OBS_LEV        validtypes.ValidString `json:"OBS_LEV"`
+	OBTYPE         validtypes.ValidString `json:"OBTYPE"`
+	VX_MASK        validtypes.ValidString `json:"VX_MASK"`
+	INTERP_MTHD    validtypes.ValidString `json:"INTERP_MTHD"`
+	INTERP_PNTS    validtypes.ValidInt    `json:"INTERP_PNTS"`
+	FCST_THRESH    validtypes.ValidString `json:"FCST_THRESH"`
+	OBS_THRESH     validtypes.ValidString `json:"OBS_THRESH"`
+	COV_THRESH     validtypes.ValidString `json:"COV_THRESH"`
+	ALPHA          validtypes.ValidFloat  `json:"ALPHA"`
+	LINE_TYPE      validtypes.ValidString `json:"LINE_TYPE"`
 }
 
 type STAT_SAL1L2_header struct {
-	VERSION        string  `json:"VERSION"`
-	MODEL          string  `json:"MODEL"`
-	DESC           string  `json:"DESC"`
-	FCST_VALID_BEG int     `json:"FCST_VALID_BEG"`
-	FCST_VALID_END int     `json:"FCST_VALID_END"`
-	OBS_LEAD       int     `json:"OBS_LEAD"`
-	OBS_VALID_BEG  int     `json:"OBS_VALID_BEG"`
-	OBS_VALID_END  int     `json:"OBS_VALID_END"`
-	FCST_VAR       string  `json:"FCST_VAR"`
-	FCST_UNITS     string  `json:"FCST_UNITS"`
-	FCST_LEV       string  `json:"FCST_LEV"`
-	OBS_VAR        string  `json:"OBS_VAR"`
-	OBS_UNITS      string  `json:"OBS_UNITS"`
-	OBS_LEV        string  `json:"OBS_LEV"`
-	OBTYPE         string  `json:"OBTYPE"`
-	VX_MASK        string  `json:"VX_MASK"`
-	INTERP_MTHD    string  `json:"INTERP_MTHD"`
-	INTERP_PNTS    int     `json:"INTERP_PNTS"`
-	FCST_THRESH    string  `json:"FCST_THRESH"`
-	OBS_THRESH     string  `json:"OBS_THRESH"`
-	COV_THRESH     string  `json:"COV_THRESH"`
-	ALPHA          float64 `json:"ALPHA"`
-	LINE_TYPE      string  `json:"LINE_TYPE"`
+	VERSION        validtypes.ValidString `json:"VERSION"`
+	MODEL          validtypes.ValidString `json:"MODEL"`
+	DESC           validtypes.ValidString `json:"DESC"`
+	FCST_VALID_BEG validtypes.ValidInt    `json:"FCST_VALID_BEG"`
+	FCST_VALID_END validtypes.ValidInt    `json:"FCST_VALID_END"`
+	OBS_LEAD       validtypes.ValidInt    `json:"OBS_LEAD"`
+	OBS_VALID_BEG  validtypes.ValidInt    `json:"OBS_VALID_BEG"`
+	OBS_VALID_END  validtypes.ValidInt    `json:"OBS_VALID_END"`
+	FCST_VAR       validtypes.ValidString `json:"FCST_VAR"`
+	FCST_UNITS     validtypes.ValidString `json:"FCST_UNITS"`
+	FCST_LEV       validtypes.ValidString `json:"FCST_LEV"`
+	OBS_VAR        validtypes.ValidString `json:"OBS_VAR"`
+	OBS_UNITS      validtypes.ValidString `json:"OBS_UNITS"`
+	OBS_LEV        validtypes.ValidString `json:"OBS_LEV"`
+	OBTYPE         validtypes.ValidString `json:"OBTYPE"`
+	VX_MASK        validtypes.ValidString `json:"VX_MASK"`
+	INTERP_MTHD    validtypes.ValidString `json:"INTERP_MTHD"`
+	INTERP_PNTS    validtypes.ValidInt    `json:"INTERP_PNTS"`
+	FCST_THRESH    validtypes.ValidString `json:"FCST_THRESH"`
+	OBS_THRESH     validtypes.ValidString `json:"OBS_THRESH"`
+	COV_THRESH     validtypes.ValidString `json:"COV_THRESH"`
+	ALPHA          validtypes.ValidFloat  `json:"ALPHA"`
+	LINE_TYPE      validtypes.ValidString `json:"LINE_TYPE"`
 }
 
 type STAT_SL1L2_header struct {
-	VERSION        string  `json:"VERSION"`
-	MODEL          string  `json:"MODEL"`
-	DESC           string  `json:"DESC"`
-	FCST_VALID_BEG int     `json:"FCST_VALID_BEG"`
-	FCST_VALID_END int     `json:"FCST_VALID_END"`
-	OBS_LEAD       int     `json:"OBS_LEAD"`
-	OBS_VALID_BEG  int     `json:"OBS_VALID_BEG"`
-	OBS_VALID_END  int     `json:"OBS_VALID_END"`
-	FCST_VAR       string  `json:"FCST_VAR"`
-	FCST_UNITS     string  `json:"FCST_UNITS"`
-	FCST_LEV       string  `json:"FCST_LEV"`
-	OBS_VAR        string  `json:"OBS_VAR"`
-	OBS_UNITS      string  `json:"OBS_UNITS"`
-	OBS_LEV        string  `json:"OBS_LEV"`
-	OBTYPE         string  `json:"OBTYPE"`
-	VX_MASK        string  `json:"VX_MASK"`
-	INTERP_MTHD    string  `json:"INTERP_MTHD"`
-	INTERP_PNTS    int     `json:"INTERP_PNTS"`
-	FCST_THRESH    string  `json:"FCST_THRESH"`
-	OBS_THRESH     string  `json:"OBS_THRESH"`
-	COV_THRESH     string  `json:"COV_THRESH"`
-	ALPHA          float64 `json:"ALPHA"`
-	LINE_TYPE      string  `json:"LINE_TYPE"`
+	VERSION        validtypes.ValidString `json:"VERSION"`
+	MODEL          validtypes.ValidString `json:"MODEL"`
+	DESC           validtypes.ValidString `json:"DESC"`
+	FCST_VALID_BEG validtypes.ValidInt    `json:"FCST_VALID_BEG"`
+	FCST_VALID_END validtypes.ValidInt    `json:"FCST_VALID_END"`
+	OBS_LEAD       validtypes.ValidInt    `json:"OBS_LEAD"`
+	OBS_VALID_BEG  validtypes.ValidInt    `json:"OBS_VALID_BEG"`
+	OBS_VALID_END  validtypes.ValidInt    `json:"OBS_VALID_END"`
+	FCST_VAR       validtypes.ValidString `json:"FCST_VAR"`
+	FCST_UNITS     validtypes.ValidString `json:"FCST_UNITS"`
+	FCST_LEV       validtypes.ValidString `json:"FCST_LEV"`
+	OBS_VAR        validtypes.ValidString `json:"OBS_VAR"`
+	OBS_UNITS      validtypes.ValidString `json:"OBS_UNITS"`
+	OBS_LEV        validtypes.ValidString `json:"OBS_LEV"`
+	OBTYPE         validtypes.ValidString `json:"OBTYPE"`
+	VX_MASK        validtypes.ValidString `json:"VX_MASK"`
+	INTERP_MTHD    validtypes.ValidString `json:"INTERP_MTHD"`
+	INTERP_PNTS    validtypes.ValidInt    `json:"INTERP_PNTS"`
+	FCST_THRESH    validtypes.ValidString `json:"FCST_THRESH"`
+	OBS_THRESH     validtypes.ValidString `json:"OBS_THRESH"`
+	COV_THRESH     validtypes.ValidString `json:"COV_THRESH"`
+	ALPHA          validtypes.ValidFloat  `json:"ALPHA"`
+	LINE_TYPE      validtypes.ValidString `json:"LINE_TYPE"`
 }
 
 type STAT_SSVAR_header struct {
-	VERSION        string  `json:"VERSION"`
-	MODEL          string  `json:"MODEL"`
-	DESC           string  `json:"DESC"`
-	FCST_VALID_BEG int     `json:"FCST_VALID_BEG"`
-	FCST_VALID_END int     `json:"FCST_VALID_END"`
-	OBS_LEAD       int     `json:"OBS_LEAD"`
-	OBS_VALID_BEG  int     `json:"OBS_VALID_BEG"`
-	OBS_VALID_END  int     `json:"OBS_VALID_END"`
-	FCST_VAR       string  `json:"FCST_VAR"`
-	FCST_UNITS     string  `json:"FCST_UNITS"`
-	FCST_LEV       string  `json:"FCST_LEV"`
-	OBS_VAR        string  `json:"OBS_VAR"`
-	OBS_UNITS      string  `json:"OBS_UNITS"`
-	OBS_LEV        string  `json:"OBS_LEV"`
-	OBTYPE         string  `json:"OBTYPE"`
-	VX_MASK        string  `json:"VX_MASK"`
-	INTERP_MTHD    string  `json:"INTERP_MTHD"`
-	INTERP_PNTS    int     `json:"INTERP_PNTS"`
-	FCST_THRESH    string  `json:"FCST_THRESH"`
-	OBS_THRESH     string  `json:"OBS_THRESH"`
-	COV_THRESH     string  `json:"COV_THRESH"`
-	ALPHA          float64 `json:"ALPHA"`
-	LINE_TYPE      string  `json:"LINE_TYPE"`
+	VERSION        validtypes.ValidString `json:"VERSION"`
+	MODEL          validtypes.ValidString `json:"MODEL"`
+	DESC           validtypes.ValidString `json:"DESC"`
+	FCST_VALID_BEG validtypes.ValidInt    `json:"FCST_VALID_BEG"`
+	FCST_VALID_END validtypes.ValidInt    `json:"FCST_VALID_END"`
+	OBS_LEAD       validtypes.ValidInt    `json:"OBS_LEAD"`
+	OBS_VALID_BEG  validtypes.ValidInt    `json:"OBS_VALID_BEG"`
+	OBS_VALID_END  validtypes.ValidInt    `json:"OBS_VALID_END"`
+	FCST_VAR       validtypes.ValidString `json:"FCST_VAR"`
+	FCST_UNITS     validtypes.ValidString `json:"FCST_UNITS"`
+	FCST_LEV       validtypes.ValidString `json:"FCST_LEV"`
+	OBS_VAR        validtypes.ValidString `json:"OBS_VAR"`
+	OBS_UNITS      validtypes.ValidString `json:"OBS_UNITS"`
+	OBS_LEV        validtypes.ValidString `json:"OBS_LEV"`
+	OBTYPE         validtypes.ValidString `json:"OBTYPE"`
+	VX_MASK        validtypes.ValidString `json:"VX_MASK"`
+	INTERP_MTHD    validtypes.ValidString `json:"INTERP_MTHD"`
+	INTERP_PNTS    validtypes.ValidInt    `json:"INTERP_PNTS"`
+	FCST_THRESH    validtypes.ValidString `json:"FCST_THRESH"`
+	OBS_THRESH     validtypes.ValidString `json:"OBS_THRESH"`
+	COV_THRESH     validtypes.ValidString `json:"COV_THRESH"`
+	ALPHA          validtypes.ValidFloat  `json:"ALPHA"`
+	LINE_TYPE      validtypes.ValidString `json:"LINE_TYPE"`
 }
 
 type STAT_VAL1L2_header struct {
-	VERSION        string  `json:"VERSION"`
-	MODEL          string  `json:"MODEL"`
-	DESC           string  `json:"DESC"`
-	FCST_VALID_BEG int     `json:"FCST_VALID_BEG"`
-	FCST_VALID_END int     `json:"FCST_VALID_END"`
-	OBS_LEAD       int     `json:"OBS_LEAD"`
-	OBS_VALID_BEG  int     `json:"OBS_VALID_BEG"`
-	OBS_VALID_END  int     `json:"OBS_VALID_END"`
-	FCST_VAR       string  `json:"FCST_VAR"`
-	FCST_UNITS     string  `json:"FCST_UNITS"`
-	FCST_LEV       string  `json:"FCST_LEV"`
-	OBS_VAR        string  `json:"OBS_VAR"`
-	OBS_UNITS      string  `json:"OBS_UNITS"`
-	OBS_LEV        string  `json:"OBS_LEV"`
-	OBTYPE         string  `json:"OBTYPE"`
-	VX_MASK        string  `json:"VX_MASK"`
-	INTERP_MTHD    string  `json:"INTERP_MTHD"`
-	INTERP_PNTS    int     `json:"INTERP_PNTS"`
-	FCST_THRESH    string  `json:"FCST_THRESH"`
-	OBS_THRESH     string  `json:"OBS_THRESH"`
-	COV_THRESH     string  `json:"COV_THRESH"`
-	ALPHA          float64 `json:"ALPHA"`
-	LINE_TYPE      string  `json:"LINE_TYPE"`
+	VERSION        validtypes.ValidString `json:"VERSION"`
+	MODEL          validtypes.ValidString `json:"MODEL"`
+	DESC           validtypes.ValidString `json:"DESC"`
+	FCST_VALID_BEG validtypes.ValidInt    `json:"FCST_VALID_BEG"`
+	FCST_VALID_END validtypes.ValidInt    `json:"FCST_VALID_END"`
+	OBS_LEAD       validtypes.ValidInt    `json:"OBS_LEAD"`
+	OBS_VALID_BEG  validtypes.ValidInt    `json:"OBS_VALID_BEG"`
+	OBS_VALID_END  validtypes.ValidInt    `json:"OBS_VALID_END"`
+	FCST_VAR       validtypes.ValidString `json:"FCST_VAR"`
+	FCST_UNITS     validtypes.ValidString `json:"FCST_UNITS"`
+	FCST_LEV       validtypes.ValidString `json:"FCST_LEV"`
+	OBS_VAR        validtypes.ValidString `json:"OBS_VAR"`
+	OBS_UNITS      validtypes.ValidString `json:"OBS_UNITS"`
+	OBS_LEV        validtypes.ValidString `json:"OBS_LEV"`
+	OBTYPE         validtypes.ValidString `json:"OBTYPE"`
+	VX_MASK        validtypes.ValidString `json:"VX_MASK"`
+	INTERP_MTHD    validtypes.ValidString `json:"INTERP_MTHD"`
+	INTERP_PNTS    validtypes.ValidInt    `json:"INTERP_PNTS"`
+	FCST_THRESH    validtypes.ValidString `json:"FCST_THRESH"`
+	OBS_THRESH     validtypes.ValidString `json:"OBS_THRESH"`
+	COV_THRESH     validtypes.ValidString `json:"COV_THRESH"`
+	ALPHA          validtypes.ValidFloat  `json:"ALPHA"`
+	LINE_TYPE      validtypes.ValidString `json:"LINE_TYPE"`
 }
 
 type STAT_VCNT_header struct {
-	VERSION        string  `json:"VERSION"`
-	MODEL          string  `json:"MODEL"`
-	DESC           string  `json:"DESC"`
-	FCST_VALID_BEG int     `json:"FCST_VALID_BEG"`
-	FCST_VALID_END int     `json:"FCST_VALID_END"`
-	OBS_LEAD       int     `json:"OBS_LEAD"`
-	OBS_VALID_BEG  int     `json:"OBS_VALID_BEG"`
-	OBS_VALID_END  int     `json:"OBS_VALID_END"`
-	FCST_VAR       string  `json:"FCST_VAR"`
-	FCST_UNITS     string  `json:"FCST_UNITS"`
-	FCST_LEV       string  `json:"FCST_LEV"`
-	OBS_VAR        string  `json:"OBS_VAR"`
-	OBS_UNITS      string  `json:"OBS_UNITS"`
-	OBS_LEV        string  `json:"OBS_LEV"`
-	OBTYPE         string  `json:"OBTYPE"`
-	VX_MASK        string  `json:"VX_MASK"`
-	INTERP_MTHD    string  `json:"INTERP_MTHD"`
-	INTERP_PNTS    int     `json:"INTERP_PNTS"`
-	FCST_THRESH    string  `json:"FCST_THRESH"`
-	OBS_THRESH     string  `json:"OBS_THRESH"`
-	COV_THRESH     string  `json:"COV_THRESH"`
-	ALPHA          float64 `json:"ALPHA"`
-	LINE_TYPE      string  `json:"LINE_TYPE"`
+	VERSION        validtypes.ValidString `json:"VERSION"`
+	MODEL          validtypes.ValidString `json:"MODEL"`
+	DESC           validtypes.ValidString `json:"DESC"`
+	FCST_VALID_BEG validtypes.ValidInt    `json:"FCST_VALID_BEG"`
+	FCST_VALID_END validtypes.ValidInt    `json:"FCST_VALID_END"`
+	OBS_LEAD       validtypes.ValidInt    `json:"OBS_LEAD"`
+	OBS_VALID_BEG  validtypes.ValidInt    `json:"OBS_VALID_BEG"`
+	OBS_VALID_END  validtypes.ValidInt    `json:"OBS_VALID_END"`
+	FCST_VAR       validtypes.ValidString `json:"FCST_VAR"`
+	FCST_UNITS     validtypes.ValidString `json:"FCST_UNITS"`
+	FCST_LEV       validtypes.ValidString `json:"FCST_LEV"`
+	OBS_VAR        validtypes.ValidString `json:"OBS_VAR"`
+	OBS_UNITS      validtypes.ValidString `json:"OBS_UNITS"`
+	OBS_LEV        validtypes.ValidString `json:"OBS_LEV"`
+	OBTYPE         validtypes.ValidString `json:"OBTYPE"`
+	VX_MASK        validtypes.ValidString `json:"VX_MASK"`
+	INTERP_MTHD    validtypes.ValidString `json:"INTERP_MTHD"`
+	INTERP_PNTS    validtypes.ValidInt    `json:"INTERP_PNTS"`
+	FCST_THRESH    validtypes.ValidString `json:"FCST_THRESH"`
+	OBS_THRESH     validtypes.ValidString `json:"OBS_THRESH"`
+	COV_THRESH     validtypes.ValidString `json:"COV_THRESH"`
+	ALPHA          validtypes.ValidFloat  `json:"ALPHA"`
+	LINE_TYPE      validtypes.ValidString `json:"LINE_TYPE"`
 }
 
 type STAT_VL1L2_header struct {
-	VERSION        string  `json:"VERSION"`
-	MODEL          string  `json:"MODEL"`
-	DESC           string  `json:"DESC"`
-	FCST_VALID_BEG int     `json:"FCST_VALID_BEG"`
-	FCST_VALID_END int     `json:"FCST_VALID_END"`
-	OBS_LEAD       int     `json:"OBS_LEAD"`
-	OBS_VALID_BEG  int     `json:"OBS_VALID_BEG"`
-	OBS_VALID_END  int     `json:"OBS_VALID_END"`
-	FCST_VAR       string  `json:"FCST_VAR"`
-	FCST_UNITS     string  `json:"FCST_UNITS"`
-	FCST_LEV       string  `json:"FCST_LEV"`
-	OBS_VAR        string  `json:"OBS_VAR"`
-	OBS_UNITS      string  `json:"OBS_UNITS"`
-	OBS_LEV        string  `json:"OBS_LEV"`
-	OBTYPE         string  `json:"OBTYPE"`
-	VX_MASK        string  `json:"VX_MASK"`
-	INTERP_MTHD    string  `json:"INTERP_MTHD"`
-	INTERP_PNTS    int     `json:"INTERP_PNTS"`
-	FCST_THRESH    string  `json:"FCST_THRESH"`
-	OBS_THRESH     string  `json:"OBS_THRESH"`
-	COV_THRESH     string  `json:"COV_THRESH"`
-	ALPHA          float64 `json:"ALPHA"`
-	LINE_TYPE      string  `json:"LINE_TYPE"`
+	VERSION        validtypes.ValidString `json:"VERSION"`
+	MODEL          validtypes.ValidString `json:"MODEL"`
+	DESC           validtypes.ValidString `json:"DESC"`
+	FCST_VALID_BEG validtypes.ValidInt    `json:"FCST_VALID_BEG"`
+	FCST_VALID_END validtypes.ValidInt    `json:"FCST_VALID_END"`
+	OBS_LEAD       validtypes.ValidInt    `json:"OBS_LEAD"`
+	OBS_VALID_BEG  validtypes.ValidInt    `json:"OBS_VALID_BEG"`
+	OBS_VALID_END  validtypes.ValidInt    `json:"OBS_VALID_END"`
+	FCST_VAR       validtypes.ValidString `json:"FCST_VAR"`
+	FCST_UNITS     validtypes.ValidString `json:"FCST_UNITS"`
+	FCST_LEV       validtypes.ValidString `json:"FCST_LEV"`
+	OBS_VAR        validtypes.ValidString `json:"OBS_VAR"`
+	OBS_UNITS      validtypes.ValidString `json:"OBS_UNITS"`
+	OBS_LEV        validtypes.ValidString `json:"OBS_LEV"`
+	OBTYPE         validtypes.ValidString `json:"OBTYPE"`
+	VX_MASK        validtypes.ValidString `json:"VX_MASK"`
+	INTERP_MTHD    validtypes.ValidString `json:"INTERP_MTHD"`
+	INTERP_PNTS    validtypes.ValidInt    `json:"INTERP_PNTS"`
+	FCST_THRESH    validtypes.ValidString `json:"FCST_THRESH"`
+	OBS_THRESH     validtypes.ValidString `json:"OBS_THRESH"`
+	COV_THRESH     validtypes.ValidString `json:"COV_THRESH"`
+	ALPHA          validtypes.ValidFloat  `json:"ALPHA"`
+	LINE_TYPE      validtypes.ValidString `json:"LINE_TYPE"`
 }
 
 type TCST_PROBRIRW_header struct {
-	VERSION    string `json:"VERSION"`
-	AMODEL     string `json:"AMODEL"`
-	BMODEL     string `json:"BMODEL"`
-	DESC       string `json:"DESC"`
-	STORM_ID   string `json:"STORM_ID"`
-	BASIN      string `json:"BASIN"`
-	CYCLONE    string `json:"CYCLONE"`
-	STORM_NAME string `json:"STORM_NAME"`
-	VALID      int    `json:"VALID"`
-	INIT_MASK  string `json:"INIT_MASK"`
-	VALID_MASK string `json:"VALID_MASK"`
-	LINE_TYPE  string `json:"LINE_TYPE"`
+	VERSION    validtypes.ValidString `json:"VERSION"`
+	AMODEL     validtypes.ValidString `json:"AMODEL"`
+	BMODEL     validtypes.ValidString `json:"BMODEL"`
+	DESC       validtypes.ValidString `json:"DESC"`
+	STORM_ID   validtypes.ValidString `json:"STORM_ID"`
+	BASIN      validtypes.ValidString `json:"BASIN"`
+	CYCLONE    validtypes.ValidString `json:"CYCLONE"`
+	STORM_NAME validtypes.ValidString `json:"STORM_NAME"`
+	VALID      validtypes.ValidInt    `json:"VALID"`
+	INIT_MASK  validtypes.ValidString `json:"INIT_MASK"`
+	VALID_MASK validtypes.ValidString `json:"VALID_MASK"`
+	LINE_TYPE  validtypes.ValidString `json:"LINE_TYPE"`
 }
 
 type TCST_TCMPR_header struct {
-	VERSION    string `json:"VERSION"`
-	AMODEL     string `json:"AMODEL"`
-	BMODEL     string `json:"BMODEL"`
-	DESC       string `json:"DESC"`
-	STORM_ID   string `json:"STORM_ID"`
-	BASIN      string `json:"BASIN"`
-	CYCLONE    string `json:"CYCLONE"`
-	STORM_NAME string `json:"STORM_NAME"`
-	VALID      int    `json:"VALID"`
-	INIT_MASK  string `json:"INIT_MASK"`
-	VALID_MASK string `json:"VALID_MASK"`
-	LINE_TYPE  string `json:"LINE_TYPE"`
+	VERSION    validtypes.ValidString `json:"VERSION"`
+	AMODEL     validtypes.ValidString `json:"AMODEL"`
+	BMODEL     validtypes.ValidString `json:"BMODEL"`
+	DESC       validtypes.ValidString `json:"DESC"`
+	STORM_ID   validtypes.ValidString `json:"STORM_ID"`
+	BASIN      validtypes.ValidString `json:"BASIN"`
+	CYCLONE    validtypes.ValidString `json:"CYCLONE"`
+	STORM_NAME validtypes.ValidString `json:"STORM_NAME"`
+	VALID      validtypes.ValidInt    `json:"VALID"`
+	INIT_MASK  validtypes.ValidString `json:"INIT_MASK"`
+	VALID_MASK validtypes.ValidString `json:"VALID_MASK"`
+	LINE_TYPE  validtypes.ValidString `json:"LINE_TYPE"`
 }
 
 // fillHeader functions
-func (s *MODE_CTS) fill_MODE_CTS_Header(fields []string, doc *map[string]interface{}) {
-	dataLen := len(fields)
-	i := -1
-	// fill the met fields leaving out "" and NA values
-	i++
-	SetValueForField(doc, "MODE", "VERSION", i, dataLen, fields, 0, "string")
-	i++
-	SetValueForField(doc, "MODE", "MODEL", i, dataLen, fields, 1, "string")
-	i++
-	SetValueForField(doc, "MODE", "N_VALID", i, dataLen, fields, 2, "int")
-	i++
-	SetValueForField(doc, "MODE", "GRID_RES", i, dataLen, fields, 3, "float64")
-	i++
-	SetValueForField(doc, "MODE", "DESC", i, dataLen, fields, 4, "string")
-	i++
-	SetValueForField(doc, "MODE", "FCST_VALID", i, dataLen, fields, 6, "string")
-	i++
-	SetValueForField(doc, "MODE", "FCST_ACCUM", i, dataLen, fields, 7, "string")
-	i++
-	SetValueForField(doc, "MODE", "OBS_LEAD", i, dataLen, fields, 8, "int")
-	i++
-	SetValueForField(doc, "MODE", "OBS_VALID", i, dataLen, fields, 9, "string")
-	i++
-	SetValueForField(doc, "MODE", "OBS_ACCUM", i, dataLen, fields, 10, "string")
-	i++
-	SetValueForField(doc, "MODE", "FCST_RAD", i, dataLen, fields, 11, "int")
-	i++
-	SetValueForField(doc, "MODE", "FCST_THR", i, dataLen, fields, 12, "string")
-	i++
-	SetValueForField(doc, "MODE", "OBS_RAD", i, dataLen, fields, 13, "int")
-	i++
-	SetValueForField(doc, "MODE", "OBS_THR", i, dataLen, fields, 14, "string")
-	i++
-	SetValueForField(doc, "MODE", "FCST_VAR", i, dataLen, fields, 15, "string")
-	i++
-	SetValueForField(doc, "MODE", "FCST_UNITS", i, dataLen, fields, 16, "string")
-	i++
-	SetValueForField(doc, "MODE", "FCST_LEV", i, dataLen, fields, 17, "string")
-	i++
-	SetValueForField(doc, "MODE", "OBS_VAR", i, dataLen, fields, 18, "string")
-	i++
-	SetValueForField(doc, "MODE", "OBS_UNITS", i, dataLen, fields, 19, "string")
-	i++
-	SetValueForField(doc, "MODE", "OBS_LEV", i, dataLen, fields, 20, "string")
-	i++
-	SetValueForField(doc, "MODE", "OBTYPE", i, dataLen, fields, 21, "string")
-	(*doc)["LINE_TYPE"] = "MODE_CTS"
+func (s *MODE_CTS_header) fill(fields []string) {
+	s.VERSION.UnmarshalText([]byte(fields[0]))
+	s.MODEL.UnmarshalText([]byte(fields[1]))
+	s.N_VALID.UnmarshalText([]byte(fields[2]))
+	s.GRID_RES.UnmarshalText([]byte(fields[3]))
+	s.DESC.UnmarshalText([]byte(fields[4]))
+	s.FCST_VALID.UnmarshalText([]byte(fields[6]))
+	s.FCST_ACCUM.UnmarshalText([]byte(fields[7]))
+	s.OBS_LEAD.UnmarshalText([]byte(fields[8]))
+	s.OBS_VALID.UnmarshalText([]byte(fields[9]))
+	s.OBS_ACCUM.UnmarshalText([]byte(fields[10]))
+	s.FCST_RAD.UnmarshalText([]byte(fields[11]))
+	s.FCST_THR.UnmarshalText([]byte(fields[12]))
+	s.OBS_RAD.UnmarshalText([]byte(fields[13]))
+	s.OBS_THR.UnmarshalText([]byte(fields[14]))
+	s.FCST_VAR.UnmarshalText([]byte(fields[15]))
+	s.FCST_UNITS.UnmarshalText([]byte(fields[16]))
+	s.FCST_LEV.UnmarshalText([]byte(fields[17]))
+	s.OBS_VAR.UnmarshalText([]byte(fields[18]))
+	s.OBS_UNITS.UnmarshalText([]byte(fields[19]))
+	s.OBS_LEV.UnmarshalText([]byte(fields[20]))
+	s.OBTYPE.UnmarshalText([]byte(fields[21]))
+	s.LINE_TYPE.UnmarshalText([]byte("MODE_CTS")) // hardcode the LINE_TYPE
 }
 
-func (s *MODE_OBJ) fill_MODE_OBJ_Header(fields []string, doc *map[string]interface{}) {
-	dataLen := len(fields)
-	i := -1
-	// fill the met fields leaving out "" and NA values
-	i++
-	SetValueForField(doc, "MODE", "VERSION", i, dataLen, fields, 0, "string")
-	i++
-	SetValueForField(doc, "MODE", "MODEL", i, dataLen, fields, 1, "string")
-	i++
-	SetValueForField(doc, "MODE", "N_VALID", i, dataLen, fields, 2, "int")
-	i++
-	SetValueForField(doc, "MODE", "GRID_RES", i, dataLen, fields, 3, "float64")
-	i++
-	SetValueForField(doc, "MODE", "DESC", i, dataLen, fields, 4, "string")
-	i++
-	SetValueForField(doc, "MODE", "FCST_VALID", i, dataLen, fields, 6, "string")
-	i++
-	SetValueForField(doc, "MODE", "FCST_ACCUM", i, dataLen, fields, 7, "string")
-	i++
-	SetValueForField(doc, "MODE", "OBS_LEAD", i, dataLen, fields, 8, "int")
-	i++
-	SetValueForField(doc, "MODE", "OBS_VALID", i, dataLen, fields, 9, "string")
-	i++
-	SetValueForField(doc, "MODE", "OBS_ACCUM", i, dataLen, fields, 10, "string")
-	i++
-	SetValueForField(doc, "MODE", "FCST_RAD", i, dataLen, fields, 11, "int")
-	i++
-	SetValueForField(doc, "MODE", "FCST_THR", i, dataLen, fields, 12, "string")
-	i++
-	SetValueForField(doc, "MODE", "OBS_RAD", i, dataLen, fields, 13, "int")
-	i++
-	SetValueForField(doc, "MODE", "OBS_THR", i, dataLen, fields, 14, "string")
-	i++
-	SetValueForField(doc, "MODE", "FCST_VAR", i, dataLen, fields, 15, "string")
-	i++
-	SetValueForField(doc, "MODE", "FCST_UNITS", i, dataLen, fields, 16, "string")
-	i++
-	SetValueForField(doc, "MODE", "FCST_LEV", i, dataLen, fields, 17, "string")
-	i++
-	SetValueForField(doc, "MODE", "OBS_VAR", i, dataLen, fields, 18, "string")
-	i++
-	SetValueForField(doc, "MODE", "OBS_UNITS", i, dataLen, fields, 19, "string")
-	i++
-	SetValueForField(doc, "MODE", "OBS_LEV", i, dataLen, fields, 20, "string")
-	i++
-	SetValueForField(doc, "MODE", "OBTYPE", i, dataLen, fields, 21, "string")
-	(*doc)["LINE_TYPE"] = "MODE_OBJ"
+func (s *MODE_OBJ_header) fill(fields []string) {
+	s.VERSION.UnmarshalText([]byte(fields[0]))
+	s.MODEL.UnmarshalText([]byte(fields[1]))
+	s.N_VALID.UnmarshalText([]byte(fields[2]))
+	s.GRID_RES.UnmarshalText([]byte(fields[3]))
+	s.DESC.UnmarshalText([]byte(fields[4]))
+	s.FCST_VALID.UnmarshalText([]byte(fields[6]))
+	s.FCST_ACCUM.UnmarshalText([]byte(fields[7]))
+	s.OBS_LEAD.UnmarshalText([]byte(fields[8]))
+	s.OBS_VALID.UnmarshalText([]byte(fields[9]))
+	s.OBS_ACCUM.UnmarshalText([]byte(fields[10]))
+	s.FCST_RAD.UnmarshalText([]byte(fields[11]))
+	s.FCST_THR.UnmarshalText([]byte(fields[12]))
+	s.OBS_RAD.UnmarshalText([]byte(fields[13]))
+	s.OBS_THR.UnmarshalText([]byte(fields[14]))
+	s.FCST_VAR.UnmarshalText([]byte(fields[15]))
+	s.FCST_UNITS.UnmarshalText([]byte(fields[16]))
+	s.FCST_LEV.UnmarshalText([]byte(fields[17]))
+	s.OBS_VAR.UnmarshalText([]byte(fields[18]))
+	s.OBS_UNITS.UnmarshalText([]byte(fields[19]))
+	s.OBS_LEV.UnmarshalText([]byte(fields[20]))
+	s.OBTYPE.UnmarshalText([]byte(fields[21]))
+	s.LINE_TYPE.UnmarshalText([]byte("MODE_OBJ")) // hardcode the LINE_TYPE
 }
 
-func (s *STAT_CNT) fill_STAT_CNT_Header(fields []string, doc *map[string]interface{}) {
-	dataLen := len(fields)
-	i := -1
-	// fill the met fields leaving out "" and NA values
-	i++
-	SetValueForField(doc, "STAT", "VERSION", i, dataLen, fields, 0, "string")
-	i++
-	SetValueForField(doc, "STAT", "MODEL", i, dataLen, fields, 1, "string")
-	i++
-	SetValueForField(doc, "STAT", "DESC", i, dataLen, fields, 2, "string")
-	i++
-	SetValueForField(doc, "STAT", "FCST_VALID_BEG", i, dataLen, fields, 4, "int")
-	i++
-	SetValueForField(doc, "STAT", "FCST_VALID_END", i, dataLen, fields, 5, "int")
-	i++
-	SetValueForField(doc, "STAT", "OBS_LEAD", i, dataLen, fields, 6, "int")
-	i++
-	SetValueForField(doc, "STAT", "OBS_VALID_BEG", i, dataLen, fields, 7, "int")
-	i++
-	SetValueForField(doc, "STAT", "OBS_VALID_END", i, dataLen, fields, 8, "int")
-	i++
-	SetValueForField(doc, "STAT", "FCST_VAR", i, dataLen, fields, 9, "string")
-	i++
-	SetValueForField(doc, "STAT", "FCST_UNITS", i, dataLen, fields, 10, "string")
-	i++
-	SetValueForField(doc, "STAT", "FCST_LEV", i, dataLen, fields, 11, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_VAR", i, dataLen, fields, 12, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_UNITS", i, dataLen, fields, 13, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_LEV", i, dataLen, fields, 14, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBTYPE", i, dataLen, fields, 15, "string")
-	i++
-	SetValueForField(doc, "STAT", "VX_MASK", i, dataLen, fields, 16, "string")
-	i++
-	SetValueForField(doc, "STAT", "INTERP_MTHD", i, dataLen, fields, 17, "string")
-	i++
-	SetValueForField(doc, "STAT", "INTERP_PNTS", i, dataLen, fields, 18, "int")
-	i++
-	SetValueForField(doc, "STAT", "FCST_THRESH", i, dataLen, fields, 19, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_THRESH", i, dataLen, fields, 20, "string")
-	i++
-	SetValueForField(doc, "STAT", "COV_THRESH", i, dataLen, fields, 21, "string")
-	i++
-	SetValueForField(doc, "STAT", "ALPHA", i, dataLen, fields, 22, "float64")
-	i++
-	SetValueForField(doc, "STAT", "LINE_TYPE", i, dataLen, fields, 23, "string")
+func (s *STAT_CNT_header) fill(fields []string) {
+	s.VERSION.UnmarshalText([]byte(fields[0]))
+	s.MODEL.UnmarshalText([]byte(fields[1]))
+	s.DESC.UnmarshalText([]byte(fields[2]))
+	s.FCST_VALID_BEG.UnmarshalText([]byte(fields[4]))
+	s.FCST_VALID_END.UnmarshalText([]byte(fields[5]))
+	s.OBS_LEAD.UnmarshalText([]byte(fields[6]))
+	s.OBS_VALID_BEG.UnmarshalText([]byte(fields[7]))
+	s.OBS_VALID_END.UnmarshalText([]byte(fields[8]))
+	s.FCST_VAR.UnmarshalText([]byte(fields[9]))
+	s.FCST_UNITS.UnmarshalText([]byte(fields[10]))
+	s.FCST_LEV.UnmarshalText([]byte(fields[11]))
+	s.OBS_VAR.UnmarshalText([]byte(fields[12]))
+	s.OBS_UNITS.UnmarshalText([]byte(fields[13]))
+	s.OBS_LEV.UnmarshalText([]byte(fields[14]))
+	s.OBTYPE.UnmarshalText([]byte(fields[15]))
+	s.VX_MASK.UnmarshalText([]byte(fields[16]))
+	s.INTERP_MTHD.UnmarshalText([]byte(fields[17]))
+	s.INTERP_PNTS.UnmarshalText([]byte(fields[18]))
+	s.FCST_THRESH.UnmarshalText([]byte(fields[19]))
+	s.OBS_THRESH.UnmarshalText([]byte(fields[20]))
+	s.COV_THRESH.UnmarshalText([]byte(fields[21]))
+	s.ALPHA.UnmarshalText([]byte(fields[22]))
+	s.LINE_TYPE.UnmarshalText([]byte(fields[23]))
 }
 
-func (s *STAT_CTC) fill_STAT_CTC_Header(fields []string, doc *map[string]interface{}) {
-	dataLen := len(fields)
-	i := -1
-	// fill the met fields leaving out "" and NA values
-	i++
-	SetValueForField(doc, "STAT", "VERSION", i, dataLen, fields, 0, "string")
-	i++
-	SetValueForField(doc, "STAT", "MODEL", i, dataLen, fields, 1, "string")
-	i++
-	SetValueForField(doc, "STAT", "DESC", i, dataLen, fields, 2, "string")
-	i++
-	SetValueForField(doc, "STAT", "FCST_VALID_BEG", i, dataLen, fields, 4, "int")
-	i++
-	SetValueForField(doc, "STAT", "FCST_VALID_END", i, dataLen, fields, 5, "int")
-	i++
-	SetValueForField(doc, "STAT", "OBS_LEAD", i, dataLen, fields, 6, "int")
-	i++
-	SetValueForField(doc, "STAT", "OBS_VALID_BEG", i, dataLen, fields, 7, "int")
-	i++
-	SetValueForField(doc, "STAT", "OBS_VALID_END", i, dataLen, fields, 8, "int")
-	i++
-	SetValueForField(doc, "STAT", "FCST_VAR", i, dataLen, fields, 9, "string")
-	i++
-	SetValueForField(doc, "STAT", "FCST_UNITS", i, dataLen, fields, 10, "string")
-	i++
-	SetValueForField(doc, "STAT", "FCST_LEV", i, dataLen, fields, 11, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_VAR", i, dataLen, fields, 12, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_UNITS", i, dataLen, fields, 13, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_LEV", i, dataLen, fields, 14, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBTYPE", i, dataLen, fields, 15, "string")
-	i++
-	SetValueForField(doc, "STAT", "VX_MASK", i, dataLen, fields, 16, "string")
-	i++
-	SetValueForField(doc, "STAT", "INTERP_MTHD", i, dataLen, fields, 17, "string")
-	i++
-	SetValueForField(doc, "STAT", "INTERP_PNTS", i, dataLen, fields, 18, "int")
-	i++
-	SetValueForField(doc, "STAT", "FCST_THRESH", i, dataLen, fields, 19, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_THRESH", i, dataLen, fields, 20, "string")
-	i++
-	SetValueForField(doc, "STAT", "COV_THRESH", i, dataLen, fields, 21, "string")
-	i++
-	SetValueForField(doc, "STAT", "ALPHA", i, dataLen, fields, 22, "float64")
-	i++
-	SetValueForField(doc, "STAT", "LINE_TYPE", i, dataLen, fields, 23, "string")
+func (s *STAT_CTC_header) fill(fields []string) {
+	s.VERSION.UnmarshalText([]byte(fields[0]))
+	s.MODEL.UnmarshalText([]byte(fields[1]))
+	s.DESC.UnmarshalText([]byte(fields[2]))
+	s.FCST_VALID_BEG.UnmarshalText([]byte(fields[4]))
+	s.FCST_VALID_END.UnmarshalText([]byte(fields[5]))
+	s.OBS_LEAD.UnmarshalText([]byte(fields[6]))
+	s.OBS_VALID_BEG.UnmarshalText([]byte(fields[7]))
+	s.OBS_VALID_END.UnmarshalText([]byte(fields[8]))
+	s.FCST_VAR.UnmarshalText([]byte(fields[9]))
+	s.FCST_UNITS.UnmarshalText([]byte(fields[10]))
+	s.FCST_LEV.UnmarshalText([]byte(fields[11]))
+	s.OBS_VAR.UnmarshalText([]byte(fields[12]))
+	s.OBS_UNITS.UnmarshalText([]byte(fields[13]))
+	s.OBS_LEV.UnmarshalText([]byte(fields[14]))
+	s.OBTYPE.UnmarshalText([]byte(fields[15]))
+	s.VX_MASK.UnmarshalText([]byte(fields[16]))
+	s.INTERP_MTHD.UnmarshalText([]byte(fields[17]))
+	s.INTERP_PNTS.UnmarshalText([]byte(fields[18]))
+	s.FCST_THRESH.UnmarshalText([]byte(fields[19]))
+	s.OBS_THRESH.UnmarshalText([]byte(fields[20]))
+	s.COV_THRESH.UnmarshalText([]byte(fields[21]))
+	s.ALPHA.UnmarshalText([]byte(fields[22]))
+	s.LINE_TYPE.UnmarshalText([]byte(fields[23]))
 }
 
-func (s *STAT_CTS) fill_STAT_CTS_Header(fields []string, doc *map[string]interface{}) {
-	dataLen := len(fields)
-	i := -1
-	// fill the met fields leaving out "" and NA values
-	i++
-	SetValueForField(doc, "STAT", "VERSION", i, dataLen, fields, 0, "string")
-	i++
-	SetValueForField(doc, "STAT", "MODEL", i, dataLen, fields, 1, "string")
-	i++
-	SetValueForField(doc, "STAT", "DESC", i, dataLen, fields, 2, "string")
-	i++
-	SetValueForField(doc, "STAT", "FCST_VALID_BEG", i, dataLen, fields, 4, "int")
-	i++
-	SetValueForField(doc, "STAT", "FCST_VALID_END", i, dataLen, fields, 5, "int")
-	i++
-	SetValueForField(doc, "STAT", "OBS_LEAD", i, dataLen, fields, 6, "int")
-	i++
-	SetValueForField(doc, "STAT", "OBS_VALID_BEG", i, dataLen, fields, 7, "int")
-	i++
-	SetValueForField(doc, "STAT", "OBS_VALID_END", i, dataLen, fields, 8, "int")
-	i++
-	SetValueForField(doc, "STAT", "FCST_VAR", i, dataLen, fields, 9, "string")
-	i++
-	SetValueForField(doc, "STAT", "FCST_UNITS", i, dataLen, fields, 10, "string")
-	i++
-	SetValueForField(doc, "STAT", "FCST_LEV", i, dataLen, fields, 11, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_VAR", i, dataLen, fields, 12, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_UNITS", i, dataLen, fields, 13, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_LEV", i, dataLen, fields, 14, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBTYPE", i, dataLen, fields, 15, "string")
-	i++
-	SetValueForField(doc, "STAT", "VX_MASK", i, dataLen, fields, 16, "string")
-	i++
-	SetValueForField(doc, "STAT", "INTERP_MTHD", i, dataLen, fields, 17, "string")
-	i++
-	SetValueForField(doc, "STAT", "INTERP_PNTS", i, dataLen, fields, 18, "int")
-	i++
-	SetValueForField(doc, "STAT", "FCST_THRESH", i, dataLen, fields, 19, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_THRESH", i, dataLen, fields, 20, "string")
-	i++
-	SetValueForField(doc, "STAT", "COV_THRESH", i, dataLen, fields, 21, "string")
-	i++
-	SetValueForField(doc, "STAT", "ALPHA", i, dataLen, fields, 22, "float64")
-	i++
-	SetValueForField(doc, "STAT", "LINE_TYPE", i, dataLen, fields, 23, "string")
+func (s *STAT_CTS_header) fill(fields []string) {
+	s.VERSION.UnmarshalText([]byte(fields[0]))
+	s.MODEL.UnmarshalText([]byte(fields[1]))
+	s.DESC.UnmarshalText([]byte(fields[2]))
+	s.FCST_VALID_BEG.UnmarshalText([]byte(fields[4]))
+	s.FCST_VALID_END.UnmarshalText([]byte(fields[5]))
+	s.OBS_LEAD.UnmarshalText([]byte(fields[6]))
+	s.OBS_VALID_BEG.UnmarshalText([]byte(fields[7]))
+	s.OBS_VALID_END.UnmarshalText([]byte(fields[8]))
+	s.FCST_VAR.UnmarshalText([]byte(fields[9]))
+	s.FCST_UNITS.UnmarshalText([]byte(fields[10]))
+	s.FCST_LEV.UnmarshalText([]byte(fields[11]))
+	s.OBS_VAR.UnmarshalText([]byte(fields[12]))
+	s.OBS_UNITS.UnmarshalText([]byte(fields[13]))
+	s.OBS_LEV.UnmarshalText([]byte(fields[14]))
+	s.OBTYPE.UnmarshalText([]byte(fields[15]))
+	s.VX_MASK.UnmarshalText([]byte(fields[16]))
+	s.INTERP_MTHD.UnmarshalText([]byte(fields[17]))
+	s.INTERP_PNTS.UnmarshalText([]byte(fields[18]))
+	s.FCST_THRESH.UnmarshalText([]byte(fields[19]))
+	s.OBS_THRESH.UnmarshalText([]byte(fields[20]))
+	s.COV_THRESH.UnmarshalText([]byte(fields[21]))
+	s.ALPHA.UnmarshalText([]byte(fields[22]))
+	s.LINE_TYPE.UnmarshalText([]byte(fields[23]))
 }
 
-func (s *STAT_DMAP) fill_STAT_DMAP_Header(fields []string, doc *map[string]interface{}) {
-	dataLen := len(fields)
-	i := -1
-	// fill the met fields leaving out "" and NA values
-	i++
-	SetValueForField(doc, "STAT", "VERSION", i, dataLen, fields, 0, "string")
-	i++
-	SetValueForField(doc, "STAT", "MODEL", i, dataLen, fields, 1, "string")
-	i++
-	SetValueForField(doc, "STAT", "DESC", i, dataLen, fields, 2, "string")
-	i++
-	SetValueForField(doc, "STAT", "FCST_VALID_BEG", i, dataLen, fields, 4, "int")
-	i++
-	SetValueForField(doc, "STAT", "FCST_VALID_END", i, dataLen, fields, 5, "int")
-	i++
-	SetValueForField(doc, "STAT", "OBS_LEAD", i, dataLen, fields, 6, "int")
-	i++
-	SetValueForField(doc, "STAT", "OBS_VALID_BEG", i, dataLen, fields, 7, "int")
-	i++
-	SetValueForField(doc, "STAT", "OBS_VALID_END", i, dataLen, fields, 8, "int")
-	i++
-	SetValueForField(doc, "STAT", "FCST_VAR", i, dataLen, fields, 9, "string")
-	i++
-	SetValueForField(doc, "STAT", "FCST_UNITS", i, dataLen, fields, 10, "string")
-	i++
-	SetValueForField(doc, "STAT", "FCST_LEV", i, dataLen, fields, 11, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_VAR", i, dataLen, fields, 12, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_UNITS", i, dataLen, fields, 13, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_LEV", i, dataLen, fields, 14, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBTYPE", i, dataLen, fields, 15, "string")
-	i++
-	SetValueForField(doc, "STAT", "VX_MASK", i, dataLen, fields, 16, "string")
-	i++
-	SetValueForField(doc, "STAT", "INTERP_MTHD", i, dataLen, fields, 17, "string")
-	i++
-	SetValueForField(doc, "STAT", "INTERP_PNTS", i, dataLen, fields, 18, "int")
-	i++
-	SetValueForField(doc, "STAT", "FCST_THRESH", i, dataLen, fields, 19, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_THRESH", i, dataLen, fields, 20, "string")
-	i++
-	SetValueForField(doc, "STAT", "COV_THRESH", i, dataLen, fields, 21, "string")
-	i++
-	SetValueForField(doc, "STAT", "ALPHA", i, dataLen, fields, 22, "float64")
-	i++
-	SetValueForField(doc, "STAT", "LINE_TYPE", i, dataLen, fields, 23, "string")
+func (s *STAT_DMAP_header) fill(fields []string) {
+	s.VERSION.UnmarshalText([]byte(fields[0]))
+	s.MODEL.UnmarshalText([]byte(fields[1]))
+	s.DESC.UnmarshalText([]byte(fields[2]))
+	s.FCST_VALID_BEG.UnmarshalText([]byte(fields[4]))
+	s.FCST_VALID_END.UnmarshalText([]byte(fields[5]))
+	s.OBS_LEAD.UnmarshalText([]byte(fields[6]))
+	s.OBS_VALID_BEG.UnmarshalText([]byte(fields[7]))
+	s.OBS_VALID_END.UnmarshalText([]byte(fields[8]))
+	s.FCST_VAR.UnmarshalText([]byte(fields[9]))
+	s.FCST_UNITS.UnmarshalText([]byte(fields[10]))
+	s.FCST_LEV.UnmarshalText([]byte(fields[11]))
+	s.OBS_VAR.UnmarshalText([]byte(fields[12]))
+	s.OBS_UNITS.UnmarshalText([]byte(fields[13]))
+	s.OBS_LEV.UnmarshalText([]byte(fields[14]))
+	s.OBTYPE.UnmarshalText([]byte(fields[15]))
+	s.VX_MASK.UnmarshalText([]byte(fields[16]))
+	s.INTERP_MTHD.UnmarshalText([]byte(fields[17]))
+	s.INTERP_PNTS.UnmarshalText([]byte(fields[18]))
+	s.FCST_THRESH.UnmarshalText([]byte(fields[19]))
+	s.OBS_THRESH.UnmarshalText([]byte(fields[20]))
+	s.COV_THRESH.UnmarshalText([]byte(fields[21]))
+	s.ALPHA.UnmarshalText([]byte(fields[22]))
+	s.LINE_TYPE.UnmarshalText([]byte(fields[23]))
 }
 
-func (s *STAT_ECLV) fill_STAT_ECLV_Header(fields []string, doc *map[string]interface{}) {
-	dataLen := len(fields)
-	i := -1
-	// fill the met fields leaving out "" and NA values
-	i++
-	SetValueForField(doc, "STAT", "VERSION", i, dataLen, fields, 0, "string")
-	i++
-	SetValueForField(doc, "STAT", "MODEL", i, dataLen, fields, 1, "string")
-	i++
-	SetValueForField(doc, "STAT", "DESC", i, dataLen, fields, 2, "string")
-	i++
-	SetValueForField(doc, "STAT", "FCST_VALID_BEG", i, dataLen, fields, 4, "int")
-	i++
-	SetValueForField(doc, "STAT", "FCST_VALID_END", i, dataLen, fields, 5, "int")
-	i++
-	SetValueForField(doc, "STAT", "OBS_LEAD", i, dataLen, fields, 6, "int")
-	i++
-	SetValueForField(doc, "STAT", "OBS_VALID_BEG", i, dataLen, fields, 7, "int")
-	i++
-	SetValueForField(doc, "STAT", "OBS_VALID_END", i, dataLen, fields, 8, "int")
-	i++
-	SetValueForField(doc, "STAT", "FCST_VAR", i, dataLen, fields, 9, "string")
-	i++
-	SetValueForField(doc, "STAT", "FCST_UNITS", i, dataLen, fields, 10, "string")
-	i++
-	SetValueForField(doc, "STAT", "FCST_LEV", i, dataLen, fields, 11, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_VAR", i, dataLen, fields, 12, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_UNITS", i, dataLen, fields, 13, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_LEV", i, dataLen, fields, 14, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBTYPE", i, dataLen, fields, 15, "string")
-	i++
-	SetValueForField(doc, "STAT", "VX_MASK", i, dataLen, fields, 16, "string")
-	i++
-	SetValueForField(doc, "STAT", "INTERP_MTHD", i, dataLen, fields, 17, "string")
-	i++
-	SetValueForField(doc, "STAT", "INTERP_PNTS", i, dataLen, fields, 18, "int")
-	i++
-	SetValueForField(doc, "STAT", "FCST_THRESH", i, dataLen, fields, 19, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_THRESH", i, dataLen, fields, 20, "string")
-	i++
-	SetValueForField(doc, "STAT", "COV_THRESH", i, dataLen, fields, 21, "string")
-	i++
-	SetValueForField(doc, "STAT", "ALPHA", i, dataLen, fields, 22, "float64")
-	i++
-	SetValueForField(doc, "STAT", "LINE_TYPE", i, dataLen, fields, 23, "string")
+func (s *STAT_ECLV_header) fill(fields []string) {
+	s.VERSION.UnmarshalText([]byte(fields[0]))
+	s.MODEL.UnmarshalText([]byte(fields[1]))
+	s.DESC.UnmarshalText([]byte(fields[2]))
+	s.FCST_VALID_BEG.UnmarshalText([]byte(fields[4]))
+	s.FCST_VALID_END.UnmarshalText([]byte(fields[5]))
+	s.OBS_LEAD.UnmarshalText([]byte(fields[6]))
+	s.OBS_VALID_BEG.UnmarshalText([]byte(fields[7]))
+	s.OBS_VALID_END.UnmarshalText([]byte(fields[8]))
+	s.FCST_VAR.UnmarshalText([]byte(fields[9]))
+	s.FCST_UNITS.UnmarshalText([]byte(fields[10]))
+	s.FCST_LEV.UnmarshalText([]byte(fields[11]))
+	s.OBS_VAR.UnmarshalText([]byte(fields[12]))
+	s.OBS_UNITS.UnmarshalText([]byte(fields[13]))
+	s.OBS_LEV.UnmarshalText([]byte(fields[14]))
+	s.OBTYPE.UnmarshalText([]byte(fields[15]))
+	s.VX_MASK.UnmarshalText([]byte(fields[16]))
+	s.INTERP_MTHD.UnmarshalText([]byte(fields[17]))
+	s.INTERP_PNTS.UnmarshalText([]byte(fields[18]))
+	s.FCST_THRESH.UnmarshalText([]byte(fields[19]))
+	s.OBS_THRESH.UnmarshalText([]byte(fields[20]))
+	s.COV_THRESH.UnmarshalText([]byte(fields[21]))
+	s.ALPHA.UnmarshalText([]byte(fields[22]))
+	s.LINE_TYPE.UnmarshalText([]byte(fields[23]))
 }
 
-func (s *STAT_ECNT) fill_STAT_ECNT_Header(fields []string, doc *map[string]interface{}) {
-	dataLen := len(fields)
-	i := -1
-	// fill the met fields leaving out "" and NA values
-	i++
-	SetValueForField(doc, "STAT", "VERSION", i, dataLen, fields, 0, "string")
-	i++
-	SetValueForField(doc, "STAT", "MODEL", i, dataLen, fields, 1, "string")
-	i++
-	SetValueForField(doc, "STAT", "DESC", i, dataLen, fields, 2, "string")
-	i++
-	SetValueForField(doc, "STAT", "FCST_VALID_BEG", i, dataLen, fields, 4, "int")
-	i++
-	SetValueForField(doc, "STAT", "FCST_VALID_END", i, dataLen, fields, 5, "int")
-	i++
-	SetValueForField(doc, "STAT", "OBS_LEAD", i, dataLen, fields, 6, "int")
-	i++
-	SetValueForField(doc, "STAT", "OBS_VALID_BEG", i, dataLen, fields, 7, "int")
-	i++
-	SetValueForField(doc, "STAT", "OBS_VALID_END", i, dataLen, fields, 8, "int")
-	i++
-	SetValueForField(doc, "STAT", "FCST_VAR", i, dataLen, fields, 9, "string")
-	i++
-	SetValueForField(doc, "STAT", "FCST_UNITS", i, dataLen, fields, 10, "string")
-	i++
-	SetValueForField(doc, "STAT", "FCST_LEV", i, dataLen, fields, 11, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_VAR", i, dataLen, fields, 12, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_UNITS", i, dataLen, fields, 13, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_LEV", i, dataLen, fields, 14, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBTYPE", i, dataLen, fields, 15, "string")
-	i++
-	SetValueForField(doc, "STAT", "VX_MASK", i, dataLen, fields, 16, "string")
-	i++
-	SetValueForField(doc, "STAT", "INTERP_MTHD", i, dataLen, fields, 17, "string")
-	i++
-	SetValueForField(doc, "STAT", "INTERP_PNTS", i, dataLen, fields, 18, "int")
-	i++
-	SetValueForField(doc, "STAT", "FCST_THRESH", i, dataLen, fields, 19, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_THRESH", i, dataLen, fields, 20, "string")
-	i++
-	SetValueForField(doc, "STAT", "COV_THRESH", i, dataLen, fields, 21, "string")
-	i++
-	SetValueForField(doc, "STAT", "ALPHA", i, dataLen, fields, 22, "float64")
-	i++
-	SetValueForField(doc, "STAT", "LINE_TYPE", i, dataLen, fields, 23, "string")
+func (s *STAT_ECNT_header) fill(fields []string) {
+	s.VERSION.UnmarshalText([]byte(fields[0]))
+	s.MODEL.UnmarshalText([]byte(fields[1]))
+	s.DESC.UnmarshalText([]byte(fields[2]))
+	s.FCST_VALID_BEG.UnmarshalText([]byte(fields[4]))
+	s.FCST_VALID_END.UnmarshalText([]byte(fields[5]))
+	s.OBS_LEAD.UnmarshalText([]byte(fields[6]))
+	s.OBS_VALID_BEG.UnmarshalText([]byte(fields[7]))
+	s.OBS_VALID_END.UnmarshalText([]byte(fields[8]))
+	s.FCST_VAR.UnmarshalText([]byte(fields[9]))
+	s.FCST_UNITS.UnmarshalText([]byte(fields[10]))
+	s.FCST_LEV.UnmarshalText([]byte(fields[11]))
+	s.OBS_VAR.UnmarshalText([]byte(fields[12]))
+	s.OBS_UNITS.UnmarshalText([]byte(fields[13]))
+	s.OBS_LEV.UnmarshalText([]byte(fields[14]))
+	s.OBTYPE.UnmarshalText([]byte(fields[15]))
+	s.VX_MASK.UnmarshalText([]byte(fields[16]))
+	s.INTERP_MTHD.UnmarshalText([]byte(fields[17]))
+	s.INTERP_PNTS.UnmarshalText([]byte(fields[18]))
+	s.FCST_THRESH.UnmarshalText([]byte(fields[19]))
+	s.OBS_THRESH.UnmarshalText([]byte(fields[20]))
+	s.COV_THRESH.UnmarshalText([]byte(fields[21]))
+	s.ALPHA.UnmarshalText([]byte(fields[22]))
+	s.LINE_TYPE.UnmarshalText([]byte(fields[23]))
 }
 
-func (s *STAT_FHO) fill_STAT_FHO_Header(fields []string, doc *map[string]interface{}) {
-	dataLen := len(fields)
-	i := -1
-	// fill the met fields leaving out "" and NA values
-	i++
-	SetValueForField(doc, "STAT", "VERSION", i, dataLen, fields, 0, "string")
-	i++
-	SetValueForField(doc, "STAT", "MODEL", i, dataLen, fields, 1, "string")
-	i++
-	SetValueForField(doc, "STAT", "DESC", i, dataLen, fields, 2, "string")
-	i++
-	SetValueForField(doc, "STAT", "FCST_VALID_BEG", i, dataLen, fields, 4, "int")
-	i++
-	SetValueForField(doc, "STAT", "FCST_VALID_END", i, dataLen, fields, 5, "int")
-	i++
-	SetValueForField(doc, "STAT", "OBS_LEAD", i, dataLen, fields, 6, "int")
-	i++
-	SetValueForField(doc, "STAT", "OBS_VALID_BEG", i, dataLen, fields, 7, "int")
-	i++
-	SetValueForField(doc, "STAT", "OBS_VALID_END", i, dataLen, fields, 8, "int")
-	i++
-	SetValueForField(doc, "STAT", "FCST_VAR", i, dataLen, fields, 9, "string")
-	i++
-	SetValueForField(doc, "STAT", "FCST_UNITS", i, dataLen, fields, 10, "string")
-	i++
-	SetValueForField(doc, "STAT", "FCST_LEV", i, dataLen, fields, 11, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_VAR", i, dataLen, fields, 12, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_UNITS", i, dataLen, fields, 13, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_LEV", i, dataLen, fields, 14, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBTYPE", i, dataLen, fields, 15, "string")
-	i++
-	SetValueForField(doc, "STAT", "VX_MASK", i, dataLen, fields, 16, "string")
-	i++
-	SetValueForField(doc, "STAT", "INTERP_MTHD", i, dataLen, fields, 17, "string")
-	i++
-	SetValueForField(doc, "STAT", "INTERP_PNTS", i, dataLen, fields, 18, "int")
-	i++
-	SetValueForField(doc, "STAT", "FCST_THRESH", i, dataLen, fields, 19, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_THRESH", i, dataLen, fields, 20, "string")
-	i++
-	SetValueForField(doc, "STAT", "COV_THRESH", i, dataLen, fields, 21, "string")
-	i++
-	SetValueForField(doc, "STAT", "ALPHA", i, dataLen, fields, 22, "float64")
-	i++
-	SetValueForField(doc, "STAT", "LINE_TYPE", i, dataLen, fields, 23, "string")
+func (s *STAT_FHO_header) fill(fields []string) {
+	s.VERSION.UnmarshalText([]byte(fields[0]))
+	s.MODEL.UnmarshalText([]byte(fields[1]))
+	s.DESC.UnmarshalText([]byte(fields[2]))
+	s.FCST_VALID_BEG.UnmarshalText([]byte(fields[4]))
+	s.FCST_VALID_END.UnmarshalText([]byte(fields[5]))
+	s.OBS_LEAD.UnmarshalText([]byte(fields[6]))
+	s.OBS_VALID_BEG.UnmarshalText([]byte(fields[7]))
+	s.OBS_VALID_END.UnmarshalText([]byte(fields[8]))
+	s.FCST_VAR.UnmarshalText([]byte(fields[9]))
+	s.FCST_UNITS.UnmarshalText([]byte(fields[10]))
+	s.FCST_LEV.UnmarshalText([]byte(fields[11]))
+	s.OBS_VAR.UnmarshalText([]byte(fields[12]))
+	s.OBS_UNITS.UnmarshalText([]byte(fields[13]))
+	s.OBS_LEV.UnmarshalText([]byte(fields[14]))
+	s.OBTYPE.UnmarshalText([]byte(fields[15]))
+	s.VX_MASK.UnmarshalText([]byte(fields[16]))
+	s.INTERP_MTHD.UnmarshalText([]byte(fields[17]))
+	s.INTERP_PNTS.UnmarshalText([]byte(fields[18]))
+	s.FCST_THRESH.UnmarshalText([]byte(fields[19]))
+	s.OBS_THRESH.UnmarshalText([]byte(fields[20]))
+	s.COV_THRESH.UnmarshalText([]byte(fields[21]))
+	s.ALPHA.UnmarshalText([]byte(fields[22]))
+	s.LINE_TYPE.UnmarshalText([]byte(fields[23]))
 }
 
-func (s *STAT_GENMPR) fill_STAT_GENMPR_Header(fields []string, doc *map[string]interface{}) {
-	dataLen := len(fields)
-	i := -1
-	// fill the met fields leaving out "" and NA values
-	i++
-	SetValueForField(doc, "STAT", "VERSION", i, dataLen, fields, 0, "string")
-	i++
-	SetValueForField(doc, "STAT", "MODEL", i, dataLen, fields, 1, "string")
-	i++
-	SetValueForField(doc, "STAT", "DESC", i, dataLen, fields, 2, "string")
-	i++
-	SetValueForField(doc, "STAT", "FCST_VALID_BEG", i, dataLen, fields, 4, "int")
-	i++
-	SetValueForField(doc, "STAT", "FCST_VALID_END", i, dataLen, fields, 5, "int")
-	i++
-	SetValueForField(doc, "STAT", "OBS_LEAD", i, dataLen, fields, 6, "int")
-	i++
-	SetValueForField(doc, "STAT", "OBS_VALID_BEG", i, dataLen, fields, 7, "int")
-	i++
-	SetValueForField(doc, "STAT", "OBS_VALID_END", i, dataLen, fields, 8, "int")
-	i++
-	SetValueForField(doc, "STAT", "FCST_VAR", i, dataLen, fields, 9, "string")
-	i++
-	SetValueForField(doc, "STAT", "FCST_UNITS", i, dataLen, fields, 10, "string")
-	i++
-	SetValueForField(doc, "STAT", "FCST_LEV", i, dataLen, fields, 11, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_VAR", i, dataLen, fields, 12, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_UNITS", i, dataLen, fields, 13, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_LEV", i, dataLen, fields, 14, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBTYPE", i, dataLen, fields, 15, "string")
-	i++
-	SetValueForField(doc, "STAT", "VX_MASK", i, dataLen, fields, 16, "string")
-	i++
-	SetValueForField(doc, "STAT", "INTERP_MTHD", i, dataLen, fields, 17, "string")
-	i++
-	SetValueForField(doc, "STAT", "INTERP_PNTS", i, dataLen, fields, 18, "int")
-	i++
-	SetValueForField(doc, "STAT", "FCST_THRESH", i, dataLen, fields, 19, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_THRESH", i, dataLen, fields, 20, "string")
-	i++
-	SetValueForField(doc, "STAT", "COV_THRESH", i, dataLen, fields, 21, "string")
-	i++
-	SetValueForField(doc, "STAT", "ALPHA", i, dataLen, fields, 22, "float64")
-	i++
-	SetValueForField(doc, "STAT", "LINE_TYPE", i, dataLen, fields, 23, "string")
+func (s *STAT_GENMPR_header) fill(fields []string) {
+	s.VERSION.UnmarshalText([]byte(fields[0]))
+	s.MODEL.UnmarshalText([]byte(fields[1]))
+	s.DESC.UnmarshalText([]byte(fields[2]))
+	s.FCST_VALID_BEG.UnmarshalText([]byte(fields[4]))
+	s.FCST_VALID_END.UnmarshalText([]byte(fields[5]))
+	s.OBS_LEAD.UnmarshalText([]byte(fields[6]))
+	s.OBS_VALID_BEG.UnmarshalText([]byte(fields[7]))
+	s.OBS_VALID_END.UnmarshalText([]byte(fields[8]))
+	s.FCST_VAR.UnmarshalText([]byte(fields[9]))
+	s.FCST_UNITS.UnmarshalText([]byte(fields[10]))
+	s.FCST_LEV.UnmarshalText([]byte(fields[11]))
+	s.OBS_VAR.UnmarshalText([]byte(fields[12]))
+	s.OBS_UNITS.UnmarshalText([]byte(fields[13]))
+	s.OBS_LEV.UnmarshalText([]byte(fields[14]))
+	s.OBTYPE.UnmarshalText([]byte(fields[15]))
+	s.VX_MASK.UnmarshalText([]byte(fields[16]))
+	s.INTERP_MTHD.UnmarshalText([]byte(fields[17]))
+	s.INTERP_PNTS.UnmarshalText([]byte(fields[18]))
+	s.FCST_THRESH.UnmarshalText([]byte(fields[19]))
+	s.OBS_THRESH.UnmarshalText([]byte(fields[20]))
+	s.COV_THRESH.UnmarshalText([]byte(fields[21]))
+	s.ALPHA.UnmarshalText([]byte(fields[22]))
+	s.LINE_TYPE.UnmarshalText([]byte(fields[23]))
 }
 
-func (s *STAT_GRAD) fill_STAT_GRAD_Header(fields []string, doc *map[string]interface{}) {
-	dataLen := len(fields)
-	i := -1
-	// fill the met fields leaving out "" and NA values
-	i++
-	SetValueForField(doc, "STAT", "VERSION", i, dataLen, fields, 0, "string")
-	i++
-	SetValueForField(doc, "STAT", "MODEL", i, dataLen, fields, 1, "string")
-	i++
-	SetValueForField(doc, "STAT", "DESC", i, dataLen, fields, 2, "string")
-	i++
-	SetValueForField(doc, "STAT", "FCST_VALID_BEG", i, dataLen, fields, 4, "int")
-	i++
-	SetValueForField(doc, "STAT", "FCST_VALID_END", i, dataLen, fields, 5, "int")
-	i++
-	SetValueForField(doc, "STAT", "OBS_LEAD", i, dataLen, fields, 6, "int")
-	i++
-	SetValueForField(doc, "STAT", "OBS_VALID_BEG", i, dataLen, fields, 7, "int")
-	i++
-	SetValueForField(doc, "STAT", "OBS_VALID_END", i, dataLen, fields, 8, "int")
-	i++
-	SetValueForField(doc, "STAT", "FCST_VAR", i, dataLen, fields, 9, "string")
-	i++
-	SetValueForField(doc, "STAT", "FCST_UNITS", i, dataLen, fields, 10, "string")
-	i++
-	SetValueForField(doc, "STAT", "FCST_LEV", i, dataLen, fields, 11, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_VAR", i, dataLen, fields, 12, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_UNITS", i, dataLen, fields, 13, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_LEV", i, dataLen, fields, 14, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBTYPE", i, dataLen, fields, 15, "string")
-	i++
-	SetValueForField(doc, "STAT", "VX_MASK", i, dataLen, fields, 16, "string")
-	i++
-	SetValueForField(doc, "STAT", "INTERP_MTHD", i, dataLen, fields, 17, "string")
-	i++
-	SetValueForField(doc, "STAT", "INTERP_PNTS", i, dataLen, fields, 18, "int")
-	i++
-	SetValueForField(doc, "STAT", "FCST_THRESH", i, dataLen, fields, 19, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_THRESH", i, dataLen, fields, 20, "string")
-	i++
-	SetValueForField(doc, "STAT", "COV_THRESH", i, dataLen, fields, 21, "string")
-	i++
-	SetValueForField(doc, "STAT", "ALPHA", i, dataLen, fields, 22, "float64")
-	i++
-	SetValueForField(doc, "STAT", "LINE_TYPE", i, dataLen, fields, 23, "string")
+func (s *STAT_GRAD_header) fill(fields []string) {
+	s.VERSION.UnmarshalText([]byte(fields[0]))
+	s.MODEL.UnmarshalText([]byte(fields[1]))
+	s.DESC.UnmarshalText([]byte(fields[2]))
+	s.FCST_VALID_BEG.UnmarshalText([]byte(fields[4]))
+	s.FCST_VALID_END.UnmarshalText([]byte(fields[5]))
+	s.OBS_LEAD.UnmarshalText([]byte(fields[6]))
+	s.OBS_VALID_BEG.UnmarshalText([]byte(fields[7]))
+	s.OBS_VALID_END.UnmarshalText([]byte(fields[8]))
+	s.FCST_VAR.UnmarshalText([]byte(fields[9]))
+	s.FCST_UNITS.UnmarshalText([]byte(fields[10]))
+	s.FCST_LEV.UnmarshalText([]byte(fields[11]))
+	s.OBS_VAR.UnmarshalText([]byte(fields[12]))
+	s.OBS_UNITS.UnmarshalText([]byte(fields[13]))
+	s.OBS_LEV.UnmarshalText([]byte(fields[14]))
+	s.OBTYPE.UnmarshalText([]byte(fields[15]))
+	s.VX_MASK.UnmarshalText([]byte(fields[16]))
+	s.INTERP_MTHD.UnmarshalText([]byte(fields[17]))
+	s.INTERP_PNTS.UnmarshalText([]byte(fields[18]))
+	s.FCST_THRESH.UnmarshalText([]byte(fields[19]))
+	s.OBS_THRESH.UnmarshalText([]byte(fields[20]))
+	s.COV_THRESH.UnmarshalText([]byte(fields[21]))
+	s.ALPHA.UnmarshalText([]byte(fields[22]))
+	s.LINE_TYPE.UnmarshalText([]byte(fields[23]))
 }
 
-func (s *STAT_ISC) fill_STAT_ISC_Header(fields []string, doc *map[string]interface{}) {
-	dataLen := len(fields)
-	i := -1
-	// fill the met fields leaving out "" and NA values
-	i++
-	SetValueForField(doc, "STAT", "VERSION", i, dataLen, fields, 0, "string")
-	i++
-	SetValueForField(doc, "STAT", "MODEL", i, dataLen, fields, 1, "string")
-	i++
-	SetValueForField(doc, "STAT", "DESC", i, dataLen, fields, 2, "string")
-	i++
-	SetValueForField(doc, "STAT", "FCST_VALID_BEG", i, dataLen, fields, 4, "int")
-	i++
-	SetValueForField(doc, "STAT", "FCST_VALID_END", i, dataLen, fields, 5, "int")
-	i++
-	SetValueForField(doc, "STAT", "OBS_LEAD", i, dataLen, fields, 6, "int")
-	i++
-	SetValueForField(doc, "STAT", "OBS_VALID_BEG", i, dataLen, fields, 7, "int")
-	i++
-	SetValueForField(doc, "STAT", "OBS_VALID_END", i, dataLen, fields, 8, "int")
-	i++
-	SetValueForField(doc, "STAT", "FCST_VAR", i, dataLen, fields, 9, "string")
-	i++
-	SetValueForField(doc, "STAT", "FCST_UNITS", i, dataLen, fields, 10, "string")
-	i++
-	SetValueForField(doc, "STAT", "FCST_LEV", i, dataLen, fields, 11, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_VAR", i, dataLen, fields, 12, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_UNITS", i, dataLen, fields, 13, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_LEV", i, dataLen, fields, 14, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBTYPE", i, dataLen, fields, 15, "string")
-	i++
-	SetValueForField(doc, "STAT", "VX_MASK", i, dataLen, fields, 16, "string")
-	i++
-	SetValueForField(doc, "STAT", "INTERP_MTHD", i, dataLen, fields, 17, "string")
-	i++
-	SetValueForField(doc, "STAT", "INTERP_PNTS", i, dataLen, fields, 18, "int")
-	i++
-	SetValueForField(doc, "STAT", "FCST_THRESH", i, dataLen, fields, 19, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_THRESH", i, dataLen, fields, 20, "string")
-	i++
-	SetValueForField(doc, "STAT", "COV_THRESH", i, dataLen, fields, 21, "string")
-	i++
-	SetValueForField(doc, "STAT", "ALPHA", i, dataLen, fields, 22, "float64")
-	i++
-	SetValueForField(doc, "STAT", "LINE_TYPE", i, dataLen, fields, 23, "string")
+func (s *STAT_ISC_header) fill(fields []string) {
+	s.VERSION.UnmarshalText([]byte(fields[0]))
+	s.MODEL.UnmarshalText([]byte(fields[1]))
+	s.DESC.UnmarshalText([]byte(fields[2]))
+	s.FCST_VALID_BEG.UnmarshalText([]byte(fields[4]))
+	s.FCST_VALID_END.UnmarshalText([]byte(fields[5]))
+	s.OBS_LEAD.UnmarshalText([]byte(fields[6]))
+	s.OBS_VALID_BEG.UnmarshalText([]byte(fields[7]))
+	s.OBS_VALID_END.UnmarshalText([]byte(fields[8]))
+	s.FCST_VAR.UnmarshalText([]byte(fields[9]))
+	s.FCST_UNITS.UnmarshalText([]byte(fields[10]))
+	s.FCST_LEV.UnmarshalText([]byte(fields[11]))
+	s.OBS_VAR.UnmarshalText([]byte(fields[12]))
+	s.OBS_UNITS.UnmarshalText([]byte(fields[13]))
+	s.OBS_LEV.UnmarshalText([]byte(fields[14]))
+	s.OBTYPE.UnmarshalText([]byte(fields[15]))
+	s.VX_MASK.UnmarshalText([]byte(fields[16]))
+	s.INTERP_MTHD.UnmarshalText([]byte(fields[17]))
+	s.INTERP_PNTS.UnmarshalText([]byte(fields[18]))
+	s.FCST_THRESH.UnmarshalText([]byte(fields[19]))
+	s.OBS_THRESH.UnmarshalText([]byte(fields[20]))
+	s.COV_THRESH.UnmarshalText([]byte(fields[21]))
+	s.ALPHA.UnmarshalText([]byte(fields[22]))
+	s.LINE_TYPE.UnmarshalText([]byte(fields[23]))
 }
 
-func (s *STAT_MCTC) fill_STAT_MCTC_Header(fields []string, doc *map[string]interface{}) {
-	dataLen := len(fields)
-	i := -1
-	// fill the met fields leaving out "" and NA values
-	i++
-	SetValueForField(doc, "STAT", "VERSION", i, dataLen, fields, 0, "string")
-	i++
-	SetValueForField(doc, "STAT", "MODEL", i, dataLen, fields, 1, "string")
-	i++
-	SetValueForField(doc, "STAT", "DESC", i, dataLen, fields, 2, "string")
-	i++
-	SetValueForField(doc, "STAT", "FCST_VALID_BEG", i, dataLen, fields, 4, "int")
-	i++
-	SetValueForField(doc, "STAT", "FCST_VALID_END", i, dataLen, fields, 5, "int")
-	i++
-	SetValueForField(doc, "STAT", "OBS_LEAD", i, dataLen, fields, 6, "int")
-	i++
-	SetValueForField(doc, "STAT", "OBS_VALID_BEG", i, dataLen, fields, 7, "int")
-	i++
-	SetValueForField(doc, "STAT", "OBS_VALID_END", i, dataLen, fields, 8, "int")
-	i++
-	SetValueForField(doc, "STAT", "FCST_VAR", i, dataLen, fields, 9, "string")
-	i++
-	SetValueForField(doc, "STAT", "FCST_UNITS", i, dataLen, fields, 10, "string")
-	i++
-	SetValueForField(doc, "STAT", "FCST_LEV", i, dataLen, fields, 11, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_VAR", i, dataLen, fields, 12, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_UNITS", i, dataLen, fields, 13, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_LEV", i, dataLen, fields, 14, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBTYPE", i, dataLen, fields, 15, "string")
-	i++
-	SetValueForField(doc, "STAT", "VX_MASK", i, dataLen, fields, 16, "string")
-	i++
-	SetValueForField(doc, "STAT", "INTERP_MTHD", i, dataLen, fields, 17, "string")
-	i++
-	SetValueForField(doc, "STAT", "INTERP_PNTS", i, dataLen, fields, 18, "int")
-	i++
-	SetValueForField(doc, "STAT", "FCST_THRESH", i, dataLen, fields, 19, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_THRESH", i, dataLen, fields, 20, "string")
-	i++
-	SetValueForField(doc, "STAT", "COV_THRESH", i, dataLen, fields, 21, "string")
-	i++
-	SetValueForField(doc, "STAT", "ALPHA", i, dataLen, fields, 22, "float64")
-	i++
-	SetValueForField(doc, "STAT", "LINE_TYPE", i, dataLen, fields, 23, "string")
+func (s *STAT_MCTC_header) fill(fields []string) {
+	s.VERSION.UnmarshalText([]byte(fields[0]))
+	s.MODEL.UnmarshalText([]byte(fields[1]))
+	s.DESC.UnmarshalText([]byte(fields[2]))
+	s.FCST_VALID_BEG.UnmarshalText([]byte(fields[4]))
+	s.FCST_VALID_END.UnmarshalText([]byte(fields[5]))
+	s.OBS_LEAD.UnmarshalText([]byte(fields[6]))
+	s.OBS_VALID_BEG.UnmarshalText([]byte(fields[7]))
+	s.OBS_VALID_END.UnmarshalText([]byte(fields[8]))
+	s.FCST_VAR.UnmarshalText([]byte(fields[9]))
+	s.FCST_UNITS.UnmarshalText([]byte(fields[10]))
+	s.FCST_LEV.UnmarshalText([]byte(fields[11]))
+	s.OBS_VAR.UnmarshalText([]byte(fields[12]))
+	s.OBS_UNITS.UnmarshalText([]byte(fields[13]))
+	s.OBS_LEV.UnmarshalText([]byte(fields[14]))
+	s.OBTYPE.UnmarshalText([]byte(fields[15]))
+	s.VX_MASK.UnmarshalText([]byte(fields[16]))
+	s.INTERP_MTHD.UnmarshalText([]byte(fields[17]))
+	s.INTERP_PNTS.UnmarshalText([]byte(fields[18]))
+	s.FCST_THRESH.UnmarshalText([]byte(fields[19]))
+	s.OBS_THRESH.UnmarshalText([]byte(fields[20]))
+	s.COV_THRESH.UnmarshalText([]byte(fields[21]))
+	s.ALPHA.UnmarshalText([]byte(fields[22]))
+	s.LINE_TYPE.UnmarshalText([]byte(fields[23]))
 }
 
-func (s *STAT_MCTS) fill_STAT_MCTS_Header(fields []string, doc *map[string]interface{}) {
-	dataLen := len(fields)
-	i := -1
-	// fill the met fields leaving out "" and NA values
-	i++
-	SetValueForField(doc, "STAT", "VERSION", i, dataLen, fields, 0, "string")
-	i++
-	SetValueForField(doc, "STAT", "MODEL", i, dataLen, fields, 1, "string")
-	i++
-	SetValueForField(doc, "STAT", "DESC", i, dataLen, fields, 2, "string")
-	i++
-	SetValueForField(doc, "STAT", "FCST_VALID_BEG", i, dataLen, fields, 4, "int")
-	i++
-	SetValueForField(doc, "STAT", "FCST_VALID_END", i, dataLen, fields, 5, "int")
-	i++
-	SetValueForField(doc, "STAT", "OBS_LEAD", i, dataLen, fields, 6, "int")
-	i++
-	SetValueForField(doc, "STAT", "OBS_VALID_BEG", i, dataLen, fields, 7, "int")
-	i++
-	SetValueForField(doc, "STAT", "OBS_VALID_END", i, dataLen, fields, 8, "int")
-	i++
-	SetValueForField(doc, "STAT", "FCST_VAR", i, dataLen, fields, 9, "string")
-	i++
-	SetValueForField(doc, "STAT", "FCST_UNITS", i, dataLen, fields, 10, "string")
-	i++
-	SetValueForField(doc, "STAT", "FCST_LEV", i, dataLen, fields, 11, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_VAR", i, dataLen, fields, 12, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_UNITS", i, dataLen, fields, 13, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_LEV", i, dataLen, fields, 14, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBTYPE", i, dataLen, fields, 15, "string")
-	i++
-	SetValueForField(doc, "STAT", "VX_MASK", i, dataLen, fields, 16, "string")
-	i++
-	SetValueForField(doc, "STAT", "INTERP_MTHD", i, dataLen, fields, 17, "string")
-	i++
-	SetValueForField(doc, "STAT", "INTERP_PNTS", i, dataLen, fields, 18, "int")
-	i++
-	SetValueForField(doc, "STAT", "FCST_THRESH", i, dataLen, fields, 19, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_THRESH", i, dataLen, fields, 20, "string")
-	i++
-	SetValueForField(doc, "STAT", "COV_THRESH", i, dataLen, fields, 21, "string")
-	i++
-	SetValueForField(doc, "STAT", "ALPHA", i, dataLen, fields, 22, "float64")
-	i++
-	SetValueForField(doc, "STAT", "LINE_TYPE", i, dataLen, fields, 23, "string")
+func (s *STAT_MCTS_header) fill(fields []string) {
+	s.VERSION.UnmarshalText([]byte(fields[0]))
+	s.MODEL.UnmarshalText([]byte(fields[1]))
+	s.DESC.UnmarshalText([]byte(fields[2]))
+	s.FCST_VALID_BEG.UnmarshalText([]byte(fields[4]))
+	s.FCST_VALID_END.UnmarshalText([]byte(fields[5]))
+	s.OBS_LEAD.UnmarshalText([]byte(fields[6]))
+	s.OBS_VALID_BEG.UnmarshalText([]byte(fields[7]))
+	s.OBS_VALID_END.UnmarshalText([]byte(fields[8]))
+	s.FCST_VAR.UnmarshalText([]byte(fields[9]))
+	s.FCST_UNITS.UnmarshalText([]byte(fields[10]))
+	s.FCST_LEV.UnmarshalText([]byte(fields[11]))
+	s.OBS_VAR.UnmarshalText([]byte(fields[12]))
+	s.OBS_UNITS.UnmarshalText([]byte(fields[13]))
+	s.OBS_LEV.UnmarshalText([]byte(fields[14]))
+	s.OBTYPE.UnmarshalText([]byte(fields[15]))
+	s.VX_MASK.UnmarshalText([]byte(fields[16]))
+	s.INTERP_MTHD.UnmarshalText([]byte(fields[17]))
+	s.INTERP_PNTS.UnmarshalText([]byte(fields[18]))
+	s.FCST_THRESH.UnmarshalText([]byte(fields[19]))
+	s.OBS_THRESH.UnmarshalText([]byte(fields[20]))
+	s.COV_THRESH.UnmarshalText([]byte(fields[21]))
+	s.ALPHA.UnmarshalText([]byte(fields[22]))
+	s.LINE_TYPE.UnmarshalText([]byte(fields[23]))
 }
 
-func (s *STAT_MPR) fill_STAT_MPR_Header(fields []string, doc *map[string]interface{}) {
-	dataLen := len(fields)
-	i := -1
-	// fill the met fields leaving out "" and NA values
-	i++
-	SetValueForField(doc, "STAT", "VERSION", i, dataLen, fields, 0, "string")
-	i++
-	SetValueForField(doc, "STAT", "MODEL", i, dataLen, fields, 1, "string")
-	i++
-	SetValueForField(doc, "STAT", "DESC", i, dataLen, fields, 2, "string")
-	i++
-	SetValueForField(doc, "STAT", "FCST_VALID_BEG", i, dataLen, fields, 4, "int")
-	i++
-	SetValueForField(doc, "STAT", "FCST_VALID_END", i, dataLen, fields, 5, "int")
-	i++
-	SetValueForField(doc, "STAT", "OBS_LEAD", i, dataLen, fields, 6, "int")
-	i++
-	SetValueForField(doc, "STAT", "OBS_VALID_BEG", i, dataLen, fields, 7, "int")
-	i++
-	SetValueForField(doc, "STAT", "OBS_VALID_END", i, dataLen, fields, 8, "int")
-	i++
-	SetValueForField(doc, "STAT", "FCST_VAR", i, dataLen, fields, 9, "string")
-	i++
-	SetValueForField(doc, "STAT", "FCST_UNITS", i, dataLen, fields, 10, "string")
-	i++
-	SetValueForField(doc, "STAT", "FCST_LEV", i, dataLen, fields, 11, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_VAR", i, dataLen, fields, 12, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_UNITS", i, dataLen, fields, 13, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_LEV", i, dataLen, fields, 14, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBTYPE", i, dataLen, fields, 15, "string")
-	i++
-	SetValueForField(doc, "STAT", "VX_MASK", i, dataLen, fields, 16, "string")
-	i++
-	SetValueForField(doc, "STAT", "INTERP_MTHD", i, dataLen, fields, 17, "string")
-	i++
-	SetValueForField(doc, "STAT", "INTERP_PNTS", i, dataLen, fields, 18, "int")
-	i++
-	SetValueForField(doc, "STAT", "FCST_THRESH", i, dataLen, fields, 19, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_THRESH", i, dataLen, fields, 20, "string")
-	i++
-	SetValueForField(doc, "STAT", "COV_THRESH", i, dataLen, fields, 21, "string")
-	i++
-	SetValueForField(doc, "STAT", "ALPHA", i, dataLen, fields, 22, "float64")
-	i++
-	SetValueForField(doc, "STAT", "LINE_TYPE", i, dataLen, fields, 23, "string")
+func (s *STAT_MPR_header) fill(fields []string) {
+	s.VERSION.UnmarshalText([]byte(fields[0]))
+	s.MODEL.UnmarshalText([]byte(fields[1]))
+	s.DESC.UnmarshalText([]byte(fields[2]))
+	s.FCST_VALID_BEG.UnmarshalText([]byte(fields[4]))
+	s.FCST_VALID_END.UnmarshalText([]byte(fields[5]))
+	s.OBS_LEAD.UnmarshalText([]byte(fields[6]))
+	s.OBS_VALID_BEG.UnmarshalText([]byte(fields[7]))
+	s.OBS_VALID_END.UnmarshalText([]byte(fields[8]))
+	s.FCST_VAR.UnmarshalText([]byte(fields[9]))
+	s.FCST_UNITS.UnmarshalText([]byte(fields[10]))
+	s.FCST_LEV.UnmarshalText([]byte(fields[11]))
+	s.OBS_VAR.UnmarshalText([]byte(fields[12]))
+	s.OBS_UNITS.UnmarshalText([]byte(fields[13]))
+	s.OBS_LEV.UnmarshalText([]byte(fields[14]))
+	s.OBTYPE.UnmarshalText([]byte(fields[15]))
+	s.VX_MASK.UnmarshalText([]byte(fields[16]))
+	s.INTERP_MTHD.UnmarshalText([]byte(fields[17]))
+	s.INTERP_PNTS.UnmarshalText([]byte(fields[18]))
+	s.FCST_THRESH.UnmarshalText([]byte(fields[19]))
+	s.OBS_THRESH.UnmarshalText([]byte(fields[20]))
+	s.COV_THRESH.UnmarshalText([]byte(fields[21]))
+	s.ALPHA.UnmarshalText([]byte(fields[22]))
+	s.LINE_TYPE.UnmarshalText([]byte(fields[23]))
 }
 
-func (s *STAT_NBRCNT) fill_STAT_NBRCNT_Header(fields []string, doc *map[string]interface{}) {
-	dataLen := len(fields)
-	i := -1
-	// fill the met fields leaving out "" and NA values
-	i++
-	SetValueForField(doc, "STAT", "VERSION", i, dataLen, fields, 0, "string")
-	i++
-	SetValueForField(doc, "STAT", "MODEL", i, dataLen, fields, 1, "string")
-	i++
-	SetValueForField(doc, "STAT", "DESC", i, dataLen, fields, 2, "string")
-	i++
-	SetValueForField(doc, "STAT", "FCST_VALID_BEG", i, dataLen, fields, 4, "int")
-	i++
-	SetValueForField(doc, "STAT", "FCST_VALID_END", i, dataLen, fields, 5, "int")
-	i++
-	SetValueForField(doc, "STAT", "OBS_LEAD", i, dataLen, fields, 6, "int")
-	i++
-	SetValueForField(doc, "STAT", "OBS_VALID_BEG", i, dataLen, fields, 7, "int")
-	i++
-	SetValueForField(doc, "STAT", "OBS_VALID_END", i, dataLen, fields, 8, "int")
-	i++
-	SetValueForField(doc, "STAT", "FCST_VAR", i, dataLen, fields, 9, "string")
-	i++
-	SetValueForField(doc, "STAT", "FCST_UNITS", i, dataLen, fields, 10, "string")
-	i++
-	SetValueForField(doc, "STAT", "FCST_LEV", i, dataLen, fields, 11, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_VAR", i, dataLen, fields, 12, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_UNITS", i, dataLen, fields, 13, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_LEV", i, dataLen, fields, 14, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBTYPE", i, dataLen, fields, 15, "string")
-	i++
-	SetValueForField(doc, "STAT", "VX_MASK", i, dataLen, fields, 16, "string")
-	i++
-	SetValueForField(doc, "STAT", "INTERP_MTHD", i, dataLen, fields, 17, "string")
-	i++
-	SetValueForField(doc, "STAT", "INTERP_PNTS", i, dataLen, fields, 18, "int")
-	i++
-	SetValueForField(doc, "STAT", "FCST_THRESH", i, dataLen, fields, 19, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_THRESH", i, dataLen, fields, 20, "string")
-	i++
-	SetValueForField(doc, "STAT", "COV_THRESH", i, dataLen, fields, 21, "string")
-	i++
-	SetValueForField(doc, "STAT", "ALPHA", i, dataLen, fields, 22, "float64")
-	i++
-	SetValueForField(doc, "STAT", "LINE_TYPE", i, dataLen, fields, 23, "string")
+func (s *STAT_NBRCNT_header) fill(fields []string) {
+	s.VERSION.UnmarshalText([]byte(fields[0]))
+	s.MODEL.UnmarshalText([]byte(fields[1]))
+	s.DESC.UnmarshalText([]byte(fields[2]))
+	s.FCST_VALID_BEG.UnmarshalText([]byte(fields[4]))
+	s.FCST_VALID_END.UnmarshalText([]byte(fields[5]))
+	s.OBS_LEAD.UnmarshalText([]byte(fields[6]))
+	s.OBS_VALID_BEG.UnmarshalText([]byte(fields[7]))
+	s.OBS_VALID_END.UnmarshalText([]byte(fields[8]))
+	s.FCST_VAR.UnmarshalText([]byte(fields[9]))
+	s.FCST_UNITS.UnmarshalText([]byte(fields[10]))
+	s.FCST_LEV.UnmarshalText([]byte(fields[11]))
+	s.OBS_VAR.UnmarshalText([]byte(fields[12]))
+	s.OBS_UNITS.UnmarshalText([]byte(fields[13]))
+	s.OBS_LEV.UnmarshalText([]byte(fields[14]))
+	s.OBTYPE.UnmarshalText([]byte(fields[15]))
+	s.VX_MASK.UnmarshalText([]byte(fields[16]))
+	s.INTERP_MTHD.UnmarshalText([]byte(fields[17]))
+	s.INTERP_PNTS.UnmarshalText([]byte(fields[18]))
+	s.FCST_THRESH.UnmarshalText([]byte(fields[19]))
+	s.OBS_THRESH.UnmarshalText([]byte(fields[20]))
+	s.COV_THRESH.UnmarshalText([]byte(fields[21]))
+	s.ALPHA.UnmarshalText([]byte(fields[22]))
+	s.LINE_TYPE.UnmarshalText([]byte(fields[23]))
 }
 
-func (s *STAT_NBRCTC) fill_STAT_NBRCTC_Header(fields []string, doc *map[string]interface{}) {
-	dataLen := len(fields)
-	i := -1
-	// fill the met fields leaving out "" and NA values
-	i++
-	SetValueForField(doc, "STAT", "VERSION", i, dataLen, fields, 0, "string")
-	i++
-	SetValueForField(doc, "STAT", "MODEL", i, dataLen, fields, 1, "string")
-	i++
-	SetValueForField(doc, "STAT", "DESC", i, dataLen, fields, 2, "string")
-	i++
-	SetValueForField(doc, "STAT", "FCST_VALID_BEG", i, dataLen, fields, 4, "int")
-	i++
-	SetValueForField(doc, "STAT", "FCST_VALID_END", i, dataLen, fields, 5, "int")
-	i++
-	SetValueForField(doc, "STAT", "OBS_LEAD", i, dataLen, fields, 6, "int")
-	i++
-	SetValueForField(doc, "STAT", "OBS_VALID_BEG", i, dataLen, fields, 7, "int")
-	i++
-	SetValueForField(doc, "STAT", "OBS_VALID_END", i, dataLen, fields, 8, "int")
-	i++
-	SetValueForField(doc, "STAT", "FCST_VAR", i, dataLen, fields, 9, "string")
-	i++
-	SetValueForField(doc, "STAT", "FCST_UNITS", i, dataLen, fields, 10, "string")
-	i++
-	SetValueForField(doc, "STAT", "FCST_LEV", i, dataLen, fields, 11, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_VAR", i, dataLen, fields, 12, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_UNITS", i, dataLen, fields, 13, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_LEV", i, dataLen, fields, 14, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBTYPE", i, dataLen, fields, 15, "string")
-	i++
-	SetValueForField(doc, "STAT", "VX_MASK", i, dataLen, fields, 16, "string")
-	i++
-	SetValueForField(doc, "STAT", "INTERP_MTHD", i, dataLen, fields, 17, "string")
-	i++
-	SetValueForField(doc, "STAT", "INTERP_PNTS", i, dataLen, fields, 18, "int")
-	i++
-	SetValueForField(doc, "STAT", "FCST_THRESH", i, dataLen, fields, 19, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_THRESH", i, dataLen, fields, 20, "string")
-	i++
-	SetValueForField(doc, "STAT", "COV_THRESH", i, dataLen, fields, 21, "string")
-	i++
-	SetValueForField(doc, "STAT", "ALPHA", i, dataLen, fields, 22, "float64")
-	i++
-	SetValueForField(doc, "STAT", "LINE_TYPE", i, dataLen, fields, 23, "string")
+func (s *STAT_NBRCTC_header) fill(fields []string) {
+	s.VERSION.UnmarshalText([]byte(fields[0]))
+	s.MODEL.UnmarshalText([]byte(fields[1]))
+	s.DESC.UnmarshalText([]byte(fields[2]))
+	s.FCST_VALID_BEG.UnmarshalText([]byte(fields[4]))
+	s.FCST_VALID_END.UnmarshalText([]byte(fields[5]))
+	s.OBS_LEAD.UnmarshalText([]byte(fields[6]))
+	s.OBS_VALID_BEG.UnmarshalText([]byte(fields[7]))
+	s.OBS_VALID_END.UnmarshalText([]byte(fields[8]))
+	s.FCST_VAR.UnmarshalText([]byte(fields[9]))
+	s.FCST_UNITS.UnmarshalText([]byte(fields[10]))
+	s.FCST_LEV.UnmarshalText([]byte(fields[11]))
+	s.OBS_VAR.UnmarshalText([]byte(fields[12]))
+	s.OBS_UNITS.UnmarshalText([]byte(fields[13]))
+	s.OBS_LEV.UnmarshalText([]byte(fields[14]))
+	s.OBTYPE.UnmarshalText([]byte(fields[15]))
+	s.VX_MASK.UnmarshalText([]byte(fields[16]))
+	s.INTERP_MTHD.UnmarshalText([]byte(fields[17]))
+	s.INTERP_PNTS.UnmarshalText([]byte(fields[18]))
+	s.FCST_THRESH.UnmarshalText([]byte(fields[19]))
+	s.OBS_THRESH.UnmarshalText([]byte(fields[20]))
+	s.COV_THRESH.UnmarshalText([]byte(fields[21]))
+	s.ALPHA.UnmarshalText([]byte(fields[22]))
+	s.LINE_TYPE.UnmarshalText([]byte(fields[23]))
 }
 
-func (s *STAT_NBRCTS) fill_STAT_NBRCTS_Header(fields []string, doc *map[string]interface{}) {
-	dataLen := len(fields)
-	i := -1
-	// fill the met fields leaving out "" and NA values
-	i++
-	SetValueForField(doc, "STAT", "VERSION", i, dataLen, fields, 0, "string")
-	i++
-	SetValueForField(doc, "STAT", "MODEL", i, dataLen, fields, 1, "string")
-	i++
-	SetValueForField(doc, "STAT", "DESC", i, dataLen, fields, 2, "string")
-	i++
-	SetValueForField(doc, "STAT", "FCST_VALID_BEG", i, dataLen, fields, 4, "int")
-	i++
-	SetValueForField(doc, "STAT", "FCST_VALID_END", i, dataLen, fields, 5, "int")
-	i++
-	SetValueForField(doc, "STAT", "OBS_LEAD", i, dataLen, fields, 6, "int")
-	i++
-	SetValueForField(doc, "STAT", "OBS_VALID_BEG", i, dataLen, fields, 7, "int")
-	i++
-	SetValueForField(doc, "STAT", "OBS_VALID_END", i, dataLen, fields, 8, "int")
-	i++
-	SetValueForField(doc, "STAT", "FCST_VAR", i, dataLen, fields, 9, "string")
-	i++
-	SetValueForField(doc, "STAT", "FCST_UNITS", i, dataLen, fields, 10, "string")
-	i++
-	SetValueForField(doc, "STAT", "FCST_LEV", i, dataLen, fields, 11, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_VAR", i, dataLen, fields, 12, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_UNITS", i, dataLen, fields, 13, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_LEV", i, dataLen, fields, 14, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBTYPE", i, dataLen, fields, 15, "string")
-	i++
-	SetValueForField(doc, "STAT", "VX_MASK", i, dataLen, fields, 16, "string")
-	i++
-	SetValueForField(doc, "STAT", "INTERP_MTHD", i, dataLen, fields, 17, "string")
-	i++
-	SetValueForField(doc, "STAT", "INTERP_PNTS", i, dataLen, fields, 18, "int")
-	i++
-	SetValueForField(doc, "STAT", "FCST_THRESH", i, dataLen, fields, 19, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_THRESH", i, dataLen, fields, 20, "string")
-	i++
-	SetValueForField(doc, "STAT", "COV_THRESH", i, dataLen, fields, 21, "string")
-	i++
-	SetValueForField(doc, "STAT", "ALPHA", i, dataLen, fields, 22, "float64")
-	i++
-	SetValueForField(doc, "STAT", "LINE_TYPE", i, dataLen, fields, 23, "string")
+func (s *STAT_NBRCTS_header) fill(fields []string) {
+	s.VERSION.UnmarshalText([]byte(fields[0]))
+	s.MODEL.UnmarshalText([]byte(fields[1]))
+	s.DESC.UnmarshalText([]byte(fields[2]))
+	s.FCST_VALID_BEG.UnmarshalText([]byte(fields[4]))
+	s.FCST_VALID_END.UnmarshalText([]byte(fields[5]))
+	s.OBS_LEAD.UnmarshalText([]byte(fields[6]))
+	s.OBS_VALID_BEG.UnmarshalText([]byte(fields[7]))
+	s.OBS_VALID_END.UnmarshalText([]byte(fields[8]))
+	s.FCST_VAR.UnmarshalText([]byte(fields[9]))
+	s.FCST_UNITS.UnmarshalText([]byte(fields[10]))
+	s.FCST_LEV.UnmarshalText([]byte(fields[11]))
+	s.OBS_VAR.UnmarshalText([]byte(fields[12]))
+	s.OBS_UNITS.UnmarshalText([]byte(fields[13]))
+	s.OBS_LEV.UnmarshalText([]byte(fields[14]))
+	s.OBTYPE.UnmarshalText([]byte(fields[15]))
+	s.VX_MASK.UnmarshalText([]byte(fields[16]))
+	s.INTERP_MTHD.UnmarshalText([]byte(fields[17]))
+	s.INTERP_PNTS.UnmarshalText([]byte(fields[18]))
+	s.FCST_THRESH.UnmarshalText([]byte(fields[19]))
+	s.OBS_THRESH.UnmarshalText([]byte(fields[20]))
+	s.COV_THRESH.UnmarshalText([]byte(fields[21]))
+	s.ALPHA.UnmarshalText([]byte(fields[22]))
+	s.LINE_TYPE.UnmarshalText([]byte(fields[23]))
 }
 
-func (s *STAT_ORANK) fill_STAT_ORANK_Header(fields []string, doc *map[string]interface{}) {
-	dataLen := len(fields)
-	i := -1
-	// fill the met fields leaving out "" and NA values
-	i++
-	SetValueForField(doc, "STAT", "VERSION", i, dataLen, fields, 0, "string")
-	i++
-	SetValueForField(doc, "STAT", "MODEL", i, dataLen, fields, 1, "string")
-	i++
-	SetValueForField(doc, "STAT", "DESC", i, dataLen, fields, 2, "string")
-	i++
-	SetValueForField(doc, "STAT", "FCST_VALID_BEG", i, dataLen, fields, 4, "int")
-	i++
-	SetValueForField(doc, "STAT", "FCST_VALID_END", i, dataLen, fields, 5, "int")
-	i++
-	SetValueForField(doc, "STAT", "OBS_LEAD", i, dataLen, fields, 6, "int")
-	i++
-	SetValueForField(doc, "STAT", "OBS_VALID_BEG", i, dataLen, fields, 7, "int")
-	i++
-	SetValueForField(doc, "STAT", "OBS_VALID_END", i, dataLen, fields, 8, "int")
-	i++
-	SetValueForField(doc, "STAT", "FCST_VAR", i, dataLen, fields, 9, "string")
-	i++
-	SetValueForField(doc, "STAT", "FCST_UNITS", i, dataLen, fields, 10, "string")
-	i++
-	SetValueForField(doc, "STAT", "FCST_LEV", i, dataLen, fields, 11, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_VAR", i, dataLen, fields, 12, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_UNITS", i, dataLen, fields, 13, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_LEV", i, dataLen, fields, 14, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBTYPE", i, dataLen, fields, 15, "string")
-	i++
-	SetValueForField(doc, "STAT", "VX_MASK", i, dataLen, fields, 16, "string")
-	i++
-	SetValueForField(doc, "STAT", "INTERP_MTHD", i, dataLen, fields, 17, "string")
-	i++
-	SetValueForField(doc, "STAT", "INTERP_PNTS", i, dataLen, fields, 18, "int")
-	i++
-	SetValueForField(doc, "STAT", "FCST_THRESH", i, dataLen, fields, 19, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_THRESH", i, dataLen, fields, 20, "string")
-	i++
-	SetValueForField(doc, "STAT", "COV_THRESH", i, dataLen, fields, 21, "string")
-	i++
-	SetValueForField(doc, "STAT", "ALPHA", i, dataLen, fields, 22, "float64")
-	i++
-	SetValueForField(doc, "STAT", "LINE_TYPE", i, dataLen, fields, 23, "string")
+func (s *STAT_ORANK_header) fill(fields []string) {
+	s.VERSION.UnmarshalText([]byte(fields[0]))
+	s.MODEL.UnmarshalText([]byte(fields[1]))
+	s.DESC.UnmarshalText([]byte(fields[2]))
+	s.FCST_VALID_BEG.UnmarshalText([]byte(fields[4]))
+	s.FCST_VALID_END.UnmarshalText([]byte(fields[5]))
+	s.OBS_LEAD.UnmarshalText([]byte(fields[6]))
+	s.OBS_VALID_BEG.UnmarshalText([]byte(fields[7]))
+	s.OBS_VALID_END.UnmarshalText([]byte(fields[8]))
+	s.FCST_VAR.UnmarshalText([]byte(fields[9]))
+	s.FCST_UNITS.UnmarshalText([]byte(fields[10]))
+	s.FCST_LEV.UnmarshalText([]byte(fields[11]))
+	s.OBS_VAR.UnmarshalText([]byte(fields[12]))
+	s.OBS_UNITS.UnmarshalText([]byte(fields[13]))
+	s.OBS_LEV.UnmarshalText([]byte(fields[14]))
+	s.OBTYPE.UnmarshalText([]byte(fields[15]))
+	s.VX_MASK.UnmarshalText([]byte(fields[16]))
+	s.INTERP_MTHD.UnmarshalText([]byte(fields[17]))
+	s.INTERP_PNTS.UnmarshalText([]byte(fields[18]))
+	s.FCST_THRESH.UnmarshalText([]byte(fields[19]))
+	s.OBS_THRESH.UnmarshalText([]byte(fields[20]))
+	s.COV_THRESH.UnmarshalText([]byte(fields[21]))
+	s.ALPHA.UnmarshalText([]byte(fields[22]))
+	s.LINE_TYPE.UnmarshalText([]byte(fields[23]))
 }
 
-func (s *STAT_PCT) fill_STAT_PCT_Header(fields []string, doc *map[string]interface{}) {
-	dataLen := len(fields)
-	i := -1
-	// fill the met fields leaving out "" and NA values
-	i++
-	SetValueForField(doc, "STAT", "VERSION", i, dataLen, fields, 0, "string")
-	i++
-	SetValueForField(doc, "STAT", "MODEL", i, dataLen, fields, 1, "string")
-	i++
-	SetValueForField(doc, "STAT", "DESC", i, dataLen, fields, 2, "string")
-	i++
-	SetValueForField(doc, "STAT", "FCST_VALID_BEG", i, dataLen, fields, 4, "int")
-	i++
-	SetValueForField(doc, "STAT", "FCST_VALID_END", i, dataLen, fields, 5, "int")
-	i++
-	SetValueForField(doc, "STAT", "OBS_LEAD", i, dataLen, fields, 6, "int")
-	i++
-	SetValueForField(doc, "STAT", "OBS_VALID_BEG", i, dataLen, fields, 7, "int")
-	i++
-	SetValueForField(doc, "STAT", "OBS_VALID_END", i, dataLen, fields, 8, "int")
-	i++
-	SetValueForField(doc, "STAT", "FCST_VAR", i, dataLen, fields, 9, "string")
-	i++
-	SetValueForField(doc, "STAT", "FCST_UNITS", i, dataLen, fields, 10, "string")
-	i++
-	SetValueForField(doc, "STAT", "FCST_LEV", i, dataLen, fields, 11, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_VAR", i, dataLen, fields, 12, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_UNITS", i, dataLen, fields, 13, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_LEV", i, dataLen, fields, 14, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBTYPE", i, dataLen, fields, 15, "string")
-	i++
-	SetValueForField(doc, "STAT", "VX_MASK", i, dataLen, fields, 16, "string")
-	i++
-	SetValueForField(doc, "STAT", "INTERP_MTHD", i, dataLen, fields, 17, "string")
-	i++
-	SetValueForField(doc, "STAT", "INTERP_PNTS", i, dataLen, fields, 18, "int")
-	i++
-	SetValueForField(doc, "STAT", "FCST_THRESH", i, dataLen, fields, 19, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_THRESH", i, dataLen, fields, 20, "string")
-	i++
-	SetValueForField(doc, "STAT", "COV_THRESH", i, dataLen, fields, 21, "string")
-	i++
-	SetValueForField(doc, "STAT", "ALPHA", i, dataLen, fields, 22, "float64")
-	i++
-	SetValueForField(doc, "STAT", "LINE_TYPE", i, dataLen, fields, 23, "string")
+func (s *STAT_PCT_header) fill(fields []string) {
+	s.VERSION.UnmarshalText([]byte(fields[0]))
+	s.MODEL.UnmarshalText([]byte(fields[1]))
+	s.DESC.UnmarshalText([]byte(fields[2]))
+	s.FCST_VALID_BEG.UnmarshalText([]byte(fields[4]))
+	s.FCST_VALID_END.UnmarshalText([]byte(fields[5]))
+	s.OBS_LEAD.UnmarshalText([]byte(fields[6]))
+	s.OBS_VALID_BEG.UnmarshalText([]byte(fields[7]))
+	s.OBS_VALID_END.UnmarshalText([]byte(fields[8]))
+	s.FCST_VAR.UnmarshalText([]byte(fields[9]))
+	s.FCST_UNITS.UnmarshalText([]byte(fields[10]))
+	s.FCST_LEV.UnmarshalText([]byte(fields[11]))
+	s.OBS_VAR.UnmarshalText([]byte(fields[12]))
+	s.OBS_UNITS.UnmarshalText([]byte(fields[13]))
+	s.OBS_LEV.UnmarshalText([]byte(fields[14]))
+	s.OBTYPE.UnmarshalText([]byte(fields[15]))
+	s.VX_MASK.UnmarshalText([]byte(fields[16]))
+	s.INTERP_MTHD.UnmarshalText([]byte(fields[17]))
+	s.INTERP_PNTS.UnmarshalText([]byte(fields[18]))
+	s.FCST_THRESH.UnmarshalText([]byte(fields[19]))
+	s.OBS_THRESH.UnmarshalText([]byte(fields[20]))
+	s.COV_THRESH.UnmarshalText([]byte(fields[21]))
+	s.ALPHA.UnmarshalText([]byte(fields[22]))
+	s.LINE_TYPE.UnmarshalText([]byte(fields[23]))
 }
 
-func (s *STAT_PHIST) fill_STAT_PHIST_Header(fields []string, doc *map[string]interface{}) {
-	dataLen := len(fields)
-	i := -1
-	// fill the met fields leaving out "" and NA values
-	i++
-	SetValueForField(doc, "STAT", "VERSION", i, dataLen, fields, 0, "string")
-	i++
-	SetValueForField(doc, "STAT", "MODEL", i, dataLen, fields, 1, "string")
-	i++
-	SetValueForField(doc, "STAT", "DESC", i, dataLen, fields, 2, "string")
-	i++
-	SetValueForField(doc, "STAT", "FCST_VALID_BEG", i, dataLen, fields, 4, "int")
-	i++
-	SetValueForField(doc, "STAT", "FCST_VALID_END", i, dataLen, fields, 5, "int")
-	i++
-	SetValueForField(doc, "STAT", "OBS_LEAD", i, dataLen, fields, 6, "int")
-	i++
-	SetValueForField(doc, "STAT", "OBS_VALID_BEG", i, dataLen, fields, 7, "int")
-	i++
-	SetValueForField(doc, "STAT", "OBS_VALID_END", i, dataLen, fields, 8, "int")
-	i++
-	SetValueForField(doc, "STAT", "FCST_VAR", i, dataLen, fields, 9, "string")
-	i++
-	SetValueForField(doc, "STAT", "FCST_UNITS", i, dataLen, fields, 10, "string")
-	i++
-	SetValueForField(doc, "STAT", "FCST_LEV", i, dataLen, fields, 11, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_VAR", i, dataLen, fields, 12, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_UNITS", i, dataLen, fields, 13, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_LEV", i, dataLen, fields, 14, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBTYPE", i, dataLen, fields, 15, "string")
-	i++
-	SetValueForField(doc, "STAT", "VX_MASK", i, dataLen, fields, 16, "string")
-	i++
-	SetValueForField(doc, "STAT", "INTERP_MTHD", i, dataLen, fields, 17, "string")
-	i++
-	SetValueForField(doc, "STAT", "INTERP_PNTS", i, dataLen, fields, 18, "int")
-	i++
-	SetValueForField(doc, "STAT", "FCST_THRESH", i, dataLen, fields, 19, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_THRESH", i, dataLen, fields, 20, "string")
-	i++
-	SetValueForField(doc, "STAT", "COV_THRESH", i, dataLen, fields, 21, "string")
-	i++
-	SetValueForField(doc, "STAT", "ALPHA", i, dataLen, fields, 22, "float64")
-	i++
-	SetValueForField(doc, "STAT", "LINE_TYPE", i, dataLen, fields, 23, "string")
+func (s *STAT_PHIST_header) fill(fields []string) {
+	s.VERSION.UnmarshalText([]byte(fields[0]))
+	s.MODEL.UnmarshalText([]byte(fields[1]))
+	s.DESC.UnmarshalText([]byte(fields[2]))
+	s.FCST_VALID_BEG.UnmarshalText([]byte(fields[4]))
+	s.FCST_VALID_END.UnmarshalText([]byte(fields[5]))
+	s.OBS_LEAD.UnmarshalText([]byte(fields[6]))
+	s.OBS_VALID_BEG.UnmarshalText([]byte(fields[7]))
+	s.OBS_VALID_END.UnmarshalText([]byte(fields[8]))
+	s.FCST_VAR.UnmarshalText([]byte(fields[9]))
+	s.FCST_UNITS.UnmarshalText([]byte(fields[10]))
+	s.FCST_LEV.UnmarshalText([]byte(fields[11]))
+	s.OBS_VAR.UnmarshalText([]byte(fields[12]))
+	s.OBS_UNITS.UnmarshalText([]byte(fields[13]))
+	s.OBS_LEV.UnmarshalText([]byte(fields[14]))
+	s.OBTYPE.UnmarshalText([]byte(fields[15]))
+	s.VX_MASK.UnmarshalText([]byte(fields[16]))
+	s.INTERP_MTHD.UnmarshalText([]byte(fields[17]))
+	s.INTERP_PNTS.UnmarshalText([]byte(fields[18]))
+	s.FCST_THRESH.UnmarshalText([]byte(fields[19]))
+	s.OBS_THRESH.UnmarshalText([]byte(fields[20]))
+	s.COV_THRESH.UnmarshalText([]byte(fields[21]))
+	s.ALPHA.UnmarshalText([]byte(fields[22]))
+	s.LINE_TYPE.UnmarshalText([]byte(fields[23]))
 }
 
-func (s *STAT_PJC) fill_STAT_PJC_Header(fields []string, doc *map[string]interface{}) {
-	dataLen := len(fields)
-	i := -1
-	// fill the met fields leaving out "" and NA values
-	i++
-	SetValueForField(doc, "STAT", "VERSION", i, dataLen, fields, 0, "string")
-	i++
-	SetValueForField(doc, "STAT", "MODEL", i, dataLen, fields, 1, "string")
-	i++
-	SetValueForField(doc, "STAT", "DESC", i, dataLen, fields, 2, "string")
-	i++
-	SetValueForField(doc, "STAT", "FCST_VALID_BEG", i, dataLen, fields, 4, "int")
-	i++
-	SetValueForField(doc, "STAT", "FCST_VALID_END", i, dataLen, fields, 5, "int")
-	i++
-	SetValueForField(doc, "STAT", "OBS_LEAD", i, dataLen, fields, 6, "int")
-	i++
-	SetValueForField(doc, "STAT", "OBS_VALID_BEG", i, dataLen, fields, 7, "int")
-	i++
-	SetValueForField(doc, "STAT", "OBS_VALID_END", i, dataLen, fields, 8, "int")
-	i++
-	SetValueForField(doc, "STAT", "FCST_VAR", i, dataLen, fields, 9, "string")
-	i++
-	SetValueForField(doc, "STAT", "FCST_UNITS", i, dataLen, fields, 10, "string")
-	i++
-	SetValueForField(doc, "STAT", "FCST_LEV", i, dataLen, fields, 11, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_VAR", i, dataLen, fields, 12, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_UNITS", i, dataLen, fields, 13, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_LEV", i, dataLen, fields, 14, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBTYPE", i, dataLen, fields, 15, "string")
-	i++
-	SetValueForField(doc, "STAT", "VX_MASK", i, dataLen, fields, 16, "string")
-	i++
-	SetValueForField(doc, "STAT", "INTERP_MTHD", i, dataLen, fields, 17, "string")
-	i++
-	SetValueForField(doc, "STAT", "INTERP_PNTS", i, dataLen, fields, 18, "int")
-	i++
-	SetValueForField(doc, "STAT", "FCST_THRESH", i, dataLen, fields, 19, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_THRESH", i, dataLen, fields, 20, "string")
-	i++
-	SetValueForField(doc, "STAT", "COV_THRESH", i, dataLen, fields, 21, "string")
-	i++
-	SetValueForField(doc, "STAT", "ALPHA", i, dataLen, fields, 22, "float64")
-	i++
-	SetValueForField(doc, "STAT", "LINE_TYPE", i, dataLen, fields, 23, "string")
+func (s *STAT_PJC_header) fill(fields []string) {
+	s.VERSION.UnmarshalText([]byte(fields[0]))
+	s.MODEL.UnmarshalText([]byte(fields[1]))
+	s.DESC.UnmarshalText([]byte(fields[2]))
+	s.FCST_VALID_BEG.UnmarshalText([]byte(fields[4]))
+	s.FCST_VALID_END.UnmarshalText([]byte(fields[5]))
+	s.OBS_LEAD.UnmarshalText([]byte(fields[6]))
+	s.OBS_VALID_BEG.UnmarshalText([]byte(fields[7]))
+	s.OBS_VALID_END.UnmarshalText([]byte(fields[8]))
+	s.FCST_VAR.UnmarshalText([]byte(fields[9]))
+	s.FCST_UNITS.UnmarshalText([]byte(fields[10]))
+	s.FCST_LEV.UnmarshalText([]byte(fields[11]))
+	s.OBS_VAR.UnmarshalText([]byte(fields[12]))
+	s.OBS_UNITS.UnmarshalText([]byte(fields[13]))
+	s.OBS_LEV.UnmarshalText([]byte(fields[14]))
+	s.OBTYPE.UnmarshalText([]byte(fields[15]))
+	s.VX_MASK.UnmarshalText([]byte(fields[16]))
+	s.INTERP_MTHD.UnmarshalText([]byte(fields[17]))
+	s.INTERP_PNTS.UnmarshalText([]byte(fields[18]))
+	s.FCST_THRESH.UnmarshalText([]byte(fields[19]))
+	s.OBS_THRESH.UnmarshalText([]byte(fields[20]))
+	s.COV_THRESH.UnmarshalText([]byte(fields[21]))
+	s.ALPHA.UnmarshalText([]byte(fields[22]))
+	s.LINE_TYPE.UnmarshalText([]byte(fields[23]))
 }
 
-func (s *STAT_PRC) fill_STAT_PRC_Header(fields []string, doc *map[string]interface{}) {
-	dataLen := len(fields)
-	i := -1
-	// fill the met fields leaving out "" and NA values
-	i++
-	SetValueForField(doc, "STAT", "VERSION", i, dataLen, fields, 0, "string")
-	i++
-	SetValueForField(doc, "STAT", "MODEL", i, dataLen, fields, 1, "string")
-	i++
-	SetValueForField(doc, "STAT", "DESC", i, dataLen, fields, 2, "string")
-	i++
-	SetValueForField(doc, "STAT", "FCST_VALID_BEG", i, dataLen, fields, 4, "int")
-	i++
-	SetValueForField(doc, "STAT", "FCST_VALID_END", i, dataLen, fields, 5, "int")
-	i++
-	SetValueForField(doc, "STAT", "OBS_LEAD", i, dataLen, fields, 6, "int")
-	i++
-	SetValueForField(doc, "STAT", "OBS_VALID_BEG", i, dataLen, fields, 7, "int")
-	i++
-	SetValueForField(doc, "STAT", "OBS_VALID_END", i, dataLen, fields, 8, "int")
-	i++
-	SetValueForField(doc, "STAT", "FCST_VAR", i, dataLen, fields, 9, "string")
-	i++
-	SetValueForField(doc, "STAT", "FCST_UNITS", i, dataLen, fields, 10, "string")
-	i++
-	SetValueForField(doc, "STAT", "FCST_LEV", i, dataLen, fields, 11, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_VAR", i, dataLen, fields, 12, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_UNITS", i, dataLen, fields, 13, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_LEV", i, dataLen, fields, 14, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBTYPE", i, dataLen, fields, 15, "string")
-	i++
-	SetValueForField(doc, "STAT", "VX_MASK", i, dataLen, fields, 16, "string")
-	i++
-	SetValueForField(doc, "STAT", "INTERP_MTHD", i, dataLen, fields, 17, "string")
-	i++
-	SetValueForField(doc, "STAT", "INTERP_PNTS", i, dataLen, fields, 18, "int")
-	i++
-	SetValueForField(doc, "STAT", "FCST_THRESH", i, dataLen, fields, 19, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_THRESH", i, dataLen, fields, 20, "string")
-	i++
-	SetValueForField(doc, "STAT", "COV_THRESH", i, dataLen, fields, 21, "string")
-	i++
-	SetValueForField(doc, "STAT", "ALPHA", i, dataLen, fields, 22, "float64")
-	i++
-	SetValueForField(doc, "STAT", "LINE_TYPE", i, dataLen, fields, 23, "string")
+func (s *STAT_PRC_header) fill(fields []string) {
+	s.VERSION.UnmarshalText([]byte(fields[0]))
+	s.MODEL.UnmarshalText([]byte(fields[1]))
+	s.DESC.UnmarshalText([]byte(fields[2]))
+	s.FCST_VALID_BEG.UnmarshalText([]byte(fields[4]))
+	s.FCST_VALID_END.UnmarshalText([]byte(fields[5]))
+	s.OBS_LEAD.UnmarshalText([]byte(fields[6]))
+	s.OBS_VALID_BEG.UnmarshalText([]byte(fields[7]))
+	s.OBS_VALID_END.UnmarshalText([]byte(fields[8]))
+	s.FCST_VAR.UnmarshalText([]byte(fields[9]))
+	s.FCST_UNITS.UnmarshalText([]byte(fields[10]))
+	s.FCST_LEV.UnmarshalText([]byte(fields[11]))
+	s.OBS_VAR.UnmarshalText([]byte(fields[12]))
+	s.OBS_UNITS.UnmarshalText([]byte(fields[13]))
+	s.OBS_LEV.UnmarshalText([]byte(fields[14]))
+	s.OBTYPE.UnmarshalText([]byte(fields[15]))
+	s.VX_MASK.UnmarshalText([]byte(fields[16]))
+	s.INTERP_MTHD.UnmarshalText([]byte(fields[17]))
+	s.INTERP_PNTS.UnmarshalText([]byte(fields[18]))
+	s.FCST_THRESH.UnmarshalText([]byte(fields[19]))
+	s.OBS_THRESH.UnmarshalText([]byte(fields[20]))
+	s.COV_THRESH.UnmarshalText([]byte(fields[21]))
+	s.ALPHA.UnmarshalText([]byte(fields[22]))
+	s.LINE_TYPE.UnmarshalText([]byte(fields[23]))
 }
 
-func (s *STAT_PSTD) fill_STAT_PSTD_Header(fields []string, doc *map[string]interface{}) {
-	dataLen := len(fields)
-	i := -1
-	// fill the met fields leaving out "" and NA values
-	i++
-	SetValueForField(doc, "STAT", "VERSION", i, dataLen, fields, 0, "string")
-	i++
-	SetValueForField(doc, "STAT", "MODEL", i, dataLen, fields, 1, "string")
-	i++
-	SetValueForField(doc, "STAT", "DESC", i, dataLen, fields, 2, "string")
-	i++
-	SetValueForField(doc, "STAT", "FCST_VALID_BEG", i, dataLen, fields, 4, "int")
-	i++
-	SetValueForField(doc, "STAT", "FCST_VALID_END", i, dataLen, fields, 5, "int")
-	i++
-	SetValueForField(doc, "STAT", "OBS_LEAD", i, dataLen, fields, 6, "int")
-	i++
-	SetValueForField(doc, "STAT", "OBS_VALID_BEG", i, dataLen, fields, 7, "int")
-	i++
-	SetValueForField(doc, "STAT", "OBS_VALID_END", i, dataLen, fields, 8, "int")
-	i++
-	SetValueForField(doc, "STAT", "FCST_VAR", i, dataLen, fields, 9, "string")
-	i++
-	SetValueForField(doc, "STAT", "FCST_UNITS", i, dataLen, fields, 10, "string")
-	i++
-	SetValueForField(doc, "STAT", "FCST_LEV", i, dataLen, fields, 11, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_VAR", i, dataLen, fields, 12, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_UNITS", i, dataLen, fields, 13, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_LEV", i, dataLen, fields, 14, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBTYPE", i, dataLen, fields, 15, "string")
-	i++
-	SetValueForField(doc, "STAT", "VX_MASK", i, dataLen, fields, 16, "string")
-	i++
-	SetValueForField(doc, "STAT", "INTERP_MTHD", i, dataLen, fields, 17, "string")
-	i++
-	SetValueForField(doc, "STAT", "INTERP_PNTS", i, dataLen, fields, 18, "int")
-	i++
-	SetValueForField(doc, "STAT", "FCST_THRESH", i, dataLen, fields, 19, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_THRESH", i, dataLen, fields, 20, "string")
-	i++
-	SetValueForField(doc, "STAT", "COV_THRESH", i, dataLen, fields, 21, "string")
-	i++
-	SetValueForField(doc, "STAT", "ALPHA", i, dataLen, fields, 22, "float64")
-	i++
-	SetValueForField(doc, "STAT", "LINE_TYPE", i, dataLen, fields, 23, "string")
+func (s *STAT_PSTD_header) fill(fields []string) {
+	s.VERSION.UnmarshalText([]byte(fields[0]))
+	s.MODEL.UnmarshalText([]byte(fields[1]))
+	s.DESC.UnmarshalText([]byte(fields[2]))
+	s.FCST_VALID_BEG.UnmarshalText([]byte(fields[4]))
+	s.FCST_VALID_END.UnmarshalText([]byte(fields[5]))
+	s.OBS_LEAD.UnmarshalText([]byte(fields[6]))
+	s.OBS_VALID_BEG.UnmarshalText([]byte(fields[7]))
+	s.OBS_VALID_END.UnmarshalText([]byte(fields[8]))
+	s.FCST_VAR.UnmarshalText([]byte(fields[9]))
+	s.FCST_UNITS.UnmarshalText([]byte(fields[10]))
+	s.FCST_LEV.UnmarshalText([]byte(fields[11]))
+	s.OBS_VAR.UnmarshalText([]byte(fields[12]))
+	s.OBS_UNITS.UnmarshalText([]byte(fields[13]))
+	s.OBS_LEV.UnmarshalText([]byte(fields[14]))
+	s.OBTYPE.UnmarshalText([]byte(fields[15]))
+	s.VX_MASK.UnmarshalText([]byte(fields[16]))
+	s.INTERP_MTHD.UnmarshalText([]byte(fields[17]))
+	s.INTERP_PNTS.UnmarshalText([]byte(fields[18]))
+	s.FCST_THRESH.UnmarshalText([]byte(fields[19]))
+	s.OBS_THRESH.UnmarshalText([]byte(fields[20]))
+	s.COV_THRESH.UnmarshalText([]byte(fields[21]))
+	s.ALPHA.UnmarshalText([]byte(fields[22]))
+	s.LINE_TYPE.UnmarshalText([]byte(fields[23]))
 }
 
-func (s *STAT_RELP) fill_STAT_RELP_Header(fields []string, doc *map[string]interface{}) {
-	dataLen := len(fields)
-	i := -1
-	// fill the met fields leaving out "" and NA values
-	i++
-	SetValueForField(doc, "STAT", "VERSION", i, dataLen, fields, 0, "string")
-	i++
-	SetValueForField(doc, "STAT", "MODEL", i, dataLen, fields, 1, "string")
-	i++
-	SetValueForField(doc, "STAT", "DESC", i, dataLen, fields, 2, "string")
-	i++
-	SetValueForField(doc, "STAT", "FCST_VALID_BEG", i, dataLen, fields, 4, "int")
-	i++
-	SetValueForField(doc, "STAT", "FCST_VALID_END", i, dataLen, fields, 5, "int")
-	i++
-	SetValueForField(doc, "STAT", "OBS_LEAD", i, dataLen, fields, 6, "int")
-	i++
-	SetValueForField(doc, "STAT", "OBS_VALID_BEG", i, dataLen, fields, 7, "int")
-	i++
-	SetValueForField(doc, "STAT", "OBS_VALID_END", i, dataLen, fields, 8, "int")
-	i++
-	SetValueForField(doc, "STAT", "FCST_VAR", i, dataLen, fields, 9, "string")
-	i++
-	SetValueForField(doc, "STAT", "FCST_UNITS", i, dataLen, fields, 10, "string")
-	i++
-	SetValueForField(doc, "STAT", "FCST_LEV", i, dataLen, fields, 11, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_VAR", i, dataLen, fields, 12, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_UNITS", i, dataLen, fields, 13, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_LEV", i, dataLen, fields, 14, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBTYPE", i, dataLen, fields, 15, "string")
-	i++
-	SetValueForField(doc, "STAT", "VX_MASK", i, dataLen, fields, 16, "string")
-	i++
-	SetValueForField(doc, "STAT", "INTERP_MTHD", i, dataLen, fields, 17, "string")
-	i++
-	SetValueForField(doc, "STAT", "INTERP_PNTS", i, dataLen, fields, 18, "int")
-	i++
-	SetValueForField(doc, "STAT", "FCST_THRESH", i, dataLen, fields, 19, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_THRESH", i, dataLen, fields, 20, "string")
-	i++
-	SetValueForField(doc, "STAT", "COV_THRESH", i, dataLen, fields, 21, "string")
-	i++
-	SetValueForField(doc, "STAT", "ALPHA", i, dataLen, fields, 22, "float64")
-	i++
-	SetValueForField(doc, "STAT", "LINE_TYPE", i, dataLen, fields, 23, "string")
+func (s *STAT_RELP_header) fill(fields []string) {
+	s.VERSION.UnmarshalText([]byte(fields[0]))
+	s.MODEL.UnmarshalText([]byte(fields[1]))
+	s.DESC.UnmarshalText([]byte(fields[2]))
+	s.FCST_VALID_BEG.UnmarshalText([]byte(fields[4]))
+	s.FCST_VALID_END.UnmarshalText([]byte(fields[5]))
+	s.OBS_LEAD.UnmarshalText([]byte(fields[6]))
+	s.OBS_VALID_BEG.UnmarshalText([]byte(fields[7]))
+	s.OBS_VALID_END.UnmarshalText([]byte(fields[8]))
+	s.FCST_VAR.UnmarshalText([]byte(fields[9]))
+	s.FCST_UNITS.UnmarshalText([]byte(fields[10]))
+	s.FCST_LEV.UnmarshalText([]byte(fields[11]))
+	s.OBS_VAR.UnmarshalText([]byte(fields[12]))
+	s.OBS_UNITS.UnmarshalText([]byte(fields[13]))
+	s.OBS_LEV.UnmarshalText([]byte(fields[14]))
+	s.OBTYPE.UnmarshalText([]byte(fields[15]))
+	s.VX_MASK.UnmarshalText([]byte(fields[16]))
+	s.INTERP_MTHD.UnmarshalText([]byte(fields[17]))
+	s.INTERP_PNTS.UnmarshalText([]byte(fields[18]))
+	s.FCST_THRESH.UnmarshalText([]byte(fields[19]))
+	s.OBS_THRESH.UnmarshalText([]byte(fields[20]))
+	s.COV_THRESH.UnmarshalText([]byte(fields[21]))
+	s.ALPHA.UnmarshalText([]byte(fields[22]))
+	s.LINE_TYPE.UnmarshalText([]byte(fields[23]))
 }
 
-func (s *STAT_RHIST) fill_STAT_RHIST_Header(fields []string, doc *map[string]interface{}) {
-	dataLen := len(fields)
-	i := -1
-	// fill the met fields leaving out "" and NA values
-	i++
-	SetValueForField(doc, "STAT", "VERSION", i, dataLen, fields, 0, "string")
-	i++
-	SetValueForField(doc, "STAT", "MODEL", i, dataLen, fields, 1, "string")
-	i++
-	SetValueForField(doc, "STAT", "DESC", i, dataLen, fields, 2, "string")
-	i++
-	SetValueForField(doc, "STAT", "FCST_VALID_BEG", i, dataLen, fields, 4, "int")
-	i++
-	SetValueForField(doc, "STAT", "FCST_VALID_END", i, dataLen, fields, 5, "int")
-	i++
-	SetValueForField(doc, "STAT", "OBS_LEAD", i, dataLen, fields, 6, "int")
-	i++
-	SetValueForField(doc, "STAT", "OBS_VALID_BEG", i, dataLen, fields, 7, "int")
-	i++
-	SetValueForField(doc, "STAT", "OBS_VALID_END", i, dataLen, fields, 8, "int")
-	i++
-	SetValueForField(doc, "STAT", "FCST_VAR", i, dataLen, fields, 9, "string")
-	i++
-	SetValueForField(doc, "STAT", "FCST_UNITS", i, dataLen, fields, 10, "string")
-	i++
-	SetValueForField(doc, "STAT", "FCST_LEV", i, dataLen, fields, 11, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_VAR", i, dataLen, fields, 12, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_UNITS", i, dataLen, fields, 13, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_LEV", i, dataLen, fields, 14, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBTYPE", i, dataLen, fields, 15, "string")
-	i++
-	SetValueForField(doc, "STAT", "VX_MASK", i, dataLen, fields, 16, "string")
-	i++
-	SetValueForField(doc, "STAT", "INTERP_MTHD", i, dataLen, fields, 17, "string")
-	i++
-	SetValueForField(doc, "STAT", "INTERP_PNTS", i, dataLen, fields, 18, "int")
-	i++
-	SetValueForField(doc, "STAT", "FCST_THRESH", i, dataLen, fields, 19, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_THRESH", i, dataLen, fields, 20, "string")
-	i++
-	SetValueForField(doc, "STAT", "COV_THRESH", i, dataLen, fields, 21, "string")
-	i++
-	SetValueForField(doc, "STAT", "ALPHA", i, dataLen, fields, 22, "float64")
-	i++
-	SetValueForField(doc, "STAT", "LINE_TYPE", i, dataLen, fields, 23, "string")
+func (s *STAT_RHIST_header) fill(fields []string) {
+	s.VERSION.UnmarshalText([]byte(fields[0]))
+	s.MODEL.UnmarshalText([]byte(fields[1]))
+	s.DESC.UnmarshalText([]byte(fields[2]))
+	s.FCST_VALID_BEG.UnmarshalText([]byte(fields[4]))
+	s.FCST_VALID_END.UnmarshalText([]byte(fields[5]))
+	s.OBS_LEAD.UnmarshalText([]byte(fields[6]))
+	s.OBS_VALID_BEG.UnmarshalText([]byte(fields[7]))
+	s.OBS_VALID_END.UnmarshalText([]byte(fields[8]))
+	s.FCST_VAR.UnmarshalText([]byte(fields[9]))
+	s.FCST_UNITS.UnmarshalText([]byte(fields[10]))
+	s.FCST_LEV.UnmarshalText([]byte(fields[11]))
+	s.OBS_VAR.UnmarshalText([]byte(fields[12]))
+	s.OBS_UNITS.UnmarshalText([]byte(fields[13]))
+	s.OBS_LEV.UnmarshalText([]byte(fields[14]))
+	s.OBTYPE.UnmarshalText([]byte(fields[15]))
+	s.VX_MASK.UnmarshalText([]byte(fields[16]))
+	s.INTERP_MTHD.UnmarshalText([]byte(fields[17]))
+	s.INTERP_PNTS.UnmarshalText([]byte(fields[18]))
+	s.FCST_THRESH.UnmarshalText([]byte(fields[19]))
+	s.OBS_THRESH.UnmarshalText([]byte(fields[20]))
+	s.COV_THRESH.UnmarshalText([]byte(fields[21]))
+	s.ALPHA.UnmarshalText([]byte(fields[22]))
+	s.LINE_TYPE.UnmarshalText([]byte(fields[23]))
 }
 
-func (s *STAT_RPS) fill_STAT_RPS_Header(fields []string, doc *map[string]interface{}) {
-	dataLen := len(fields)
-	i := -1
-	// fill the met fields leaving out "" and NA values
-	i++
-	SetValueForField(doc, "STAT", "VERSION", i, dataLen, fields, 0, "string")
-	i++
-	SetValueForField(doc, "STAT", "MODEL", i, dataLen, fields, 1, "string")
-	i++
-	SetValueForField(doc, "STAT", "DESC", i, dataLen, fields, 2, "string")
-	i++
-	SetValueForField(doc, "STAT", "FCST_VALID_BEG", i, dataLen, fields, 4, "int")
-	i++
-	SetValueForField(doc, "STAT", "FCST_VALID_END", i, dataLen, fields, 5, "int")
-	i++
-	SetValueForField(doc, "STAT", "OBS_LEAD", i, dataLen, fields, 6, "int")
-	i++
-	SetValueForField(doc, "STAT", "OBS_VALID_BEG", i, dataLen, fields, 7, "int")
-	i++
-	SetValueForField(doc, "STAT", "OBS_VALID_END", i, dataLen, fields, 8, "int")
-	i++
-	SetValueForField(doc, "STAT", "FCST_VAR", i, dataLen, fields, 9, "string")
-	i++
-	SetValueForField(doc, "STAT", "FCST_UNITS", i, dataLen, fields, 10, "string")
-	i++
-	SetValueForField(doc, "STAT", "FCST_LEV", i, dataLen, fields, 11, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_VAR", i, dataLen, fields, 12, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_UNITS", i, dataLen, fields, 13, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_LEV", i, dataLen, fields, 14, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBTYPE", i, dataLen, fields, 15, "string")
-	i++
-	SetValueForField(doc, "STAT", "VX_MASK", i, dataLen, fields, 16, "string")
-	i++
-	SetValueForField(doc, "STAT", "INTERP_MTHD", i, dataLen, fields, 17, "string")
-	i++
-	SetValueForField(doc, "STAT", "INTERP_PNTS", i, dataLen, fields, 18, "int")
-	i++
-	SetValueForField(doc, "STAT", "FCST_THRESH", i, dataLen, fields, 19, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_THRESH", i, dataLen, fields, 20, "string")
-	i++
-	SetValueForField(doc, "STAT", "COV_THRESH", i, dataLen, fields, 21, "string")
-	i++
-	SetValueForField(doc, "STAT", "ALPHA", i, dataLen, fields, 22, "float64")
-	i++
-	SetValueForField(doc, "STAT", "LINE_TYPE", i, dataLen, fields, 23, "string")
+func (s *STAT_RPS_header) fill(fields []string) {
+	s.VERSION.UnmarshalText([]byte(fields[0]))
+	s.MODEL.UnmarshalText([]byte(fields[1]))
+	s.DESC.UnmarshalText([]byte(fields[2]))
+	s.FCST_VALID_BEG.UnmarshalText([]byte(fields[4]))
+	s.FCST_VALID_END.UnmarshalText([]byte(fields[5]))
+	s.OBS_LEAD.UnmarshalText([]byte(fields[6]))
+	s.OBS_VALID_BEG.UnmarshalText([]byte(fields[7]))
+	s.OBS_VALID_END.UnmarshalText([]byte(fields[8]))
+	s.FCST_VAR.UnmarshalText([]byte(fields[9]))
+	s.FCST_UNITS.UnmarshalText([]byte(fields[10]))
+	s.FCST_LEV.UnmarshalText([]byte(fields[11]))
+	s.OBS_VAR.UnmarshalText([]byte(fields[12]))
+	s.OBS_UNITS.UnmarshalText([]byte(fields[13]))
+	s.OBS_LEV.UnmarshalText([]byte(fields[14]))
+	s.OBTYPE.UnmarshalText([]byte(fields[15]))
+	s.VX_MASK.UnmarshalText([]byte(fields[16]))
+	s.INTERP_MTHD.UnmarshalText([]byte(fields[17]))
+	s.INTERP_PNTS.UnmarshalText([]byte(fields[18]))
+	s.FCST_THRESH.UnmarshalText([]byte(fields[19]))
+	s.OBS_THRESH.UnmarshalText([]byte(fields[20]))
+	s.COV_THRESH.UnmarshalText([]byte(fields[21]))
+	s.ALPHA.UnmarshalText([]byte(fields[22]))
+	s.LINE_TYPE.UnmarshalText([]byte(fields[23]))
 }
 
-func (s *STAT_SAL1L2) fill_STAT_SAL1L2_Header(fields []string, doc *map[string]interface{}) {
-	dataLen := len(fields)
-	i := -1
-	// fill the met fields leaving out "" and NA values
-	i++
-	SetValueForField(doc, "STAT", "VERSION", i, dataLen, fields, 0, "string")
-	i++
-	SetValueForField(doc, "STAT", "MODEL", i, dataLen, fields, 1, "string")
-	i++
-	SetValueForField(doc, "STAT", "DESC", i, dataLen, fields, 2, "string")
-	i++
-	SetValueForField(doc, "STAT", "FCST_VALID_BEG", i, dataLen, fields, 4, "int")
-	i++
-	SetValueForField(doc, "STAT", "FCST_VALID_END", i, dataLen, fields, 5, "int")
-	i++
-	SetValueForField(doc, "STAT", "OBS_LEAD", i, dataLen, fields, 6, "int")
-	i++
-	SetValueForField(doc, "STAT", "OBS_VALID_BEG", i, dataLen, fields, 7, "int")
-	i++
-	SetValueForField(doc, "STAT", "OBS_VALID_END", i, dataLen, fields, 8, "int")
-	i++
-	SetValueForField(doc, "STAT", "FCST_VAR", i, dataLen, fields, 9, "string")
-	i++
-	SetValueForField(doc, "STAT", "FCST_UNITS", i, dataLen, fields, 10, "string")
-	i++
-	SetValueForField(doc, "STAT", "FCST_LEV", i, dataLen, fields, 11, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_VAR", i, dataLen, fields, 12, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_UNITS", i, dataLen, fields, 13, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_LEV", i, dataLen, fields, 14, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBTYPE", i, dataLen, fields, 15, "string")
-	i++
-	SetValueForField(doc, "STAT", "VX_MASK", i, dataLen, fields, 16, "string")
-	i++
-	SetValueForField(doc, "STAT", "INTERP_MTHD", i, dataLen, fields, 17, "string")
-	i++
-	SetValueForField(doc, "STAT", "INTERP_PNTS", i, dataLen, fields, 18, "int")
-	i++
-	SetValueForField(doc, "STAT", "FCST_THRESH", i, dataLen, fields, 19, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_THRESH", i, dataLen, fields, 20, "string")
-	i++
-	SetValueForField(doc, "STAT", "COV_THRESH", i, dataLen, fields, 21, "string")
-	i++
-	SetValueForField(doc, "STAT", "ALPHA", i, dataLen, fields, 22, "float64")
-	i++
-	SetValueForField(doc, "STAT", "LINE_TYPE", i, dataLen, fields, 23, "string")
+func (s *STAT_SAL1L2_header) fill(fields []string) {
+	s.VERSION.UnmarshalText([]byte(fields[0]))
+	s.MODEL.UnmarshalText([]byte(fields[1]))
+	s.DESC.UnmarshalText([]byte(fields[2]))
+	s.FCST_VALID_BEG.UnmarshalText([]byte(fields[4]))
+	s.FCST_VALID_END.UnmarshalText([]byte(fields[5]))
+	s.OBS_LEAD.UnmarshalText([]byte(fields[6]))
+	s.OBS_VALID_BEG.UnmarshalText([]byte(fields[7]))
+	s.OBS_VALID_END.UnmarshalText([]byte(fields[8]))
+	s.FCST_VAR.UnmarshalText([]byte(fields[9]))
+	s.FCST_UNITS.UnmarshalText([]byte(fields[10]))
+	s.FCST_LEV.UnmarshalText([]byte(fields[11]))
+	s.OBS_VAR.UnmarshalText([]byte(fields[12]))
+	s.OBS_UNITS.UnmarshalText([]byte(fields[13]))
+	s.OBS_LEV.UnmarshalText([]byte(fields[14]))
+	s.OBTYPE.UnmarshalText([]byte(fields[15]))
+	s.VX_MASK.UnmarshalText([]byte(fields[16]))
+	s.INTERP_MTHD.UnmarshalText([]byte(fields[17]))
+	s.INTERP_PNTS.UnmarshalText([]byte(fields[18]))
+	s.FCST_THRESH.UnmarshalText([]byte(fields[19]))
+	s.OBS_THRESH.UnmarshalText([]byte(fields[20]))
+	s.COV_THRESH.UnmarshalText([]byte(fields[21]))
+	s.ALPHA.UnmarshalText([]byte(fields[22]))
+	s.LINE_TYPE.UnmarshalText([]byte(fields[23]))
 }
 
-func (s *STAT_SL1L2) fill_STAT_SL1L2_Header(fields []string, doc *map[string]interface{}) {
-	dataLen := len(fields)
-	i := -1
-	// fill the met fields leaving out "" and NA values
-	i++
-	SetValueForField(doc, "STAT", "VERSION", i, dataLen, fields, 0, "string")
-	i++
-	SetValueForField(doc, "STAT", "MODEL", i, dataLen, fields, 1, "string")
-	i++
-	SetValueForField(doc, "STAT", "DESC", i, dataLen, fields, 2, "string")
-	i++
-	SetValueForField(doc, "STAT", "FCST_VALID_BEG", i, dataLen, fields, 4, "int")
-	i++
-	SetValueForField(doc, "STAT", "FCST_VALID_END", i, dataLen, fields, 5, "int")
-	i++
-	SetValueForField(doc, "STAT", "OBS_LEAD", i, dataLen, fields, 6, "int")
-	i++
-	SetValueForField(doc, "STAT", "OBS_VALID_BEG", i, dataLen, fields, 7, "int")
-	i++
-	SetValueForField(doc, "STAT", "OBS_VALID_END", i, dataLen, fields, 8, "int")
-	i++
-	SetValueForField(doc, "STAT", "FCST_VAR", i, dataLen, fields, 9, "string")
-	i++
-	SetValueForField(doc, "STAT", "FCST_UNITS", i, dataLen, fields, 10, "string")
-	i++
-	SetValueForField(doc, "STAT", "FCST_LEV", i, dataLen, fields, 11, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_VAR", i, dataLen, fields, 12, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_UNITS", i, dataLen, fields, 13, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_LEV", i, dataLen, fields, 14, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBTYPE", i, dataLen, fields, 15, "string")
-	i++
-	SetValueForField(doc, "STAT", "VX_MASK", i, dataLen, fields, 16, "string")
-	i++
-	SetValueForField(doc, "STAT", "INTERP_MTHD", i, dataLen, fields, 17, "string")
-	i++
-	SetValueForField(doc, "STAT", "INTERP_PNTS", i, dataLen, fields, 18, "int")
-	i++
-	SetValueForField(doc, "STAT", "FCST_THRESH", i, dataLen, fields, 19, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_THRESH", i, dataLen, fields, 20, "string")
-	i++
-	SetValueForField(doc, "STAT", "COV_THRESH", i, dataLen, fields, 21, "string")
-	i++
-	SetValueForField(doc, "STAT", "ALPHA", i, dataLen, fields, 22, "float64")
-	i++
-	SetValueForField(doc, "STAT", "LINE_TYPE", i, dataLen, fields, 23, "string")
+func (s *STAT_SL1L2_header) fill(fields []string) {
+	s.VERSION.UnmarshalText([]byte(fields[0]))
+	s.MODEL.UnmarshalText([]byte(fields[1]))
+	s.DESC.UnmarshalText([]byte(fields[2]))
+	s.FCST_VALID_BEG.UnmarshalText([]byte(fields[4]))
+	s.FCST_VALID_END.UnmarshalText([]byte(fields[5]))
+	s.OBS_LEAD.UnmarshalText([]byte(fields[6]))
+	s.OBS_VALID_BEG.UnmarshalText([]byte(fields[7]))
+	s.OBS_VALID_END.UnmarshalText([]byte(fields[8]))
+	s.FCST_VAR.UnmarshalText([]byte(fields[9]))
+	s.FCST_UNITS.UnmarshalText([]byte(fields[10]))
+	s.FCST_LEV.UnmarshalText([]byte(fields[11]))
+	s.OBS_VAR.UnmarshalText([]byte(fields[12]))
+	s.OBS_UNITS.UnmarshalText([]byte(fields[13]))
+	s.OBS_LEV.UnmarshalText([]byte(fields[14]))
+	s.OBTYPE.UnmarshalText([]byte(fields[15]))
+	s.VX_MASK.UnmarshalText([]byte(fields[16]))
+	s.INTERP_MTHD.UnmarshalText([]byte(fields[17]))
+	s.INTERP_PNTS.UnmarshalText([]byte(fields[18]))
+	s.FCST_THRESH.UnmarshalText([]byte(fields[19]))
+	s.OBS_THRESH.UnmarshalText([]byte(fields[20]))
+	s.COV_THRESH.UnmarshalText([]byte(fields[21]))
+	s.ALPHA.UnmarshalText([]byte(fields[22]))
+	s.LINE_TYPE.UnmarshalText([]byte(fields[23]))
 }
 
-func (s *STAT_SSVAR) fill_STAT_SSVAR_Header(fields []string, doc *map[string]interface{}) {
-	dataLen := len(fields)
-	i := -1
-	// fill the met fields leaving out "" and NA values
-	i++
-	SetValueForField(doc, "STAT", "VERSION", i, dataLen, fields, 0, "string")
-	i++
-	SetValueForField(doc, "STAT", "MODEL", i, dataLen, fields, 1, "string")
-	i++
-	SetValueForField(doc, "STAT", "DESC", i, dataLen, fields, 2, "string")
-	i++
-	SetValueForField(doc, "STAT", "FCST_VALID_BEG", i, dataLen, fields, 4, "int")
-	i++
-	SetValueForField(doc, "STAT", "FCST_VALID_END", i, dataLen, fields, 5, "int")
-	i++
-	SetValueForField(doc, "STAT", "OBS_LEAD", i, dataLen, fields, 6, "int")
-	i++
-	SetValueForField(doc, "STAT", "OBS_VALID_BEG", i, dataLen, fields, 7, "int")
-	i++
-	SetValueForField(doc, "STAT", "OBS_VALID_END", i, dataLen, fields, 8, "int")
-	i++
-	SetValueForField(doc, "STAT", "FCST_VAR", i, dataLen, fields, 9, "string")
-	i++
-	SetValueForField(doc, "STAT", "FCST_UNITS", i, dataLen, fields, 10, "string")
-	i++
-	SetValueForField(doc, "STAT", "FCST_LEV", i, dataLen, fields, 11, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_VAR", i, dataLen, fields, 12, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_UNITS", i, dataLen, fields, 13, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_LEV", i, dataLen, fields, 14, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBTYPE", i, dataLen, fields, 15, "string")
-	i++
-	SetValueForField(doc, "STAT", "VX_MASK", i, dataLen, fields, 16, "string")
-	i++
-	SetValueForField(doc, "STAT", "INTERP_MTHD", i, dataLen, fields, 17, "string")
-	i++
-	SetValueForField(doc, "STAT", "INTERP_PNTS", i, dataLen, fields, 18, "int")
-	i++
-	SetValueForField(doc, "STAT", "FCST_THRESH", i, dataLen, fields, 19, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_THRESH", i, dataLen, fields, 20, "string")
-	i++
-	SetValueForField(doc, "STAT", "COV_THRESH", i, dataLen, fields, 21, "string")
-	i++
-	SetValueForField(doc, "STAT", "ALPHA", i, dataLen, fields, 22, "float64")
-	i++
-	SetValueForField(doc, "STAT", "LINE_TYPE", i, dataLen, fields, 23, "string")
+func (s *STAT_SSVAR_header) fill(fields []string) {
+	s.VERSION.UnmarshalText([]byte(fields[0]))
+	s.MODEL.UnmarshalText([]byte(fields[1]))
+	s.DESC.UnmarshalText([]byte(fields[2]))
+	s.FCST_VALID_BEG.UnmarshalText([]byte(fields[4]))
+	s.FCST_VALID_END.UnmarshalText([]byte(fields[5]))
+	s.OBS_LEAD.UnmarshalText([]byte(fields[6]))
+	s.OBS_VALID_BEG.UnmarshalText([]byte(fields[7]))
+	s.OBS_VALID_END.UnmarshalText([]byte(fields[8]))
+	s.FCST_VAR.UnmarshalText([]byte(fields[9]))
+	s.FCST_UNITS.UnmarshalText([]byte(fields[10]))
+	s.FCST_LEV.UnmarshalText([]byte(fields[11]))
+	s.OBS_VAR.UnmarshalText([]byte(fields[12]))
+	s.OBS_UNITS.UnmarshalText([]byte(fields[13]))
+	s.OBS_LEV.UnmarshalText([]byte(fields[14]))
+	s.OBTYPE.UnmarshalText([]byte(fields[15]))
+	s.VX_MASK.UnmarshalText([]byte(fields[16]))
+	s.INTERP_MTHD.UnmarshalText([]byte(fields[17]))
+	s.INTERP_PNTS.UnmarshalText([]byte(fields[18]))
+	s.FCST_THRESH.UnmarshalText([]byte(fields[19]))
+	s.OBS_THRESH.UnmarshalText([]byte(fields[20]))
+	s.COV_THRESH.UnmarshalText([]byte(fields[21]))
+	s.ALPHA.UnmarshalText([]byte(fields[22]))
+	s.LINE_TYPE.UnmarshalText([]byte(fields[23]))
 }
 
-func (s *STAT_VAL1L2) fill_STAT_VAL1L2_Header(fields []string, doc *map[string]interface{}) {
-	dataLen := len(fields)
-	i := -1
-	// fill the met fields leaving out "" and NA values
-	i++
-	SetValueForField(doc, "STAT", "VERSION", i, dataLen, fields, 0, "string")
-	i++
-	SetValueForField(doc, "STAT", "MODEL", i, dataLen, fields, 1, "string")
-	i++
-	SetValueForField(doc, "STAT", "DESC", i, dataLen, fields, 2, "string")
-	i++
-	SetValueForField(doc, "STAT", "FCST_VALID_BEG", i, dataLen, fields, 4, "int")
-	i++
-	SetValueForField(doc, "STAT", "FCST_VALID_END", i, dataLen, fields, 5, "int")
-	i++
-	SetValueForField(doc, "STAT", "OBS_LEAD", i, dataLen, fields, 6, "int")
-	i++
-	SetValueForField(doc, "STAT", "OBS_VALID_BEG", i, dataLen, fields, 7, "int")
-	i++
-	SetValueForField(doc, "STAT", "OBS_VALID_END", i, dataLen, fields, 8, "int")
-	i++
-	SetValueForField(doc, "STAT", "FCST_VAR", i, dataLen, fields, 9, "string")
-	i++
-	SetValueForField(doc, "STAT", "FCST_UNITS", i, dataLen, fields, 10, "string")
-	i++
-	SetValueForField(doc, "STAT", "FCST_LEV", i, dataLen, fields, 11, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_VAR", i, dataLen, fields, 12, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_UNITS", i, dataLen, fields, 13, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_LEV", i, dataLen, fields, 14, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBTYPE", i, dataLen, fields, 15, "string")
-	i++
-	SetValueForField(doc, "STAT", "VX_MASK", i, dataLen, fields, 16, "string")
-	i++
-	SetValueForField(doc, "STAT", "INTERP_MTHD", i, dataLen, fields, 17, "string")
-	i++
-	SetValueForField(doc, "STAT", "INTERP_PNTS", i, dataLen, fields, 18, "int")
-	i++
-	SetValueForField(doc, "STAT", "FCST_THRESH", i, dataLen, fields, 19, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_THRESH", i, dataLen, fields, 20, "string")
-	i++
-	SetValueForField(doc, "STAT", "COV_THRESH", i, dataLen, fields, 21, "string")
-	i++
-	SetValueForField(doc, "STAT", "ALPHA", i, dataLen, fields, 22, "float64")
-	i++
-	SetValueForField(doc, "STAT", "LINE_TYPE", i, dataLen, fields, 23, "string")
+func (s *STAT_VAL1L2_header) fill(fields []string) {
+	s.VERSION.UnmarshalText([]byte(fields[0]))
+	s.MODEL.UnmarshalText([]byte(fields[1]))
+	s.DESC.UnmarshalText([]byte(fields[2]))
+	s.FCST_VALID_BEG.UnmarshalText([]byte(fields[4]))
+	s.FCST_VALID_END.UnmarshalText([]byte(fields[5]))
+	s.OBS_LEAD.UnmarshalText([]byte(fields[6]))
+	s.OBS_VALID_BEG.UnmarshalText([]byte(fields[7]))
+	s.OBS_VALID_END.UnmarshalText([]byte(fields[8]))
+	s.FCST_VAR.UnmarshalText([]byte(fields[9]))
+	s.FCST_UNITS.UnmarshalText([]byte(fields[10]))
+	s.FCST_LEV.UnmarshalText([]byte(fields[11]))
+	s.OBS_VAR.UnmarshalText([]byte(fields[12]))
+	s.OBS_UNITS.UnmarshalText([]byte(fields[13]))
+	s.OBS_LEV.UnmarshalText([]byte(fields[14]))
+	s.OBTYPE.UnmarshalText([]byte(fields[15]))
+	s.VX_MASK.UnmarshalText([]byte(fields[16]))
+	s.INTERP_MTHD.UnmarshalText([]byte(fields[17]))
+	s.INTERP_PNTS.UnmarshalText([]byte(fields[18]))
+	s.FCST_THRESH.UnmarshalText([]byte(fields[19]))
+	s.OBS_THRESH.UnmarshalText([]byte(fields[20]))
+	s.COV_THRESH.UnmarshalText([]byte(fields[21]))
+	s.ALPHA.UnmarshalText([]byte(fields[22]))
+	s.LINE_TYPE.UnmarshalText([]byte(fields[23]))
 }
 
-func (s *STAT_VCNT) fill_STAT_VCNT_Header(fields []string, doc *map[string]interface{}) {
-	dataLen := len(fields)
-	i := -1
-	// fill the met fields leaving out "" and NA values
-	i++
-	SetValueForField(doc, "STAT", "VERSION", i, dataLen, fields, 0, "string")
-	i++
-	SetValueForField(doc, "STAT", "MODEL", i, dataLen, fields, 1, "string")
-	i++
-	SetValueForField(doc, "STAT", "DESC", i, dataLen, fields, 2, "string")
-	i++
-	SetValueForField(doc, "STAT", "FCST_VALID_BEG", i, dataLen, fields, 4, "int")
-	i++
-	SetValueForField(doc, "STAT", "FCST_VALID_END", i, dataLen, fields, 5, "int")
-	i++
-	SetValueForField(doc, "STAT", "OBS_LEAD", i, dataLen, fields, 6, "int")
-	i++
-	SetValueForField(doc, "STAT", "OBS_VALID_BEG", i, dataLen, fields, 7, "int")
-	i++
-	SetValueForField(doc, "STAT", "OBS_VALID_END", i, dataLen, fields, 8, "int")
-	i++
-	SetValueForField(doc, "STAT", "FCST_VAR", i, dataLen, fields, 9, "string")
-	i++
-	SetValueForField(doc, "STAT", "FCST_UNITS", i, dataLen, fields, 10, "string")
-	i++
-	SetValueForField(doc, "STAT", "FCST_LEV", i, dataLen, fields, 11, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_VAR", i, dataLen, fields, 12, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_UNITS", i, dataLen, fields, 13, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_LEV", i, dataLen, fields, 14, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBTYPE", i, dataLen, fields, 15, "string")
-	i++
-	SetValueForField(doc, "STAT", "VX_MASK", i, dataLen, fields, 16, "string")
-	i++
-	SetValueForField(doc, "STAT", "INTERP_MTHD", i, dataLen, fields, 17, "string")
-	i++
-	SetValueForField(doc, "STAT", "INTERP_PNTS", i, dataLen, fields, 18, "int")
-	i++
-	SetValueForField(doc, "STAT", "FCST_THRESH", i, dataLen, fields, 19, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_THRESH", i, dataLen, fields, 20, "string")
-	i++
-	SetValueForField(doc, "STAT", "COV_THRESH", i, dataLen, fields, 21, "string")
-	i++
-	SetValueForField(doc, "STAT", "ALPHA", i, dataLen, fields, 22, "float64")
-	i++
-	SetValueForField(doc, "STAT", "LINE_TYPE", i, dataLen, fields, 23, "string")
+func (s *STAT_VCNT_header) fill(fields []string) {
+	s.VERSION.UnmarshalText([]byte(fields[0]))
+	s.MODEL.UnmarshalText([]byte(fields[1]))
+	s.DESC.UnmarshalText([]byte(fields[2]))
+	s.FCST_VALID_BEG.UnmarshalText([]byte(fields[4]))
+	s.FCST_VALID_END.UnmarshalText([]byte(fields[5]))
+	s.OBS_LEAD.UnmarshalText([]byte(fields[6]))
+	s.OBS_VALID_BEG.UnmarshalText([]byte(fields[7]))
+	s.OBS_VALID_END.UnmarshalText([]byte(fields[8]))
+	s.FCST_VAR.UnmarshalText([]byte(fields[9]))
+	s.FCST_UNITS.UnmarshalText([]byte(fields[10]))
+	s.FCST_LEV.UnmarshalText([]byte(fields[11]))
+	s.OBS_VAR.UnmarshalText([]byte(fields[12]))
+	s.OBS_UNITS.UnmarshalText([]byte(fields[13]))
+	s.OBS_LEV.UnmarshalText([]byte(fields[14]))
+	s.OBTYPE.UnmarshalText([]byte(fields[15]))
+	s.VX_MASK.UnmarshalText([]byte(fields[16]))
+	s.INTERP_MTHD.UnmarshalText([]byte(fields[17]))
+	s.INTERP_PNTS.UnmarshalText([]byte(fields[18]))
+	s.FCST_THRESH.UnmarshalText([]byte(fields[19]))
+	s.OBS_THRESH.UnmarshalText([]byte(fields[20]))
+	s.COV_THRESH.UnmarshalText([]byte(fields[21]))
+	s.ALPHA.UnmarshalText([]byte(fields[22]))
+	s.LINE_TYPE.UnmarshalText([]byte(fields[23]))
 }
 
-func (s *STAT_VL1L2) fill_STAT_VL1L2_Header(fields []string, doc *map[string]interface{}) {
-	dataLen := len(fields)
-	i := -1
-	// fill the met fields leaving out "" and NA values
-	i++
-	SetValueForField(doc, "STAT", "VERSION", i, dataLen, fields, 0, "string")
-	i++
-	SetValueForField(doc, "STAT", "MODEL", i, dataLen, fields, 1, "string")
-	i++
-	SetValueForField(doc, "STAT", "DESC", i, dataLen, fields, 2, "string")
-	i++
-	SetValueForField(doc, "STAT", "FCST_VALID_BEG", i, dataLen, fields, 4, "int")
-	i++
-	SetValueForField(doc, "STAT", "FCST_VALID_END", i, dataLen, fields, 5, "int")
-	i++
-	SetValueForField(doc, "STAT", "OBS_LEAD", i, dataLen, fields, 6, "int")
-	i++
-	SetValueForField(doc, "STAT", "OBS_VALID_BEG", i, dataLen, fields, 7, "int")
-	i++
-	SetValueForField(doc, "STAT", "OBS_VALID_END", i, dataLen, fields, 8, "int")
-	i++
-	SetValueForField(doc, "STAT", "FCST_VAR", i, dataLen, fields, 9, "string")
-	i++
-	SetValueForField(doc, "STAT", "FCST_UNITS", i, dataLen, fields, 10, "string")
-	i++
-	SetValueForField(doc, "STAT", "FCST_LEV", i, dataLen, fields, 11, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_VAR", i, dataLen, fields, 12, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_UNITS", i, dataLen, fields, 13, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_LEV", i, dataLen, fields, 14, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBTYPE", i, dataLen, fields, 15, "string")
-	i++
-	SetValueForField(doc, "STAT", "VX_MASK", i, dataLen, fields, 16, "string")
-	i++
-	SetValueForField(doc, "STAT", "INTERP_MTHD", i, dataLen, fields, 17, "string")
-	i++
-	SetValueForField(doc, "STAT", "INTERP_PNTS", i, dataLen, fields, 18, "int")
-	i++
-	SetValueForField(doc, "STAT", "FCST_THRESH", i, dataLen, fields, 19, "string")
-	i++
-	SetValueForField(doc, "STAT", "OBS_THRESH", i, dataLen, fields, 20, "string")
-	i++
-	SetValueForField(doc, "STAT", "COV_THRESH", i, dataLen, fields, 21, "string")
-	i++
-	SetValueForField(doc, "STAT", "ALPHA", i, dataLen, fields, 22, "float64")
-	i++
-	SetValueForField(doc, "STAT", "LINE_TYPE", i, dataLen, fields, 23, "string")
+func (s *STAT_VL1L2_header) fill(fields []string) {
+	s.VERSION.UnmarshalText([]byte(fields[0]))
+	s.MODEL.UnmarshalText([]byte(fields[1]))
+	s.DESC.UnmarshalText([]byte(fields[2]))
+	s.FCST_VALID_BEG.UnmarshalText([]byte(fields[4]))
+	s.FCST_VALID_END.UnmarshalText([]byte(fields[5]))
+	s.OBS_LEAD.UnmarshalText([]byte(fields[6]))
+	s.OBS_VALID_BEG.UnmarshalText([]byte(fields[7]))
+	s.OBS_VALID_END.UnmarshalText([]byte(fields[8]))
+	s.FCST_VAR.UnmarshalText([]byte(fields[9]))
+	s.FCST_UNITS.UnmarshalText([]byte(fields[10]))
+	s.FCST_LEV.UnmarshalText([]byte(fields[11]))
+	s.OBS_VAR.UnmarshalText([]byte(fields[12]))
+	s.OBS_UNITS.UnmarshalText([]byte(fields[13]))
+	s.OBS_LEV.UnmarshalText([]byte(fields[14]))
+	s.OBTYPE.UnmarshalText([]byte(fields[15]))
+	s.VX_MASK.UnmarshalText([]byte(fields[16]))
+	s.INTERP_MTHD.UnmarshalText([]byte(fields[17]))
+	s.INTERP_PNTS.UnmarshalText([]byte(fields[18]))
+	s.FCST_THRESH.UnmarshalText([]byte(fields[19]))
+	s.OBS_THRESH.UnmarshalText([]byte(fields[20]))
+	s.COV_THRESH.UnmarshalText([]byte(fields[21]))
+	s.ALPHA.UnmarshalText([]byte(fields[22]))
+	s.LINE_TYPE.UnmarshalText([]byte(fields[23]))
 }
 
-func (s *TCST_PROBRIRW) fill_TCST_PROBRIRW_Header(fields []string, doc *map[string]interface{}) {
-	dataLen := len(fields)
-	i := -1
-	// fill the met fields leaving out "" and NA values
-	i++
-	SetValueForField(doc, "TCST", "VERSION", i, dataLen, fields, 0, "string")
-	i++
-	SetValueForField(doc, "TCST", "AMODEL", i, dataLen, fields, 1, "string")
-	i++
-	SetValueForField(doc, "TCST", "BMODEL", i, dataLen, fields, 2, "string")
-	i++
-	SetValueForField(doc, "TCST", "DESC", i, dataLen, fields, 3, "string")
-	i++
-	SetValueForField(doc, "TCST", "STORM_ID", i, dataLen, fields, 4, "string")
-	i++
-	SetValueForField(doc, "TCST", "BASIN", i, dataLen, fields, 5, "string")
-	i++
-	SetValueForField(doc, "TCST", "CYCLONE", i, dataLen, fields, 6, "string")
-	i++
-	SetValueForField(doc, "TCST", "STORM_NAME", i, dataLen, fields, 7, "string")
-	i++
-	SetValueForField(doc, "TCST", "VALID", i, dataLen, fields, 10, "int")
-	i++
-	SetValueForField(doc, "TCST", "INIT_MASK", i, dataLen, fields, 11, "string")
-	i++
-	SetValueForField(doc, "TCST", "VALID_MASK", i, dataLen, fields, 12, "string")
-	i++
-	SetValueForField(doc, "TCST", "LINE_TYPE", i, dataLen, fields, 13, "string")
+func (s *TCST_PROBRIRW_header) fill(fields []string) {
+	s.VERSION.UnmarshalText([]byte(fields[0]))
+	s.AMODEL.UnmarshalText([]byte(fields[1]))
+	s.BMODEL.UnmarshalText([]byte(fields[2]))
+	s.DESC.UnmarshalText([]byte(fields[3]))
+	s.STORM_ID.UnmarshalText([]byte(fields[4]))
+	s.BASIN.UnmarshalText([]byte(fields[5]))
+	s.CYCLONE.UnmarshalText([]byte(fields[6]))
+	s.STORM_NAME.UnmarshalText([]byte(fields[7]))
+	s.VALID.UnmarshalText([]byte(fields[10]))
+	s.INIT_MASK.UnmarshalText([]byte(fields[11]))
+	s.VALID_MASK.UnmarshalText([]byte(fields[12]))
+	s.LINE_TYPE.UnmarshalText([]byte(fields[13]))
 }
 
-func (s *TCST_TCMPR) fill_TCST_TCMPR_Header(fields []string, doc *map[string]interface{}) {
-	dataLen := len(fields)
-	i := -1
-	// fill the met fields leaving out "" and NA values
-	i++
-	SetValueForField(doc, "TCST", "VERSION", i, dataLen, fields, 0, "string")
-	i++
-	SetValueForField(doc, "TCST", "AMODEL", i, dataLen, fields, 1, "string")
-	i++
-	SetValueForField(doc, "TCST", "BMODEL", i, dataLen, fields, 2, "string")
-	i++
-	SetValueForField(doc, "TCST", "DESC", i, dataLen, fields, 3, "string")
-	i++
-	SetValueForField(doc, "TCST", "STORM_ID", i, dataLen, fields, 4, "string")
-	i++
-	SetValueForField(doc, "TCST", "BASIN", i, dataLen, fields, 5, "string")
-	i++
-	SetValueForField(doc, "TCST", "CYCLONE", i, dataLen, fields, 6, "string")
-	i++
-	SetValueForField(doc, "TCST", "STORM_NAME", i, dataLen, fields, 7, "string")
-	i++
-	SetValueForField(doc, "TCST", "VALID", i, dataLen, fields, 10, "int")
-	i++
-	SetValueForField(doc, "TCST", "INIT_MASK", i, dataLen, fields, 11, "string")
-	i++
-	SetValueForField(doc, "TCST", "VALID_MASK", i, dataLen, fields, 12, "string")
-	i++
-	SetValueForField(doc, "TCST", "LINE_TYPE", i, dataLen, fields, 13, "string")
+func (s *TCST_TCMPR_header) fill(fields []string) {
+	s.VERSION.UnmarshalText([]byte(fields[0]))
+	s.AMODEL.UnmarshalText([]byte(fields[1]))
+	s.BMODEL.UnmarshalText([]byte(fields[2]))
+	s.DESC.UnmarshalText([]byte(fields[3]))
+	s.STORM_ID.UnmarshalText([]byte(fields[4]))
+	s.BASIN.UnmarshalText([]byte(fields[5]))
+	s.CYCLONE.UnmarshalText([]byte(fields[6]))
+	s.STORM_NAME.UnmarshalText([]byte(fields[7]))
+	s.VALID.UnmarshalText([]byte(fields[10]))
+	s.INIT_MASK.UnmarshalText([]byte(fields[11]))
+	s.VALID_MASK.UnmarshalText([]byte(fields[12]))
+	s.LINE_TYPE.UnmarshalText([]byte(fields[13]))
 }
 
 //line data struct definitions
-type MODE_CTS struct {
-	FIELD string  `json:"FIELD,omitempty"`
-	TOTAL int     `json:"TOTAL,omitempty"`
-	FY_OY float64 `json:"FY_OY,omitempty"`
-	FY_ON float64 `json:"FY_ON,omitempty"`
-	FN_OY float64 `json:"FN_OY,omitempty"`
-	FN_ON float64 `json:"FN_ON,omitempty"`
-	BASER float64 `json:"BASER,omitempty"`
-	FMEAN float64 `json:"FMEAN,omitempty"`
-	ACC   float64 `json:"ACC,omitempty"`
-	FBIAS float64 `json:"FBIAS,omitempty"`
-	PODY  float64 `json:"PODY,omitempty"`
-	PODN  float64 `json:"PODN,omitempty"`
-	POFD  float64 `json:"POFD,omitempty"`
-	FAR   float64 `json:"FAR,omitempty"`
-	CSI   float64 `json:"CSI,omitempty"`
-	GSS   float64 `json:"GSS,omitempty"`
-	HK    float64 `json:"HK,omitempty"`
-	HSS   float64 `json:"HSS,omitempty"`
-	ODDS  float64 `json:"ODDS,omitempty"`
+type MODE_CTS_data struct {
+	FIELD validtypes.ValidString `json:"FIELD,omitzero"`
+	TOTAL validtypes.ValidInt    `json:"TOTAL,omitzero"`
+	FY_OY validtypes.ValidFloat  `json:"FY_OY,omitzero"`
+	FY_ON validtypes.ValidFloat  `json:"FY_ON,omitzero"`
+	FN_OY validtypes.ValidFloat  `json:"FN_OY,omitzero"`
+	FN_ON validtypes.ValidFloat  `json:"FN_ON,omitzero"`
+	BASER validtypes.ValidFloat  `json:"BASER,omitzero"`
+	FMEAN validtypes.ValidFloat  `json:"FMEAN,omitzero"`
+	ACC   validtypes.ValidFloat  `json:"ACC,omitzero"`
+	FBIAS validtypes.ValidFloat  `json:"FBIAS,omitzero"`
+	PODY  validtypes.ValidFloat  `json:"PODY,omitzero"`
+	PODN  validtypes.ValidFloat  `json:"PODN,omitzero"`
+	POFD  validtypes.ValidFloat  `json:"POFD,omitzero"`
+	FAR   validtypes.ValidFloat  `json:"FAR,omitzero"`
+	CSI   validtypes.ValidFloat  `json:"CSI,omitzero"`
+	GSS   validtypes.ValidFloat  `json:"GSS,omitzero"`
+	HK    validtypes.ValidFloat  `json:"HK,omitzero"`
+	HSS   validtypes.ValidFloat  `json:"HSS,omitzero"`
+	ODDS  validtypes.ValidFloat  `json:"ODDS,omitzero"`
 }
 
-type MODE_OBJ struct {
-	OBJECT_ID                  string  `json:"OBJECT_ID,omitempty"`
-	OBJECT_CAT                 string  `json:"OBJECT_CAT,omitempty"`
-	CENTROID_X                 float64 `json:"CENTROID_X,omitempty"`
-	CENTROID_Y                 float64 `json:"CENTROID_Y,omitempty"`
-	CENTROID_LAT               float64 `json:"CENTROID_LAT,omitempty"`
-	CENTROID_LON               float64 `json:"CENTROID_LON,omitempty"`
-	AXIS_ANG                   float64 `json:"AXIS_ANG,omitempty"`
-	LENGTH                     float64 `json:"LENGTH,omitempty"`
-	WIDTH                      float64 `json:"WIDTH,omitempty"`
-	AREA                       int     `json:"AREA,omitempty"`
-	AREA_THRESH                int     `json:"AREA_THRESH,omitempty"`
-	CURVATURE                  float64 `json:"CURVATURE,omitempty"`
-	CURVATURE_X                float64 `json:"CURVATURE_X,omitempty"`
-	CURVATURE_Y                float64 `json:"CURVATURE_Y,omitempty"`
-	COMPLEXITY                 float64 `json:"COMPLEXITY,omitempty"`
-	INTENSITY_10               float64 `json:"INTENSITY_10,omitempty"`
-	INTENSITY_25               float64 `json:"INTENSITY_25,omitempty"`
-	INTENSITY_50               float64 `json:"INTENSITY_50,omitempty"`
-	INTENSITY_75               float64 `json:"INTENSITY_75,omitempty"`
-	INTENSITY_90               float64 `json:"INTENSITY_90,omitempty"`
-	INTENSITY_USER             float64 `json:"INTENSITY_USER,omitempty"`
-	INTENSITY_SUM              float64 `json:"INTENSITY_SUM,omitempty"`
-	CENTROID_DIST              float64 `json:"CENTROID_DIST,omitempty"`
-	BOUNDARY_DIST              float64 `json:"BOUNDARY_DIST,omitempty"`
-	CONVEX_HULL_DIST           float64 `json:"CONVEX_HULL_DIST,omitempty"`
-	ANGLE_DIFF                 float64 `json:"ANGLE_DIFF,omitempty"`
-	ASPECT_DIFF                float64 `json:"ASPECT_DIFF,omitempty"`
-	AREA_RATIO                 float64 `json:"AREA_RATIO,omitempty"`
-	INTERSECTION_AREA          float64 `json:"INTERSECTION_AREA,omitempty"`
-	UNION_AREA                 float64 `json:"UNION_AREA,omitempty"`
-	SYMMETRIC_DIFF             float64 `json:"SYMMETRIC_DIFF,omitempty"`
-	INTERSECTION_OVER_AREA     float64 `json:"INTERSECTION_OVER_AREA,omitempty"`
-	CURVATURE_RATIO            float64 `json:"CURVATURE_RATIO,omitempty"`
-	COMPLEXITY_RATIO           float64 `json:"COMPLEXITY_RATIO,omitempty"`
-	PERCENTILE_INTENSITY_RATIO float64 `json:"PERCENTILE_INTENSITY_RATIO,omitempty"`
-	INTEREST                   float64 `json:"INTEREST,omitempty"`
+type MODE_OBJ_data struct {
+	OBJECT_ID                  validtypes.ValidString `json:"OBJECT_ID,omitzero"`
+	OBJECT_CAT                 validtypes.ValidString `json:"OBJECT_CAT,omitzero"`
+	CENTROID_X                 validtypes.ValidFloat  `json:"CENTROID_X,omitzero"`
+	CENTROID_Y                 validtypes.ValidFloat  `json:"CENTROID_Y,omitzero"`
+	CENTROID_LAT               validtypes.ValidFloat  `json:"CENTROID_LAT,omitzero"`
+	CENTROID_LON               validtypes.ValidFloat  `json:"CENTROID_LON,omitzero"`
+	AXIS_ANG                   validtypes.ValidFloat  `json:"AXIS_ANG,omitzero"`
+	LENGTH                     validtypes.ValidFloat  `json:"LENGTH,omitzero"`
+	WIDTH                      validtypes.ValidFloat  `json:"WIDTH,omitzero"`
+	AREA                       validtypes.ValidInt    `json:"AREA,omitzero"`
+	AREA_THRESH                validtypes.ValidInt    `json:"AREA_THRESH,omitzero"`
+	CURVATURE                  validtypes.ValidFloat  `json:"CURVATURE,omitzero"`
+	CURVATURE_X                validtypes.ValidFloat  `json:"CURVATURE_X,omitzero"`
+	CURVATURE_Y                validtypes.ValidFloat  `json:"CURVATURE_Y,omitzero"`
+	COMPLEXITY                 validtypes.ValidFloat  `json:"COMPLEXITY,omitzero"`
+	INTENSITY_10               validtypes.ValidFloat  `json:"INTENSITY_10,omitzero"`
+	INTENSITY_25               validtypes.ValidFloat  `json:"INTENSITY_25,omitzero"`
+	INTENSITY_50               validtypes.ValidFloat  `json:"INTENSITY_50,omitzero"`
+	INTENSITY_75               validtypes.ValidFloat  `json:"INTENSITY_75,omitzero"`
+	INTENSITY_90               validtypes.ValidFloat  `json:"INTENSITY_90,omitzero"`
+	INTENSITY_USER             validtypes.ValidFloat  `json:"INTENSITY_USER,omitzero"`
+	INTENSITY_SUM              validtypes.ValidFloat  `json:"INTENSITY_SUM,omitzero"`
+	CENTROID_DIST              validtypes.ValidFloat  `json:"CENTROID_DIST,omitzero"`
+	BOUNDARY_DIST              validtypes.ValidFloat  `json:"BOUNDARY_DIST,omitzero"`
+	CONVEX_HULL_DIST           validtypes.ValidFloat  `json:"CONVEX_HULL_DIST,omitzero"`
+	ANGLE_DIFF                 validtypes.ValidFloat  `json:"ANGLE_DIFF,omitzero"`
+	ASPECT_DIFF                validtypes.ValidFloat  `json:"ASPECT_DIFF,omitzero"`
+	AREA_RATIO                 validtypes.ValidFloat  `json:"AREA_RATIO,omitzero"`
+	INTERSECTION_AREA          validtypes.ValidFloat  `json:"INTERSECTION_AREA,omitzero"`
+	UNION_AREA                 validtypes.ValidFloat  `json:"UNION_AREA,omitzero"`
+	SYMMETRIC_DIFF             validtypes.ValidFloat  `json:"SYMMETRIC_DIFF,omitzero"`
+	INTERSECTION_OVER_AREA     validtypes.ValidFloat  `json:"INTERSECTION_OVER_AREA,omitzero"`
+	CURVATURE_RATIO            validtypes.ValidFloat  `json:"CURVATURE_RATIO,omitzero"`
+	COMPLEXITY_RATIO           validtypes.ValidFloat  `json:"COMPLEXITY_RATIO,omitzero"`
+	PERCENTILE_INTENSITY_RATIO validtypes.ValidFloat  `json:"PERCENTILE_INTENSITY_RATIO,omitzero"`
+	INTEREST                   validtypes.ValidFloat  `json:"INTEREST,omitzero"`
 }
 
-type STAT_CNT struct {
-	TOTAL                int     `json:"TOTAL,omitempty"`
-	FBAR                 float64 `json:"FBAR,omitempty"`
-	FBAR_NCL             float64 `json:"FBAR_NCL,omitempty"`
-	FBAR_NCU             float64 `json:"FBAR_NCU,omitempty"`
-	FBAR_BCL             float64 `json:"FBAR_BCL,omitempty"`
-	FBAR_BCU             float64 `json:"FBAR_BCU,omitempty"`
-	FSTDEV               float64 `json:"FSTDEV,omitempty"`
-	FSTDEV_NCL           float64 `json:"FSTDEV_NCL,omitempty"`
-	FSTDEV_NCU           float64 `json:"FSTDEV_NCU,omitempty"`
-	FSTDEV_BCL           float64 `json:"FSTDEV_BCL,omitempty"`
-	FSTDEV_BCU           float64 `json:"FSTDEV_BCU,omitempty"`
-	OBAR                 float64 `json:"OBAR,omitempty"`
-	OBAR_NCL             float64 `json:"OBAR_NCL,omitempty"`
-	OBAR_NCU             float64 `json:"OBAR_NCU,omitempty"`
-	OBAR_BCL             float64 `json:"OBAR_BCL,omitempty"`
-	OBAR_BCU             float64 `json:"OBAR_BCU,omitempty"`
-	OSTDEV               float64 `json:"OSTDEV,omitempty"`
-	OSTDEV_NCL           float64 `json:"OSTDEV_NCL,omitempty"`
-	OSTDEV_NCU           float64 `json:"OSTDEV_NCU,omitempty"`
-	OSTDEV_BCL           float64 `json:"OSTDEV_BCL,omitempty"`
-	OSTDEV_BCU           float64 `json:"OSTDEV_BCU,omitempty"`
-	PR_CORR              float64 `json:"PR_CORR,omitempty"`
-	PR_CORR_NCL          float64 `json:"PR_CORR_NCL,omitempty"`
-	PR_CORR_NCU          float64 `json:"PR_CORR_NCU,omitempty"`
-	PR_CORR_BCL          float64 `json:"PR_CORR_BCL,omitempty"`
-	PR_CORR_BCU          float64 `json:"PR_CORR_BCU,omitempty"`
-	SP_CORR              float64 `json:"SP_CORR,omitempty"`
-	KT_CORR              float64 `json:"KT_CORR,omitempty"`
-	RANKS                int     `json:"RANKS,omitempty"`
-	FRANK_TIES           int     `json:"FRANK_TIES,omitempty"`
-	ORANK_TIES           int     `json:"ORANK_TIES,omitempty"`
-	ME                   float64 `json:"ME,omitempty"`
-	ME_NCL               float64 `json:"ME_NCL,omitempty"`
-	ME_NCU               float64 `json:"ME_NCU,omitempty"`
-	ME_BCL               float64 `json:"ME_BCL,omitempty"`
-	ME_BCU               float64 `json:"ME_BCU,omitempty"`
-	ESTDEV               float64 `json:"ESTDEV,omitempty"`
-	ESTDEV_NCL           float64 `json:"ESTDEV_NCL,omitempty"`
-	ESTDEV_NCU           float64 `json:"ESTDEV_NCU,omitempty"`
-	ESTDEV_BCL           float64 `json:"ESTDEV_BCL,omitempty"`
-	ESTDEV_BCU           float64 `json:"ESTDEV_BCU,omitempty"`
-	MBIAS                float64 `json:"MBIAS,omitempty"`
-	MBIAS_BCL            float64 `json:"MBIAS_BCL,omitempty"`
-	MBIAS_BCU            float64 `json:"MBIAS_BCU,omitempty"`
-	MAE                  float64 `json:"MAE,omitempty"`
-	MAE_BCL              float64 `json:"MAE_BCL,omitempty"`
-	MAE_BCU              float64 `json:"MAE_BCU,omitempty"`
-	MSE                  float64 `json:"MSE,omitempty"`
-	MSE_BCL              float64 `json:"MSE_BCL,omitempty"`
-	MSE_BCU              float64 `json:"MSE_BCU,omitempty"`
-	BCMSE                float64 `json:"BCMSE,omitempty"`
-	BCMSE_BCL            float64 `json:"BCMSE_BCL,omitempty"`
-	BCMSE_BCU            float64 `json:"BCMSE_BCU,omitempty"`
-	RMSE                 float64 `json:"RMSE,omitempty"`
-	RMSE_BCL             float64 `json:"RMSE_BCL,omitempty"`
-	RMSE_BCU             float64 `json:"RMSE_BCU,omitempty"`
-	E10                  float64 `json:"E10,omitempty"`
-	E10_BCL              float64 `json:"E10_BCL,omitempty"`
-	E10_BCU              float64 `json:"E10_BCU,omitempty"`
-	E25                  float64 `json:"E25,omitempty"`
-	E25_BCL              float64 `json:"E25_BCL,omitempty"`
-	E25_BCU              float64 `json:"E25_BCU,omitempty"`
-	E50                  float64 `json:"E50,omitempty"`
-	E50_BCL              float64 `json:"E50_BCL,omitempty"`
-	E50_BCU              float64 `json:"E50_BCU,omitempty"`
-	E75                  float64 `json:"E75,omitempty"`
-	E75_BCL              float64 `json:"E75_BCL,omitempty"`
-	E75_BCU              float64 `json:"E75_BCU,omitempty"`
-	E90                  float64 `json:"E90,omitempty"`
-	E90_BCL              float64 `json:"E90_BCL,omitempty"`
-	E90_BCU              float64 `json:"E90_BCU,omitempty"`
-	EIQR                 float64 `json:"EIQR,omitempty"`
-	EIQR_BCL             float64 `json:"EIQR_BCL,omitempty"`
-	EIQR_BCU             float64 `json:"EIQR_BCU,omitempty"`
-	MAD                  float64 `json:"MAD,omitempty"`
-	MAD_BCL              float64 `json:"MAD_BCL,omitempty"`
-	MAD_BCU              float64 `json:"MAD_BCU,omitempty"`
-	ANOM_CORR            float64 `json:"ANOM_CORR,omitempty"`
-	ANOM_CORR_NCL        float64 `json:"ANOM_CORR_NCL,omitempty"`
-	ANOM_CORR_NCU        float64 `json:"ANOM_CORR_NCU,omitempty"`
-	ANOM_CORR_BCL        float64 `json:"ANOM_CORR_BCL,omitempty"`
-	ANOM_CORR_BCU        float64 `json:"ANOM_CORR_BCU,omitempty"`
-	ME2                  float64 `json:"ME2,omitempty"`
-	ME2_BCL              float64 `json:"ME2_BCL,omitempty"`
-	ME2_BCU              float64 `json:"ME2_BCU,omitempty"`
-	MSESS                float64 `json:"MSESS,omitempty"`
-	MSESS_BCL            float64 `json:"MSESS_BCL,omitempty"`
-	MSESS_BCU            float64 `json:"MSESS_BCU,omitempty"`
-	RMSFA                float64 `json:"RMSFA,omitempty"`
-	RMSFA_BCL            float64 `json:"RMSFA_BCL,omitempty"`
-	RMSFA_BCU            float64 `json:"RMSFA_BCU,omitempty"`
-	RMSOA                float64 `json:"RMSOA,omitempty"`
-	RMSOA_BCL            float64 `json:"RMSOA_BCL,omitempty"`
-	RMSOA_BCU            float64 `json:"RMSOA_BCU,omitempty"`
-	ANOM_CORR_UNCNTR     float64 `json:"ANOM_CORR_UNCNTR,omitempty"`
-	ANOM_CORR_UNCNTR_BCL float64 `json:"ANOM_CORR_UNCNTR_BCL,omitempty"`
-	ANOM_CORR_UNCNTR_BCU float64 `json:"ANOM_CORR_UNCNTR_BCU,omitempty"`
+type STAT_CNT_data struct {
+	TOTAL                validtypes.ValidInt   `json:"TOTAL,omitzero"`
+	FBAR                 validtypes.ValidFloat `json:"FBAR,omitzero"`
+	FBAR_NCL             validtypes.ValidFloat `json:"FBAR_NCL,omitzero"`
+	FBAR_NCU             validtypes.ValidFloat `json:"FBAR_NCU,omitzero"`
+	FBAR_BCL             validtypes.ValidFloat `json:"FBAR_BCL,omitzero"`
+	FBAR_BCU             validtypes.ValidFloat `json:"FBAR_BCU,omitzero"`
+	FSTDEV               validtypes.ValidFloat `json:"FSTDEV,omitzero"`
+	FSTDEV_NCL           validtypes.ValidFloat `json:"FSTDEV_NCL,omitzero"`
+	FSTDEV_NCU           validtypes.ValidFloat `json:"FSTDEV_NCU,omitzero"`
+	FSTDEV_BCL           validtypes.ValidFloat `json:"FSTDEV_BCL,omitzero"`
+	FSTDEV_BCU           validtypes.ValidFloat `json:"FSTDEV_BCU,omitzero"`
+	OBAR                 validtypes.ValidFloat `json:"OBAR,omitzero"`
+	OBAR_NCL             validtypes.ValidFloat `json:"OBAR_NCL,omitzero"`
+	OBAR_NCU             validtypes.ValidFloat `json:"OBAR_NCU,omitzero"`
+	OBAR_BCL             validtypes.ValidFloat `json:"OBAR_BCL,omitzero"`
+	OBAR_BCU             validtypes.ValidFloat `json:"OBAR_BCU,omitzero"`
+	OSTDEV               validtypes.ValidFloat `json:"OSTDEV,omitzero"`
+	OSTDEV_NCL           validtypes.ValidFloat `json:"OSTDEV_NCL,omitzero"`
+	OSTDEV_NCU           validtypes.ValidFloat `json:"OSTDEV_NCU,omitzero"`
+	OSTDEV_BCL           validtypes.ValidFloat `json:"OSTDEV_BCL,omitzero"`
+	OSTDEV_BCU           validtypes.ValidFloat `json:"OSTDEV_BCU,omitzero"`
+	PR_CORR              validtypes.ValidFloat `json:"PR_CORR,omitzero"`
+	PR_CORR_NCL          validtypes.ValidFloat `json:"PR_CORR_NCL,omitzero"`
+	PR_CORR_NCU          validtypes.ValidFloat `json:"PR_CORR_NCU,omitzero"`
+	PR_CORR_BCL          validtypes.ValidFloat `json:"PR_CORR_BCL,omitzero"`
+	PR_CORR_BCU          validtypes.ValidFloat `json:"PR_CORR_BCU,omitzero"`
+	SP_CORR              validtypes.ValidFloat `json:"SP_CORR,omitzero"`
+	KT_CORR              validtypes.ValidFloat `json:"KT_CORR,omitzero"`
+	RANKS                validtypes.ValidInt   `json:"RANKS,omitzero"`
+	FRANK_TIES           validtypes.ValidInt   `json:"FRANK_TIES,omitzero"`
+	ORANK_TIES           validtypes.ValidInt   `json:"ORANK_TIES,omitzero"`
+	ME                   validtypes.ValidFloat `json:"ME,omitzero"`
+	ME_NCL               validtypes.ValidFloat `json:"ME_NCL,omitzero"`
+	ME_NCU               validtypes.ValidFloat `json:"ME_NCU,omitzero"`
+	ME_BCL               validtypes.ValidFloat `json:"ME_BCL,omitzero"`
+	ME_BCU               validtypes.ValidFloat `json:"ME_BCU,omitzero"`
+	ESTDEV               validtypes.ValidFloat `json:"ESTDEV,omitzero"`
+	ESTDEV_NCL           validtypes.ValidFloat `json:"ESTDEV_NCL,omitzero"`
+	ESTDEV_NCU           validtypes.ValidFloat `json:"ESTDEV_NCU,omitzero"`
+	ESTDEV_BCL           validtypes.ValidFloat `json:"ESTDEV_BCL,omitzero"`
+	ESTDEV_BCU           validtypes.ValidFloat `json:"ESTDEV_BCU,omitzero"`
+	MBIAS                validtypes.ValidFloat `json:"MBIAS,omitzero"`
+	MBIAS_BCL            validtypes.ValidFloat `json:"MBIAS_BCL,omitzero"`
+	MBIAS_BCU            validtypes.ValidFloat `json:"MBIAS_BCU,omitzero"`
+	MAE                  validtypes.ValidFloat `json:"MAE,omitzero"`
+	MAE_BCL              validtypes.ValidFloat `json:"MAE_BCL,omitzero"`
+	MAE_BCU              validtypes.ValidFloat `json:"MAE_BCU,omitzero"`
+	MSE                  validtypes.ValidFloat `json:"MSE,omitzero"`
+	MSE_BCL              validtypes.ValidFloat `json:"MSE_BCL,omitzero"`
+	MSE_BCU              validtypes.ValidFloat `json:"MSE_BCU,omitzero"`
+	BCMSE                validtypes.ValidFloat `json:"BCMSE,omitzero"`
+	BCMSE_BCL            validtypes.ValidFloat `json:"BCMSE_BCL,omitzero"`
+	BCMSE_BCU            validtypes.ValidFloat `json:"BCMSE_BCU,omitzero"`
+	RMSE                 validtypes.ValidFloat `json:"RMSE,omitzero"`
+	RMSE_BCL             validtypes.ValidFloat `json:"RMSE_BCL,omitzero"`
+	RMSE_BCU             validtypes.ValidFloat `json:"RMSE_BCU,omitzero"`
+	E10                  validtypes.ValidFloat `json:"E10,omitzero"`
+	E10_BCL              validtypes.ValidFloat `json:"E10_BCL,omitzero"`
+	E10_BCU              validtypes.ValidFloat `json:"E10_BCU,omitzero"`
+	E25                  validtypes.ValidFloat `json:"E25,omitzero"`
+	E25_BCL              validtypes.ValidFloat `json:"E25_BCL,omitzero"`
+	E25_BCU              validtypes.ValidFloat `json:"E25_BCU,omitzero"`
+	E50                  validtypes.ValidFloat `json:"E50,omitzero"`
+	E50_BCL              validtypes.ValidFloat `json:"E50_BCL,omitzero"`
+	E50_BCU              validtypes.ValidFloat `json:"E50_BCU,omitzero"`
+	E75                  validtypes.ValidFloat `json:"E75,omitzero"`
+	E75_BCL              validtypes.ValidFloat `json:"E75_BCL,omitzero"`
+	E75_BCU              validtypes.ValidFloat `json:"E75_BCU,omitzero"`
+	E90                  validtypes.ValidFloat `json:"E90,omitzero"`
+	E90_BCL              validtypes.ValidFloat `json:"E90_BCL,omitzero"`
+	E90_BCU              validtypes.ValidFloat `json:"E90_BCU,omitzero"`
+	EIQR                 validtypes.ValidFloat `json:"EIQR,omitzero"`
+	EIQR_BCL             validtypes.ValidFloat `json:"EIQR_BCL,omitzero"`
+	EIQR_BCU             validtypes.ValidFloat `json:"EIQR_BCU,omitzero"`
+	MAD                  validtypes.ValidFloat `json:"MAD,omitzero"`
+	MAD_BCL              validtypes.ValidFloat `json:"MAD_BCL,omitzero"`
+	MAD_BCU              validtypes.ValidFloat `json:"MAD_BCU,omitzero"`
+	ANOM_CORR            validtypes.ValidFloat `json:"ANOM_CORR,omitzero"`
+	ANOM_CORR_NCL        validtypes.ValidFloat `json:"ANOM_CORR_NCL,omitzero"`
+	ANOM_CORR_NCU        validtypes.ValidFloat `json:"ANOM_CORR_NCU,omitzero"`
+	ANOM_CORR_BCL        validtypes.ValidFloat `json:"ANOM_CORR_BCL,omitzero"`
+	ANOM_CORR_BCU        validtypes.ValidFloat `json:"ANOM_CORR_BCU,omitzero"`
+	ME2                  validtypes.ValidFloat `json:"ME2,omitzero"`
+	ME2_BCL              validtypes.ValidFloat `json:"ME2_BCL,omitzero"`
+	ME2_BCU              validtypes.ValidFloat `json:"ME2_BCU,omitzero"`
+	MSESS                validtypes.ValidFloat `json:"MSESS,omitzero"`
+	MSESS_BCL            validtypes.ValidFloat `json:"MSESS_BCL,omitzero"`
+	MSESS_BCU            validtypes.ValidFloat `json:"MSESS_BCU,omitzero"`
+	RMSFA                validtypes.ValidFloat `json:"RMSFA,omitzero"`
+	RMSFA_BCL            validtypes.ValidFloat `json:"RMSFA_BCL,omitzero"`
+	RMSFA_BCU            validtypes.ValidFloat `json:"RMSFA_BCU,omitzero"`
+	RMSOA                validtypes.ValidFloat `json:"RMSOA,omitzero"`
+	RMSOA_BCL            validtypes.ValidFloat `json:"RMSOA_BCL,omitzero"`
+	RMSOA_BCU            validtypes.ValidFloat `json:"RMSOA_BCU,omitzero"`
+	ANOM_CORR_UNCNTR     validtypes.ValidFloat `json:"ANOM_CORR_UNCNTR,omitzero"`
+	ANOM_CORR_UNCNTR_BCL validtypes.ValidFloat `json:"ANOM_CORR_UNCNTR_BCL,omitzero"`
+	ANOM_CORR_UNCNTR_BCU validtypes.ValidFloat `json:"ANOM_CORR_UNCNTR_BCU,omitzero"`
 }
 
-type STAT_CTC struct {
-	TOTAL int     `json:"TOTAL,omitempty"`
-	FY_OY float64 `json:"FY_OY,omitempty"`
-	FY_ON float64 `json:"FY_ON,omitempty"`
-	FN_OY float64 `json:"FN_OY,omitempty"`
-	FN_ON float64 `json:"FN_ON,omitempty"`
+type STAT_CTC_data struct {
+	TOTAL validtypes.ValidInt   `json:"TOTAL,omitzero"`
+	FY_OY validtypes.ValidFloat `json:"FY_OY,omitzero"`
+	FY_ON validtypes.ValidFloat `json:"FY_ON,omitzero"`
+	FN_OY validtypes.ValidFloat `json:"FN_OY,omitzero"`
+	FN_ON validtypes.ValidFloat `json:"FN_ON,omitzero"`
 }
 
-type STAT_CTS struct {
-	TOTAL     int     `json:"TOTAL,omitempty"`
-	BASER     float64 `json:"BASER,omitempty"`
-	BASER_NCL float64 `json:"BASER_NCL,omitempty"`
-	BASER_NCU float64 `json:"BASER_NCU,omitempty"`
-	BASER_BCL float64 `json:"BASER_BCL,omitempty"`
-	BASER_BCU float64 `json:"BASER_BCU,omitempty"`
-	FMEAN     float64 `json:"FMEAN,omitempty"`
-	FMEAN_NCL float64 `json:"FMEAN_NCL,omitempty"`
-	FMEAN_NCU float64 `json:"FMEAN_NCU,omitempty"`
-	FMEAN_BCL float64 `json:"FMEAN_BCL,omitempty"`
-	FMEAN_BCU float64 `json:"FMEAN_BCU,omitempty"`
-	ACC       float64 `json:"ACC,omitempty"`
-	ACC_NCL   float64 `json:"ACC_NCL,omitempty"`
-	ACC_NCU   float64 `json:"ACC_NCU,omitempty"`
-	ACC_BCL   float64 `json:"ACC_BCL,omitempty"`
-	ACC_BCU   float64 `json:"ACC_BCU,omitempty"`
-	FBIAS     float64 `json:"FBIAS,omitempty"`
-	FBIAS_BCL float64 `json:"FBIAS_BCL,omitempty"`
-	FBIAS_BCU float64 `json:"FBIAS_BCU,omitempty"`
-	PODY      float64 `json:"PODY,omitempty"`
-	PODY_NCL  float64 `json:"PODY_NCL,omitempty"`
-	PODY_NCU  float64 `json:"PODY_NCU,omitempty"`
-	PODY_BCL  float64 `json:"PODY_BCL,omitempty"`
-	PODY_BCU  float64 `json:"PODY_BCU,omitempty"`
-	PODN      float64 `json:"PODN,omitempty"`
-	PODN_NCL  float64 `json:"PODN_NCL,omitempty"`
-	PODN_NCU  float64 `json:"PODN_NCU,omitempty"`
-	PODN_BCL  float64 `json:"PODN_BCL,omitempty"`
-	PODN_BCU  float64 `json:"PODN_BCU,omitempty"`
-	POFD      float64 `json:"POFD,omitempty"`
-	POFD_NCL  float64 `json:"POFD_NCL,omitempty"`
-	POFD_NCU  float64 `json:"POFD_NCU,omitempty"`
-	POFD_BCL  float64 `json:"POFD_BCL,omitempty"`
-	POFD_BCU  float64 `json:"POFD_BCU,omitempty"`
-	FAR       float64 `json:"FAR,omitempty"`
-	FAR_NCL   float64 `json:"FAR_NCL,omitempty"`
-	FAR_NCU   float64 `json:"FAR_NCU,omitempty"`
-	FAR_BCL   float64 `json:"FAR_BCL,omitempty"`
-	FAR_BCU   float64 `json:"FAR_BCU,omitempty"`
-	CSI       float64 `json:"CSI,omitempty"`
-	CSI_NCL   float64 `json:"CSI_NCL,omitempty"`
-	CSI_NCU   float64 `json:"CSI_NCU,omitempty"`
-	CSI_BCL   float64 `json:"CSI_BCL,omitempty"`
-	CSI_BCU   float64 `json:"CSI_BCU,omitempty"`
-	GSS       float64 `json:"GSS,omitempty"`
-	GSS_BCL   float64 `json:"GSS_BCL,omitempty"`
-	GSS_BCU   float64 `json:"GSS_BCU,omitempty"`
-	HK        float64 `json:"HK,omitempty"`
-	HK_NCL    float64 `json:"HK_NCL,omitempty"`
-	HK_NCU    float64 `json:"HK_NCU,omitempty"`
-	HK_BCL    float64 `json:"HK_BCL,omitempty"`
-	HK_BCU    float64 `json:"HK_BCU,omitempty"`
-	HSS       float64 `json:"HSS,omitempty"`
-	HSS_BCL   float64 `json:"HSS_BCL,omitempty"`
-	HSS_BCU   float64 `json:"HSS_BCU,omitempty"`
-	ODDS      float64 `json:"ODDS,omitempty"`
-	ODDS_NCL  float64 `json:"ODDS_NCL,omitempty"`
-	ODDS_NCU  float64 `json:"ODDS_NCU,omitempty"`
-	ODDS_BCL  float64 `json:"ODDS_BCL,omitempty"`
-	ODDS_BCU  float64 `json:"ODDS_BCU,omitempty"`
-	LODDS     float64 `json:"LODDS,omitempty"`
-	LODDS_NCL float64 `json:"LODDS_NCL,omitempty"`
-	LODDS_NCU float64 `json:"LODDS_NCU,omitempty"`
-	LODDS_BCL float64 `json:"LODDS_BCL,omitempty"`
-	LODDS_BCU float64 `json:"LODDS_BCU,omitempty"`
-	ORSS      float64 `json:"ORSS,omitempty"`
-	ORSS_NCL  float64 `json:"ORSS_NCL,omitempty"`
-	ORSS_NCU  float64 `json:"ORSS_NCU,omitempty"`
-	ORSS_BCL  float64 `json:"ORSS_BCL,omitempty"`
-	ORSS_BCU  float64 `json:"ORSS_BCU,omitempty"`
-	EDS       float64 `json:"EDS,omitempty"`
-	EDS_NCL   float64 `json:"EDS_NCL,omitempty"`
-	EDS_NCU   float64 `json:"EDS_NCU,omitempty"`
-	EDS_BCL   float64 `json:"EDS_BCL,omitempty"`
-	EDS_BCU   float64 `json:"EDS_BCU,omitempty"`
-	SEDS      float64 `json:"SEDS,omitempty"`
-	SEDS_NCL  float64 `json:"SEDS_NCL,omitempty"`
-	SEDS_NCU  float64 `json:"SEDS_NCU,omitempty"`
-	SEDS_BCL  float64 `json:"SEDS_BCL,omitempty"`
-	SEDS_BCU  float64 `json:"SEDS_BCU,omitempty"`
-	EDI       float64 `json:"EDI,omitempty"`
-	EDI_NCL   float64 `json:"EDI_NCL,omitempty"`
-	EDI_NCU   float64 `json:"EDI_NCU,omitempty"`
-	EDI_BCL   float64 `json:"EDI_BCL,omitempty"`
-	EDI_BCU   float64 `json:"EDI_BCU,omitempty"`
-	SEDI      float64 `json:"SEDI,omitempty"`
-	SEDI_NCL  float64 `json:"SEDI_NCL,omitempty"`
-	SEDI_NCU  float64 `json:"SEDI_NCU,omitempty"`
-	SEDI_BCL  float64 `json:"SEDI_BCL,omitempty"`
-	SEDI_BCU  float64 `json:"SEDI_BCU,omitempty"`
-	BAGSS     float64 `json:"BAGSS,omitempty"`
-	BAGSS_BCL float64 `json:"BAGSS_BCL,omitempty"`
-	BAGSS_BCU float64 `json:"BAGSS_BCU,omitempty"`
+type STAT_CTS_data struct {
+	TOTAL     validtypes.ValidInt   `json:"TOTAL,omitzero"`
+	BASER     validtypes.ValidFloat `json:"BASER,omitzero"`
+	BASER_NCL validtypes.ValidFloat `json:"BASER_NCL,omitzero"`
+	BASER_NCU validtypes.ValidFloat `json:"BASER_NCU,omitzero"`
+	BASER_BCL validtypes.ValidFloat `json:"BASER_BCL,omitzero"`
+	BASER_BCU validtypes.ValidFloat `json:"BASER_BCU,omitzero"`
+	FMEAN     validtypes.ValidFloat `json:"FMEAN,omitzero"`
+	FMEAN_NCL validtypes.ValidFloat `json:"FMEAN_NCL,omitzero"`
+	FMEAN_NCU validtypes.ValidFloat `json:"FMEAN_NCU,omitzero"`
+	FMEAN_BCL validtypes.ValidFloat `json:"FMEAN_BCL,omitzero"`
+	FMEAN_BCU validtypes.ValidFloat `json:"FMEAN_BCU,omitzero"`
+	ACC       validtypes.ValidFloat `json:"ACC,omitzero"`
+	ACC_NCL   validtypes.ValidFloat `json:"ACC_NCL,omitzero"`
+	ACC_NCU   validtypes.ValidFloat `json:"ACC_NCU,omitzero"`
+	ACC_BCL   validtypes.ValidFloat `json:"ACC_BCL,omitzero"`
+	ACC_BCU   validtypes.ValidFloat `json:"ACC_BCU,omitzero"`
+	FBIAS     validtypes.ValidFloat `json:"FBIAS,omitzero"`
+	FBIAS_BCL validtypes.ValidFloat `json:"FBIAS_BCL,omitzero"`
+	FBIAS_BCU validtypes.ValidFloat `json:"FBIAS_BCU,omitzero"`
+	PODY      validtypes.ValidFloat `json:"PODY,omitzero"`
+	PODY_NCL  validtypes.ValidFloat `json:"PODY_NCL,omitzero"`
+	PODY_NCU  validtypes.ValidFloat `json:"PODY_NCU,omitzero"`
+	PODY_BCL  validtypes.ValidFloat `json:"PODY_BCL,omitzero"`
+	PODY_BCU  validtypes.ValidFloat `json:"PODY_BCU,omitzero"`
+	PODN      validtypes.ValidFloat `json:"PODN,omitzero"`
+	PODN_NCL  validtypes.ValidFloat `json:"PODN_NCL,omitzero"`
+	PODN_NCU  validtypes.ValidFloat `json:"PODN_NCU,omitzero"`
+	PODN_BCL  validtypes.ValidFloat `json:"PODN_BCL,omitzero"`
+	PODN_BCU  validtypes.ValidFloat `json:"PODN_BCU,omitzero"`
+	POFD      validtypes.ValidFloat `json:"POFD,omitzero"`
+	POFD_NCL  validtypes.ValidFloat `json:"POFD_NCL,omitzero"`
+	POFD_NCU  validtypes.ValidFloat `json:"POFD_NCU,omitzero"`
+	POFD_BCL  validtypes.ValidFloat `json:"POFD_BCL,omitzero"`
+	POFD_BCU  validtypes.ValidFloat `json:"POFD_BCU,omitzero"`
+	FAR       validtypes.ValidFloat `json:"FAR,omitzero"`
+	FAR_NCL   validtypes.ValidFloat `json:"FAR_NCL,omitzero"`
+	FAR_NCU   validtypes.ValidFloat `json:"FAR_NCU,omitzero"`
+	FAR_BCL   validtypes.ValidFloat `json:"FAR_BCL,omitzero"`
+	FAR_BCU   validtypes.ValidFloat `json:"FAR_BCU,omitzero"`
+	CSI       validtypes.ValidFloat `json:"CSI,omitzero"`
+	CSI_NCL   validtypes.ValidFloat `json:"CSI_NCL,omitzero"`
+	CSI_NCU   validtypes.ValidFloat `json:"CSI_NCU,omitzero"`
+	CSI_BCL   validtypes.ValidFloat `json:"CSI_BCL,omitzero"`
+	CSI_BCU   validtypes.ValidFloat `json:"CSI_BCU,omitzero"`
+	GSS       validtypes.ValidFloat `json:"GSS,omitzero"`
+	GSS_BCL   validtypes.ValidFloat `json:"GSS_BCL,omitzero"`
+	GSS_BCU   validtypes.ValidFloat `json:"GSS_BCU,omitzero"`
+	HK        validtypes.ValidFloat `json:"HK,omitzero"`
+	HK_NCL    validtypes.ValidFloat `json:"HK_NCL,omitzero"`
+	HK_NCU    validtypes.ValidFloat `json:"HK_NCU,omitzero"`
+	HK_BCL    validtypes.ValidFloat `json:"HK_BCL,omitzero"`
+	HK_BCU    validtypes.ValidFloat `json:"HK_BCU,omitzero"`
+	HSS       validtypes.ValidFloat `json:"HSS,omitzero"`
+	HSS_BCL   validtypes.ValidFloat `json:"HSS_BCL,omitzero"`
+	HSS_BCU   validtypes.ValidFloat `json:"HSS_BCU,omitzero"`
+	ODDS      validtypes.ValidFloat `json:"ODDS,omitzero"`
+	ODDS_NCL  validtypes.ValidFloat `json:"ODDS_NCL,omitzero"`
+	ODDS_NCU  validtypes.ValidFloat `json:"ODDS_NCU,omitzero"`
+	ODDS_BCL  validtypes.ValidFloat `json:"ODDS_BCL,omitzero"`
+	ODDS_BCU  validtypes.ValidFloat `json:"ODDS_BCU,omitzero"`
+	LODDS     validtypes.ValidFloat `json:"LODDS,omitzero"`
+	LODDS_NCL validtypes.ValidFloat `json:"LODDS_NCL,omitzero"`
+	LODDS_NCU validtypes.ValidFloat `json:"LODDS_NCU,omitzero"`
+	LODDS_BCL validtypes.ValidFloat `json:"LODDS_BCL,omitzero"`
+	LODDS_BCU validtypes.ValidFloat `json:"LODDS_BCU,omitzero"`
+	ORSS      validtypes.ValidFloat `json:"ORSS,omitzero"`
+	ORSS_NCL  validtypes.ValidFloat `json:"ORSS_NCL,omitzero"`
+	ORSS_NCU  validtypes.ValidFloat `json:"ORSS_NCU,omitzero"`
+	ORSS_BCL  validtypes.ValidFloat `json:"ORSS_BCL,omitzero"`
+	ORSS_BCU  validtypes.ValidFloat `json:"ORSS_BCU,omitzero"`
+	EDS       validtypes.ValidFloat `json:"EDS,omitzero"`
+	EDS_NCL   validtypes.ValidFloat `json:"EDS_NCL,omitzero"`
+	EDS_NCU   validtypes.ValidFloat `json:"EDS_NCU,omitzero"`
+	EDS_BCL   validtypes.ValidFloat `json:"EDS_BCL,omitzero"`
+	EDS_BCU   validtypes.ValidFloat `json:"EDS_BCU,omitzero"`
+	SEDS      validtypes.ValidFloat `json:"SEDS,omitzero"`
+	SEDS_NCL  validtypes.ValidFloat `json:"SEDS_NCL,omitzero"`
+	SEDS_NCU  validtypes.ValidFloat `json:"SEDS_NCU,omitzero"`
+	SEDS_BCL  validtypes.ValidFloat `json:"SEDS_BCL,omitzero"`
+	SEDS_BCU  validtypes.ValidFloat `json:"SEDS_BCU,omitzero"`
+	EDI       validtypes.ValidFloat `json:"EDI,omitzero"`
+	EDI_NCL   validtypes.ValidFloat `json:"EDI_NCL,omitzero"`
+	EDI_NCU   validtypes.ValidFloat `json:"EDI_NCU,omitzero"`
+	EDI_BCL   validtypes.ValidFloat `json:"EDI_BCL,omitzero"`
+	EDI_BCU   validtypes.ValidFloat `json:"EDI_BCU,omitzero"`
+	SEDI      validtypes.ValidFloat `json:"SEDI,omitzero"`
+	SEDI_NCL  validtypes.ValidFloat `json:"SEDI_NCL,omitzero"`
+	SEDI_NCU  validtypes.ValidFloat `json:"SEDI_NCU,omitzero"`
+	SEDI_BCL  validtypes.ValidFloat `json:"SEDI_BCL,omitzero"`
+	SEDI_BCU  validtypes.ValidFloat `json:"SEDI_BCU,omitzero"`
+	BAGSS     validtypes.ValidFloat `json:"BAGSS,omitzero"`
+	BAGSS_BCL validtypes.ValidFloat `json:"BAGSS_BCL,omitzero"`
+	BAGSS_BCU validtypes.ValidFloat `json:"BAGSS_BCU,omitzero"`
 }
 
-type STAT_DMAP struct {
-	TOTAL     int     `json:"TOTAL,omitempty"`
-	FY        int     `json:"FY,omitempty"`
-	OY        int     `json:"OY,omitempty"`
-	FBIAS     float64 `json:"FBIAS,omitempty"`
-	BADDELEY  float64 `json:"BADDELEY,omitempty"`
-	HAUSDORFF float64 `json:"HAUSDORFF,omitempty"`
-	MED_FO    float64 `json:"MED_FO,omitempty"`
-	MED_OF    float64 `json:"MED_OF,omitempty"`
-	MED_MIN   float64 `json:"MED_MIN,omitempty"`
-	MED_MAX   float64 `json:"MED_MAX,omitempty"`
-	MED_MEAN  float64 `json:"MED_MEAN,omitempty"`
-	FOM_FO    float64 `json:"FOM_FO,omitempty"`
-	FOM_OF    float64 `json:"FOM_OF,omitempty"`
-	FOM_MIN   float64 `json:"FOM_MIN,omitempty"`
-	FOM_MAX   float64 `json:"FOM_MAX,omitempty"`
-	FOM_MEAN  float64 `json:"FOM_MEAN,omitempty"`
-	ZHU_FO    float64 `json:"ZHU_FO,omitempty"`
-	ZHU_OF    float64 `json:"ZHU_OF,omitempty"`
-	ZHU_MIN   float64 `json:"ZHU_MIN,omitempty"`
-	ZHU_MAX   float64 `json:"ZHU_MAX,omitempty"`
-	ZHU_MEAN  float64 `json:"ZHU_MEAN,omitempty"`
+type STAT_DMAP_data struct {
+	TOTAL     validtypes.ValidInt   `json:"TOTAL,omitzero"`
+	FY        validtypes.ValidInt   `json:"FY,omitzero"`
+	OY        validtypes.ValidInt   `json:"OY,omitzero"`
+	FBIAS     validtypes.ValidFloat `json:"FBIAS,omitzero"`
+	BADDELEY  validtypes.ValidFloat `json:"BADDELEY,omitzero"`
+	HAUSDORFF validtypes.ValidFloat `json:"HAUSDORFF,omitzero"`
+	MED_FO    validtypes.ValidFloat `json:"MED_FO,omitzero"`
+	MED_OF    validtypes.ValidFloat `json:"MED_OF,omitzero"`
+	MED_MIN   validtypes.ValidFloat `json:"MED_MIN,omitzero"`
+	MED_MAX   validtypes.ValidFloat `json:"MED_MAX,omitzero"`
+	MED_MEAN  validtypes.ValidFloat `json:"MED_MEAN,omitzero"`
+	FOM_FO    validtypes.ValidFloat `json:"FOM_FO,omitzero"`
+	FOM_OF    validtypes.ValidFloat `json:"FOM_OF,omitzero"`
+	FOM_MIN   validtypes.ValidFloat `json:"FOM_MIN,omitzero"`
+	FOM_MAX   validtypes.ValidFloat `json:"FOM_MAX,omitzero"`
+	FOM_MEAN  validtypes.ValidFloat `json:"FOM_MEAN,omitzero"`
+	ZHU_FO    validtypes.ValidFloat `json:"ZHU_FO,omitzero"`
+	ZHU_OF    validtypes.ValidFloat `json:"ZHU_OF,omitzero"`
+	ZHU_MIN   validtypes.ValidFloat `json:"ZHU_MIN,omitzero"`
+	ZHU_MAX   validtypes.ValidFloat `json:"ZHU_MAX,omitzero"`
+	ZHU_MEAN  validtypes.ValidFloat `json:"ZHU_MEAN,omitzero"`
 }
 
-type STAT_ECLV struct {
-	TOTAL       int                    `json:"TOTAL,omitempty"`
-	BASER       float64                `json:"BASER,omitempty"`
-	VALUE_BASER int                    `json:"VALUE_BASER,omitempty"`
-	PTS         map[string]interface{} `json:"PTS,omitempty"`
+type STAT_ECLV_data struct {
+	TOTAL       validtypes.ValidInt    `json:"TOTAL,omitzero"`
+	BASER       validtypes.ValidFloat  `json:"BASER,omitzero"`
+	VALUE_BASER validtypes.ValidInt    `json:"VALUE_BASER,omitzero"`
+	PTS         map[string]interface{} `json:"PTS,omitzero"`
 }
 
-type STAT_ECNT struct {
-	TOTAL            int     `json:"TOTAL,omitempty"`
-	N_ENS            int     `json:"N_ENS,omitempty"`
-	CRPS             float64 `json:"CRPS,omitempty"`
-	CRPSS            float64 `json:"CRPSS,omitempty"`
-	IGN              float64 `json:"IGN,omitempty"`
-	ME               float64 `json:"ME,omitempty"`
-	RMSE             float64 `json:"RMSE,omitempty"`
-	SPREAD           float64 `json:"SPREAD,omitempty"`
-	ME_OERR          float64 `json:"ME_OERR,omitempty"`
-	RMSE_OERR        float64 `json:"RMSE_OERR,omitempty"`
-	SPREAD_OERR      float64 `json:"SPREAD_OERR,omitempty"`
-	SPREAD_PLUS_OERR float64 `json:"SPREAD_PLUS_OERR,omitempty"`
-	CRPSCL           float64 `json:"CRPSCL,omitempty"`
-	CRPS_EMP         float64 `json:"CRPS_EMP,omitempty"`
-	CRPSCL_EMP       float64 `json:"CRPSCL_EMP,omitempty"`
-	CRPSS_EMP        float64 `json:"CRPSS_EMP,omitempty"`
+type STAT_ECNT_data struct {
+	TOTAL            validtypes.ValidInt   `json:"TOTAL,omitzero"`
+	N_ENS            validtypes.ValidInt   `json:"N_ENS,omitzero"`
+	CRPS             validtypes.ValidFloat `json:"CRPS,omitzero"`
+	CRPSS            validtypes.ValidFloat `json:"CRPSS,omitzero"`
+	IGN              validtypes.ValidFloat `json:"IGN,omitzero"`
+	ME               validtypes.ValidFloat `json:"ME,omitzero"`
+	RMSE             validtypes.ValidFloat `json:"RMSE,omitzero"`
+	SPREAD           validtypes.ValidFloat `json:"SPREAD,omitzero"`
+	ME_OERR          validtypes.ValidFloat `json:"ME_OERR,omitzero"`
+	RMSE_OERR        validtypes.ValidFloat `json:"RMSE_OERR,omitzero"`
+	SPREAD_OERR      validtypes.ValidFloat `json:"SPREAD_OERR,omitzero"`
+	SPREAD_PLUS_OERR validtypes.ValidFloat `json:"SPREAD_PLUS_OERR,omitzero"`
+	CRPSCL           validtypes.ValidFloat `json:"CRPSCL,omitzero"`
+	CRPS_EMP         validtypes.ValidFloat `json:"CRPS_EMP,omitzero"`
+	CRPSCL_EMP       validtypes.ValidFloat `json:"CRPSCL_EMP,omitzero"`
+	CRPSS_EMP        validtypes.ValidFloat `json:"CRPSS_EMP,omitzero"`
 }
 
-type STAT_FHO struct {
-	TOTAL  int     `json:"TOTAL,omitempty"`
-	F_RATE float64 `json:"F_RATE,omitempty"`
-	H_RATE float64 `json:"H_RATE,omitempty"`
-	O_RATE float64 `json:"O_RATE,omitempty"`
+type STAT_FHO_data struct {
+	TOTAL  validtypes.ValidInt   `json:"TOTAL,omitzero"`
+	F_RATE validtypes.ValidFloat `json:"F_RATE,omitzero"`
+	H_RATE validtypes.ValidFloat `json:"H_RATE,omitzero"`
+	O_RATE validtypes.ValidFloat `json:"O_RATE,omitzero"`
 }
 
-type STAT_GENMPR struct {
-	TOTAL      int     `json:"TOTAL,omitempty"`
-	INDEX      int     `json:"INDEX,omitempty"`
-	STORM_ID   string  `json:"STORM_ID,omitempty"`
-	AGEN_INIT  string  `json:"AGEN_INIT,omitempty"`
-	AGEN_FHR   string  `json:"AGEN_FHR,omitempty"`
-	AGEN_LAT   float64 `json:"AGEN_LAT,omitempty"`
-	AGEN_LON   float64 `json:"AGEN_LON,omitempty"`
-	AGEN_DLAND float64 `json:"AGEN_DLAND,omitempty"`
-	BGEN_LAT   float64 `json:"BGEN_LAT,omitempty"`
-	BGEN_LON   float64 `json:"BGEN_LON,omitempty"`
-	BGEN_DLAND float64 `json:"BGEN_DLAND,omitempty"`
-	GEN_DIST   float64 `json:"GEN_DIST,omitempty"`
-	GEN_TDIFF  string  `json:"GEN_TDIFF,omitempty"`
-	INIT_TDIFF string  `json:"INIT_TDIFF,omitempty"`
-	DEV_CAT    string  `json:"DEV_CAT,omitempty"`
-	OPS_CAT    string  `json:"OPS_CAT,omitempty"`
+type STAT_GENMPR_data struct {
+	TOTAL      validtypes.ValidInt    `json:"TOTAL,omitzero"`
+	INDEX      validtypes.ValidInt    `json:"INDEX,omitzero"`
+	STORM_ID   validtypes.ValidString `json:"STORM_ID,omitzero"`
+	AGEN_INIT  validtypes.ValidString `json:"AGEN_INIT,omitzero"`
+	AGEN_FHR   validtypes.ValidString `json:"AGEN_FHR,omitzero"`
+	AGEN_LAT   validtypes.ValidFloat  `json:"AGEN_LAT,omitzero"`
+	AGEN_LON   validtypes.ValidFloat  `json:"AGEN_LON,omitzero"`
+	AGEN_DLAND validtypes.ValidFloat  `json:"AGEN_DLAND,omitzero"`
+	BGEN_LAT   validtypes.ValidFloat  `json:"BGEN_LAT,omitzero"`
+	BGEN_LON   validtypes.ValidFloat  `json:"BGEN_LON,omitzero"`
+	BGEN_DLAND validtypes.ValidFloat  `json:"BGEN_DLAND,omitzero"`
+	GEN_DIST   validtypes.ValidFloat  `json:"GEN_DIST,omitzero"`
+	GEN_TDIFF  validtypes.ValidString `json:"GEN_TDIFF,omitzero"`
+	INIT_TDIFF validtypes.ValidString `json:"INIT_TDIFF,omitzero"`
+	DEV_CAT    validtypes.ValidString `json:"DEV_CAT,omitzero"`
+	OPS_CAT    validtypes.ValidString `json:"OPS_CAT,omitzero"`
 }
 
-type STAT_GRAD struct {
-	TOTAL      int     `json:"TOTAL,omitempty"`
-	FGBAR      float64 `json:"FGBAR,omitempty"`
-	OGBAR      float64 `json:"OGBAR,omitempty"`
-	MGBAR      float64 `json:"MGBAR,omitempty"`
-	EGBAR      float64 `json:"EGBAR,omitempty"`
-	S1         float64 `json:"S1,omitempty"`
-	S1_OG      float64 `json:"S1_OG,omitempty"`
-	FGOG_RATIO float64 `json:"FGOG_RATIO,omitempty"`
-	DX         float64 `json:"DX,omitempty"`
-	DY         float64 `json:"DY,omitempty"`
+type STAT_GRAD_data struct {
+	TOTAL      validtypes.ValidInt   `json:"TOTAL,omitzero"`
+	FGBAR      validtypes.ValidFloat `json:"FGBAR,omitzero"`
+	OGBAR      validtypes.ValidFloat `json:"OGBAR,omitzero"`
+	MGBAR      validtypes.ValidFloat `json:"MGBAR,omitzero"`
+	EGBAR      validtypes.ValidFloat `json:"EGBAR,omitzero"`
+	S1         validtypes.ValidFloat `json:"S1,omitzero"`
+	S1_OG      validtypes.ValidFloat `json:"S1_OG,omitzero"`
+	FGOG_RATIO validtypes.ValidFloat `json:"FGOG_RATIO,omitzero"`
+	DX         validtypes.ValidFloat `json:"DX,omitzero"`
+	DY         validtypes.ValidFloat `json:"DY,omitzero"`
 }
 
-type STAT_ISC struct {
-	TOTAL    int     `json:"TOTAL,omitempty"`
-	TILE_DIM int     `json:"TILE_DIM,omitempty"`
-	TILE_XLL int     `json:"TILE_XLL,omitempty"`
-	TILE_YLL int     `json:"TILE_YLL,omitempty"`
-	NSCALE   int     `json:"NSCALE,omitempty"`
-	ISCALE   int     `json:"ISCALE,omitempty"`
-	MSE      float64 `json:"MSE,omitempty"`
-	ISC      float64 `json:"ISC,omitempty"`
-	FENERGY2 float64 `json:"FENERGY2,omitempty"`
-	OENERGY2 float64 `json:"OENERGY2,omitempty"`
-	BASER    float64 `json:"BASER,omitempty"`
-	FBIAS    float64 `json:"FBIAS,omitempty"`
+type STAT_ISC_data struct {
+	TOTAL    validtypes.ValidInt   `json:"TOTAL,omitzero"`
+	TILE_DIM validtypes.ValidInt   `json:"TILE_DIM,omitzero"`
+	TILE_XLL validtypes.ValidInt   `json:"TILE_XLL,omitzero"`
+	TILE_YLL validtypes.ValidInt   `json:"TILE_YLL,omitzero"`
+	NSCALE   validtypes.ValidInt   `json:"NSCALE,omitzero"`
+	ISCALE   validtypes.ValidInt   `json:"ISCALE,omitzero"`
+	MSE      validtypes.ValidFloat `json:"MSE,omitzero"`
+	ISC      validtypes.ValidFloat `json:"ISC,omitzero"`
+	FENERGY2 validtypes.ValidFloat `json:"FENERGY2,omitzero"`
+	OENERGY2 validtypes.ValidFloat `json:"OENERGY2,omitzero"`
+	BASER    validtypes.ValidFloat `json:"BASER,omitzero"`
+	FBIAS    validtypes.ValidFloat `json:"FBIAS,omitzero"`
 }
 
-type STAT_MCTC struct {
-	TOTAL int                    `json:"TOTAL,omitempty"`
-	CAT   map[string]interface{} `json:"CAT,omitempty"`
+type STAT_MCTC_data struct {
+	TOTAL validtypes.ValidInt    `json:"TOTAL,omitzero"`
+	CAT   map[string]interface{} `json:"CAT,omitzero"`
 }
 
-type STAT_MCTS struct {
-	TOTAL   int     `json:"TOTAL,omitempty"`
-	N_CAT   int     `json:"N_CAT,omitempty"`
-	ACC     float64 `json:"ACC,omitempty"`
-	ACC_NCL float64 `json:"ACC_NCL,omitempty"`
-	ACC_NCU float64 `json:"ACC_NCU,omitempty"`
-	ACC_BCL float64 `json:"ACC_BCL,omitempty"`
-	ACC_BCU float64 `json:"ACC_BCU,omitempty"`
-	HK      float64 `json:"HK,omitempty"`
-	HK_BCL  float64 `json:"HK_BCL,omitempty"`
-	HK_BCU  float64 `json:"HK_BCU,omitempty"`
-	HSS     float64 `json:"HSS,omitempty"`
-	HSS_BCL float64 `json:"HSS_BCL,omitempty"`
-	HSS_BCU float64 `json:"HSS_BCU,omitempty"`
-	GER     float64 `json:"GER,omitempty"`
-	GER_BCL float64 `json:"GER_BCL,omitempty"`
-	GER_BCU float64 `json:"GER_BCU,omitempty"`
+type STAT_MCTS_data struct {
+	TOTAL   validtypes.ValidInt   `json:"TOTAL,omitzero"`
+	N_CAT   validtypes.ValidInt   `json:"N_CAT,omitzero"`
+	ACC     validtypes.ValidFloat `json:"ACC,omitzero"`
+	ACC_NCL validtypes.ValidFloat `json:"ACC_NCL,omitzero"`
+	ACC_NCU validtypes.ValidFloat `json:"ACC_NCU,omitzero"`
+	ACC_BCL validtypes.ValidFloat `json:"ACC_BCL,omitzero"`
+	ACC_BCU validtypes.ValidFloat `json:"ACC_BCU,omitzero"`
+	HK      validtypes.ValidFloat `json:"HK,omitzero"`
+	HK_BCL  validtypes.ValidFloat `json:"HK_BCL,omitzero"`
+	HK_BCU  validtypes.ValidFloat `json:"HK_BCU,omitzero"`
+	HSS     validtypes.ValidFloat `json:"HSS,omitzero"`
+	HSS_BCL validtypes.ValidFloat `json:"HSS_BCL,omitzero"`
+	HSS_BCU validtypes.ValidFloat `json:"HSS_BCU,omitzero"`
+	GER     validtypes.ValidFloat `json:"GER,omitzero"`
+	GER_BCL validtypes.ValidFloat `json:"GER_BCL,omitzero"`
+	GER_BCU validtypes.ValidFloat `json:"GER_BCU,omitzero"`
 }
 
-type STAT_MPR struct {
-	TOTAL       int     `json:"TOTAL,omitempty"`
-	INDEX       int     `json:"INDEX,omitempty"`
-	OBS_SID     string  `json:"OBS_SID,omitempty"`
-	OBS_LAT     float64 `json:"OBS_LAT,omitempty"`
-	OBS_LON     float64 `json:"OBS_LON,omitempty"`
-	OBS_LVL     float64 `json:"OBS_LVL,omitempty"`
-	OBS_ELV     float64 `json:"OBS_ELV,omitempty"`
-	FCST        float64 `json:"FCST,omitempty"`
-	OBS         float64 `json:"OBS,omitempty"`
-	OBS_QC      string  `json:"OBS_QC,omitempty"`
-	CLIMO_MEAN  float64 `json:"CLIMO_MEAN,omitempty"`
-	CLIMO_STDEV float64 `json:"CLIMO_STDEV,omitempty"`
-	CLIMO_CDF   float64 `json:"CLIMO_CDF,omitempty"`
+type STAT_MPR_data struct {
+	TOTAL       validtypes.ValidInt    `json:"TOTAL,omitzero"`
+	INDEX       validtypes.ValidInt    `json:"INDEX,omitzero"`
+	OBS_SID     validtypes.ValidString `json:"OBS_SID,omitzero"`
+	OBS_LAT     validtypes.ValidFloat  `json:"OBS_LAT,omitzero"`
+	OBS_LON     validtypes.ValidFloat  `json:"OBS_LON,omitzero"`
+	OBS_LVL     validtypes.ValidFloat  `json:"OBS_LVL,omitzero"`
+	OBS_ELV     validtypes.ValidFloat  `json:"OBS_ELV,omitzero"`
+	FCST        validtypes.ValidFloat  `json:"FCST,omitzero"`
+	OBS         validtypes.ValidFloat  `json:"OBS,omitzero"`
+	OBS_QC      validtypes.ValidString `json:"OBS_QC,omitzero"`
+	CLIMO_MEAN  validtypes.ValidFloat  `json:"CLIMO_MEAN,omitzero"`
+	CLIMO_STDEV validtypes.ValidFloat  `json:"CLIMO_STDEV,omitzero"`
+	CLIMO_CDF   validtypes.ValidFloat  `json:"CLIMO_CDF,omitzero"`
 }
 
-type STAT_NBRCNT struct {
-	TOTAL      int     `json:"TOTAL,omitempty"`
-	FBS        float64 `json:"FBS,omitempty"`
-	FBS_BCL    float64 `json:"FBS_BCL,omitempty"`
-	FBS_BCU    float64 `json:"FBS_BCU,omitempty"`
-	FSS        float64 `json:"FSS,omitempty"`
-	FSS_BCL    float64 `json:"FSS_BCL,omitempty"`
-	FSS_BCU    float64 `json:"FSS_BCU,omitempty"`
-	AFSS       float64 `json:"AFSS,omitempty"`
-	AFSS_BCL   float64 `json:"AFSS_BCL,omitempty"`
-	AFSS_BCU   float64 `json:"AFSS_BCU,omitempty"`
-	UFSS       float64 `json:"UFSS,omitempty"`
-	UFSS_BCL   float64 `json:"UFSS_BCL,omitempty"`
-	UFSS_BCU   float64 `json:"UFSS_BCU,omitempty"`
-	F_RATE     float64 `json:"F_RATE,omitempty"`
-	F_RATE_BCL float64 `json:"F_RATE_BCL,omitempty"`
-	F_RATE_BCU float64 `json:"F_RATE_BCU,omitempty"`
-	O_RATE     float64 `json:"O_RATE,omitempty"`
-	O_RATE_BCL float64 `json:"O_RATE_BCL,omitempty"`
-	O_RATE_BCU float64 `json:"O_RATE_BCU,omitempty"`
+type STAT_NBRCNT_data struct {
+	TOTAL      validtypes.ValidInt   `json:"TOTAL,omitzero"`
+	FBS        validtypes.ValidFloat `json:"FBS,omitzero"`
+	FBS_BCL    validtypes.ValidFloat `json:"FBS_BCL,omitzero"`
+	FBS_BCU    validtypes.ValidFloat `json:"FBS_BCU,omitzero"`
+	FSS        validtypes.ValidFloat `json:"FSS,omitzero"`
+	FSS_BCL    validtypes.ValidFloat `json:"FSS_BCL,omitzero"`
+	FSS_BCU    validtypes.ValidFloat `json:"FSS_BCU,omitzero"`
+	AFSS       validtypes.ValidFloat `json:"AFSS,omitzero"`
+	AFSS_BCL   validtypes.ValidFloat `json:"AFSS_BCL,omitzero"`
+	AFSS_BCU   validtypes.ValidFloat `json:"AFSS_BCU,omitzero"`
+	UFSS       validtypes.ValidFloat `json:"UFSS,omitzero"`
+	UFSS_BCL   validtypes.ValidFloat `json:"UFSS_BCL,omitzero"`
+	UFSS_BCU   validtypes.ValidFloat `json:"UFSS_BCU,omitzero"`
+	F_RATE     validtypes.ValidFloat `json:"F_RATE,omitzero"`
+	F_RATE_BCL validtypes.ValidFloat `json:"F_RATE_BCL,omitzero"`
+	F_RATE_BCU validtypes.ValidFloat `json:"F_RATE_BCU,omitzero"`
+	O_RATE     validtypes.ValidFloat `json:"O_RATE,omitzero"`
+	O_RATE_BCL validtypes.ValidFloat `json:"O_RATE_BCL,omitzero"`
+	O_RATE_BCU validtypes.ValidFloat `json:"O_RATE_BCU,omitzero"`
 }
 
-type STAT_NBRCTC struct {
-	TOTAL int     `json:"TOTAL,omitempty"`
-	FY_OY float64 `json:"FY_OY,omitempty"`
-	FY_ON float64 `json:"FY_ON,omitempty"`
-	FN_OY float64 `json:"FN_OY,omitempty"`
-	FN_ON float64 `json:"FN_ON,omitempty"`
+type STAT_NBRCTC_data struct {
+	TOTAL validtypes.ValidInt   `json:"TOTAL,omitzero"`
+	FY_OY validtypes.ValidFloat `json:"FY_OY,omitzero"`
+	FY_ON validtypes.ValidFloat `json:"FY_ON,omitzero"`
+	FN_OY validtypes.ValidFloat `json:"FN_OY,omitzero"`
+	FN_ON validtypes.ValidFloat `json:"FN_ON,omitzero"`
 }
 
-type STAT_NBRCTS struct {
-	TOTAL     int     `json:"TOTAL,omitempty"`
-	BASER     float64 `json:"BASER,omitempty"`
-	BASER_NCL float64 `json:"BASER_NCL,omitempty"`
-	BASER_NCU float64 `json:"BASER_NCU,omitempty"`
-	BASER_BCL float64 `json:"BASER_BCL,omitempty"`
-	BASER_BCU float64 `json:"BASER_BCU,omitempty"`
-	FMEAN     float64 `json:"FMEAN,omitempty"`
-	FMEAN_NCL float64 `json:"FMEAN_NCL,omitempty"`
-	FMEAN_NCU float64 `json:"FMEAN_NCU,omitempty"`
-	FMEAN_BCL float64 `json:"FMEAN_BCL,omitempty"`
-	FMEAN_BCU float64 `json:"FMEAN_BCU,omitempty"`
-	ACC       float64 `json:"ACC,omitempty"`
-	ACC_NCL   float64 `json:"ACC_NCL,omitempty"`
-	ACC_NCU   float64 `json:"ACC_NCU,omitempty"`
-	ACC_BCL   float64 `json:"ACC_BCL,omitempty"`
-	ACC_BCU   float64 `json:"ACC_BCU,omitempty"`
-	FBIAS     float64 `json:"FBIAS,omitempty"`
-	FBIAS_BCL float64 `json:"FBIAS_BCL,omitempty"`
-	FBIAS_BCU float64 `json:"FBIAS_BCU,omitempty"`
-	PODY      float64 `json:"PODY,omitempty"`
-	PODY_NCL  float64 `json:"PODY_NCL,omitempty"`
-	PODY_NCU  float64 `json:"PODY_NCU,omitempty"`
-	PODY_BCL  float64 `json:"PODY_BCL,omitempty"`
-	PODY_BCU  float64 `json:"PODY_BCU,omitempty"`
-	PODN      float64 `json:"PODN,omitempty"`
-	PODN_NCL  float64 `json:"PODN_NCL,omitempty"`
-	PODN_NCU  float64 `json:"PODN_NCU,omitempty"`
-	PODN_BCL  float64 `json:"PODN_BCL,omitempty"`
-	PODN_BCU  float64 `json:"PODN_BCU,omitempty"`
-	POFD      float64 `json:"POFD,omitempty"`
-	POFD_NCL  float64 `json:"POFD_NCL,omitempty"`
-	POFD_NCU  float64 `json:"POFD_NCU,omitempty"`
-	POFD_BCL  float64 `json:"POFD_BCL,omitempty"`
-	POFD_BCU  float64 `json:"POFD_BCU,omitempty"`
-	FAR       float64 `json:"FAR,omitempty"`
-	FAR_NCL   float64 `json:"FAR_NCL,omitempty"`
-	FAR_NCU   float64 `json:"FAR_NCU,omitempty"`
-	FAR_BCL   float64 `json:"FAR_BCL,omitempty"`
-	FAR_BCU   float64 `json:"FAR_BCU,omitempty"`
-	CSI       float64 `json:"CSI,omitempty"`
-	CSI_NCL   float64 `json:"CSI_NCL,omitempty"`
-	CSI_NCU   float64 `json:"CSI_NCU,omitempty"`
-	CSI_BCL   float64 `json:"CSI_BCL,omitempty"`
-	CSI_BCU   float64 `json:"CSI_BCU,omitempty"`
-	GSS       float64 `json:"GSS,omitempty"`
-	GSS_BCL   float64 `json:"GSS_BCL,omitempty"`
-	GSS_BCU   float64 `json:"GSS_BCU,omitempty"`
-	HK        float64 `json:"HK,omitempty"`
-	HK_NCL    float64 `json:"HK_NCL,omitempty"`
-	HK_NCU    float64 `json:"HK_NCU,omitempty"`
-	HK_BCL    float64 `json:"HK_BCL,omitempty"`
-	HK_BCU    float64 `json:"HK_BCU,omitempty"`
-	HSS       float64 `json:"HSS,omitempty"`
-	HSS_BCL   float64 `json:"HSS_BCL,omitempty"`
-	HSS_BCU   float64 `json:"HSS_BCU,omitempty"`
-	ODDS      float64 `json:"ODDS,omitempty"`
-	ODDS_NCL  float64 `json:"ODDS_NCL,omitempty"`
-	ODDS_NCU  float64 `json:"ODDS_NCU,omitempty"`
-	ODDS_BCL  float64 `json:"ODDS_BCL,omitempty"`
-	ODDS_BCU  float64 `json:"ODDS_BCU,omitempty"`
-	LODDS     float64 `json:"LODDS,omitempty"`
-	LODDS_NCL float64 `json:"LODDS_NCL,omitempty"`
-	LODDS_NCU float64 `json:"LODDS_NCU,omitempty"`
-	LODDS_BCL float64 `json:"LODDS_BCL,omitempty"`
-	LODDS_BCU float64 `json:"LODDS_BCU,omitempty"`
-	ORSS      float64 `json:"ORSS,omitempty"`
-	ORSS_NCL  float64 `json:"ORSS_NCL,omitempty"`
-	ORSS_NCU  float64 `json:"ORSS_NCU,omitempty"`
-	ORSS_BCL  float64 `json:"ORSS_BCL,omitempty"`
-	ORSS_BCU  float64 `json:"ORSS_BCU,omitempty"`
-	EDS       float64 `json:"EDS,omitempty"`
-	EDS_NCL   float64 `json:"EDS_NCL,omitempty"`
-	EDS_NCU   float64 `json:"EDS_NCU,omitempty"`
-	EDS_BCL   float64 `json:"EDS_BCL,omitempty"`
-	EDS_BCU   float64 `json:"EDS_BCU,omitempty"`
-	SEDS      float64 `json:"SEDS,omitempty"`
-	SEDS_NCL  float64 `json:"SEDS_NCL,omitempty"`
-	SEDS_NCU  float64 `json:"SEDS_NCU,omitempty"`
-	SEDS_BCL  float64 `json:"SEDS_BCL,omitempty"`
-	SEDS_BCU  float64 `json:"SEDS_BCU,omitempty"`
-	EDI       float64 `json:"EDI,omitempty"`
-	EDI_NCL   float64 `json:"EDI_NCL,omitempty"`
-	EDI_NCU   float64 `json:"EDI_NCU,omitempty"`
-	EDI_BCL   float64 `json:"EDI_BCL,omitempty"`
-	EDI_BCU   float64 `json:"EDI_BCU,omitempty"`
-	SEDI      float64 `json:"SEDI,omitempty"`
-	SEDI_NCL  float64 `json:"SEDI_NCL,omitempty"`
-	SEDI_NCU  float64 `json:"SEDI_NCU,omitempty"`
-	SEDI_BCL  float64 `json:"SEDI_BCL,omitempty"`
-	SEDI_BCU  float64 `json:"SEDI_BCU,omitempty"`
-	BAGSS     float64 `json:"BAGSS,omitempty"`
-	BAGSS_BCL float64 `json:"BAGSS_BCL,omitempty"`
-	BAGSS_BCU float64 `json:"BAGSS_BCU,omitempty"`
+type STAT_NBRCTS_data struct {
+	TOTAL     validtypes.ValidInt   `json:"TOTAL,omitzero"`
+	BASER     validtypes.ValidFloat `json:"BASER,omitzero"`
+	BASER_NCL validtypes.ValidFloat `json:"BASER_NCL,omitzero"`
+	BASER_NCU validtypes.ValidFloat `json:"BASER_NCU,omitzero"`
+	BASER_BCL validtypes.ValidFloat `json:"BASER_BCL,omitzero"`
+	BASER_BCU validtypes.ValidFloat `json:"BASER_BCU,omitzero"`
+	FMEAN     validtypes.ValidFloat `json:"FMEAN,omitzero"`
+	FMEAN_NCL validtypes.ValidFloat `json:"FMEAN_NCL,omitzero"`
+	FMEAN_NCU validtypes.ValidFloat `json:"FMEAN_NCU,omitzero"`
+	FMEAN_BCL validtypes.ValidFloat `json:"FMEAN_BCL,omitzero"`
+	FMEAN_BCU validtypes.ValidFloat `json:"FMEAN_BCU,omitzero"`
+	ACC       validtypes.ValidFloat `json:"ACC,omitzero"`
+	ACC_NCL   validtypes.ValidFloat `json:"ACC_NCL,omitzero"`
+	ACC_NCU   validtypes.ValidFloat `json:"ACC_NCU,omitzero"`
+	ACC_BCL   validtypes.ValidFloat `json:"ACC_BCL,omitzero"`
+	ACC_BCU   validtypes.ValidFloat `json:"ACC_BCU,omitzero"`
+	FBIAS     validtypes.ValidFloat `json:"FBIAS,omitzero"`
+	FBIAS_BCL validtypes.ValidFloat `json:"FBIAS_BCL,omitzero"`
+	FBIAS_BCU validtypes.ValidFloat `json:"FBIAS_BCU,omitzero"`
+	PODY      validtypes.ValidFloat `json:"PODY,omitzero"`
+	PODY_NCL  validtypes.ValidFloat `json:"PODY_NCL,omitzero"`
+	PODY_NCU  validtypes.ValidFloat `json:"PODY_NCU,omitzero"`
+	PODY_BCL  validtypes.ValidFloat `json:"PODY_BCL,omitzero"`
+	PODY_BCU  validtypes.ValidFloat `json:"PODY_BCU,omitzero"`
+	PODN      validtypes.ValidFloat `json:"PODN,omitzero"`
+	PODN_NCL  validtypes.ValidFloat `json:"PODN_NCL,omitzero"`
+	PODN_NCU  validtypes.ValidFloat `json:"PODN_NCU,omitzero"`
+	PODN_BCL  validtypes.ValidFloat `json:"PODN_BCL,omitzero"`
+	PODN_BCU  validtypes.ValidFloat `json:"PODN_BCU,omitzero"`
+	POFD      validtypes.ValidFloat `json:"POFD,omitzero"`
+	POFD_NCL  validtypes.ValidFloat `json:"POFD_NCL,omitzero"`
+	POFD_NCU  validtypes.ValidFloat `json:"POFD_NCU,omitzero"`
+	POFD_BCL  validtypes.ValidFloat `json:"POFD_BCL,omitzero"`
+	POFD_BCU  validtypes.ValidFloat `json:"POFD_BCU,omitzero"`
+	FAR       validtypes.ValidFloat `json:"FAR,omitzero"`
+	FAR_NCL   validtypes.ValidFloat `json:"FAR_NCL,omitzero"`
+	FAR_NCU   validtypes.ValidFloat `json:"FAR_NCU,omitzero"`
+	FAR_BCL   validtypes.ValidFloat `json:"FAR_BCL,omitzero"`
+	FAR_BCU   validtypes.ValidFloat `json:"FAR_BCU,omitzero"`
+	CSI       validtypes.ValidFloat `json:"CSI,omitzero"`
+	CSI_NCL   validtypes.ValidFloat `json:"CSI_NCL,omitzero"`
+	CSI_NCU   validtypes.ValidFloat `json:"CSI_NCU,omitzero"`
+	CSI_BCL   validtypes.ValidFloat `json:"CSI_BCL,omitzero"`
+	CSI_BCU   validtypes.ValidFloat `json:"CSI_BCU,omitzero"`
+	GSS       validtypes.ValidFloat `json:"GSS,omitzero"`
+	GSS_BCL   validtypes.ValidFloat `json:"GSS_BCL,omitzero"`
+	GSS_BCU   validtypes.ValidFloat `json:"GSS_BCU,omitzero"`
+	HK        validtypes.ValidFloat `json:"HK,omitzero"`
+	HK_NCL    validtypes.ValidFloat `json:"HK_NCL,omitzero"`
+	HK_NCU    validtypes.ValidFloat `json:"HK_NCU,omitzero"`
+	HK_BCL    validtypes.ValidFloat `json:"HK_BCL,omitzero"`
+	HK_BCU    validtypes.ValidFloat `json:"HK_BCU,omitzero"`
+	HSS       validtypes.ValidFloat `json:"HSS,omitzero"`
+	HSS_BCL   validtypes.ValidFloat `json:"HSS_BCL,omitzero"`
+	HSS_BCU   validtypes.ValidFloat `json:"HSS_BCU,omitzero"`
+	ODDS      validtypes.ValidFloat `json:"ODDS,omitzero"`
+	ODDS_NCL  validtypes.ValidFloat `json:"ODDS_NCL,omitzero"`
+	ODDS_NCU  validtypes.ValidFloat `json:"ODDS_NCU,omitzero"`
+	ODDS_BCL  validtypes.ValidFloat `json:"ODDS_BCL,omitzero"`
+	ODDS_BCU  validtypes.ValidFloat `json:"ODDS_BCU,omitzero"`
+	LODDS     validtypes.ValidFloat `json:"LODDS,omitzero"`
+	LODDS_NCL validtypes.ValidFloat `json:"LODDS_NCL,omitzero"`
+	LODDS_NCU validtypes.ValidFloat `json:"LODDS_NCU,omitzero"`
+	LODDS_BCL validtypes.ValidFloat `json:"LODDS_BCL,omitzero"`
+	LODDS_BCU validtypes.ValidFloat `json:"LODDS_BCU,omitzero"`
+	ORSS      validtypes.ValidFloat `json:"ORSS,omitzero"`
+	ORSS_NCL  validtypes.ValidFloat `json:"ORSS_NCL,omitzero"`
+	ORSS_NCU  validtypes.ValidFloat `json:"ORSS_NCU,omitzero"`
+	ORSS_BCL  validtypes.ValidFloat `json:"ORSS_BCL,omitzero"`
+	ORSS_BCU  validtypes.ValidFloat `json:"ORSS_BCU,omitzero"`
+	EDS       validtypes.ValidFloat `json:"EDS,omitzero"`
+	EDS_NCL   validtypes.ValidFloat `json:"EDS_NCL,omitzero"`
+	EDS_NCU   validtypes.ValidFloat `json:"EDS_NCU,omitzero"`
+	EDS_BCL   validtypes.ValidFloat `json:"EDS_BCL,omitzero"`
+	EDS_BCU   validtypes.ValidFloat `json:"EDS_BCU,omitzero"`
+	SEDS      validtypes.ValidFloat `json:"SEDS,omitzero"`
+	SEDS_NCL  validtypes.ValidFloat `json:"SEDS_NCL,omitzero"`
+	SEDS_NCU  validtypes.ValidFloat `json:"SEDS_NCU,omitzero"`
+	SEDS_BCL  validtypes.ValidFloat `json:"SEDS_BCL,omitzero"`
+	SEDS_BCU  validtypes.ValidFloat `json:"SEDS_BCU,omitzero"`
+	EDI       validtypes.ValidFloat `json:"EDI,omitzero"`
+	EDI_NCL   validtypes.ValidFloat `json:"EDI_NCL,omitzero"`
+	EDI_NCU   validtypes.ValidFloat `json:"EDI_NCU,omitzero"`
+	EDI_BCL   validtypes.ValidFloat `json:"EDI_BCL,omitzero"`
+	EDI_BCU   validtypes.ValidFloat `json:"EDI_BCU,omitzero"`
+	SEDI      validtypes.ValidFloat `json:"SEDI,omitzero"`
+	SEDI_NCL  validtypes.ValidFloat `json:"SEDI_NCL,omitzero"`
+	SEDI_NCU  validtypes.ValidFloat `json:"SEDI_NCU,omitzero"`
+	SEDI_BCL  validtypes.ValidFloat `json:"SEDI_BCL,omitzero"`
+	SEDI_BCU  validtypes.ValidFloat `json:"SEDI_BCU,omitzero"`
+	BAGSS     validtypes.ValidFloat `json:"BAGSS,omitzero"`
+	BAGSS_BCL validtypes.ValidFloat `json:"BAGSS_BCL,omitzero"`
+	BAGSS_BCU validtypes.ValidFloat `json:"BAGSS_BCU,omitzero"`
 }
 
-type STAT_ORANK struct {
-	TOTAL            int                    `json:"TOTAL,omitempty"`
-	INDEX            int                    `json:"INDEX,omitempty"`
-	OBS_SID          string                 `json:"OBS_SID,omitempty"`
-	OBS_LAT          float64                `json:"OBS_LAT,omitempty"`
-	OBS_LON          float64                `json:"OBS_LON,omitempty"`
-	OBS_LVL          float64                `json:"OBS_LVL,omitempty"`
-	OBS_ELV          float64                `json:"OBS_ELV,omitempty"`
-	OBS              float64                `json:"OBS,omitempty"`
-	PIT              float64                `json:"PIT,omitempty"`
-	RANK             int                    `json:"RANK,omitempty"`
-	N_ENS_VLD        int                    `json:"N_ENS_VLD,omitempty"`
-	ENS              map[string]interface{} `json:"ENS,omitempty"`
-	OBS_QC           string                 `json:"OBS_QC,omitempty"`
-	ENS_MEAN         int                    `json:"ENS_MEAN,omitempty"`
-	CLIMO_MEAN       float64                `json:"CLIMO_MEAN,omitempty"`
-	SPREAD           float64                `json:"SPREAD,omitempty"`
-	ENS_MEAN_OERR    int                    `json:"ENS_MEAN_OERR,omitempty"`
-	SPREAD_OERR      float64                `json:"SPREAD_OERR,omitempty"`
-	SPREAD_PLUS_OERR float64                `json:"SPREAD_PLUS_OERR,omitempty"`
-	CLIMO_STDEV      float64                `json:"CLIMO_STDEV,omitempty"`
+type STAT_ORANK_data struct {
+	TOTAL            validtypes.ValidInt    `json:"TOTAL,omitzero"`
+	INDEX            validtypes.ValidInt    `json:"INDEX,omitzero"`
+	OBS_SID          validtypes.ValidString `json:"OBS_SID,omitzero"`
+	OBS_LAT          validtypes.ValidFloat  `json:"OBS_LAT,omitzero"`
+	OBS_LON          validtypes.ValidFloat  `json:"OBS_LON,omitzero"`
+	OBS_LVL          validtypes.ValidFloat  `json:"OBS_LVL,omitzero"`
+	OBS_ELV          validtypes.ValidFloat  `json:"OBS_ELV,omitzero"`
+	OBS              validtypes.ValidFloat  `json:"OBS,omitzero"`
+	PIT              validtypes.ValidFloat  `json:"PIT,omitzero"`
+	RANK             validtypes.ValidInt    `json:"RANK,omitzero"`
+	N_ENS_VLD        validtypes.ValidInt    `json:"N_ENS_VLD,omitzero"`
+	ENS              map[string]interface{} `json:"ENS,omitzero"`
+	OBS_QC           validtypes.ValidString `json:"OBS_QC,omitzero"`
+	ENS_MEAN         validtypes.ValidInt    `json:"ENS_MEAN,omitzero"`
+	CLIMO_MEAN       validtypes.ValidFloat  `json:"CLIMO_MEAN,omitzero"`
+	SPREAD           validtypes.ValidFloat  `json:"SPREAD,omitzero"`
+	ENS_MEAN_OERR    validtypes.ValidInt    `json:"ENS_MEAN_OERR,omitzero"`
+	SPREAD_OERR      validtypes.ValidFloat  `json:"SPREAD_OERR,omitzero"`
+	SPREAD_PLUS_OERR validtypes.ValidFloat  `json:"SPREAD_PLUS_OERR,omitzero"`
+	CLIMO_STDEV      validtypes.ValidFloat  `json:"CLIMO_STDEV,omitzero"`
 }
 
-type STAT_PCT struct {
-	TOTAL  int                    `json:"TOTAL,omitempty"`
-	THRESH map[string]interface{} `json:"THRESH,omitempty"`
+type STAT_PCT_data struct {
+	TOTAL  validtypes.ValidInt    `json:"TOTAL,omitzero"`
+	THRESH map[string]interface{} `json:"THRESH,omitzero"`
 }
 
-type STAT_PHIST struct {
-	TOTAL    int                    `json:"TOTAL,omitempty"`
-	BIN_SIZE int                    `json:"BIN_SIZE,omitempty"`
-	BIN      map[string]interface{} `json:"BIN,omitempty"`
+type STAT_PHIST_data struct {
+	TOTAL    validtypes.ValidInt    `json:"TOTAL,omitzero"`
+	BIN_SIZE validtypes.ValidInt    `json:"BIN_SIZE,omitzero"`
+	BIN      map[string]interface{} `json:"BIN,omitzero"`
 }
 
-type STAT_PJC struct {
-	TOTAL  int                    `json:"TOTAL,omitempty"`
-	THRESH map[string]interface{} `json:"THRESH,omitempty"`
+type STAT_PJC_data struct {
+	TOTAL  validtypes.ValidInt    `json:"TOTAL,omitzero"`
+	THRESH map[string]interface{} `json:"THRESH,omitzero"`
 }
 
-type STAT_PRC struct {
-	TOTAL  int                    `json:"TOTAL,omitempty"`
-	THRESH map[string]interface{} `json:"THRESH,omitempty"`
+type STAT_PRC_data struct {
+	TOTAL  validtypes.ValidInt    `json:"TOTAL,omitzero"`
+	THRESH map[string]interface{} `json:"THRESH,omitzero"`
 }
 
-type STAT_PSTD struct {
-	TOTAL       int                    `json:"TOTAL,omitempty"`
-	THRESH      map[string]interface{} `json:"THRESH,omitempty"`
-	BASER_NCL   float64                `json:"BASER_NCL,omitempty"`
-	BASER_NCU   float64                `json:"BASER_NCU,omitempty"`
-	RELIABILITY float64                `json:"RELIABILITY,omitempty"`
-	RESOLUTION  float64                `json:"RESOLUTION,omitempty"`
-	UNCERTAINTY float64                `json:"UNCERTAINTY,omitempty"`
-	ROC_AUC     float64                `json:"ROC_AUC,omitempty"`
-	BRIER       float64                `json:"BRIER,omitempty"`
-	BRIER_NCL   float64                `json:"BRIER_NCL,omitempty"`
-	BRIER_NCU   float64                `json:"BRIER_NCU,omitempty"`
-	BRIERCL     float64                `json:"BRIERCL,omitempty"`
-	BRIERCL_NCL float64                `json:"BRIERCL_NCL,omitempty"`
-	BRIERCL_NCU float64                `json:"BRIERCL_NCU,omitempty"`
-	BSS         float64                `json:"BSS,omitempty"`
-	BSS_SMPL    float64                `json:"BSS_SMPL,omitempty"`
-	THRESH_I    int                    `json:"THRESH_I,omitempty"`
+type STAT_PSTD_data struct {
+	TOTAL       validtypes.ValidInt    `json:"TOTAL,omitzero"`
+	THRESH      map[string]interface{} `json:"THRESH,omitzero"`
+	BASER_NCL   validtypes.ValidFloat  `json:"BASER_NCL,omitzero"`
+	BASER_NCU   validtypes.ValidFloat  `json:"BASER_NCU,omitzero"`
+	RELIABILITY validtypes.ValidFloat  `json:"RELIABILITY,omitzero"`
+	RESOLUTION  validtypes.ValidFloat  `json:"RESOLUTION,omitzero"`
+	UNCERTAINTY validtypes.ValidFloat  `json:"UNCERTAINTY,omitzero"`
+	ROC_AUC     validtypes.ValidFloat  `json:"ROC_AUC,omitzero"`
+	BRIER       validtypes.ValidFloat  `json:"BRIER,omitzero"`
+	BRIER_NCL   validtypes.ValidFloat  `json:"BRIER_NCL,omitzero"`
+	BRIER_NCU   validtypes.ValidFloat  `json:"BRIER_NCU,omitzero"`
+	BRIERCL     validtypes.ValidFloat  `json:"BRIERCL,omitzero"`
+	BRIERCL_NCL validtypes.ValidFloat  `json:"BRIERCL_NCL,omitzero"`
+	BRIERCL_NCU validtypes.ValidFloat  `json:"BRIERCL_NCU,omitzero"`
+	BSS         validtypes.ValidFloat  `json:"BSS,omitzero"`
+	BSS_SMPL    validtypes.ValidFloat  `json:"BSS_SMPL,omitzero"`
+	THRESH_I    validtypes.ValidInt    `json:"THRESH_I,omitzero"`
 }
 
-type STAT_RELP struct {
-	TOTAL int                    `json:"TOTAL,omitempty"`
-	ENS   map[string]interface{} `json:"ENS,omitempty"`
+type STAT_RELP_data struct {
+	TOTAL validtypes.ValidInt    `json:"TOTAL,omitzero"`
+	ENS   map[string]interface{} `json:"ENS,omitzero"`
 }
 
-type STAT_RHIST struct {
-	TOTAL int                    `json:"TOTAL,omitempty"`
-	RANK  map[string]interface{} `json:"RANK,omitempty"`
+type STAT_RHIST_data struct {
+	TOTAL validtypes.ValidInt    `json:"TOTAL,omitzero"`
+	RANK  map[string]interface{} `json:"RANK,omitzero"`
 }
 
-type STAT_RPS struct {
-	TOTAL     int     `json:"TOTAL,omitempty"`
-	N_PROB    int     `json:"N_PROB,omitempty"`
-	RPS_REL   float64 `json:"RPS_REL,omitempty"`
-	RPS_RES   float64 `json:"RPS_RES,omitempty"`
-	RPS_UNC   float64 `json:"RPS_UNC,omitempty"`
-	RPS       float64 `json:"RPS,omitempty"`
-	RPSS      float64 `json:"RPSS,omitempty"`
-	RPSS_SMPL float64 `json:"RPSS_SMPL,omitempty"`
-	RPS_COMP  float64 `json:"RPS_COMP,omitempty"`
+type STAT_RPS_data struct {
+	TOTAL     validtypes.ValidInt   `json:"TOTAL,omitzero"`
+	N_PROB    validtypes.ValidInt   `json:"N_PROB,omitzero"`
+	RPS_REL   validtypes.ValidFloat `json:"RPS_REL,omitzero"`
+	RPS_RES   validtypes.ValidFloat `json:"RPS_RES,omitzero"`
+	RPS_UNC   validtypes.ValidFloat `json:"RPS_UNC,omitzero"`
+	RPS       validtypes.ValidFloat `json:"RPS,omitzero"`
+	RPSS      validtypes.ValidFloat `json:"RPSS,omitzero"`
+	RPSS_SMPL validtypes.ValidFloat `json:"RPSS_SMPL,omitzero"`
+	RPS_COMP  validtypes.ValidFloat `json:"RPS_COMP,omitzero"`
 }
 
-type STAT_SAL1L2 struct {
-	TOTAL  int     `json:"TOTAL,omitempty"`
-	FABAR  float64 `json:"FABAR,omitempty"`
-	OABAR  float64 `json:"OABAR,omitempty"`
-	FOABAR float64 `json:"FOABAR,omitempty"`
-	FFABAR float64 `json:"FFABAR,omitempty"`
-	OOABAR float64 `json:"OOABAR,omitempty"`
-	MAE    float64 `json:"MAE,omitempty"`
+type STAT_SAL1L2_data struct {
+	TOTAL  validtypes.ValidInt   `json:"TOTAL,omitzero"`
+	FABAR  validtypes.ValidFloat `json:"FABAR,omitzero"`
+	OABAR  validtypes.ValidFloat `json:"OABAR,omitzero"`
+	FOABAR validtypes.ValidFloat `json:"FOABAR,omitzero"`
+	FFABAR validtypes.ValidFloat `json:"FFABAR,omitzero"`
+	OOABAR validtypes.ValidFloat `json:"OOABAR,omitzero"`
+	MAE    validtypes.ValidFloat `json:"MAE,omitzero"`
 }
 
-type STAT_SL1L2 struct {
-	TOTAL int     `json:"TOTAL,omitempty"`
-	FBAR  float64 `json:"FBAR,omitempty"`
-	OBAR  float64 `json:"OBAR,omitempty"`
-	FOBAR float64 `json:"FOBAR,omitempty"`
-	FFBAR float64 `json:"FFBAR,omitempty"`
-	OOBAR float64 `json:"OOBAR,omitempty"`
-	MAE   float64 `json:"MAE,omitempty"`
+type STAT_SL1L2_data struct {
+	TOTAL validtypes.ValidInt   `json:"TOTAL,omitzero"`
+	FBAR  validtypes.ValidFloat `json:"FBAR,omitzero"`
+	OBAR  validtypes.ValidFloat `json:"OBAR,omitzero"`
+	FOBAR validtypes.ValidFloat `json:"FOBAR,omitzero"`
+	FFBAR validtypes.ValidFloat `json:"FFBAR,omitzero"`
+	OOBAR validtypes.ValidFloat `json:"OOBAR,omitzero"`
+	MAE   validtypes.ValidFloat `json:"MAE,omitzero"`
 }
 
-type STAT_SSVAR struct {
-	TOTAL       int     `json:"TOTAL,omitempty"`
-	N_BIN       int     `json:"N_BIN,omitempty"`
-	BIN_I       int     `json:"BIN_I,omitempty"`
-	BIN_N       int     `json:"BIN_N,omitempty"`
-	VAR_MIN     float64 `json:"VAR_MIN,omitempty"`
-	VAR_MAX     float64 `json:"VAR_MAX,omitempty"`
-	VAR_MEAN    float64 `json:"VAR_MEAN,omitempty"`
-	FBAR        float64 `json:"FBAR,omitempty"`
-	OBAR        float64 `json:"OBAR,omitempty"`
-	FOBAR       float64 `json:"FOBAR,omitempty"`
-	FFBAR       float64 `json:"FFBAR,omitempty"`
-	OOBAR       float64 `json:"OOBAR,omitempty"`
-	FBAR_NCL    float64 `json:"FBAR_NCL,omitempty"`
-	FBAR_NCU    float64 `json:"FBAR_NCU,omitempty"`
-	FSTDEV      float64 `json:"FSTDEV,omitempty"`
-	FSTDEV_NCL  float64 `json:"FSTDEV_NCL,omitempty"`
-	FSTDEV_NCU  float64 `json:"FSTDEV_NCU,omitempty"`
-	OBAR_NCL    float64 `json:"OBAR_NCL,omitempty"`
-	OBAR_NCU    float64 `json:"OBAR_NCU,omitempty"`
-	OSTDEV      float64 `json:"OSTDEV,omitempty"`
-	OSTDEV_NCL  float64 `json:"OSTDEV_NCL,omitempty"`
-	OSTDEV_NCU  float64 `json:"OSTDEV_NCU,omitempty"`
-	PR_CORR     float64 `json:"PR_CORR,omitempty"`
-	PR_CORR_NCL float64 `json:"PR_CORR_NCL,omitempty"`
-	PR_CORR_NCU float64 `json:"PR_CORR_NCU,omitempty"`
-	ME          float64 `json:"ME,omitempty"`
-	ME_NCL      float64 `json:"ME_NCL,omitempty"`
-	ME_NCU      float64 `json:"ME_NCU,omitempty"`
-	ESTDEV      float64 `json:"ESTDEV,omitempty"`
-	ESTDEV_NCL  float64 `json:"ESTDEV_NCL,omitempty"`
-	ESTDEV_NCU  float64 `json:"ESTDEV_NCU,omitempty"`
-	MBIAS       float64 `json:"MBIAS,omitempty"`
-	MSE         float64 `json:"MSE,omitempty"`
-	BCMSE       float64 `json:"BCMSE,omitempty"`
-	RMSE        float64 `json:"RMSE,omitempty"`
+type STAT_SSVAR_data struct {
+	TOTAL       validtypes.ValidInt   `json:"TOTAL,omitzero"`
+	N_BIN       validtypes.ValidInt   `json:"N_BIN,omitzero"`
+	BIN_I       validtypes.ValidInt   `json:"BIN_I,omitzero"`
+	BIN_N       validtypes.ValidInt   `json:"BIN_N,omitzero"`
+	VAR_MIN     validtypes.ValidFloat `json:"VAR_MIN,omitzero"`
+	VAR_MAX     validtypes.ValidFloat `json:"VAR_MAX,omitzero"`
+	VAR_MEAN    validtypes.ValidFloat `json:"VAR_MEAN,omitzero"`
+	FBAR        validtypes.ValidFloat `json:"FBAR,omitzero"`
+	OBAR        validtypes.ValidFloat `json:"OBAR,omitzero"`
+	FOBAR       validtypes.ValidFloat `json:"FOBAR,omitzero"`
+	FFBAR       validtypes.ValidFloat `json:"FFBAR,omitzero"`
+	OOBAR       validtypes.ValidFloat `json:"OOBAR,omitzero"`
+	FBAR_NCL    validtypes.ValidFloat `json:"FBAR_NCL,omitzero"`
+	FBAR_NCU    validtypes.ValidFloat `json:"FBAR_NCU,omitzero"`
+	FSTDEV      validtypes.ValidFloat `json:"FSTDEV,omitzero"`
+	FSTDEV_NCL  validtypes.ValidFloat `json:"FSTDEV_NCL,omitzero"`
+	FSTDEV_NCU  validtypes.ValidFloat `json:"FSTDEV_NCU,omitzero"`
+	OBAR_NCL    validtypes.ValidFloat `json:"OBAR_NCL,omitzero"`
+	OBAR_NCU    validtypes.ValidFloat `json:"OBAR_NCU,omitzero"`
+	OSTDEV      validtypes.ValidFloat `json:"OSTDEV,omitzero"`
+	OSTDEV_NCL  validtypes.ValidFloat `json:"OSTDEV_NCL,omitzero"`
+	OSTDEV_NCU  validtypes.ValidFloat `json:"OSTDEV_NCU,omitzero"`
+	PR_CORR     validtypes.ValidFloat `json:"PR_CORR,omitzero"`
+	PR_CORR_NCL validtypes.ValidFloat `json:"PR_CORR_NCL,omitzero"`
+	PR_CORR_NCU validtypes.ValidFloat `json:"PR_CORR_NCU,omitzero"`
+	ME          validtypes.ValidFloat `json:"ME,omitzero"`
+	ME_NCL      validtypes.ValidFloat `json:"ME_NCL,omitzero"`
+	ME_NCU      validtypes.ValidFloat `json:"ME_NCU,omitzero"`
+	ESTDEV      validtypes.ValidFloat `json:"ESTDEV,omitzero"`
+	ESTDEV_NCL  validtypes.ValidFloat `json:"ESTDEV_NCL,omitzero"`
+	ESTDEV_NCU  validtypes.ValidFloat `json:"ESTDEV_NCU,omitzero"`
+	MBIAS       validtypes.ValidFloat `json:"MBIAS,omitzero"`
+	MSE         validtypes.ValidFloat `json:"MSE,omitzero"`
+	BCMSE       validtypes.ValidFloat `json:"BCMSE,omitzero"`
+	RMSE        validtypes.ValidFloat `json:"RMSE,omitzero"`
 }
 
-type STAT_VAL1L2 struct {
-	TOTAL    int     `json:"TOTAL,omitempty"`
-	UFABAR   float64 `json:"UFABAR,omitempty"`
-	VFABAR   float64 `json:"VFABAR,omitempty"`
-	UOABAR   float64 `json:"UOABAR,omitempty"`
-	VOABAR   float64 `json:"VOABAR,omitempty"`
-	UVFOABAR float64 `json:"UVFOABAR,omitempty"`
-	UVFFABAR float64 `json:"UVFFABAR,omitempty"`
-	UVOOABAR float64 `json:"UVOOABAR,omitempty"`
+type STAT_VAL1L2_data struct {
+	TOTAL    validtypes.ValidInt   `json:"TOTAL,omitzero"`
+	UFABAR   validtypes.ValidFloat `json:"UFABAR,omitzero"`
+	VFABAR   validtypes.ValidFloat `json:"VFABAR,omitzero"`
+	UOABAR   validtypes.ValidFloat `json:"UOABAR,omitzero"`
+	VOABAR   validtypes.ValidFloat `json:"VOABAR,omitzero"`
+	UVFOABAR validtypes.ValidFloat `json:"UVFOABAR,omitzero"`
+	UVFFABAR validtypes.ValidFloat `json:"UVFFABAR,omitzero"`
+	UVOOABAR validtypes.ValidFloat `json:"UVOOABAR,omitzero"`
 }
 
-type STAT_VCNT struct {
-	TOTAL            int     `json:"TOTAL,omitempty"`
-	FBAR             float64 `json:"FBAR,omitempty"`
-	FBAR_BCL         float64 `json:"FBAR_BCL,omitempty"`
-	FBAR_BCU         float64 `json:"FBAR_BCU,omitempty"`
-	OBAR             float64 `json:"OBAR,omitempty"`
-	OBAR_BCL         float64 `json:"OBAR_BCL,omitempty"`
-	OBAR_BCU         float64 `json:"OBAR_BCU,omitempty"`
-	FS_RMS           float64 `json:"FS_RMS,omitempty"`
-	FS_RMS_BCL       float64 `json:"FS_RMS_BCL,omitempty"`
-	FS_RMS_BCU       float64 `json:"FS_RMS_BCU,omitempty"`
-	OS_RMS           float64 `json:"OS_RMS,omitempty"`
-	OS_RMS_BCL       float64 `json:"OS_RMS_BCL,omitempty"`
-	OS_RMS_BCU       float64 `json:"OS_RMS_BCU,omitempty"`
-	MSVE             float64 `json:"MSVE,omitempty"`
-	MSVE_BCL         float64 `json:"MSVE_BCL,omitempty"`
-	MSVE_BCU         float64 `json:"MSVE_BCU,omitempty"`
-	RMSVE            float64 `json:"RMSVE,omitempty"`
-	RMSVE_BCL        float64 `json:"RMSVE_BCL,omitempty"`
-	RMSVE_BCU        float64 `json:"RMSVE_BCU,omitempty"`
-	FSTDEV           float64 `json:"FSTDEV,omitempty"`
-	FSTDEV_BCL       float64 `json:"FSTDEV_BCL,omitempty"`
-	FSTDEV_BCU       float64 `json:"FSTDEV_BCU,omitempty"`
-	OSTDEV           float64 `json:"OSTDEV,omitempty"`
-	OSTDEV_BCL       float64 `json:"OSTDEV_BCL,omitempty"`
-	OSTDEV_BCU       float64 `json:"OSTDEV_BCU,omitempty"`
-	FDIR             float64 `json:"FDIR,omitempty"`
-	FDIR_BCL         float64 `json:"FDIR_BCL,omitempty"`
-	FDIR_BCU         float64 `json:"FDIR_BCU,omitempty"`
-	ODIR             float64 `json:"ODIR,omitempty"`
-	ODIR_BCL         float64 `json:"ODIR_BCL,omitempty"`
-	ODIR_BCU         float64 `json:"ODIR_BCU,omitempty"`
-	FBAR_SPEED       float64 `json:"FBAR_SPEED,omitempty"`
-	FBAR_SPEED_BCL   float64 `json:"FBAR_SPEED_BCL,omitempty"`
-	FBAR_SPEED_BCU   float64 `json:"FBAR_SPEED_BCU,omitempty"`
-	OBAR_SPEED       float64 `json:"OBAR_SPEED,omitempty"`
-	OBAR_SPEED_BCL   float64 `json:"OBAR_SPEED_BCL,omitempty"`
-	OBAR_SPEED_BCU   float64 `json:"OBAR_SPEED_BCU,omitempty"`
-	VDIFF_SPEED      float64 `json:"VDIFF_SPEED,omitempty"`
-	VDIFF_SPEED_BCL  float64 `json:"VDIFF_SPEED_BCL,omitempty"`
-	VDIFF_SPEED_BCU  float64 `json:"VDIFF_SPEED_BCU,omitempty"`
-	VDIFF_DIR        float64 `json:"VDIFF_DIR,omitempty"`
-	VDIFF_DIR_BCL    float64 `json:"VDIFF_DIR_BCL,omitempty"`
-	VDIFF_DIR_BCU    float64 `json:"VDIFF_DIR_BCU,omitempty"`
-	SPEED_ERR        float64 `json:"SPEED_ERR,omitempty"`
-	SPEED_ERR_BCL    float64 `json:"SPEED_ERR_BCL,omitempty"`
-	SPEED_ERR_BCU    float64 `json:"SPEED_ERR_BCU,omitempty"`
-	SPEED_ABSERR     float64 `json:"SPEED_ABSERR,omitempty"`
-	SPEED_ABSERR_BCL float64 `json:"SPEED_ABSERR_BCL,omitempty"`
-	SPEED_ABSERR_BCU float64 `json:"SPEED_ABSERR_BCU,omitempty"`
-	DIR_ERR          float64 `json:"DIR_ERR,omitempty"`
-	DIR_ERR_BCL      float64 `json:"DIR_ERR_BCL,omitempty"`
-	DIR_ERR_BCU      float64 `json:"DIR_ERR_BCU,omitempty"`
-	DIR_ABSERR       float64 `json:"DIR_ABSERR,omitempty"`
-	DIR_ABSERR_BCL   float64 `json:"DIR_ABSERR_BCL,omitempty"`
-	DIR_ABSERR_BCU   float64 `json:"DIR_ABSERR_BCU,omitempty"`
+type STAT_VCNT_data struct {
+	TOTAL            validtypes.ValidInt   `json:"TOTAL,omitzero"`
+	FBAR             validtypes.ValidFloat `json:"FBAR,omitzero"`
+	FBAR_BCL         validtypes.ValidFloat `json:"FBAR_BCL,omitzero"`
+	FBAR_BCU         validtypes.ValidFloat `json:"FBAR_BCU,omitzero"`
+	OBAR             validtypes.ValidFloat `json:"OBAR,omitzero"`
+	OBAR_BCL         validtypes.ValidFloat `json:"OBAR_BCL,omitzero"`
+	OBAR_BCU         validtypes.ValidFloat `json:"OBAR_BCU,omitzero"`
+	FS_RMS           validtypes.ValidFloat `json:"FS_RMS,omitzero"`
+	FS_RMS_BCL       validtypes.ValidFloat `json:"FS_RMS_BCL,omitzero"`
+	FS_RMS_BCU       validtypes.ValidFloat `json:"FS_RMS_BCU,omitzero"`
+	OS_RMS           validtypes.ValidFloat `json:"OS_RMS,omitzero"`
+	OS_RMS_BCL       validtypes.ValidFloat `json:"OS_RMS_BCL,omitzero"`
+	OS_RMS_BCU       validtypes.ValidFloat `json:"OS_RMS_BCU,omitzero"`
+	MSVE             validtypes.ValidFloat `json:"MSVE,omitzero"`
+	MSVE_BCL         validtypes.ValidFloat `json:"MSVE_BCL,omitzero"`
+	MSVE_BCU         validtypes.ValidFloat `json:"MSVE_BCU,omitzero"`
+	RMSVE            validtypes.ValidFloat `json:"RMSVE,omitzero"`
+	RMSVE_BCL        validtypes.ValidFloat `json:"RMSVE_BCL,omitzero"`
+	RMSVE_BCU        validtypes.ValidFloat `json:"RMSVE_BCU,omitzero"`
+	FSTDEV           validtypes.ValidFloat `json:"FSTDEV,omitzero"`
+	FSTDEV_BCL       validtypes.ValidFloat `json:"FSTDEV_BCL,omitzero"`
+	FSTDEV_BCU       validtypes.ValidFloat `json:"FSTDEV_BCU,omitzero"`
+	OSTDEV           validtypes.ValidFloat `json:"OSTDEV,omitzero"`
+	OSTDEV_BCL       validtypes.ValidFloat `json:"OSTDEV_BCL,omitzero"`
+	OSTDEV_BCU       validtypes.ValidFloat `json:"OSTDEV_BCU,omitzero"`
+	FDIR             validtypes.ValidFloat `json:"FDIR,omitzero"`
+	FDIR_BCL         validtypes.ValidFloat `json:"FDIR_BCL,omitzero"`
+	FDIR_BCU         validtypes.ValidFloat `json:"FDIR_BCU,omitzero"`
+	ODIR             validtypes.ValidFloat `json:"ODIR,omitzero"`
+	ODIR_BCL         validtypes.ValidFloat `json:"ODIR_BCL,omitzero"`
+	ODIR_BCU         validtypes.ValidFloat `json:"ODIR_BCU,omitzero"`
+	FBAR_SPEED       validtypes.ValidFloat `json:"FBAR_SPEED,omitzero"`
+	FBAR_SPEED_BCL   validtypes.ValidFloat `json:"FBAR_SPEED_BCL,omitzero"`
+	FBAR_SPEED_BCU   validtypes.ValidFloat `json:"FBAR_SPEED_BCU,omitzero"`
+	OBAR_SPEED       validtypes.ValidFloat `json:"OBAR_SPEED,omitzero"`
+	OBAR_SPEED_BCL   validtypes.ValidFloat `json:"OBAR_SPEED_BCL,omitzero"`
+	OBAR_SPEED_BCU   validtypes.ValidFloat `json:"OBAR_SPEED_BCU,omitzero"`
+	VDIFF_SPEED      validtypes.ValidFloat `json:"VDIFF_SPEED,omitzero"`
+	VDIFF_SPEED_BCL  validtypes.ValidFloat `json:"VDIFF_SPEED_BCL,omitzero"`
+	VDIFF_SPEED_BCU  validtypes.ValidFloat `json:"VDIFF_SPEED_BCU,omitzero"`
+	VDIFF_DIR        validtypes.ValidFloat `json:"VDIFF_DIR,omitzero"`
+	VDIFF_DIR_BCL    validtypes.ValidFloat `json:"VDIFF_DIR_BCL,omitzero"`
+	VDIFF_DIR_BCU    validtypes.ValidFloat `json:"VDIFF_DIR_BCU,omitzero"`
+	SPEED_ERR        validtypes.ValidFloat `json:"SPEED_ERR,omitzero"`
+	SPEED_ERR_BCL    validtypes.ValidFloat `json:"SPEED_ERR_BCL,omitzero"`
+	SPEED_ERR_BCU    validtypes.ValidFloat `json:"SPEED_ERR_BCU,omitzero"`
+	SPEED_ABSERR     validtypes.ValidFloat `json:"SPEED_ABSERR,omitzero"`
+	SPEED_ABSERR_BCL validtypes.ValidFloat `json:"SPEED_ABSERR_BCL,omitzero"`
+	SPEED_ABSERR_BCU validtypes.ValidFloat `json:"SPEED_ABSERR_BCU,omitzero"`
+	DIR_ERR          validtypes.ValidFloat `json:"DIR_ERR,omitzero"`
+	DIR_ERR_BCL      validtypes.ValidFloat `json:"DIR_ERR_BCL,omitzero"`
+	DIR_ERR_BCU      validtypes.ValidFloat `json:"DIR_ERR_BCU,omitzero"`
+	DIR_ABSERR       validtypes.ValidFloat `json:"DIR_ABSERR,omitzero"`
+	DIR_ABSERR_BCL   validtypes.ValidFloat `json:"DIR_ABSERR_BCL,omitzero"`
+	DIR_ABSERR_BCU   validtypes.ValidFloat `json:"DIR_ABSERR_BCU,omitzero"`
 }
 
-type STAT_VL1L2 struct {
-	TOTAL       int     `json:"TOTAL,omitempty"`
-	UFBAR       float64 `json:"UFBAR,omitempty"`
-	VFBAR       float64 `json:"VFBAR,omitempty"`
-	UOBAR       float64 `json:"UOBAR,omitempty"`
-	VOBAR       float64 `json:"VOBAR,omitempty"`
-	UVFOBAR     float64 `json:"UVFOBAR,omitempty"`
-	UVFFBAR     float64 `json:"UVFFBAR,omitempty"`
-	UVOOBAR     float64 `json:"UVOOBAR,omitempty"`
-	F_SPEED_BAR float64 `json:"F_SPEED_BAR,omitempty"`
-	O_SPEED_BAR float64 `json:"O_SPEED_BAR,omitempty"`
+type STAT_VL1L2_data struct {
+	TOTAL       validtypes.ValidInt   `json:"TOTAL,omitzero"`
+	UFBAR       validtypes.ValidFloat `json:"UFBAR,omitzero"`
+	VFBAR       validtypes.ValidFloat `json:"VFBAR,omitzero"`
+	UOBAR       validtypes.ValidFloat `json:"UOBAR,omitzero"`
+	VOBAR       validtypes.ValidFloat `json:"VOBAR,omitzero"`
+	UVFOBAR     validtypes.ValidFloat `json:"UVFOBAR,omitzero"`
+	UVFFBAR     validtypes.ValidFloat `json:"UVFFBAR,omitzero"`
+	UVOOBAR     validtypes.ValidFloat `json:"UVOOBAR,omitzero"`
+	F_SPEED_BAR validtypes.ValidFloat `json:"F_SPEED_BAR,omitzero"`
+	O_SPEED_BAR validtypes.ValidFloat `json:"O_SPEED_BAR,omitzero"`
 }
 
-type TCST_PROBRIRW struct {
-	ALAT        float64                `json:"ALAT,omitempty"`
-	ALON        float64                `json:"ALON,omitempty"`
-	BLAT        float64                `json:"BLAT,omitempty"`
-	BLON        float64                `json:"BLON,omitempty"`
-	INITIALS    string                 `json:"INITIALS,omitempty"`
-	TK_ERR      float64                `json:"TK_ERR,omitempty"`
-	X_ERR       float64                `json:"X_ERR,omitempty"`
-	Y_ERR       float64                `json:"Y_ERR,omitempty"`
-	ADLAND      float64                `json:"ADLAND,omitempty"`
-	BDLAND      float64                `json:"BDLAND,omitempty"`
-	RIRW_BEG    int                    `json:"RIRW_BEG,omitempty"`
-	RIRW_END    int                    `json:"RIRW_END,omitempty"`
-	RIRW_WINDOW int                    `json:"RIRW_WINDOW,omitempty"`
-	AWIND_END   float64                `json:"AWIND_END,omitempty"`
-	BWIND_BEG   float64                `json:"BWIND_BEG,omitempty"`
-	BWIND_END   float64                `json:"BWIND_END,omitempty"`
-	BDELTA      float64                `json:"BDELTA,omitempty"`
-	BDELTA_MAX  float64                `json:"BDELTA_MAX,omitempty"`
-	BLEVEL_BEG  string                 `json:"BLEVEL_BEG,omitempty"`
-	BLEVEL_END  string                 `json:"BLEVEL_END,omitempty"`
-	THRESH      map[string]interface{} `json:"THRESH,omitempty"`
-	INIT        int                    `json:"INIT,omitempty"`
+type TCST_PROBRIRW_data struct {
+	ALAT        validtypes.ValidFloat  `json:"ALAT,omitzero"`
+	ALON        validtypes.ValidFloat  `json:"ALON,omitzero"`
+	BLAT        validtypes.ValidFloat  `json:"BLAT,omitzero"`
+	BLON        validtypes.ValidFloat  `json:"BLON,omitzero"`
+	INITIALS    validtypes.ValidString `json:"INITIALS,omitzero"`
+	TK_ERR      validtypes.ValidFloat  `json:"TK_ERR,omitzero"`
+	X_ERR       validtypes.ValidFloat  `json:"X_ERR,omitzero"`
+	Y_ERR       validtypes.ValidFloat  `json:"Y_ERR,omitzero"`
+	ADLAND      validtypes.ValidFloat  `json:"ADLAND,omitzero"`
+	BDLAND      validtypes.ValidFloat  `json:"BDLAND,omitzero"`
+	RIRW_BEG    validtypes.ValidInt    `json:"RIRW_BEG,omitzero"`
+	RIRW_END    validtypes.ValidInt    `json:"RIRW_END,omitzero"`
+	RIRW_WINDOW validtypes.ValidInt    `json:"RIRW_WINDOW,omitzero"`
+	AWIND_END   validtypes.ValidFloat  `json:"AWIND_END,omitzero"`
+	BWIND_BEG   validtypes.ValidFloat  `json:"BWIND_BEG,omitzero"`
+	BWIND_END   validtypes.ValidFloat  `json:"BWIND_END,omitzero"`
+	BDELTA      validtypes.ValidFloat  `json:"BDELTA,omitzero"`
+	BDELTA_MAX  validtypes.ValidFloat  `json:"BDELTA_MAX,omitzero"`
+	BLEVEL_BEG  validtypes.ValidString `json:"BLEVEL_BEG,omitzero"`
+	BLEVEL_END  validtypes.ValidString `json:"BLEVEL_END,omitzero"`
+	THRESH      map[string]interface{} `json:"THRESH,omitzero"`
+	INIT        validtypes.ValidInt    `json:"INIT,omitzero"`
 }
 
-type TCST_TCMPR struct {
-	TOTAL       int     `json:"TOTAL,omitempty"`
-	INDEX       int     `json:"INDEX,omitempty"`
-	LEVEL       string  `json:"LEVEL,omitempty"`
-	WATCH_WARN  string  `json:"WATCH_WARN,omitempty"`
-	INITIALS    string  `json:"INITIALS,omitempty"`
-	ALAT        float64 `json:"ALAT,omitempty"`
-	ALON        float64 `json:"ALON,omitempty"`
-	BLAT        float64 `json:"BLAT,omitempty"`
-	BLON        float64 `json:"BLON,omitempty"`
-	TK_ERR      float64 `json:"TK_ERR,omitempty"`
-	X_ERR       float64 `json:"X_ERR,omitempty"`
-	Y_ERR       float64 `json:"Y_ERR,omitempty"`
-	ALTK_ERR    float64 `json:"ALTK_ERR,omitempty"`
-	CRTK_ERR    float64 `json:"CRTK_ERR,omitempty"`
-	ADLAND      float64 `json:"ADLAND,omitempty"`
-	BDLAND      float64 `json:"BDLAND,omitempty"`
-	AMSLP       float64 `json:"AMSLP,omitempty"`
-	BMSLP       float64 `json:"BMSLP,omitempty"`
-	AMAX_WIND   float64 `json:"AMAX_WIND,omitempty"`
-	BMAX_WIND   float64 `json:"BMAX_WIND,omitempty"`
-	AAL_WIND_34 float64 `json:"AAL_WIND_34,omitempty"`
-	BAL_WIND_34 float64 `json:"BAL_WIND_34,omitempty"`
-	ANE_WIND_34 float64 `json:"ANE_WIND_34,omitempty"`
-	BNE_WIND_34 float64 `json:"BNE_WIND_34,omitempty"`
-	ASE_WIND_34 float64 `json:"ASE_WIND_34,omitempty"`
-	BSE_WIND_34 float64 `json:"BSE_WIND_34,omitempty"`
-	ASW_WIND_34 float64 `json:"ASW_WIND_34,omitempty"`
-	BSW_WIND_34 float64 `json:"BSW_WIND_34,omitempty"`
-	ANW_WIND_34 float64 `json:"ANW_WIND_34,omitempty"`
-	BNW_WIND_34 float64 `json:"BNW_WIND_34,omitempty"`
-	AAL_WIND_50 float64 `json:"AAL_WIND_50,omitempty"`
-	BAL_WIND_50 float64 `json:"BAL_WIND_50,omitempty"`
-	ANE_WIND_50 float64 `json:"ANE_WIND_50,omitempty"`
-	BNE_WIND_50 float64 `json:"BNE_WIND_50,omitempty"`
-	ASE_WIND_50 float64 `json:"ASE_WIND_50,omitempty"`
-	BSE_WIND_50 float64 `json:"BSE_WIND_50,omitempty"`
-	ASW_WIND_50 float64 `json:"ASW_WIND_50,omitempty"`
-	BSW_WIND_50 float64 `json:"BSW_WIND_50,omitempty"`
-	ANW_WIND_50 float64 `json:"ANW_WIND_50,omitempty"`
-	BNW_WIND_50 float64 `json:"BNW_WIND_50,omitempty"`
-	AAL_WIND_64 float64 `json:"AAL_WIND_64,omitempty"`
-	BAL_WIND_64 float64 `json:"BAL_WIND_64,omitempty"`
-	ANE_WIND_64 float64 `json:"ANE_WIND_64,omitempty"`
-	BNE_WIND_64 float64 `json:"BNE_WIND_64,omitempty"`
-	ASE_WIND_64 float64 `json:"ASE_WIND_64,omitempty"`
-	BSE_WIND_64 float64 `json:"BSE_WIND_64,omitempty"`
-	ASW_WIND_64 float64 `json:"ASW_WIND_64,omitempty"`
-	BSW_WIND_64 float64 `json:"BSW_WIND_64,omitempty"`
-	ANW_WIND_64 float64 `json:"ANW_WIND_64,omitempty"`
-	BNW_WIND_64 float64 `json:"BNW_WIND_64,omitempty"`
-	ARADP       string  `json:"ARADP,omitempty"`
-	BRADP       float64 `json:"BRADP,omitempty"`
-	ARRP        int     `json:"ARRP,omitempty"`
-	BRRP        float64 `json:"BRRP,omitempty"`
-	AMRD        int     `json:"AMRD,omitempty"`
-	BMRD        float64 `json:"BMRD,omitempty"`
-	AGUSTS      int     `json:"AGUSTS,omitempty"`
-	BGUSTS      float64 `json:"BGUSTS,omitempty"`
-	AEYE        int     `json:"AEYE,omitempty"`
-	BEYE        float64 `json:"BEYE,omitempty"`
-	ADIR        int     `json:"ADIR,omitempty"`
-	BDIR        float64 `json:"BDIR,omitempty"`
-	ASPEED      int     `json:"ASPEED,omitempty"`
-	BSPEED      float64 `json:"BSPEED,omitempty"`
-	ADEPTH      int     `json:"ADEPTH,omitempty"`
-	BDEPTH      float64 `json:"BDEPTH,omitempty"`
-	INIT        int     `json:"INIT,omitempty"`
+type TCST_TCMPR_data struct {
+	TOTAL       validtypes.ValidInt    `json:"TOTAL,omitzero"`
+	INDEX       validtypes.ValidInt    `json:"INDEX,omitzero"`
+	LEVEL       validtypes.ValidString `json:"LEVEL,omitzero"`
+	WATCH_WARN  validtypes.ValidString `json:"WATCH_WARN,omitzero"`
+	INITIALS    validtypes.ValidString `json:"INITIALS,omitzero"`
+	ALAT        validtypes.ValidFloat  `json:"ALAT,omitzero"`
+	ALON        validtypes.ValidFloat  `json:"ALON,omitzero"`
+	BLAT        validtypes.ValidFloat  `json:"BLAT,omitzero"`
+	BLON        validtypes.ValidFloat  `json:"BLON,omitzero"`
+	TK_ERR      validtypes.ValidFloat  `json:"TK_ERR,omitzero"`
+	X_ERR       validtypes.ValidFloat  `json:"X_ERR,omitzero"`
+	Y_ERR       validtypes.ValidFloat  `json:"Y_ERR,omitzero"`
+	ALTK_ERR    validtypes.ValidFloat  `json:"ALTK_ERR,omitzero"`
+	CRTK_ERR    validtypes.ValidFloat  `json:"CRTK_ERR,omitzero"`
+	ADLAND      validtypes.ValidFloat  `json:"ADLAND,omitzero"`
+	BDLAND      validtypes.ValidFloat  `json:"BDLAND,omitzero"`
+	AMSLP       validtypes.ValidFloat  `json:"AMSLP,omitzero"`
+	BMSLP       validtypes.ValidFloat  `json:"BMSLP,omitzero"`
+	AMAX_WIND   validtypes.ValidFloat  `json:"AMAX_WIND,omitzero"`
+	BMAX_WIND   validtypes.ValidFloat  `json:"BMAX_WIND,omitzero"`
+	AAL_WIND_34 validtypes.ValidFloat  `json:"AAL_WIND_34,omitzero"`
+	BAL_WIND_34 validtypes.ValidFloat  `json:"BAL_WIND_34,omitzero"`
+	ANE_WIND_34 validtypes.ValidFloat  `json:"ANE_WIND_34,omitzero"`
+	BNE_WIND_34 validtypes.ValidFloat  `json:"BNE_WIND_34,omitzero"`
+	ASE_WIND_34 validtypes.ValidFloat  `json:"ASE_WIND_34,omitzero"`
+	BSE_WIND_34 validtypes.ValidFloat  `json:"BSE_WIND_34,omitzero"`
+	ASW_WIND_34 validtypes.ValidFloat  `json:"ASW_WIND_34,omitzero"`
+	BSW_WIND_34 validtypes.ValidFloat  `json:"BSW_WIND_34,omitzero"`
+	ANW_WIND_34 validtypes.ValidFloat  `json:"ANW_WIND_34,omitzero"`
+	BNW_WIND_34 validtypes.ValidFloat  `json:"BNW_WIND_34,omitzero"`
+	AAL_WIND_50 validtypes.ValidFloat  `json:"AAL_WIND_50,omitzero"`
+	BAL_WIND_50 validtypes.ValidFloat  `json:"BAL_WIND_50,omitzero"`
+	ANE_WIND_50 validtypes.ValidFloat  `json:"ANE_WIND_50,omitzero"`
+	BNE_WIND_50 validtypes.ValidFloat  `json:"BNE_WIND_50,omitzero"`
+	ASE_WIND_50 validtypes.ValidFloat  `json:"ASE_WIND_50,omitzero"`
+	BSE_WIND_50 validtypes.ValidFloat  `json:"BSE_WIND_50,omitzero"`
+	ASW_WIND_50 validtypes.ValidFloat  `json:"ASW_WIND_50,omitzero"`
+	BSW_WIND_50 validtypes.ValidFloat  `json:"BSW_WIND_50,omitzero"`
+	ANW_WIND_50 validtypes.ValidFloat  `json:"ANW_WIND_50,omitzero"`
+	BNW_WIND_50 validtypes.ValidFloat  `json:"BNW_WIND_50,omitzero"`
+	AAL_WIND_64 validtypes.ValidFloat  `json:"AAL_WIND_64,omitzero"`
+	BAL_WIND_64 validtypes.ValidFloat  `json:"BAL_WIND_64,omitzero"`
+	ANE_WIND_64 validtypes.ValidFloat  `json:"ANE_WIND_64,omitzero"`
+	BNE_WIND_64 validtypes.ValidFloat  `json:"BNE_WIND_64,omitzero"`
+	ASE_WIND_64 validtypes.ValidFloat  `json:"ASE_WIND_64,omitzero"`
+	BSE_WIND_64 validtypes.ValidFloat  `json:"BSE_WIND_64,omitzero"`
+	ASW_WIND_64 validtypes.ValidFloat  `json:"ASW_WIND_64,omitzero"`
+	BSW_WIND_64 validtypes.ValidFloat  `json:"BSW_WIND_64,omitzero"`
+	ANW_WIND_64 validtypes.ValidFloat  `json:"ANW_WIND_64,omitzero"`
+	BNW_WIND_64 validtypes.ValidFloat  `json:"BNW_WIND_64,omitzero"`
+	ARADP       validtypes.ValidString `json:"ARADP,omitzero"`
+	BRADP       validtypes.ValidFloat  `json:"BRADP,omitzero"`
+	ARRP        validtypes.ValidInt    `json:"ARRP,omitzero"`
+	BRRP        validtypes.ValidFloat  `json:"BRRP,omitzero"`
+	AMRD        validtypes.ValidInt    `json:"AMRD,omitzero"`
+	BMRD        validtypes.ValidFloat  `json:"BMRD,omitzero"`
+	AGUSTS      validtypes.ValidInt    `json:"AGUSTS,omitzero"`
+	BGUSTS      validtypes.ValidFloat  `json:"BGUSTS,omitzero"`
+	AEYE        validtypes.ValidInt    `json:"AEYE,omitzero"`
+	BEYE        validtypes.ValidFloat  `json:"BEYE,omitzero"`
+	ADIR        validtypes.ValidInt    `json:"ADIR,omitzero"`
+	BDIR        validtypes.ValidFloat  `json:"BDIR,omitzero"`
+	ASPEED      validtypes.ValidInt    `json:"ASPEED,omitzero"`
+	BSPEED      validtypes.ValidFloat  `json:"BSPEED,omitzero"`
+	ADEPTH      validtypes.ValidInt    `json:"ADEPTH,omitzero"`
+	BDEPTH      validtypes.ValidFloat  `json:"BDEPTH,omitzero"`
+	INIT        validtypes.ValidInt    `json:"INIT,omitzero"`
 }
 
 // fillStructure functions
-func (s *MODE_CTS) fill_MODE_CTS(fields []string) {
-	dataLen := len(fields) - 1
-	i := -1
-	i++
-	if i <= dataLen {
-		if fields[0] != "NA" {
-			s.FIELD = fields[0]
-		}
-	}
-	i++
-	if i <= dataLen {
-		s.TOTAL, _ = strconv.Atoi(fields[1])
-	}
-	i++
-	if i <= dataLen {
-		s.FY_OY, _ = strconv.ParseFloat(fields[2], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.FY_ON, _ = strconv.ParseFloat(fields[3], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.FN_OY, _ = strconv.ParseFloat(fields[4], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.FN_ON, _ = strconv.ParseFloat(fields[5], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.BASER, _ = strconv.ParseFloat(fields[6], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.FMEAN, _ = strconv.ParseFloat(fields[7], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ACC, _ = strconv.ParseFloat(fields[8], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.FBIAS, _ = strconv.ParseFloat(fields[9], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.PODY, _ = strconv.ParseFloat(fields[10], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.PODN, _ = strconv.ParseFloat(fields[11], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.POFD, _ = strconv.ParseFloat(fields[12], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.FAR, _ = strconv.ParseFloat(fields[13], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.CSI, _ = strconv.ParseFloat(fields[14], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.GSS, _ = strconv.ParseFloat(fields[15], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.HK, _ = strconv.ParseFloat(fields[16], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.HSS, _ = strconv.ParseFloat(fields[17], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ODDS, _ = strconv.ParseFloat(fields[18], 64)
-	}
+func (s *MODE_CTS_data) fill(fields []string) {
+	s.FIELD.UnmarshalText([]byte(fields[0]))
+	s.TOTAL.UnmarshalText([]byte(fields[1]))
+	s.FY_OY.UnmarshalText([]byte(fields[2]))
+	s.FY_ON.UnmarshalText([]byte(fields[3]))
+	s.FN_OY.UnmarshalText([]byte(fields[4]))
+	s.FN_ON.UnmarshalText([]byte(fields[5]))
+	s.BASER.UnmarshalText([]byte(fields[6]))
+	s.FMEAN.UnmarshalText([]byte(fields[7]))
+	s.ACC.UnmarshalText([]byte(fields[8]))
+	s.FBIAS.UnmarshalText([]byte(fields[9]))
+	s.PODY.UnmarshalText([]byte(fields[10]))
+	s.PODN.UnmarshalText([]byte(fields[11]))
+	s.POFD.UnmarshalText([]byte(fields[12]))
+	s.FAR.UnmarshalText([]byte(fields[13]))
+	s.CSI.UnmarshalText([]byte(fields[14]))
+	s.GSS.UnmarshalText([]byte(fields[15]))
+	s.HK.UnmarshalText([]byte(fields[16]))
+	s.HSS.UnmarshalText([]byte(fields[17]))
+	s.ODDS.UnmarshalText([]byte(fields[18]))
 }
 
-func (s *MODE_OBJ) fill_MODE_OBJ(fields []string) {
-	dataLen := len(fields) - 1
-	i := -1
-	i++
-	if i <= dataLen {
-		if fields[0] != "NA" {
-			s.OBJECT_ID = fields[0]
-		}
-	}
-	i++
-	if i <= dataLen {
-		if fields[1] != "NA" {
-			s.OBJECT_CAT = fields[1]
-		}
-	}
-	i++
-	if i <= dataLen {
-		s.CENTROID_X, _ = strconv.ParseFloat(fields[2], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.CENTROID_Y, _ = strconv.ParseFloat(fields[3], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.CENTROID_LAT, _ = strconv.ParseFloat(fields[4], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.CENTROID_LON, _ = strconv.ParseFloat(fields[5], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.AXIS_ANG, _ = strconv.ParseFloat(fields[6], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.LENGTH, _ = strconv.ParseFloat(fields[7], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.WIDTH, _ = strconv.ParseFloat(fields[8], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.AREA, _ = strconv.Atoi(fields[9])
-	}
-	i++
-	if i <= dataLen {
-		s.AREA_THRESH, _ = strconv.Atoi(fields[10])
-	}
-	i++
-	if i <= dataLen {
-		s.CURVATURE, _ = strconv.ParseFloat(fields[11], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.CURVATURE_X, _ = strconv.ParseFloat(fields[12], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.CURVATURE_Y, _ = strconv.ParseFloat(fields[13], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.COMPLEXITY, _ = strconv.ParseFloat(fields[14], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.INTENSITY_10, _ = strconv.ParseFloat(fields[15], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.INTENSITY_25, _ = strconv.ParseFloat(fields[16], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.INTENSITY_50, _ = strconv.ParseFloat(fields[17], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.INTENSITY_75, _ = strconv.ParseFloat(fields[18], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.INTENSITY_90, _ = strconv.ParseFloat(fields[19], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.INTENSITY_USER, _ = strconv.ParseFloat(fields[20], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.INTENSITY_SUM, _ = strconv.ParseFloat(fields[21], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.CENTROID_DIST, _ = strconv.ParseFloat(fields[22], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.BOUNDARY_DIST, _ = strconv.ParseFloat(fields[23], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.CONVEX_HULL_DIST, _ = strconv.ParseFloat(fields[24], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ANGLE_DIFF, _ = strconv.ParseFloat(fields[25], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ASPECT_DIFF, _ = strconv.ParseFloat(fields[26], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.AREA_RATIO, _ = strconv.ParseFloat(fields[27], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.INTERSECTION_AREA, _ = strconv.ParseFloat(fields[28], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.UNION_AREA, _ = strconv.ParseFloat(fields[29], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.SYMMETRIC_DIFF, _ = strconv.ParseFloat(fields[30], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.INTERSECTION_OVER_AREA, _ = strconv.ParseFloat(fields[31], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.CURVATURE_RATIO, _ = strconv.ParseFloat(fields[32], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.COMPLEXITY_RATIO, _ = strconv.ParseFloat(fields[33], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.PERCENTILE_INTENSITY_RATIO, _ = strconv.ParseFloat(fields[34], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.INTEREST, _ = strconv.ParseFloat(fields[35], 64)
-	}
+func (s *MODE_OBJ_data) fill(fields []string) {
+	s.OBJECT_ID.UnmarshalText([]byte(fields[0]))
+	s.OBJECT_CAT.UnmarshalText([]byte(fields[1]))
+	s.CENTROID_X.UnmarshalText([]byte(fields[2]))
+	s.CENTROID_Y.UnmarshalText([]byte(fields[3]))
+	s.CENTROID_LAT.UnmarshalText([]byte(fields[4]))
+	s.CENTROID_LON.UnmarshalText([]byte(fields[5]))
+	s.AXIS_ANG.UnmarshalText([]byte(fields[6]))
+	s.LENGTH.UnmarshalText([]byte(fields[7]))
+	s.WIDTH.UnmarshalText([]byte(fields[8]))
+	s.AREA.UnmarshalText([]byte(fields[9]))
+	s.AREA_THRESH.UnmarshalText([]byte(fields[10]))
+	s.CURVATURE.UnmarshalText([]byte(fields[11]))
+	s.CURVATURE_X.UnmarshalText([]byte(fields[12]))
+	s.CURVATURE_Y.UnmarshalText([]byte(fields[13]))
+	s.COMPLEXITY.UnmarshalText([]byte(fields[14]))
+	s.INTENSITY_10.UnmarshalText([]byte(fields[15]))
+	s.INTENSITY_25.UnmarshalText([]byte(fields[16]))
+	s.INTENSITY_50.UnmarshalText([]byte(fields[17]))
+	s.INTENSITY_75.UnmarshalText([]byte(fields[18]))
+	s.INTENSITY_90.UnmarshalText([]byte(fields[19]))
+	s.INTENSITY_USER.UnmarshalText([]byte(fields[20]))
+	s.INTENSITY_SUM.UnmarshalText([]byte(fields[21]))
+	s.CENTROID_DIST.UnmarshalText([]byte(fields[22]))
+	s.BOUNDARY_DIST.UnmarshalText([]byte(fields[23]))
+	s.CONVEX_HULL_DIST.UnmarshalText([]byte(fields[24]))
+	s.ANGLE_DIFF.UnmarshalText([]byte(fields[25]))
+	s.ASPECT_DIFF.UnmarshalText([]byte(fields[26]))
+	s.AREA_RATIO.UnmarshalText([]byte(fields[27]))
+	s.INTERSECTION_AREA.UnmarshalText([]byte(fields[28]))
+	s.UNION_AREA.UnmarshalText([]byte(fields[29]))
+	s.SYMMETRIC_DIFF.UnmarshalText([]byte(fields[30]))
+	s.INTERSECTION_OVER_AREA.UnmarshalText([]byte(fields[31]))
+	s.CURVATURE_RATIO.UnmarshalText([]byte(fields[32]))
+	s.COMPLEXITY_RATIO.UnmarshalText([]byte(fields[33]))
+	s.PERCENTILE_INTENSITY_RATIO.UnmarshalText([]byte(fields[34]))
+	s.INTEREST.UnmarshalText([]byte(fields[35]))
 }
 
-func (s *STAT_CNT) fill_STAT_CNT(fields []string) {
-	dataLen := len(fields) - 1
-	i := -1
-	i++
-	if i <= dataLen {
-		s.TOTAL, _ = strconv.Atoi(fields[0])
-	}
-	i++
-	if i <= dataLen {
-		s.FBAR, _ = strconv.ParseFloat(fields[1], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.FBAR_NCL, _ = strconv.ParseFloat(fields[2], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.FBAR_NCU, _ = strconv.ParseFloat(fields[3], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.FBAR_BCL, _ = strconv.ParseFloat(fields[4], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.FBAR_BCU, _ = strconv.ParseFloat(fields[5], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.FSTDEV, _ = strconv.ParseFloat(fields[6], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.FSTDEV_NCL, _ = strconv.ParseFloat(fields[7], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.FSTDEV_NCU, _ = strconv.ParseFloat(fields[8], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.FSTDEV_BCL, _ = strconv.ParseFloat(fields[9], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.FSTDEV_BCU, _ = strconv.ParseFloat(fields[10], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.OBAR, _ = strconv.ParseFloat(fields[11], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.OBAR_NCL, _ = strconv.ParseFloat(fields[12], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.OBAR_NCU, _ = strconv.ParseFloat(fields[13], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.OBAR_BCL, _ = strconv.ParseFloat(fields[14], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.OBAR_BCU, _ = strconv.ParseFloat(fields[15], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.OSTDEV, _ = strconv.ParseFloat(fields[16], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.OSTDEV_NCL, _ = strconv.ParseFloat(fields[17], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.OSTDEV_NCU, _ = strconv.ParseFloat(fields[18], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.OSTDEV_BCL, _ = strconv.ParseFloat(fields[19], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.OSTDEV_BCU, _ = strconv.ParseFloat(fields[20], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.PR_CORR, _ = strconv.ParseFloat(fields[21], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.PR_CORR_NCL, _ = strconv.ParseFloat(fields[22], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.PR_CORR_NCU, _ = strconv.ParseFloat(fields[23], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.PR_CORR_BCL, _ = strconv.ParseFloat(fields[24], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.PR_CORR_BCU, _ = strconv.ParseFloat(fields[25], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.SP_CORR, _ = strconv.ParseFloat(fields[26], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.KT_CORR, _ = strconv.ParseFloat(fields[27], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.RANKS, _ = strconv.Atoi(fields[28])
-	}
-	i++
-	if i <= dataLen {
-		s.FRANK_TIES, _ = strconv.Atoi(fields[29])
-	}
-	i++
-	if i <= dataLen {
-		s.ORANK_TIES, _ = strconv.Atoi(fields[30])
-	}
-	i++
-	if i <= dataLen {
-		s.ME, _ = strconv.ParseFloat(fields[31], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ME_NCL, _ = strconv.ParseFloat(fields[32], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ME_NCU, _ = strconv.ParseFloat(fields[33], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ME_BCL, _ = strconv.ParseFloat(fields[34], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ME_BCU, _ = strconv.ParseFloat(fields[35], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ESTDEV, _ = strconv.ParseFloat(fields[36], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ESTDEV_NCL, _ = strconv.ParseFloat(fields[37], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ESTDEV_NCU, _ = strconv.ParseFloat(fields[38], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ESTDEV_BCL, _ = strconv.ParseFloat(fields[39], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ESTDEV_BCU, _ = strconv.ParseFloat(fields[40], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.MBIAS, _ = strconv.ParseFloat(fields[41], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.MBIAS_BCL, _ = strconv.ParseFloat(fields[42], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.MBIAS_BCU, _ = strconv.ParseFloat(fields[43], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.MAE, _ = strconv.ParseFloat(fields[44], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.MAE_BCL, _ = strconv.ParseFloat(fields[45], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.MAE_BCU, _ = strconv.ParseFloat(fields[46], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.MSE, _ = strconv.ParseFloat(fields[47], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.MSE_BCL, _ = strconv.ParseFloat(fields[48], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.MSE_BCU, _ = strconv.ParseFloat(fields[49], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.BCMSE, _ = strconv.ParseFloat(fields[50], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.BCMSE_BCL, _ = strconv.ParseFloat(fields[51], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.BCMSE_BCU, _ = strconv.ParseFloat(fields[52], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.RMSE, _ = strconv.ParseFloat(fields[53], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.RMSE_BCL, _ = strconv.ParseFloat(fields[54], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.RMSE_BCU, _ = strconv.ParseFloat(fields[55], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.E10, _ = strconv.ParseFloat(fields[56], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.E10_BCL, _ = strconv.ParseFloat(fields[57], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.E10_BCU, _ = strconv.ParseFloat(fields[58], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.E25, _ = strconv.ParseFloat(fields[59], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.E25_BCL, _ = strconv.ParseFloat(fields[60], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.E25_BCU, _ = strconv.ParseFloat(fields[61], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.E50, _ = strconv.ParseFloat(fields[62], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.E50_BCL, _ = strconv.ParseFloat(fields[63], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.E50_BCU, _ = strconv.ParseFloat(fields[64], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.E75, _ = strconv.ParseFloat(fields[65], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.E75_BCL, _ = strconv.ParseFloat(fields[66], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.E75_BCU, _ = strconv.ParseFloat(fields[67], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.E90, _ = strconv.ParseFloat(fields[68], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.E90_BCL, _ = strconv.ParseFloat(fields[69], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.E90_BCU, _ = strconv.ParseFloat(fields[70], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.EIQR, _ = strconv.ParseFloat(fields[71], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.EIQR_BCL, _ = strconv.ParseFloat(fields[72], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.EIQR_BCU, _ = strconv.ParseFloat(fields[73], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.MAD, _ = strconv.ParseFloat(fields[74], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.MAD_BCL, _ = strconv.ParseFloat(fields[75], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.MAD_BCU, _ = strconv.ParseFloat(fields[76], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ANOM_CORR, _ = strconv.ParseFloat(fields[77], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ANOM_CORR_NCL, _ = strconv.ParseFloat(fields[78], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ANOM_CORR_NCU, _ = strconv.ParseFloat(fields[79], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ANOM_CORR_BCL, _ = strconv.ParseFloat(fields[80], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ANOM_CORR_BCU, _ = strconv.ParseFloat(fields[81], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ME2, _ = strconv.ParseFloat(fields[82], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ME2_BCL, _ = strconv.ParseFloat(fields[83], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ME2_BCU, _ = strconv.ParseFloat(fields[84], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.MSESS, _ = strconv.ParseFloat(fields[85], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.MSESS_BCL, _ = strconv.ParseFloat(fields[86], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.MSESS_BCU, _ = strconv.ParseFloat(fields[87], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.RMSFA, _ = strconv.ParseFloat(fields[88], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.RMSFA_BCL, _ = strconv.ParseFloat(fields[89], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.RMSFA_BCU, _ = strconv.ParseFloat(fields[90], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.RMSOA, _ = strconv.ParseFloat(fields[91], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.RMSOA_BCL, _ = strconv.ParseFloat(fields[92], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.RMSOA_BCU, _ = strconv.ParseFloat(fields[93], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ANOM_CORR_UNCNTR, _ = strconv.ParseFloat(fields[94], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ANOM_CORR_UNCNTR_BCL, _ = strconv.ParseFloat(fields[95], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ANOM_CORR_UNCNTR_BCU, _ = strconv.ParseFloat(fields[96], 64)
-	}
+func (s *STAT_CNT_data) fill(fields []string) {
+	s.TOTAL.UnmarshalText([]byte(fields[0]))
+	s.FBAR.UnmarshalText([]byte(fields[1]))
+	s.FBAR_NCL.UnmarshalText([]byte(fields[2]))
+	s.FBAR_NCU.UnmarshalText([]byte(fields[3]))
+	s.FBAR_BCL.UnmarshalText([]byte(fields[4]))
+	s.FBAR_BCU.UnmarshalText([]byte(fields[5]))
+	s.FSTDEV.UnmarshalText([]byte(fields[6]))
+	s.FSTDEV_NCL.UnmarshalText([]byte(fields[7]))
+	s.FSTDEV_NCU.UnmarshalText([]byte(fields[8]))
+	s.FSTDEV_BCL.UnmarshalText([]byte(fields[9]))
+	s.FSTDEV_BCU.UnmarshalText([]byte(fields[10]))
+	s.OBAR.UnmarshalText([]byte(fields[11]))
+	s.OBAR_NCL.UnmarshalText([]byte(fields[12]))
+	s.OBAR_NCU.UnmarshalText([]byte(fields[13]))
+	s.OBAR_BCL.UnmarshalText([]byte(fields[14]))
+	s.OBAR_BCU.UnmarshalText([]byte(fields[15]))
+	s.OSTDEV.UnmarshalText([]byte(fields[16]))
+	s.OSTDEV_NCL.UnmarshalText([]byte(fields[17]))
+	s.OSTDEV_NCU.UnmarshalText([]byte(fields[18]))
+	s.OSTDEV_BCL.UnmarshalText([]byte(fields[19]))
+	s.OSTDEV_BCU.UnmarshalText([]byte(fields[20]))
+	s.PR_CORR.UnmarshalText([]byte(fields[21]))
+	s.PR_CORR_NCL.UnmarshalText([]byte(fields[22]))
+	s.PR_CORR_NCU.UnmarshalText([]byte(fields[23]))
+	s.PR_CORR_BCL.UnmarshalText([]byte(fields[24]))
+	s.PR_CORR_BCU.UnmarshalText([]byte(fields[25]))
+	s.SP_CORR.UnmarshalText([]byte(fields[26]))
+	s.KT_CORR.UnmarshalText([]byte(fields[27]))
+	s.RANKS.UnmarshalText([]byte(fields[28]))
+	s.FRANK_TIES.UnmarshalText([]byte(fields[29]))
+	s.ORANK_TIES.UnmarshalText([]byte(fields[30]))
+	s.ME.UnmarshalText([]byte(fields[31]))
+	s.ME_NCL.UnmarshalText([]byte(fields[32]))
+	s.ME_NCU.UnmarshalText([]byte(fields[33]))
+	s.ME_BCL.UnmarshalText([]byte(fields[34]))
+	s.ME_BCU.UnmarshalText([]byte(fields[35]))
+	s.ESTDEV.UnmarshalText([]byte(fields[36]))
+	s.ESTDEV_NCL.UnmarshalText([]byte(fields[37]))
+	s.ESTDEV_NCU.UnmarshalText([]byte(fields[38]))
+	s.ESTDEV_BCL.UnmarshalText([]byte(fields[39]))
+	s.ESTDEV_BCU.UnmarshalText([]byte(fields[40]))
+	s.MBIAS.UnmarshalText([]byte(fields[41]))
+	s.MBIAS_BCL.UnmarshalText([]byte(fields[42]))
+	s.MBIAS_BCU.UnmarshalText([]byte(fields[43]))
+	s.MAE.UnmarshalText([]byte(fields[44]))
+	s.MAE_BCL.UnmarshalText([]byte(fields[45]))
+	s.MAE_BCU.UnmarshalText([]byte(fields[46]))
+	s.MSE.UnmarshalText([]byte(fields[47]))
+	s.MSE_BCL.UnmarshalText([]byte(fields[48]))
+	s.MSE_BCU.UnmarshalText([]byte(fields[49]))
+	s.BCMSE.UnmarshalText([]byte(fields[50]))
+	s.BCMSE_BCL.UnmarshalText([]byte(fields[51]))
+	s.BCMSE_BCU.UnmarshalText([]byte(fields[52]))
+	s.RMSE.UnmarshalText([]byte(fields[53]))
+	s.RMSE_BCL.UnmarshalText([]byte(fields[54]))
+	s.RMSE_BCU.UnmarshalText([]byte(fields[55]))
+	s.E10.UnmarshalText([]byte(fields[56]))
+	s.E10_BCL.UnmarshalText([]byte(fields[57]))
+	s.E10_BCU.UnmarshalText([]byte(fields[58]))
+	s.E25.UnmarshalText([]byte(fields[59]))
+	s.E25_BCL.UnmarshalText([]byte(fields[60]))
+	s.E25_BCU.UnmarshalText([]byte(fields[61]))
+	s.E50.UnmarshalText([]byte(fields[62]))
+	s.E50_BCL.UnmarshalText([]byte(fields[63]))
+	s.E50_BCU.UnmarshalText([]byte(fields[64]))
+	s.E75.UnmarshalText([]byte(fields[65]))
+	s.E75_BCL.UnmarshalText([]byte(fields[66]))
+	s.E75_BCU.UnmarshalText([]byte(fields[67]))
+	s.E90.UnmarshalText([]byte(fields[68]))
+	s.E90_BCL.UnmarshalText([]byte(fields[69]))
+	s.E90_BCU.UnmarshalText([]byte(fields[70]))
+	s.EIQR.UnmarshalText([]byte(fields[71]))
+	s.EIQR_BCL.UnmarshalText([]byte(fields[72]))
+	s.EIQR_BCU.UnmarshalText([]byte(fields[73]))
+	s.MAD.UnmarshalText([]byte(fields[74]))
+	s.MAD_BCL.UnmarshalText([]byte(fields[75]))
+	s.MAD_BCU.UnmarshalText([]byte(fields[76]))
+	s.ANOM_CORR.UnmarshalText([]byte(fields[77]))
+	s.ANOM_CORR_NCL.UnmarshalText([]byte(fields[78]))
+	s.ANOM_CORR_NCU.UnmarshalText([]byte(fields[79]))
+	s.ANOM_CORR_BCL.UnmarshalText([]byte(fields[80]))
+	s.ANOM_CORR_BCU.UnmarshalText([]byte(fields[81]))
+	s.ME2.UnmarshalText([]byte(fields[82]))
+	s.ME2_BCL.UnmarshalText([]byte(fields[83]))
+	s.ME2_BCU.UnmarshalText([]byte(fields[84]))
+	s.MSESS.UnmarshalText([]byte(fields[85]))
+	s.MSESS_BCL.UnmarshalText([]byte(fields[86]))
+	s.MSESS_BCU.UnmarshalText([]byte(fields[87]))
+	s.RMSFA.UnmarshalText([]byte(fields[88]))
+	s.RMSFA_BCL.UnmarshalText([]byte(fields[89]))
+	s.RMSFA_BCU.UnmarshalText([]byte(fields[90]))
+	s.RMSOA.UnmarshalText([]byte(fields[91]))
+	s.RMSOA_BCL.UnmarshalText([]byte(fields[92]))
+	s.RMSOA_BCU.UnmarshalText([]byte(fields[93]))
+	s.ANOM_CORR_UNCNTR.UnmarshalText([]byte(fields[94]))
+	s.ANOM_CORR_UNCNTR_BCL.UnmarshalText([]byte(fields[95]))
+	s.ANOM_CORR_UNCNTR_BCU.UnmarshalText([]byte(fields[96]))
 }
 
-func (s *STAT_CTC) fill_STAT_CTC(fields []string) {
-	dataLen := len(fields) - 1
-	i := -1
-	i++
-	if i <= dataLen {
-		s.TOTAL, _ = strconv.Atoi(fields[0])
-	}
-	i++
-	if i <= dataLen {
-		s.FY_OY, _ = strconv.ParseFloat(fields[1], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.FY_ON, _ = strconv.ParseFloat(fields[2], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.FN_OY, _ = strconv.ParseFloat(fields[3], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.FN_ON, _ = strconv.ParseFloat(fields[4], 64)
-	}
+func (s *STAT_CTC_data) fill(fields []string) {
+	s.TOTAL.UnmarshalText([]byte(fields[0]))
+	s.FY_OY.UnmarshalText([]byte(fields[1]))
+	s.FY_ON.UnmarshalText([]byte(fields[2]))
+	s.FN_OY.UnmarshalText([]byte(fields[3]))
+	s.FN_ON.UnmarshalText([]byte(fields[4]))
 }
 
-func (s *STAT_CTS) fill_STAT_CTS(fields []string) {
-	dataLen := len(fields) - 1
-	i := -1
-	i++
-	if i <= dataLen {
-		s.TOTAL, _ = strconv.Atoi(fields[0])
-	}
-	i++
-	if i <= dataLen {
-		s.BASER, _ = strconv.ParseFloat(fields[1], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.BASER_NCL, _ = strconv.ParseFloat(fields[2], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.BASER_NCU, _ = strconv.ParseFloat(fields[3], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.BASER_BCL, _ = strconv.ParseFloat(fields[4], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.BASER_BCU, _ = strconv.ParseFloat(fields[5], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.FMEAN, _ = strconv.ParseFloat(fields[6], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.FMEAN_NCL, _ = strconv.ParseFloat(fields[7], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.FMEAN_NCU, _ = strconv.ParseFloat(fields[8], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.FMEAN_BCL, _ = strconv.ParseFloat(fields[9], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.FMEAN_BCU, _ = strconv.ParseFloat(fields[10], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ACC, _ = strconv.ParseFloat(fields[11], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ACC_NCL, _ = strconv.ParseFloat(fields[12], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ACC_NCU, _ = strconv.ParseFloat(fields[13], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ACC_BCL, _ = strconv.ParseFloat(fields[14], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ACC_BCU, _ = strconv.ParseFloat(fields[15], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.FBIAS, _ = strconv.ParseFloat(fields[16], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.FBIAS_BCL, _ = strconv.ParseFloat(fields[17], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.FBIAS_BCU, _ = strconv.ParseFloat(fields[18], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.PODY, _ = strconv.ParseFloat(fields[19], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.PODY_NCL, _ = strconv.ParseFloat(fields[20], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.PODY_NCU, _ = strconv.ParseFloat(fields[21], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.PODY_BCL, _ = strconv.ParseFloat(fields[22], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.PODY_BCU, _ = strconv.ParseFloat(fields[23], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.PODN, _ = strconv.ParseFloat(fields[24], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.PODN_NCL, _ = strconv.ParseFloat(fields[25], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.PODN_NCU, _ = strconv.ParseFloat(fields[26], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.PODN_BCL, _ = strconv.ParseFloat(fields[27], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.PODN_BCU, _ = strconv.ParseFloat(fields[28], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.POFD, _ = strconv.ParseFloat(fields[29], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.POFD_NCL, _ = strconv.ParseFloat(fields[30], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.POFD_NCU, _ = strconv.ParseFloat(fields[31], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.POFD_BCL, _ = strconv.ParseFloat(fields[32], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.POFD_BCU, _ = strconv.ParseFloat(fields[33], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.FAR, _ = strconv.ParseFloat(fields[34], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.FAR_NCL, _ = strconv.ParseFloat(fields[35], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.FAR_NCU, _ = strconv.ParseFloat(fields[36], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.FAR_BCL, _ = strconv.ParseFloat(fields[37], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.FAR_BCU, _ = strconv.ParseFloat(fields[38], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.CSI, _ = strconv.ParseFloat(fields[39], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.CSI_NCL, _ = strconv.ParseFloat(fields[40], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.CSI_NCU, _ = strconv.ParseFloat(fields[41], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.CSI_BCL, _ = strconv.ParseFloat(fields[42], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.CSI_BCU, _ = strconv.ParseFloat(fields[43], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.GSS, _ = strconv.ParseFloat(fields[44], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.GSS_BCL, _ = strconv.ParseFloat(fields[45], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.GSS_BCU, _ = strconv.ParseFloat(fields[46], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.HK, _ = strconv.ParseFloat(fields[47], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.HK_NCL, _ = strconv.ParseFloat(fields[48], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.HK_NCU, _ = strconv.ParseFloat(fields[49], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.HK_BCL, _ = strconv.ParseFloat(fields[50], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.HK_BCU, _ = strconv.ParseFloat(fields[51], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.HSS, _ = strconv.ParseFloat(fields[52], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.HSS_BCL, _ = strconv.ParseFloat(fields[53], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.HSS_BCU, _ = strconv.ParseFloat(fields[54], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ODDS, _ = strconv.ParseFloat(fields[55], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ODDS_NCL, _ = strconv.ParseFloat(fields[56], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ODDS_NCU, _ = strconv.ParseFloat(fields[57], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ODDS_BCL, _ = strconv.ParseFloat(fields[58], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ODDS_BCU, _ = strconv.ParseFloat(fields[59], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.LODDS, _ = strconv.ParseFloat(fields[60], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.LODDS_NCL, _ = strconv.ParseFloat(fields[61], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.LODDS_NCU, _ = strconv.ParseFloat(fields[62], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.LODDS_BCL, _ = strconv.ParseFloat(fields[63], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.LODDS_BCU, _ = strconv.ParseFloat(fields[64], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ORSS, _ = strconv.ParseFloat(fields[65], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ORSS_NCL, _ = strconv.ParseFloat(fields[66], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ORSS_NCU, _ = strconv.ParseFloat(fields[67], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ORSS_BCL, _ = strconv.ParseFloat(fields[68], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ORSS_BCU, _ = strconv.ParseFloat(fields[69], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.EDS, _ = strconv.ParseFloat(fields[70], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.EDS_NCL, _ = strconv.ParseFloat(fields[71], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.EDS_NCU, _ = strconv.ParseFloat(fields[72], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.EDS_BCL, _ = strconv.ParseFloat(fields[73], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.EDS_BCU, _ = strconv.ParseFloat(fields[74], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.SEDS, _ = strconv.ParseFloat(fields[75], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.SEDS_NCL, _ = strconv.ParseFloat(fields[76], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.SEDS_NCU, _ = strconv.ParseFloat(fields[77], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.SEDS_BCL, _ = strconv.ParseFloat(fields[78], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.SEDS_BCU, _ = strconv.ParseFloat(fields[79], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.EDI, _ = strconv.ParseFloat(fields[80], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.EDI_NCL, _ = strconv.ParseFloat(fields[81], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.EDI_NCU, _ = strconv.ParseFloat(fields[82], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.EDI_BCL, _ = strconv.ParseFloat(fields[83], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.EDI_BCU, _ = strconv.ParseFloat(fields[84], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.SEDI, _ = strconv.ParseFloat(fields[85], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.SEDI_NCL, _ = strconv.ParseFloat(fields[86], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.SEDI_NCU, _ = strconv.ParseFloat(fields[87], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.SEDI_BCL, _ = strconv.ParseFloat(fields[88], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.SEDI_BCU, _ = strconv.ParseFloat(fields[89], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.BAGSS, _ = strconv.ParseFloat(fields[90], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.BAGSS_BCL, _ = strconv.ParseFloat(fields[91], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.BAGSS_BCU, _ = strconv.ParseFloat(fields[92], 64)
-	}
+func (s *STAT_CTS_data) fill(fields []string) {
+	s.TOTAL.UnmarshalText([]byte(fields[0]))
+	s.BASER.UnmarshalText([]byte(fields[1]))
+	s.BASER_NCL.UnmarshalText([]byte(fields[2]))
+	s.BASER_NCU.UnmarshalText([]byte(fields[3]))
+	s.BASER_BCL.UnmarshalText([]byte(fields[4]))
+	s.BASER_BCU.UnmarshalText([]byte(fields[5]))
+	s.FMEAN.UnmarshalText([]byte(fields[6]))
+	s.FMEAN_NCL.UnmarshalText([]byte(fields[7]))
+	s.FMEAN_NCU.UnmarshalText([]byte(fields[8]))
+	s.FMEAN_BCL.UnmarshalText([]byte(fields[9]))
+	s.FMEAN_BCU.UnmarshalText([]byte(fields[10]))
+	s.ACC.UnmarshalText([]byte(fields[11]))
+	s.ACC_NCL.UnmarshalText([]byte(fields[12]))
+	s.ACC_NCU.UnmarshalText([]byte(fields[13]))
+	s.ACC_BCL.UnmarshalText([]byte(fields[14]))
+	s.ACC_BCU.UnmarshalText([]byte(fields[15]))
+	s.FBIAS.UnmarshalText([]byte(fields[16]))
+	s.FBIAS_BCL.UnmarshalText([]byte(fields[17]))
+	s.FBIAS_BCU.UnmarshalText([]byte(fields[18]))
+	s.PODY.UnmarshalText([]byte(fields[19]))
+	s.PODY_NCL.UnmarshalText([]byte(fields[20]))
+	s.PODY_NCU.UnmarshalText([]byte(fields[21]))
+	s.PODY_BCL.UnmarshalText([]byte(fields[22]))
+	s.PODY_BCU.UnmarshalText([]byte(fields[23]))
+	s.PODN.UnmarshalText([]byte(fields[24]))
+	s.PODN_NCL.UnmarshalText([]byte(fields[25]))
+	s.PODN_NCU.UnmarshalText([]byte(fields[26]))
+	s.PODN_BCL.UnmarshalText([]byte(fields[27]))
+	s.PODN_BCU.UnmarshalText([]byte(fields[28]))
+	s.POFD.UnmarshalText([]byte(fields[29]))
+	s.POFD_NCL.UnmarshalText([]byte(fields[30]))
+	s.POFD_NCU.UnmarshalText([]byte(fields[31]))
+	s.POFD_BCL.UnmarshalText([]byte(fields[32]))
+	s.POFD_BCU.UnmarshalText([]byte(fields[33]))
+	s.FAR.UnmarshalText([]byte(fields[34]))
+	s.FAR_NCL.UnmarshalText([]byte(fields[35]))
+	s.FAR_NCU.UnmarshalText([]byte(fields[36]))
+	s.FAR_BCL.UnmarshalText([]byte(fields[37]))
+	s.FAR_BCU.UnmarshalText([]byte(fields[38]))
+	s.CSI.UnmarshalText([]byte(fields[39]))
+	s.CSI_NCL.UnmarshalText([]byte(fields[40]))
+	s.CSI_NCU.UnmarshalText([]byte(fields[41]))
+	s.CSI_BCL.UnmarshalText([]byte(fields[42]))
+	s.CSI_BCU.UnmarshalText([]byte(fields[43]))
+	s.GSS.UnmarshalText([]byte(fields[44]))
+	s.GSS_BCL.UnmarshalText([]byte(fields[45]))
+	s.GSS_BCU.UnmarshalText([]byte(fields[46]))
+	s.HK.UnmarshalText([]byte(fields[47]))
+	s.HK_NCL.UnmarshalText([]byte(fields[48]))
+	s.HK_NCU.UnmarshalText([]byte(fields[49]))
+	s.HK_BCL.UnmarshalText([]byte(fields[50]))
+	s.HK_BCU.UnmarshalText([]byte(fields[51]))
+	s.HSS.UnmarshalText([]byte(fields[52]))
+	s.HSS_BCL.UnmarshalText([]byte(fields[53]))
+	s.HSS_BCU.UnmarshalText([]byte(fields[54]))
+	s.ODDS.UnmarshalText([]byte(fields[55]))
+	s.ODDS_NCL.UnmarshalText([]byte(fields[56]))
+	s.ODDS_NCU.UnmarshalText([]byte(fields[57]))
+	s.ODDS_BCL.UnmarshalText([]byte(fields[58]))
+	s.ODDS_BCU.UnmarshalText([]byte(fields[59]))
+	s.LODDS.UnmarshalText([]byte(fields[60]))
+	s.LODDS_NCL.UnmarshalText([]byte(fields[61]))
+	s.LODDS_NCU.UnmarshalText([]byte(fields[62]))
+	s.LODDS_BCL.UnmarshalText([]byte(fields[63]))
+	s.LODDS_BCU.UnmarshalText([]byte(fields[64]))
+	s.ORSS.UnmarshalText([]byte(fields[65]))
+	s.ORSS_NCL.UnmarshalText([]byte(fields[66]))
+	s.ORSS_NCU.UnmarshalText([]byte(fields[67]))
+	s.ORSS_BCL.UnmarshalText([]byte(fields[68]))
+	s.ORSS_BCU.UnmarshalText([]byte(fields[69]))
+	s.EDS.UnmarshalText([]byte(fields[70]))
+	s.EDS_NCL.UnmarshalText([]byte(fields[71]))
+	s.EDS_NCU.UnmarshalText([]byte(fields[72]))
+	s.EDS_BCL.UnmarshalText([]byte(fields[73]))
+	s.EDS_BCU.UnmarshalText([]byte(fields[74]))
+	s.SEDS.UnmarshalText([]byte(fields[75]))
+	s.SEDS_NCL.UnmarshalText([]byte(fields[76]))
+	s.SEDS_NCU.UnmarshalText([]byte(fields[77]))
+	s.SEDS_BCL.UnmarshalText([]byte(fields[78]))
+	s.SEDS_BCU.UnmarshalText([]byte(fields[79]))
+	s.EDI.UnmarshalText([]byte(fields[80]))
+	s.EDI_NCL.UnmarshalText([]byte(fields[81]))
+	s.EDI_NCU.UnmarshalText([]byte(fields[82]))
+	s.EDI_BCL.UnmarshalText([]byte(fields[83]))
+	s.EDI_BCU.UnmarshalText([]byte(fields[84]))
+	s.SEDI.UnmarshalText([]byte(fields[85]))
+	s.SEDI_NCL.UnmarshalText([]byte(fields[86]))
+	s.SEDI_NCU.UnmarshalText([]byte(fields[87]))
+	s.SEDI_BCL.UnmarshalText([]byte(fields[88]))
+	s.SEDI_BCU.UnmarshalText([]byte(fields[89]))
+	s.BAGSS.UnmarshalText([]byte(fields[90]))
+	s.BAGSS_BCL.UnmarshalText([]byte(fields[91]))
+	s.BAGSS_BCU.UnmarshalText([]byte(fields[92]))
 }
 
-func (s *STAT_DMAP) fill_STAT_DMAP(fields []string) {
-	dataLen := len(fields) - 1
-	i := -1
-	i++
-	if i <= dataLen {
-		s.TOTAL, _ = strconv.Atoi(fields[0])
-	}
-	i++
-	if i <= dataLen {
-		s.FY, _ = strconv.Atoi(fields[1])
-	}
-	i++
-	if i <= dataLen {
-		s.OY, _ = strconv.Atoi(fields[2])
-	}
-	i++
-	if i <= dataLen {
-		s.FBIAS, _ = strconv.ParseFloat(fields[3], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.BADDELEY, _ = strconv.ParseFloat(fields[4], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.HAUSDORFF, _ = strconv.ParseFloat(fields[5], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.MED_FO, _ = strconv.ParseFloat(fields[6], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.MED_OF, _ = strconv.ParseFloat(fields[7], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.MED_MIN, _ = strconv.ParseFloat(fields[8], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.MED_MAX, _ = strconv.ParseFloat(fields[9], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.MED_MEAN, _ = strconv.ParseFloat(fields[10], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.FOM_FO, _ = strconv.ParseFloat(fields[11], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.FOM_OF, _ = strconv.ParseFloat(fields[12], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.FOM_MIN, _ = strconv.ParseFloat(fields[13], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.FOM_MAX, _ = strconv.ParseFloat(fields[14], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.FOM_MEAN, _ = strconv.ParseFloat(fields[15], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ZHU_FO, _ = strconv.ParseFloat(fields[16], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ZHU_OF, _ = strconv.ParseFloat(fields[17], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ZHU_MIN, _ = strconv.ParseFloat(fields[18], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ZHU_MAX, _ = strconv.ParseFloat(fields[19], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ZHU_MEAN, _ = strconv.ParseFloat(fields[20], 64)
-	}
+func (s *STAT_DMAP_data) fill(fields []string) {
+	s.TOTAL.UnmarshalText([]byte(fields[0]))
+	s.FY.UnmarshalText([]byte(fields[1]))
+	s.OY.UnmarshalText([]byte(fields[2]))
+	s.FBIAS.UnmarshalText([]byte(fields[3]))
+	s.BADDELEY.UnmarshalText([]byte(fields[4]))
+	s.HAUSDORFF.UnmarshalText([]byte(fields[5]))
+	s.MED_FO.UnmarshalText([]byte(fields[6]))
+	s.MED_OF.UnmarshalText([]byte(fields[7]))
+	s.MED_MIN.UnmarshalText([]byte(fields[8]))
+	s.MED_MAX.UnmarshalText([]byte(fields[9]))
+	s.MED_MEAN.UnmarshalText([]byte(fields[10]))
+	s.FOM_FO.UnmarshalText([]byte(fields[11]))
+	s.FOM_OF.UnmarshalText([]byte(fields[12]))
+	s.FOM_MIN.UnmarshalText([]byte(fields[13]))
+	s.FOM_MAX.UnmarshalText([]byte(fields[14]))
+	s.FOM_MEAN.UnmarshalText([]byte(fields[15]))
+	s.ZHU_FO.UnmarshalText([]byte(fields[16]))
+	s.ZHU_OF.UnmarshalText([]byte(fields[17]))
+	s.ZHU_MIN.UnmarshalText([]byte(fields[18]))
+	s.ZHU_MAX.UnmarshalText([]byte(fields[19]))
+	s.ZHU_MEAN.UnmarshalText([]byte(fields[20]))
 }
 
-func (s *STAT_ECLV) fill_STAT_ECLV(fields []string) {
-	dataLen := len(fields) - 1
-	i := -1
-	i++
-	if i <= dataLen {
-		s.TOTAL, _ = strconv.Atoi(fields[0])
+func (s *STAT_ECLV_data) fill(fields []string) {
+	s.TOTAL.UnmarshalText([]byte(fields[0]))
+	s.BASER.UnmarshalText([]byte(fields[1]))
+	s.VALUE_BASER.UnmarshalText([]byte(fields[2]))
+	// the first field of the repeating fields is the TOTAL, the second field is the 1st dimenSion of the 1st sequence (there might be only one sequence)
+	var value validtypes.ValidFloat
+	count, err := strconv.Atoi(fields[3])
+	if err != nil {
+		count = 0
 	}
-	i++
-	if i <= dataLen {
-		s.BASER, _ = strconv.ParseFloat(fields[1], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.VALUE_BASER, _ = strconv.Atoi(fields[2])
-	}
-	i++
-	if i <= dataLen { // the first field of the repeating fields is the TOTAL, the second field is the 1st dimenSion of the 1st sequence (there might be only one sequence)
-		var value interface{}
-		count, err := strconv.Atoi(fields[3])
-		if err != nil {
-			count = 0
-		}
-		keyPrefixes := []string{"CL_", "VALUE_"}
-		s.PTS = make(map[string]interface{})
-		for group := 1; group <= count; group++ {
-			for index := 4; index <= len(keyPrefixes); index++ {
-				key := fmt.Sprintf("%s_%d", keyPrefixes[index-1], index)
-				if index > len(fields) { // sometimes the data line is truncated - we will set expected data to "NA"
-					value = "NA"
-				} else {
-					value, err = strconv.ParseFloat(fields[index], 64)
-					if err != nil { // sometimes there can be these NA values in the data, which will be left out of json
-						value = "NA"
-					}
-				}
-				s.PTS[key] = value
+	keyPrefixes := []string{"CL_", "VALUE_"}
+	s.PTS = make(map[string]interface{})
+	for group := 1; group <= count; group++ {
+		for index := 4; index <= len(keyPrefixes); index++ {
+			key := fmt.Sprintf("%s_%d", keyPrefixes[index-1], index)
+			if index > len(fields) { // sometimes the data line is truncated - invalidate that field
+				value.Reset()
+			} else {
+				value.UnmarshalText([]byte(fields[index]))
 			}
+			s.PTS[key] = value
 		}
 	}
 }
 
-func (s *STAT_ECNT) fill_STAT_ECNT(fields []string) {
-	dataLen := len(fields) - 1
-	i := -1
-	i++
-	if i <= dataLen {
-		s.TOTAL, _ = strconv.Atoi(fields[0])
-	}
-	i++
-	if i <= dataLen {
-		s.N_ENS, _ = strconv.Atoi(fields[1])
-	}
-	i++
-	if i <= dataLen {
-		s.CRPS, _ = strconv.ParseFloat(fields[2], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.CRPSS, _ = strconv.ParseFloat(fields[3], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.IGN, _ = strconv.ParseFloat(fields[4], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ME, _ = strconv.ParseFloat(fields[5], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.RMSE, _ = strconv.ParseFloat(fields[6], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.SPREAD, _ = strconv.ParseFloat(fields[7], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ME_OERR, _ = strconv.ParseFloat(fields[8], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.RMSE_OERR, _ = strconv.ParseFloat(fields[9], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.SPREAD_OERR, _ = strconv.ParseFloat(fields[10], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.SPREAD_PLUS_OERR, _ = strconv.ParseFloat(fields[11], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.CRPSCL, _ = strconv.ParseFloat(fields[12], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.CRPS_EMP, _ = strconv.ParseFloat(fields[13], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.CRPSCL_EMP, _ = strconv.ParseFloat(fields[14], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.CRPSS_EMP, _ = strconv.ParseFloat(fields[15], 64)
-	}
+func (s *STAT_ECNT_data) fill(fields []string) {
+	s.TOTAL.UnmarshalText([]byte(fields[0]))
+	s.N_ENS.UnmarshalText([]byte(fields[1]))
+	s.CRPS.UnmarshalText([]byte(fields[2]))
+	s.CRPSS.UnmarshalText([]byte(fields[3]))
+	s.IGN.UnmarshalText([]byte(fields[4]))
+	s.ME.UnmarshalText([]byte(fields[5]))
+	s.RMSE.UnmarshalText([]byte(fields[6]))
+	s.SPREAD.UnmarshalText([]byte(fields[7]))
+	s.ME_OERR.UnmarshalText([]byte(fields[8]))
+	s.RMSE_OERR.UnmarshalText([]byte(fields[9]))
+	s.SPREAD_OERR.UnmarshalText([]byte(fields[10]))
+	s.SPREAD_PLUS_OERR.UnmarshalText([]byte(fields[11]))
+	s.CRPSCL.UnmarshalText([]byte(fields[12]))
+	s.CRPS_EMP.UnmarshalText([]byte(fields[13]))
+	s.CRPSCL_EMP.UnmarshalText([]byte(fields[14]))
+	s.CRPSS_EMP.UnmarshalText([]byte(fields[15]))
 }
 
-func (s *STAT_FHO) fill_STAT_FHO(fields []string) {
-	dataLen := len(fields) - 1
-	i := -1
-	i++
-	if i <= dataLen {
-		s.TOTAL, _ = strconv.Atoi(fields[0])
-	}
-	i++
-	if i <= dataLen {
-		s.F_RATE, _ = strconv.ParseFloat(fields[1], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.H_RATE, _ = strconv.ParseFloat(fields[2], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.O_RATE, _ = strconv.ParseFloat(fields[3], 64)
-	}
+func (s *STAT_FHO_data) fill(fields []string) {
+	s.TOTAL.UnmarshalText([]byte(fields[0]))
+	s.F_RATE.UnmarshalText([]byte(fields[1]))
+	s.H_RATE.UnmarshalText([]byte(fields[2]))
+	s.O_RATE.UnmarshalText([]byte(fields[3]))
 }
 
-func (s *STAT_GENMPR) fill_STAT_GENMPR(fields []string) {
-	dataLen := len(fields) - 1
-	i := -1
-	i++
-	if i <= dataLen {
-		s.TOTAL, _ = strconv.Atoi(fields[0])
-	}
-	i++
-	if i <= dataLen {
-		s.INDEX, _ = strconv.Atoi(fields[1])
-	}
-	i++
-	if i <= dataLen {
-		if fields[2] != "NA" {
-			s.STORM_ID = fields[2]
-		}
-	}
-	i++
-	if i <= dataLen {
-		if fields[3] != "NA" {
-			s.AGEN_INIT = fields[3]
-		}
-	}
-	i++
-	if i <= dataLen {
-		if fields[4] != "NA" {
-			s.AGEN_FHR = fields[4]
-		}
-	}
-	i++
-	if i <= dataLen {
-		s.AGEN_LAT, _ = strconv.ParseFloat(fields[5], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.AGEN_LON, _ = strconv.ParseFloat(fields[6], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.AGEN_DLAND, _ = strconv.ParseFloat(fields[7], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.BGEN_LAT, _ = strconv.ParseFloat(fields[8], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.BGEN_LON, _ = strconv.ParseFloat(fields[9], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.BGEN_DLAND, _ = strconv.ParseFloat(fields[10], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.GEN_DIST, _ = strconv.ParseFloat(fields[11], 64)
-	}
-	i++
-	if i <= dataLen {
-		if fields[12] != "NA" {
-			s.GEN_TDIFF = fields[12]
-		}
-	}
-	i++
-	if i <= dataLen {
-		if fields[13] != "NA" {
-			s.INIT_TDIFF = fields[13]
-		}
-	}
-	i++
-	if i <= dataLen {
-		if fields[14] != "NA" {
-			s.DEV_CAT = fields[14]
-		}
-	}
-	i++
-	if i <= dataLen {
-		if fields[15] != "NA" {
-			s.OPS_CAT = fields[15]
-		}
-	}
+func (s *STAT_GENMPR_data) fill(fields []string) {
+	s.TOTAL.UnmarshalText([]byte(fields[0]))
+	s.INDEX.UnmarshalText([]byte(fields[1]))
+	s.STORM_ID.UnmarshalText([]byte(fields[2]))
+	s.AGEN_INIT.UnmarshalText([]byte(fields[3]))
+	s.AGEN_FHR.UnmarshalText([]byte(fields[4]))
+	s.AGEN_LAT.UnmarshalText([]byte(fields[5]))
+	s.AGEN_LON.UnmarshalText([]byte(fields[6]))
+	s.AGEN_DLAND.UnmarshalText([]byte(fields[7]))
+	s.BGEN_LAT.UnmarshalText([]byte(fields[8]))
+	s.BGEN_LON.UnmarshalText([]byte(fields[9]))
+	s.BGEN_DLAND.UnmarshalText([]byte(fields[10]))
+	s.GEN_DIST.UnmarshalText([]byte(fields[11]))
+	s.GEN_TDIFF.UnmarshalText([]byte(fields[12]))
+	s.INIT_TDIFF.UnmarshalText([]byte(fields[13]))
+	s.DEV_CAT.UnmarshalText([]byte(fields[14]))
+	s.OPS_CAT.UnmarshalText([]byte(fields[15]))
 }
 
-func (s *STAT_GRAD) fill_STAT_GRAD(fields []string) {
-	dataLen := len(fields) - 1
-	i := -1
-	i++
-	if i <= dataLen {
-		s.TOTAL, _ = strconv.Atoi(fields[0])
-	}
-	i++
-	if i <= dataLen {
-		s.FGBAR, _ = strconv.ParseFloat(fields[1], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.OGBAR, _ = strconv.ParseFloat(fields[2], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.MGBAR, _ = strconv.ParseFloat(fields[3], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.EGBAR, _ = strconv.ParseFloat(fields[4], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.S1, _ = strconv.ParseFloat(fields[5], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.S1_OG, _ = strconv.ParseFloat(fields[6], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.FGOG_RATIO, _ = strconv.ParseFloat(fields[7], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.DX, _ = strconv.ParseFloat(fields[8], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.DY, _ = strconv.ParseFloat(fields[9], 64)
-	}
+func (s *STAT_GRAD_data) fill(fields []string) {
+	s.TOTAL.UnmarshalText([]byte(fields[0]))
+	s.FGBAR.UnmarshalText([]byte(fields[1]))
+	s.OGBAR.UnmarshalText([]byte(fields[2]))
+	s.MGBAR.UnmarshalText([]byte(fields[3]))
+	s.EGBAR.UnmarshalText([]byte(fields[4]))
+	s.S1.UnmarshalText([]byte(fields[5]))
+	s.S1_OG.UnmarshalText([]byte(fields[6]))
+	s.FGOG_RATIO.UnmarshalText([]byte(fields[7]))
+	s.DX.UnmarshalText([]byte(fields[8]))
+	s.DY.UnmarshalText([]byte(fields[9]))
 }
 
-func (s *STAT_ISC) fill_STAT_ISC(fields []string) {
-	dataLen := len(fields) - 1
-	i := -1
-	i++
-	if i <= dataLen {
-		s.TOTAL, _ = strconv.Atoi(fields[0])
-	}
-	i++
-	if i <= dataLen {
-		s.TILE_DIM, _ = strconv.Atoi(fields[1])
-	}
-	i++
-	if i <= dataLen {
-		s.TILE_XLL, _ = strconv.Atoi(fields[2])
-	}
-	i++
-	if i <= dataLen {
-		s.TILE_YLL, _ = strconv.Atoi(fields[3])
-	}
-	i++
-	if i <= dataLen {
-		s.NSCALE, _ = strconv.Atoi(fields[4])
-	}
-	i++
-	if i <= dataLen {
-		s.ISCALE, _ = strconv.Atoi(fields[5])
-	}
-	i++
-	if i <= dataLen {
-		s.MSE, _ = strconv.ParseFloat(fields[6], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ISC, _ = strconv.ParseFloat(fields[7], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.FENERGY2, _ = strconv.ParseFloat(fields[8], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.OENERGY2, _ = strconv.ParseFloat(fields[9], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.BASER, _ = strconv.ParseFloat(fields[10], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.FBIAS, _ = strconv.ParseFloat(fields[11], 64)
-	}
+func (s *STAT_ISC_data) fill(fields []string) {
+	s.TOTAL.UnmarshalText([]byte(fields[0]))
+	s.TILE_DIM.UnmarshalText([]byte(fields[1]))
+	s.TILE_XLL.UnmarshalText([]byte(fields[2]))
+	s.TILE_YLL.UnmarshalText([]byte(fields[3]))
+	s.NSCALE.UnmarshalText([]byte(fields[4]))
+	s.ISCALE.UnmarshalText([]byte(fields[5]))
+	s.MSE.UnmarshalText([]byte(fields[6]))
+	s.ISC.UnmarshalText([]byte(fields[7]))
+	s.FENERGY2.UnmarshalText([]byte(fields[8]))
+	s.OENERGY2.UnmarshalText([]byte(fields[9]))
+	s.BASER.UnmarshalText([]byte(fields[10]))
+	s.FBIAS.UnmarshalText([]byte(fields[11]))
 }
 
-func (s *STAT_MCTC) fill_STAT_MCTC(fields []string) {
-	dataLen := len(fields) - 1
-	i := -1
-	i++
-	if i <= dataLen {
-		s.TOTAL, _ = strconv.Atoi(fields[0])
+func (s *STAT_MCTC_data) fill(fields []string) {
+	s.TOTAL.UnmarshalText([]byte(fields[0]))
+	// these values seem to always be ints (or "NA")
+	var value validtypes.ValidInt
+	count, err := strconv.Atoi(fields[1])
+	if err != nil {
+		count = 0
 	}
-	i++
-	if i <= dataLen { // these values seem to always be ints (or "NA")
-		var value interface{}
-		count, err := strconv.Atoi(fields[1])
-		if err != nil {
-			count = 0
-		}
-		s.CAT = make(map[string]interface{})
-		for i1 := 1; i1 <= count; i1++ {
-			for i2 := 1; i2 <= count; i2++ {
-				// generate the particular key for the map i.e. F1_O1, F1_O2, F1_O3, F1_O4, F2_O1, F2_O2, F2_O3, F2_O4, etc.
-				key := fmt.Sprintf("F%d_O%d", i1, i2)
-				index := (i1-1)*count + i2
-				if index >= len(fields) {
-					value = "NA"
-				} else {
-					value, err = strconv.Atoi(fields[index])
-				}
-				if err != nil {
-					value = "NA"
-				}
-				s.CAT[key] = value
+	s.CAT = make(map[string]interface{})
+	for i1 := 1; i1 <= count; i1++ {
+		for i2 := 1; i2 <= count; i2++ {
+			// generate the particular key for the map i.e. F1_O1, F1_O2, F1_O3, F1_O4, F2_O1, F2_O2, F2_O3, F2_O4, etc.
+			key := fmt.Sprintf("F%d_O%d", i1, i2)
+			index := (i1-1)*count + i2
+			if index >= len(fields) {
+				value.Reset()
+			} else {
+				value.UnmarshalText([]byte(fields[index]))
 			}
+			s.CAT[key] = value
 		}
 	}
 }
 
-func (s *STAT_MCTS) fill_STAT_MCTS(fields []string) {
-	dataLen := len(fields) - 1
-	i := -1
-	i++
-	if i <= dataLen {
-		s.TOTAL, _ = strconv.Atoi(fields[0])
-	}
-	i++
-	if i <= dataLen {
-		s.N_CAT, _ = strconv.Atoi(fields[1])
-	}
-	i++
-	if i <= dataLen {
-		s.ACC, _ = strconv.ParseFloat(fields[2], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ACC_NCL, _ = strconv.ParseFloat(fields[3], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ACC_NCU, _ = strconv.ParseFloat(fields[4], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ACC_BCL, _ = strconv.ParseFloat(fields[5], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ACC_BCU, _ = strconv.ParseFloat(fields[6], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.HK, _ = strconv.ParseFloat(fields[7], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.HK_BCL, _ = strconv.ParseFloat(fields[8], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.HK_BCU, _ = strconv.ParseFloat(fields[9], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.HSS, _ = strconv.ParseFloat(fields[10], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.HSS_BCL, _ = strconv.ParseFloat(fields[11], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.HSS_BCU, _ = strconv.ParseFloat(fields[12], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.GER, _ = strconv.ParseFloat(fields[13], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.GER_BCL, _ = strconv.ParseFloat(fields[14], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.GER_BCU, _ = strconv.ParseFloat(fields[15], 64)
-	}
+func (s *STAT_MCTS_data) fill(fields []string) {
+	s.TOTAL.UnmarshalText([]byte(fields[0]))
+	s.N_CAT.UnmarshalText([]byte(fields[1]))
+	s.ACC.UnmarshalText([]byte(fields[2]))
+	s.ACC_NCL.UnmarshalText([]byte(fields[3]))
+	s.ACC_NCU.UnmarshalText([]byte(fields[4]))
+	s.ACC_BCL.UnmarshalText([]byte(fields[5]))
+	s.ACC_BCU.UnmarshalText([]byte(fields[6]))
+	s.HK.UnmarshalText([]byte(fields[7]))
+	s.HK_BCL.UnmarshalText([]byte(fields[8]))
+	s.HK_BCU.UnmarshalText([]byte(fields[9]))
+	s.HSS.UnmarshalText([]byte(fields[10]))
+	s.HSS_BCL.UnmarshalText([]byte(fields[11]))
+	s.HSS_BCU.UnmarshalText([]byte(fields[12]))
+	s.GER.UnmarshalText([]byte(fields[13]))
+	s.GER_BCL.UnmarshalText([]byte(fields[14]))
+	s.GER_BCU.UnmarshalText([]byte(fields[15]))
 }
 
-func (s *STAT_MPR) fill_STAT_MPR(fields []string) {
-	dataLen := len(fields) - 1
-	i := -1
-	i++
-	if i <= dataLen {
-		s.TOTAL, _ = strconv.Atoi(fields[0])
-	}
-	i++
-	if i <= dataLen {
-		s.INDEX, _ = strconv.Atoi(fields[1])
-	}
-	i++
-	if i <= dataLen {
-		if fields[2] != "NA" {
-			s.OBS_SID = fields[2]
-		}
-	}
-	i++
-	if i <= dataLen {
-		s.OBS_LAT, _ = strconv.ParseFloat(fields[3], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.OBS_LON, _ = strconv.ParseFloat(fields[4], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.OBS_LVL, _ = strconv.ParseFloat(fields[5], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.OBS_ELV, _ = strconv.ParseFloat(fields[6], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.FCST, _ = strconv.ParseFloat(fields[7], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.OBS, _ = strconv.ParseFloat(fields[8], 64)
-	}
-	i++
-	if i <= dataLen {
-		if fields[9] != "NA" {
-			s.OBS_QC = fields[9]
-		}
-	}
-	i++
-	if i <= dataLen {
-		s.CLIMO_MEAN, _ = strconv.ParseFloat(fields[10], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.CLIMO_STDEV, _ = strconv.ParseFloat(fields[11], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.CLIMO_CDF, _ = strconv.ParseFloat(fields[12], 64)
-	}
+func (s *STAT_MPR_data) fill(fields []string) {
+	s.TOTAL.UnmarshalText([]byte(fields[0]))
+	s.INDEX.UnmarshalText([]byte(fields[1]))
+	s.OBS_SID.UnmarshalText([]byte(fields[2]))
+	s.OBS_LAT.UnmarshalText([]byte(fields[3]))
+	s.OBS_LON.UnmarshalText([]byte(fields[4]))
+	s.OBS_LVL.UnmarshalText([]byte(fields[5]))
+	s.OBS_ELV.UnmarshalText([]byte(fields[6]))
+	s.FCST.UnmarshalText([]byte(fields[7]))
+	s.OBS.UnmarshalText([]byte(fields[8]))
+	s.OBS_QC.UnmarshalText([]byte(fields[9]))
+	s.CLIMO_MEAN.UnmarshalText([]byte(fields[10]))
+	s.CLIMO_STDEV.UnmarshalText([]byte(fields[11]))
+	s.CLIMO_CDF.UnmarshalText([]byte(fields[12]))
 }
 
-func (s *STAT_NBRCNT) fill_STAT_NBRCNT(fields []string) {
-	dataLen := len(fields) - 1
-	i := -1
-	i++
-	if i <= dataLen {
-		s.TOTAL, _ = strconv.Atoi(fields[0])
-	}
-	i++
-	if i <= dataLen {
-		s.FBS, _ = strconv.ParseFloat(fields[1], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.FBS_BCL, _ = strconv.ParseFloat(fields[2], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.FBS_BCU, _ = strconv.ParseFloat(fields[3], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.FSS, _ = strconv.ParseFloat(fields[4], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.FSS_BCL, _ = strconv.ParseFloat(fields[5], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.FSS_BCU, _ = strconv.ParseFloat(fields[6], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.AFSS, _ = strconv.ParseFloat(fields[7], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.AFSS_BCL, _ = strconv.ParseFloat(fields[8], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.AFSS_BCU, _ = strconv.ParseFloat(fields[9], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.UFSS, _ = strconv.ParseFloat(fields[10], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.UFSS_BCL, _ = strconv.ParseFloat(fields[11], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.UFSS_BCU, _ = strconv.ParseFloat(fields[12], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.F_RATE, _ = strconv.ParseFloat(fields[13], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.F_RATE_BCL, _ = strconv.ParseFloat(fields[14], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.F_RATE_BCU, _ = strconv.ParseFloat(fields[15], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.O_RATE, _ = strconv.ParseFloat(fields[16], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.O_RATE_BCL, _ = strconv.ParseFloat(fields[17], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.O_RATE_BCU, _ = strconv.ParseFloat(fields[18], 64)
-	}
+func (s *STAT_NBRCNT_data) fill(fields []string) {
+	s.TOTAL.UnmarshalText([]byte(fields[0]))
+	s.FBS.UnmarshalText([]byte(fields[1]))
+	s.FBS_BCL.UnmarshalText([]byte(fields[2]))
+	s.FBS_BCU.UnmarshalText([]byte(fields[3]))
+	s.FSS.UnmarshalText([]byte(fields[4]))
+	s.FSS_BCL.UnmarshalText([]byte(fields[5]))
+	s.FSS_BCU.UnmarshalText([]byte(fields[6]))
+	s.AFSS.UnmarshalText([]byte(fields[7]))
+	s.AFSS_BCL.UnmarshalText([]byte(fields[8]))
+	s.AFSS_BCU.UnmarshalText([]byte(fields[9]))
+	s.UFSS.UnmarshalText([]byte(fields[10]))
+	s.UFSS_BCL.UnmarshalText([]byte(fields[11]))
+	s.UFSS_BCU.UnmarshalText([]byte(fields[12]))
+	s.F_RATE.UnmarshalText([]byte(fields[13]))
+	s.F_RATE_BCL.UnmarshalText([]byte(fields[14]))
+	s.F_RATE_BCU.UnmarshalText([]byte(fields[15]))
+	s.O_RATE.UnmarshalText([]byte(fields[16]))
+	s.O_RATE_BCL.UnmarshalText([]byte(fields[17]))
+	s.O_RATE_BCU.UnmarshalText([]byte(fields[18]))
 }
 
-func (s *STAT_NBRCTC) fill_STAT_NBRCTC(fields []string) {
-	dataLen := len(fields) - 1
-	i := -1
-	i++
-	if i <= dataLen {
-		s.TOTAL, _ = strconv.Atoi(fields[0])
-	}
-	i++
-	if i <= dataLen {
-		s.FY_OY, _ = strconv.ParseFloat(fields[1], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.FY_ON, _ = strconv.ParseFloat(fields[2], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.FN_OY, _ = strconv.ParseFloat(fields[3], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.FN_ON, _ = strconv.ParseFloat(fields[4], 64)
-	}
+func (s *STAT_NBRCTC_data) fill(fields []string) {
+	s.TOTAL.UnmarshalText([]byte(fields[0]))
+	s.FY_OY.UnmarshalText([]byte(fields[1]))
+	s.FY_ON.UnmarshalText([]byte(fields[2]))
+	s.FN_OY.UnmarshalText([]byte(fields[3]))
+	s.FN_ON.UnmarshalText([]byte(fields[4]))
 }
 
-func (s *STAT_NBRCTS) fill_STAT_NBRCTS(fields []string) {
-	dataLen := len(fields) - 1
-	i := -1
-	i++
-	if i <= dataLen {
-		s.TOTAL, _ = strconv.Atoi(fields[0])
-	}
-	i++
-	if i <= dataLen {
-		s.BASER, _ = strconv.ParseFloat(fields[1], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.BASER_NCL, _ = strconv.ParseFloat(fields[2], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.BASER_NCU, _ = strconv.ParseFloat(fields[3], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.BASER_BCL, _ = strconv.ParseFloat(fields[4], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.BASER_BCU, _ = strconv.ParseFloat(fields[5], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.FMEAN, _ = strconv.ParseFloat(fields[6], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.FMEAN_NCL, _ = strconv.ParseFloat(fields[7], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.FMEAN_NCU, _ = strconv.ParseFloat(fields[8], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.FMEAN_BCL, _ = strconv.ParseFloat(fields[9], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.FMEAN_BCU, _ = strconv.ParseFloat(fields[10], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ACC, _ = strconv.ParseFloat(fields[11], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ACC_NCL, _ = strconv.ParseFloat(fields[12], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ACC_NCU, _ = strconv.ParseFloat(fields[13], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ACC_BCL, _ = strconv.ParseFloat(fields[14], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ACC_BCU, _ = strconv.ParseFloat(fields[15], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.FBIAS, _ = strconv.ParseFloat(fields[16], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.FBIAS_BCL, _ = strconv.ParseFloat(fields[17], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.FBIAS_BCU, _ = strconv.ParseFloat(fields[18], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.PODY, _ = strconv.ParseFloat(fields[19], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.PODY_NCL, _ = strconv.ParseFloat(fields[20], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.PODY_NCU, _ = strconv.ParseFloat(fields[21], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.PODY_BCL, _ = strconv.ParseFloat(fields[22], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.PODY_BCU, _ = strconv.ParseFloat(fields[23], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.PODN, _ = strconv.ParseFloat(fields[24], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.PODN_NCL, _ = strconv.ParseFloat(fields[25], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.PODN_NCU, _ = strconv.ParseFloat(fields[26], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.PODN_BCL, _ = strconv.ParseFloat(fields[27], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.PODN_BCU, _ = strconv.ParseFloat(fields[28], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.POFD, _ = strconv.ParseFloat(fields[29], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.POFD_NCL, _ = strconv.ParseFloat(fields[30], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.POFD_NCU, _ = strconv.ParseFloat(fields[31], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.POFD_BCL, _ = strconv.ParseFloat(fields[32], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.POFD_BCU, _ = strconv.ParseFloat(fields[33], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.FAR, _ = strconv.ParseFloat(fields[34], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.FAR_NCL, _ = strconv.ParseFloat(fields[35], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.FAR_NCU, _ = strconv.ParseFloat(fields[36], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.FAR_BCL, _ = strconv.ParseFloat(fields[37], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.FAR_BCU, _ = strconv.ParseFloat(fields[38], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.CSI, _ = strconv.ParseFloat(fields[39], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.CSI_NCL, _ = strconv.ParseFloat(fields[40], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.CSI_NCU, _ = strconv.ParseFloat(fields[41], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.CSI_BCL, _ = strconv.ParseFloat(fields[42], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.CSI_BCU, _ = strconv.ParseFloat(fields[43], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.GSS, _ = strconv.ParseFloat(fields[44], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.GSS_BCL, _ = strconv.ParseFloat(fields[45], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.GSS_BCU, _ = strconv.ParseFloat(fields[46], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.HK, _ = strconv.ParseFloat(fields[47], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.HK_NCL, _ = strconv.ParseFloat(fields[48], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.HK_NCU, _ = strconv.ParseFloat(fields[49], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.HK_BCL, _ = strconv.ParseFloat(fields[50], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.HK_BCU, _ = strconv.ParseFloat(fields[51], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.HSS, _ = strconv.ParseFloat(fields[52], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.HSS_BCL, _ = strconv.ParseFloat(fields[53], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.HSS_BCU, _ = strconv.ParseFloat(fields[54], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ODDS, _ = strconv.ParseFloat(fields[55], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ODDS_NCL, _ = strconv.ParseFloat(fields[56], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ODDS_NCU, _ = strconv.ParseFloat(fields[57], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ODDS_BCL, _ = strconv.ParseFloat(fields[58], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ODDS_BCU, _ = strconv.ParseFloat(fields[59], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.LODDS, _ = strconv.ParseFloat(fields[60], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.LODDS_NCL, _ = strconv.ParseFloat(fields[61], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.LODDS_NCU, _ = strconv.ParseFloat(fields[62], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.LODDS_BCL, _ = strconv.ParseFloat(fields[63], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.LODDS_BCU, _ = strconv.ParseFloat(fields[64], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ORSS, _ = strconv.ParseFloat(fields[65], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ORSS_NCL, _ = strconv.ParseFloat(fields[66], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ORSS_NCU, _ = strconv.ParseFloat(fields[67], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ORSS_BCL, _ = strconv.ParseFloat(fields[68], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ORSS_BCU, _ = strconv.ParseFloat(fields[69], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.EDS, _ = strconv.ParseFloat(fields[70], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.EDS_NCL, _ = strconv.ParseFloat(fields[71], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.EDS_NCU, _ = strconv.ParseFloat(fields[72], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.EDS_BCL, _ = strconv.ParseFloat(fields[73], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.EDS_BCU, _ = strconv.ParseFloat(fields[74], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.SEDS, _ = strconv.ParseFloat(fields[75], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.SEDS_NCL, _ = strconv.ParseFloat(fields[76], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.SEDS_NCU, _ = strconv.ParseFloat(fields[77], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.SEDS_BCL, _ = strconv.ParseFloat(fields[78], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.SEDS_BCU, _ = strconv.ParseFloat(fields[79], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.EDI, _ = strconv.ParseFloat(fields[80], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.EDI_NCL, _ = strconv.ParseFloat(fields[81], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.EDI_NCU, _ = strconv.ParseFloat(fields[82], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.EDI_BCL, _ = strconv.ParseFloat(fields[83], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.EDI_BCU, _ = strconv.ParseFloat(fields[84], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.SEDI, _ = strconv.ParseFloat(fields[85], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.SEDI_NCL, _ = strconv.ParseFloat(fields[86], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.SEDI_NCU, _ = strconv.ParseFloat(fields[87], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.SEDI_BCL, _ = strconv.ParseFloat(fields[88], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.SEDI_BCU, _ = strconv.ParseFloat(fields[89], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.BAGSS, _ = strconv.ParseFloat(fields[90], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.BAGSS_BCL, _ = strconv.ParseFloat(fields[91], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.BAGSS_BCU, _ = strconv.ParseFloat(fields[92], 64)
-	}
+func (s *STAT_NBRCTS_data) fill(fields []string) {
+	s.TOTAL.UnmarshalText([]byte(fields[0]))
+	s.BASER.UnmarshalText([]byte(fields[1]))
+	s.BASER_NCL.UnmarshalText([]byte(fields[2]))
+	s.BASER_NCU.UnmarshalText([]byte(fields[3]))
+	s.BASER_BCL.UnmarshalText([]byte(fields[4]))
+	s.BASER_BCU.UnmarshalText([]byte(fields[5]))
+	s.FMEAN.UnmarshalText([]byte(fields[6]))
+	s.FMEAN_NCL.UnmarshalText([]byte(fields[7]))
+	s.FMEAN_NCU.UnmarshalText([]byte(fields[8]))
+	s.FMEAN_BCL.UnmarshalText([]byte(fields[9]))
+	s.FMEAN_BCU.UnmarshalText([]byte(fields[10]))
+	s.ACC.UnmarshalText([]byte(fields[11]))
+	s.ACC_NCL.UnmarshalText([]byte(fields[12]))
+	s.ACC_NCU.UnmarshalText([]byte(fields[13]))
+	s.ACC_BCL.UnmarshalText([]byte(fields[14]))
+	s.ACC_BCU.UnmarshalText([]byte(fields[15]))
+	s.FBIAS.UnmarshalText([]byte(fields[16]))
+	s.FBIAS_BCL.UnmarshalText([]byte(fields[17]))
+	s.FBIAS_BCU.UnmarshalText([]byte(fields[18]))
+	s.PODY.UnmarshalText([]byte(fields[19]))
+	s.PODY_NCL.UnmarshalText([]byte(fields[20]))
+	s.PODY_NCU.UnmarshalText([]byte(fields[21]))
+	s.PODY_BCL.UnmarshalText([]byte(fields[22]))
+	s.PODY_BCU.UnmarshalText([]byte(fields[23]))
+	s.PODN.UnmarshalText([]byte(fields[24]))
+	s.PODN_NCL.UnmarshalText([]byte(fields[25]))
+	s.PODN_NCU.UnmarshalText([]byte(fields[26]))
+	s.PODN_BCL.UnmarshalText([]byte(fields[27]))
+	s.PODN_BCU.UnmarshalText([]byte(fields[28]))
+	s.POFD.UnmarshalText([]byte(fields[29]))
+	s.POFD_NCL.UnmarshalText([]byte(fields[30]))
+	s.POFD_NCU.UnmarshalText([]byte(fields[31]))
+	s.POFD_BCL.UnmarshalText([]byte(fields[32]))
+	s.POFD_BCU.UnmarshalText([]byte(fields[33]))
+	s.FAR.UnmarshalText([]byte(fields[34]))
+	s.FAR_NCL.UnmarshalText([]byte(fields[35]))
+	s.FAR_NCU.UnmarshalText([]byte(fields[36]))
+	s.FAR_BCL.UnmarshalText([]byte(fields[37]))
+	s.FAR_BCU.UnmarshalText([]byte(fields[38]))
+	s.CSI.UnmarshalText([]byte(fields[39]))
+	s.CSI_NCL.UnmarshalText([]byte(fields[40]))
+	s.CSI_NCU.UnmarshalText([]byte(fields[41]))
+	s.CSI_BCL.UnmarshalText([]byte(fields[42]))
+	s.CSI_BCU.UnmarshalText([]byte(fields[43]))
+	s.GSS.UnmarshalText([]byte(fields[44]))
+	s.GSS_BCL.UnmarshalText([]byte(fields[45]))
+	s.GSS_BCU.UnmarshalText([]byte(fields[46]))
+	s.HK.UnmarshalText([]byte(fields[47]))
+	s.HK_NCL.UnmarshalText([]byte(fields[48]))
+	s.HK_NCU.UnmarshalText([]byte(fields[49]))
+	s.HK_BCL.UnmarshalText([]byte(fields[50]))
+	s.HK_BCU.UnmarshalText([]byte(fields[51]))
+	s.HSS.UnmarshalText([]byte(fields[52]))
+	s.HSS_BCL.UnmarshalText([]byte(fields[53]))
+	s.HSS_BCU.UnmarshalText([]byte(fields[54]))
+	s.ODDS.UnmarshalText([]byte(fields[55]))
+	s.ODDS_NCL.UnmarshalText([]byte(fields[56]))
+	s.ODDS_NCU.UnmarshalText([]byte(fields[57]))
+	s.ODDS_BCL.UnmarshalText([]byte(fields[58]))
+	s.ODDS_BCU.UnmarshalText([]byte(fields[59]))
+	s.LODDS.UnmarshalText([]byte(fields[60]))
+	s.LODDS_NCL.UnmarshalText([]byte(fields[61]))
+	s.LODDS_NCU.UnmarshalText([]byte(fields[62]))
+	s.LODDS_BCL.UnmarshalText([]byte(fields[63]))
+	s.LODDS_BCU.UnmarshalText([]byte(fields[64]))
+	s.ORSS.UnmarshalText([]byte(fields[65]))
+	s.ORSS_NCL.UnmarshalText([]byte(fields[66]))
+	s.ORSS_NCU.UnmarshalText([]byte(fields[67]))
+	s.ORSS_BCL.UnmarshalText([]byte(fields[68]))
+	s.ORSS_BCU.UnmarshalText([]byte(fields[69]))
+	s.EDS.UnmarshalText([]byte(fields[70]))
+	s.EDS_NCL.UnmarshalText([]byte(fields[71]))
+	s.EDS_NCU.UnmarshalText([]byte(fields[72]))
+	s.EDS_BCL.UnmarshalText([]byte(fields[73]))
+	s.EDS_BCU.UnmarshalText([]byte(fields[74]))
+	s.SEDS.UnmarshalText([]byte(fields[75]))
+	s.SEDS_NCL.UnmarshalText([]byte(fields[76]))
+	s.SEDS_NCU.UnmarshalText([]byte(fields[77]))
+	s.SEDS_BCL.UnmarshalText([]byte(fields[78]))
+	s.SEDS_BCU.UnmarshalText([]byte(fields[79]))
+	s.EDI.UnmarshalText([]byte(fields[80]))
+	s.EDI_NCL.UnmarshalText([]byte(fields[81]))
+	s.EDI_NCU.UnmarshalText([]byte(fields[82]))
+	s.EDI_BCL.UnmarshalText([]byte(fields[83]))
+	s.EDI_BCU.UnmarshalText([]byte(fields[84]))
+	s.SEDI.UnmarshalText([]byte(fields[85]))
+	s.SEDI_NCL.UnmarshalText([]byte(fields[86]))
+	s.SEDI_NCU.UnmarshalText([]byte(fields[87]))
+	s.SEDI_BCL.UnmarshalText([]byte(fields[88]))
+	s.SEDI_BCU.UnmarshalText([]byte(fields[89]))
+	s.BAGSS.UnmarshalText([]byte(fields[90]))
+	s.BAGSS_BCL.UnmarshalText([]byte(fields[91]))
+	s.BAGSS_BCU.UnmarshalText([]byte(fields[92]))
 }
 
-func (s *STAT_ORANK) fill_STAT_ORANK(fields []string) {
-	dataLen := len(fields) - 1
-	i := -1
-	i++
-	if i <= dataLen {
-		s.TOTAL, _ = strconv.Atoi(fields[0])
+func (s *STAT_ORANK_data) fill(fields []string) {
+	s.TOTAL.UnmarshalText([]byte(fields[0]))
+	s.INDEX.UnmarshalText([]byte(fields[1]))
+	s.OBS_SID.UnmarshalText([]byte(fields[2]))
+	s.OBS_LAT.UnmarshalText([]byte(fields[3]))
+	s.OBS_LON.UnmarshalText([]byte(fields[4]))
+	s.OBS_LVL.UnmarshalText([]byte(fields[5]))
+	s.OBS_ELV.UnmarshalText([]byte(fields[6]))
+	s.OBS.UnmarshalText([]byte(fields[7]))
+	s.PIT.UnmarshalText([]byte(fields[8]))
+	s.RANK.UnmarshalText([]byte(fields[9]))
+	s.N_ENS_VLD.UnmarshalText([]byte(fields[10]))
+	// the first field of the repeating fields is the TOTAL, the second field is the 1st dimenSion of the 1st sequence (there might be only one sequence)
+	var value validtypes.ValidInt
+	count, err := strconv.Atoi(fields[11])
+	if err != nil {
+		count = 0
 	}
-	i++
-	if i <= dataLen {
-		s.INDEX, _ = strconv.Atoi(fields[1])
-	}
-	i++
-	if i <= dataLen {
-		if fields[2] != "NA" {
-			s.OBS_SID = fields[2]
-		}
-	}
-	i++
-	if i <= dataLen {
-		s.OBS_LAT, _ = strconv.ParseFloat(fields[3], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.OBS_LON, _ = strconv.ParseFloat(fields[4], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.OBS_LVL, _ = strconv.ParseFloat(fields[5], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.OBS_ELV, _ = strconv.ParseFloat(fields[6], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.OBS, _ = strconv.ParseFloat(fields[7], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.PIT, _ = strconv.ParseFloat(fields[8], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.RANK, _ = strconv.Atoi(fields[9])
-	}
-	i++
-	if i <= dataLen {
-		s.N_ENS_VLD, _ = strconv.Atoi(fields[10])
-	}
-	i++
-	if i <= dataLen { // the first field of the repeating fields is the TOTAL, the second field is the 1st dimenSion of the 1st sequence (there might be only one sequence)
-		var value interface{}
-		count, err := strconv.Atoi(fields[11])
-		if err != nil {
-			count = 0
-		}
-		keyPrefixes := []string{"ENS_"}
-		s.ENS = make(map[string]interface{})
-		for group := 1; group <= count; group++ {
-			for index := 12; index <= len(keyPrefixes); index++ {
-				key := fmt.Sprintf("%s_%d", keyPrefixes[index-1], index)
-				if index > len(fields) { // sometimes the data line is truncated - we will set expected data to "NA"
-					value = "NA"
-				} else {
-					value, err = strconv.Atoi(fields[index])
-					if err != nil { // sometimes there can be these NA values in the data, which will be left out of json
-						value = "NA"
-					}
-				}
-				s.ENS[key] = value
+	keyPrefixes := []string{"ENS_"}
+	s.ENS = make(map[string]interface{})
+	for group := 1; group <= count; group++ {
+		for index := 12; index <= len(keyPrefixes); index++ {
+			key := fmt.Sprintf("%s_%d", keyPrefixes[index-1], index)
+			if index > len(fields) { // sometimes the data line is truncated - invalidate that field
+				value.Reset()
+			} else {
+				value.UnmarshalText([]byte(fields[index]))
 			}
+			s.ENS[key] = value
 		}
 	}
-	i++
-	if i <= dataLen {
-		if fields[13] != "NA" {
-			s.OBS_QC = fields[13]
-		}
-	}
-	i++
-	if i <= dataLen {
-		s.ENS_MEAN, _ = strconv.Atoi(fields[14])
-	}
-	i++
-	if i <= dataLen {
-		s.CLIMO_MEAN, _ = strconv.ParseFloat(fields[15], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.SPREAD, _ = strconv.ParseFloat(fields[16], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ENS_MEAN_OERR, _ = strconv.Atoi(fields[17])
-	}
-	i++
-	if i <= dataLen {
-		s.SPREAD_OERR, _ = strconv.ParseFloat(fields[18], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.SPREAD_PLUS_OERR, _ = strconv.ParseFloat(fields[19], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.CLIMO_STDEV, _ = strconv.ParseFloat(fields[20], 64)
-	}
+	s.OBS_QC.UnmarshalText([]byte(fields[13]))
+	s.ENS_MEAN.UnmarshalText([]byte(fields[14]))
+	s.CLIMO_MEAN.UnmarshalText([]byte(fields[15]))
+	s.SPREAD.UnmarshalText([]byte(fields[16]))
+	s.ENS_MEAN_OERR.UnmarshalText([]byte(fields[17]))
+	s.SPREAD_OERR.UnmarshalText([]byte(fields[18]))
+	s.SPREAD_PLUS_OERR.UnmarshalText([]byte(fields[19]))
+	s.CLIMO_STDEV.UnmarshalText([]byte(fields[20]))
 }
 
-func (s *STAT_PCT) fill_STAT_PCT(fields []string) {
-	dataLen := len(fields) - 1
-	i := -1
-	i++
-	if i <= dataLen {
-		s.TOTAL, _ = strconv.Atoi(fields[0])
+func (s *STAT_PCT_data) fill(fields []string) {
+	s.TOTAL.UnmarshalText([]byte(fields[0]))
+	// the first field of the repeating fields is the TOTAL, the second field is the 1st dimenSion of the 1st sequence (there might be only one sequence)
+	var value validtypes.ValidFloat
+	count, err := strconv.Atoi(fields[1])
+	if err != nil {
+		count = 0
 	}
-	i++
-	if i <= dataLen { // the first field of the repeating fields is the TOTAL, the second field is the 1st dimenSion of the 1st sequence (there might be only one sequence)
-		var value interface{}
-		count, err := strconv.Atoi(fields[1])
-		if err != nil {
-			count = 0
-		}
-		keyPrefixes := []string{"THRESH_", "OY_", "ON_"}
-		s.THRESH = make(map[string]interface{})
-		for group := 1; group <= count; group++ {
-			for index := 2; index <= len(keyPrefixes); index++ {
-				key := fmt.Sprintf("%s_%d", keyPrefixes[index-1], index)
-				if index > len(fields) { // sometimes the data line is truncated - we will set expected data to "NA"
-					value = "NA"
-				} else {
-					value, err = strconv.ParseFloat(fields[index], 64)
-					if err != nil { // sometimes there can be these NA values in the data, which will be left out of json
-						value = "NA"
-					}
-				}
-				s.THRESH[key] = value
+	keyPrefixes := []string{"THRESH_", "OY_", "ON_"}
+	s.THRESH = make(map[string]interface{})
+	for group := 1; group <= count; group++ {
+		for index := 2; index <= len(keyPrefixes); index++ {
+			key := fmt.Sprintf("%s_%d", keyPrefixes[index-1], index)
+			if index > len(fields) { // sometimes the data line is truncated - invalidate that field
+				value.Reset()
+			} else {
+				value.UnmarshalText([]byte(fields[index]))
 			}
+			s.THRESH[key] = value
 		}
 	}
 }
 
-func (s *STAT_PHIST) fill_STAT_PHIST(fields []string) {
-	dataLen := len(fields) - 1
-	i := -1
-	i++
-	if i <= dataLen {
-		s.TOTAL, _ = strconv.Atoi(fields[0])
+func (s *STAT_PHIST_data) fill(fields []string) {
+	s.TOTAL.UnmarshalText([]byte(fields[0]))
+	s.BIN_SIZE.UnmarshalText([]byte(fields[1]))
+	// the first field of the repeating fields is the TOTAL, the second field is the 1st dimenSion of the 1st sequence (there might be only one sequence)
+	var value validtypes.ValidInt
+	count, err := strconv.Atoi(fields[2])
+	if err != nil {
+		count = 0
 	}
-	i++
-	if i <= dataLen {
-		s.BIN_SIZE, _ = strconv.Atoi(fields[1])
-	}
-	i++
-	if i <= dataLen { // the first field of the repeating fields is the TOTAL, the second field is the 1st dimenSion of the 1st sequence (there might be only one sequence)
-		var value interface{}
-		count, err := strconv.Atoi(fields[2])
-		if err != nil {
-			count = 0
-		}
-		keyPrefixes := []string{"BIN_"}
-		s.BIN = make(map[string]interface{})
-		for group := 1; group <= count; group++ {
-			for index := 3; index <= len(keyPrefixes); index++ {
-				key := fmt.Sprintf("%s_%d", keyPrefixes[index-1], index)
-				if index > len(fields) { // sometimes the data line is truncated - we will set expected data to "NA"
-					value = "NA"
-				} else {
-					value, err = strconv.Atoi(fields[index])
-					if err != nil { // sometimes there can be these NA values in the data, which will be left out of json
-						value = "NA"
-					}
-				}
-				s.BIN[key] = value
+	keyPrefixes := []string{"BIN_"}
+	s.BIN = make(map[string]interface{})
+	for group := 1; group <= count; group++ {
+		for index := 3; index <= len(keyPrefixes); index++ {
+			key := fmt.Sprintf("%s_%d", keyPrefixes[index-1], index)
+			if index > len(fields) { // sometimes the data line is truncated - invalidate that field
+				value.Reset()
+			} else {
+				value.UnmarshalText([]byte(fields[index]))
 			}
+			s.BIN[key] = value
 		}
 	}
 }
 
-func (s *STAT_PJC) fill_STAT_PJC(fields []string) {
-	dataLen := len(fields) - 1
-	i := -1
-	i++
-	if i <= dataLen {
-		s.TOTAL, _ = strconv.Atoi(fields[0])
+func (s *STAT_PJC_data) fill(fields []string) {
+	s.TOTAL.UnmarshalText([]byte(fields[0]))
+	// the first field of the repeating fields is the TOTAL, the second field is the 1st dimenSion of the 1st sequence (there might be only one sequence)
+	var value validtypes.ValidFloat
+	count, err := strconv.Atoi(fields[1])
+	if err != nil {
+		count = 0
 	}
-	i++
-	if i <= dataLen { // the first field of the repeating fields is the TOTAL, the second field is the 1st dimenSion of the 1st sequence (there might be only one sequence)
-		var value interface{}
-		count, err := strconv.Atoi(fields[1])
-		if err != nil {
-			count = 0
-		}
-		keyPrefixes := []string{"THRESH_", "OY_TP_", "ON_TP_", "CALIBRATION_", "REFINEMENT", "LIKELIHOOD_", "BASER_"}
-		s.THRESH = make(map[string]interface{})
-		for group := 1; group <= count; group++ {
-			for index := 2; index <= len(keyPrefixes); index++ {
-				key := fmt.Sprintf("%s_%d", keyPrefixes[index-1], index)
-				if index > len(fields) { // sometimes the data line is truncated - we will set expected data to "NA"
-					value = "NA"
-				} else {
-					value, err = strconv.ParseFloat(fields[index], 64)
-					if err != nil { // sometimes there can be these NA values in the data, which will be left out of json
-						value = "NA"
-					}
-				}
-				s.THRESH[key] = value
+	keyPrefixes := []string{"THRESH_", "OY_TP_", "ON_TP_", "CALIBRATION_", "REFINEMENT", "LIKELIHOOD_", "BASER_"}
+	s.THRESH = make(map[string]interface{})
+	for group := 1; group <= count; group++ {
+		for index := 2; index <= len(keyPrefixes); index++ {
+			key := fmt.Sprintf("%s_%d", keyPrefixes[index-1], index)
+			if index > len(fields) { // sometimes the data line is truncated - invalidate that field
+				value.Reset()
+			} else {
+				value.UnmarshalText([]byte(fields[index]))
 			}
+			s.THRESH[key] = value
 		}
 	}
 }
 
-func (s *STAT_PRC) fill_STAT_PRC(fields []string) {
-	dataLen := len(fields) - 1
-	i := -1
-	i++
-	if i <= dataLen {
-		s.TOTAL, _ = strconv.Atoi(fields[0])
+func (s *STAT_PRC_data) fill(fields []string) {
+	s.TOTAL.UnmarshalText([]byte(fields[0]))
+	// the first field of the repeating fields is the TOTAL, the second field is the 1st dimenSion of the 1st sequence (there might be only one sequence)
+	var value validtypes.ValidFloat
+	count, err := strconv.Atoi(fields[1])
+	if err != nil {
+		count = 0
 	}
-	i++
-	if i <= dataLen { // the first field of the repeating fields is the TOTAL, the second field is the 1st dimenSion of the 1st sequence (there might be only one sequence)
-		var value interface{}
-		count, err := strconv.Atoi(fields[1])
-		if err != nil {
-			count = 0
-		}
-		keyPrefixes := []string{"THRESH_", "PODY_", "POFD_"}
-		s.THRESH = make(map[string]interface{})
-		for group := 1; group <= count; group++ {
-			for index := 2; index <= len(keyPrefixes); index++ {
-				key := fmt.Sprintf("%s_%d", keyPrefixes[index-1], index)
-				if index > len(fields) { // sometimes the data line is truncated - we will set expected data to "NA"
-					value = "NA"
-				} else {
-					value, err = strconv.ParseFloat(fields[index], 64)
-					if err != nil { // sometimes there can be these NA values in the data, which will be left out of json
-						value = "NA"
-					}
-				}
-				s.THRESH[key] = value
+	keyPrefixes := []string{"THRESH_", "PODY_", "POFD_"}
+	s.THRESH = make(map[string]interface{})
+	for group := 1; group <= count; group++ {
+		for index := 2; index <= len(keyPrefixes); index++ {
+			key := fmt.Sprintf("%s_%d", keyPrefixes[index-1], index)
+			if index > len(fields) { // sometimes the data line is truncated - invalidate that field
+				value.Reset()
+			} else {
+				value.UnmarshalText([]byte(fields[index]))
 			}
+			s.THRESH[key] = value
 		}
 	}
 }
 
-func (s *STAT_PSTD) fill_STAT_PSTD(fields []string) {
-	dataLen := len(fields) - 1
-	i := -1
-	i++
-	if i <= dataLen {
-		s.TOTAL, _ = strconv.Atoi(fields[0])
+func (s *STAT_PSTD_data) fill(fields []string) {
+	s.TOTAL.UnmarshalText([]byte(fields[0]))
+	// the first field of the repeating fields is the TOTAL, the second field is the 1st dimenSion of the 1st sequence (there might be only one sequence)
+	var value validtypes.ValidFloat
+	count, err := strconv.Atoi(fields[1])
+	if err != nil {
+		count = 0
 	}
-	i++
-	if i <= dataLen { // the first field of the repeating fields is the TOTAL, the second field is the 1st dimenSion of the 1st sequence (there might be only one sequence)
-		var value interface{}
-		count, err := strconv.Atoi(fields[1])
-		if err != nil {
-			count = 0
-		}
-		keyPrefixes := []string{"THRESH_"}
-		s.THRESH = make(map[string]interface{})
-		for group := 1; group <= count; group++ {
-			for index := 2; index <= len(keyPrefixes); index++ {
-				key := fmt.Sprintf("%s_%d", keyPrefixes[index-1], index)
-				if index > len(fields) { // sometimes the data line is truncated - we will set expected data to "NA"
-					value = "NA"
-				} else {
-					value, err = strconv.ParseFloat(fields[index], 64)
-					if err != nil { // sometimes there can be these NA values in the data, which will be left out of json
-						value = "NA"
-					}
-				}
-				s.THRESH[key] = value
+	keyPrefixes := []string{"THRESH_"}
+	s.THRESH = make(map[string]interface{})
+	for group := 1; group <= count; group++ {
+		for index := 2; index <= len(keyPrefixes); index++ {
+			key := fmt.Sprintf("%s_%d", keyPrefixes[index-1], index)
+			if index > len(fields) { // sometimes the data line is truncated - invalidate that field
+				value.Reset()
+			} else {
+				value.UnmarshalText([]byte(fields[index]))
 			}
+			s.THRESH[key] = value
 		}
 	}
-	i++
-	if i <= dataLen {
-		s.BASER_NCL, _ = strconv.ParseFloat(fields[3], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.BASER_NCU, _ = strconv.ParseFloat(fields[4], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.RELIABILITY, _ = strconv.ParseFloat(fields[5], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.RESOLUTION, _ = strconv.ParseFloat(fields[6], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.UNCERTAINTY, _ = strconv.ParseFloat(fields[7], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ROC_AUC, _ = strconv.ParseFloat(fields[8], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.BRIER, _ = strconv.ParseFloat(fields[9], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.BRIER_NCL, _ = strconv.ParseFloat(fields[10], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.BRIER_NCU, _ = strconv.ParseFloat(fields[11], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.BRIERCL, _ = strconv.ParseFloat(fields[12], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.BRIERCL_NCL, _ = strconv.ParseFloat(fields[13], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.BRIERCL_NCU, _ = strconv.ParseFloat(fields[14], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.BSS, _ = strconv.ParseFloat(fields[15], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.BSS_SMPL, _ = strconv.ParseFloat(fields[16], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.THRESH_I, _ = strconv.Atoi(fields[17])
-	}
+	s.BASER_NCL.UnmarshalText([]byte(fields[3]))
+	s.BASER_NCU.UnmarshalText([]byte(fields[4]))
+	s.RELIABILITY.UnmarshalText([]byte(fields[5]))
+	s.RESOLUTION.UnmarshalText([]byte(fields[6]))
+	s.UNCERTAINTY.UnmarshalText([]byte(fields[7]))
+	s.ROC_AUC.UnmarshalText([]byte(fields[8]))
+	s.BRIER.UnmarshalText([]byte(fields[9]))
+	s.BRIER_NCL.UnmarshalText([]byte(fields[10]))
+	s.BRIER_NCU.UnmarshalText([]byte(fields[11]))
+	s.BRIERCL.UnmarshalText([]byte(fields[12]))
+	s.BRIERCL_NCL.UnmarshalText([]byte(fields[13]))
+	s.BRIERCL_NCU.UnmarshalText([]byte(fields[14]))
+	s.BSS.UnmarshalText([]byte(fields[15]))
+	s.BSS_SMPL.UnmarshalText([]byte(fields[16]))
+	s.THRESH_I.UnmarshalText([]byte(fields[17]))
 }
 
-func (s *STAT_RELP) fill_STAT_RELP(fields []string) {
-	dataLen := len(fields) - 1
-	i := -1
-	i++
-	if i <= dataLen {
-		s.TOTAL, _ = strconv.Atoi(fields[0])
+func (s *STAT_RELP_data) fill(fields []string) {
+	s.TOTAL.UnmarshalText([]byte(fields[0]))
+	// the first field of the repeating fields is the TOTAL, the second field is the 1st dimenSion of the 1st sequence (there might be only one sequence)
+	var value validtypes.ValidFloat
+	count, err := strconv.Atoi(fields[1])
+	if err != nil {
+		count = 0
 	}
-	i++
-	if i <= dataLen { // the first field of the repeating fields is the TOTAL, the second field is the 1st dimenSion of the 1st sequence (there might be only one sequence)
-		var value interface{}
-		count, err := strconv.Atoi(fields[1])
-		if err != nil {
-			count = 0
-		}
-		keyPrefixes := []string{"RELP_"}
-		s.ENS = make(map[string]interface{})
-		for group := 1; group <= count; group++ {
-			for index := 2; index <= len(keyPrefixes); index++ {
-				key := fmt.Sprintf("%s_%d", keyPrefixes[index-1], index)
-				if index > len(fields) { // sometimes the data line is truncated - we will set expected data to "NA"
-					value = "NA"
-				} else {
-					value, err = strconv.ParseFloat(fields[index], 64)
-					if err != nil { // sometimes there can be these NA values in the data, which will be left out of json
-						value = "NA"
-					}
-				}
-				s.ENS[key] = value
+	keyPrefixes := []string{"RELP_"}
+	s.ENS = make(map[string]interface{})
+	for group := 1; group <= count; group++ {
+		for index := 2; index <= len(keyPrefixes); index++ {
+			key := fmt.Sprintf("%s_%d", keyPrefixes[index-1], index)
+			if index > len(fields) { // sometimes the data line is truncated - invalidate that field
+				value.Reset()
+			} else {
+				value.UnmarshalText([]byte(fields[index]))
 			}
+			s.ENS[key] = value
 		}
 	}
 }
 
-func (s *STAT_RHIST) fill_STAT_RHIST(fields []string) {
-	dataLen := len(fields) - 1
-	i := -1
-	i++
-	if i <= dataLen {
-		s.TOTAL, _ = strconv.Atoi(fields[0])
+func (s *STAT_RHIST_data) fill(fields []string) {
+	s.TOTAL.UnmarshalText([]byte(fields[0]))
+	// the first field of the repeating fields is the TOTAL, the second field is the 1st dimenSion of the 1st sequence (there might be only one sequence)
+	var value validtypes.ValidInt
+	count, err := strconv.Atoi(fields[1])
+	if err != nil {
+		count = 0
 	}
-	i++
-	if i <= dataLen { // the first field of the repeating fields is the TOTAL, the second field is the 1st dimenSion of the 1st sequence (there might be only one sequence)
-		var value interface{}
-		count, err := strconv.Atoi(fields[1])
-		if err != nil {
-			count = 0
-		}
-		keyPrefixes := []string{"RANK_"}
-		s.RANK = make(map[string]interface{})
-		for group := 1; group <= count; group++ {
-			for index := 2; index <= len(keyPrefixes); index++ {
-				key := fmt.Sprintf("%s_%d", keyPrefixes[index-1], index)
-				if index > len(fields) { // sometimes the data line is truncated - we will set expected data to "NA"
-					value = "NA"
-				} else {
-					value, err = strconv.Atoi(fields[index])
-					if err != nil { // sometimes there can be these NA values in the data, which will be left out of json
-						value = "NA"
-					}
-				}
-				s.RANK[key] = value
+	keyPrefixes := []string{"RANK_"}
+	s.RANK = make(map[string]interface{})
+	for group := 1; group <= count; group++ {
+		for index := 2; index <= len(keyPrefixes); index++ {
+			key := fmt.Sprintf("%s_%d", keyPrefixes[index-1], index)
+			if index > len(fields) { // sometimes the data line is truncated - invalidate that field
+				value.Reset()
+			} else {
+				value.UnmarshalText([]byte(fields[index]))
 			}
+			s.RANK[key] = value
 		}
 	}
 }
 
-func (s *STAT_RPS) fill_STAT_RPS(fields []string) {
-	dataLen := len(fields) - 1
-	i := -1
-	i++
-	if i <= dataLen {
-		s.TOTAL, _ = strconv.Atoi(fields[0])
-	}
-	i++
-	if i <= dataLen {
-		s.N_PROB, _ = strconv.Atoi(fields[1])
-	}
-	i++
-	if i <= dataLen {
-		s.RPS_REL, _ = strconv.ParseFloat(fields[2], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.RPS_RES, _ = strconv.ParseFloat(fields[3], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.RPS_UNC, _ = strconv.ParseFloat(fields[4], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.RPS, _ = strconv.ParseFloat(fields[5], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.RPSS, _ = strconv.ParseFloat(fields[6], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.RPSS_SMPL, _ = strconv.ParseFloat(fields[7], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.RPS_COMP, _ = strconv.ParseFloat(fields[8], 64)
-	}
+func (s *STAT_RPS_data) fill(fields []string) {
+	s.TOTAL.UnmarshalText([]byte(fields[0]))
+	s.N_PROB.UnmarshalText([]byte(fields[1]))
+	s.RPS_REL.UnmarshalText([]byte(fields[2]))
+	s.RPS_RES.UnmarshalText([]byte(fields[3]))
+	s.RPS_UNC.UnmarshalText([]byte(fields[4]))
+	s.RPS.UnmarshalText([]byte(fields[5]))
+	s.RPSS.UnmarshalText([]byte(fields[6]))
+	s.RPSS_SMPL.UnmarshalText([]byte(fields[7]))
+	s.RPS_COMP.UnmarshalText([]byte(fields[8]))
 }
 
-func (s *STAT_SAL1L2) fill_STAT_SAL1L2(fields []string) {
-	dataLen := len(fields) - 1
-	i := -1
-	i++
-	if i <= dataLen {
-		s.TOTAL, _ = strconv.Atoi(fields[0])
-	}
-	i++
-	if i <= dataLen {
-		s.FABAR, _ = strconv.ParseFloat(fields[1], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.OABAR, _ = strconv.ParseFloat(fields[2], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.FOABAR, _ = strconv.ParseFloat(fields[3], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.FFABAR, _ = strconv.ParseFloat(fields[4], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.OOABAR, _ = strconv.ParseFloat(fields[5], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.MAE, _ = strconv.ParseFloat(fields[6], 64)
-	}
+func (s *STAT_SAL1L2_data) fill(fields []string) {
+	s.TOTAL.UnmarshalText([]byte(fields[0]))
+	s.FABAR.UnmarshalText([]byte(fields[1]))
+	s.OABAR.UnmarshalText([]byte(fields[2]))
+	s.FOABAR.UnmarshalText([]byte(fields[3]))
+	s.FFABAR.UnmarshalText([]byte(fields[4]))
+	s.OOABAR.UnmarshalText([]byte(fields[5]))
+	s.MAE.UnmarshalText([]byte(fields[6]))
 }
 
-func (s *STAT_SL1L2) fill_STAT_SL1L2(fields []string) {
-	dataLen := len(fields) - 1
-	i := -1
-	i++
-	if i <= dataLen {
-		s.TOTAL, _ = strconv.Atoi(fields[0])
-	}
-	i++
-	if i <= dataLen {
-		s.FBAR, _ = strconv.ParseFloat(fields[1], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.OBAR, _ = strconv.ParseFloat(fields[2], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.FOBAR, _ = strconv.ParseFloat(fields[3], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.FFBAR, _ = strconv.ParseFloat(fields[4], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.OOBAR, _ = strconv.ParseFloat(fields[5], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.MAE, _ = strconv.ParseFloat(fields[6], 64)
-	}
+func (s *STAT_SL1L2_data) fill(fields []string) {
+	s.TOTAL.UnmarshalText([]byte(fields[0]))
+	s.FBAR.UnmarshalText([]byte(fields[1]))
+	s.OBAR.UnmarshalText([]byte(fields[2]))
+	s.FOBAR.UnmarshalText([]byte(fields[3]))
+	s.FFBAR.UnmarshalText([]byte(fields[4]))
+	s.OOBAR.UnmarshalText([]byte(fields[5]))
+	s.MAE.UnmarshalText([]byte(fields[6]))
 }
 
-func (s *STAT_SSVAR) fill_STAT_SSVAR(fields []string) {
-	dataLen := len(fields) - 1
-	i := -1
-	i++
-	if i <= dataLen {
-		s.TOTAL, _ = strconv.Atoi(fields[0])
-	}
-	i++
-	if i <= dataLen {
-		s.N_BIN, _ = strconv.Atoi(fields[1])
-	}
-	i++
-	if i <= dataLen {
-		s.BIN_I, _ = strconv.Atoi(fields[2])
-	}
-	i++
-	if i <= dataLen {
-		s.BIN_N, _ = strconv.Atoi(fields[3])
-	}
-	i++
-	if i <= dataLen {
-		s.VAR_MIN, _ = strconv.ParseFloat(fields[4], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.VAR_MAX, _ = strconv.ParseFloat(fields[5], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.VAR_MEAN, _ = strconv.ParseFloat(fields[6], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.FBAR, _ = strconv.ParseFloat(fields[7], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.OBAR, _ = strconv.ParseFloat(fields[8], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.FOBAR, _ = strconv.ParseFloat(fields[9], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.FFBAR, _ = strconv.ParseFloat(fields[10], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.OOBAR, _ = strconv.ParseFloat(fields[11], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.FBAR_NCL, _ = strconv.ParseFloat(fields[12], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.FBAR_NCU, _ = strconv.ParseFloat(fields[13], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.FSTDEV, _ = strconv.ParseFloat(fields[14], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.FSTDEV_NCL, _ = strconv.ParseFloat(fields[15], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.FSTDEV_NCU, _ = strconv.ParseFloat(fields[16], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.OBAR_NCL, _ = strconv.ParseFloat(fields[17], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.OBAR_NCU, _ = strconv.ParseFloat(fields[18], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.OSTDEV, _ = strconv.ParseFloat(fields[19], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.OSTDEV_NCL, _ = strconv.ParseFloat(fields[20], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.OSTDEV_NCU, _ = strconv.ParseFloat(fields[21], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.PR_CORR, _ = strconv.ParseFloat(fields[22], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.PR_CORR_NCL, _ = strconv.ParseFloat(fields[23], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.PR_CORR_NCU, _ = strconv.ParseFloat(fields[24], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ME, _ = strconv.ParseFloat(fields[25], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ME_NCL, _ = strconv.ParseFloat(fields[26], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ME_NCU, _ = strconv.ParseFloat(fields[27], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ESTDEV, _ = strconv.ParseFloat(fields[28], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ESTDEV_NCL, _ = strconv.ParseFloat(fields[29], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ESTDEV_NCU, _ = strconv.ParseFloat(fields[30], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.MBIAS, _ = strconv.ParseFloat(fields[31], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.MSE, _ = strconv.ParseFloat(fields[32], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.BCMSE, _ = strconv.ParseFloat(fields[33], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.RMSE, _ = strconv.ParseFloat(fields[34], 64)
-	}
+func (s *STAT_SSVAR_data) fill(fields []string) {
+	s.TOTAL.UnmarshalText([]byte(fields[0]))
+	s.N_BIN.UnmarshalText([]byte(fields[1]))
+	s.BIN_I.UnmarshalText([]byte(fields[2]))
+	s.BIN_N.UnmarshalText([]byte(fields[3]))
+	s.VAR_MIN.UnmarshalText([]byte(fields[4]))
+	s.VAR_MAX.UnmarshalText([]byte(fields[5]))
+	s.VAR_MEAN.UnmarshalText([]byte(fields[6]))
+	s.FBAR.UnmarshalText([]byte(fields[7]))
+	s.OBAR.UnmarshalText([]byte(fields[8]))
+	s.FOBAR.UnmarshalText([]byte(fields[9]))
+	s.FFBAR.UnmarshalText([]byte(fields[10]))
+	s.OOBAR.UnmarshalText([]byte(fields[11]))
+	s.FBAR_NCL.UnmarshalText([]byte(fields[12]))
+	s.FBAR_NCU.UnmarshalText([]byte(fields[13]))
+	s.FSTDEV.UnmarshalText([]byte(fields[14]))
+	s.FSTDEV_NCL.UnmarshalText([]byte(fields[15]))
+	s.FSTDEV_NCU.UnmarshalText([]byte(fields[16]))
+	s.OBAR_NCL.UnmarshalText([]byte(fields[17]))
+	s.OBAR_NCU.UnmarshalText([]byte(fields[18]))
+	s.OSTDEV.UnmarshalText([]byte(fields[19]))
+	s.OSTDEV_NCL.UnmarshalText([]byte(fields[20]))
+	s.OSTDEV_NCU.UnmarshalText([]byte(fields[21]))
+	s.PR_CORR.UnmarshalText([]byte(fields[22]))
+	s.PR_CORR_NCL.UnmarshalText([]byte(fields[23]))
+	s.PR_CORR_NCU.UnmarshalText([]byte(fields[24]))
+	s.ME.UnmarshalText([]byte(fields[25]))
+	s.ME_NCL.UnmarshalText([]byte(fields[26]))
+	s.ME_NCU.UnmarshalText([]byte(fields[27]))
+	s.ESTDEV.UnmarshalText([]byte(fields[28]))
+	s.ESTDEV_NCL.UnmarshalText([]byte(fields[29]))
+	s.ESTDEV_NCU.UnmarshalText([]byte(fields[30]))
+	s.MBIAS.UnmarshalText([]byte(fields[31]))
+	s.MSE.UnmarshalText([]byte(fields[32]))
+	s.BCMSE.UnmarshalText([]byte(fields[33]))
+	s.RMSE.UnmarshalText([]byte(fields[34]))
 }
 
-func (s *STAT_VAL1L2) fill_STAT_VAL1L2(fields []string) {
-	dataLen := len(fields) - 1
-	i := -1
-	i++
-	if i <= dataLen {
-		s.TOTAL, _ = strconv.Atoi(fields[0])
-	}
-	i++
-	if i <= dataLen {
-		s.UFABAR, _ = strconv.ParseFloat(fields[1], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.VFABAR, _ = strconv.ParseFloat(fields[2], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.UOABAR, _ = strconv.ParseFloat(fields[3], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.VOABAR, _ = strconv.ParseFloat(fields[4], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.UVFOABAR, _ = strconv.ParseFloat(fields[5], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.UVFFABAR, _ = strconv.ParseFloat(fields[6], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.UVOOABAR, _ = strconv.ParseFloat(fields[7], 64)
-	}
+func (s *STAT_VAL1L2_data) fill(fields []string) {
+	s.TOTAL.UnmarshalText([]byte(fields[0]))
+	s.UFABAR.UnmarshalText([]byte(fields[1]))
+	s.VFABAR.UnmarshalText([]byte(fields[2]))
+	s.UOABAR.UnmarshalText([]byte(fields[3]))
+	s.VOABAR.UnmarshalText([]byte(fields[4]))
+	s.UVFOABAR.UnmarshalText([]byte(fields[5]))
+	s.UVFFABAR.UnmarshalText([]byte(fields[6]))
+	s.UVOOABAR.UnmarshalText([]byte(fields[7]))
 }
 
-func (s *STAT_VCNT) fill_STAT_VCNT(fields []string) {
-	dataLen := len(fields) - 1
-	i := -1
-	i++
-	if i <= dataLen {
-		s.TOTAL, _ = strconv.Atoi(fields[0])
-	}
-	i++
-	if i <= dataLen {
-		s.FBAR, _ = strconv.ParseFloat(fields[1], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.FBAR_BCL, _ = strconv.ParseFloat(fields[2], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.FBAR_BCU, _ = strconv.ParseFloat(fields[3], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.OBAR, _ = strconv.ParseFloat(fields[4], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.OBAR_BCL, _ = strconv.ParseFloat(fields[5], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.OBAR_BCU, _ = strconv.ParseFloat(fields[6], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.FS_RMS, _ = strconv.ParseFloat(fields[7], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.FS_RMS_BCL, _ = strconv.ParseFloat(fields[8], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.FS_RMS_BCU, _ = strconv.ParseFloat(fields[9], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.OS_RMS, _ = strconv.ParseFloat(fields[10], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.OS_RMS_BCL, _ = strconv.ParseFloat(fields[11], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.OS_RMS_BCU, _ = strconv.ParseFloat(fields[12], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.MSVE, _ = strconv.ParseFloat(fields[13], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.MSVE_BCL, _ = strconv.ParseFloat(fields[14], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.MSVE_BCU, _ = strconv.ParseFloat(fields[15], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.RMSVE, _ = strconv.ParseFloat(fields[16], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.RMSVE_BCL, _ = strconv.ParseFloat(fields[17], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.RMSVE_BCU, _ = strconv.ParseFloat(fields[18], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.FSTDEV, _ = strconv.ParseFloat(fields[19], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.FSTDEV_BCL, _ = strconv.ParseFloat(fields[20], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.FSTDEV_BCU, _ = strconv.ParseFloat(fields[21], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.OSTDEV, _ = strconv.ParseFloat(fields[22], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.OSTDEV_BCL, _ = strconv.ParseFloat(fields[23], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.OSTDEV_BCU, _ = strconv.ParseFloat(fields[24], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.FDIR, _ = strconv.ParseFloat(fields[25], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.FDIR_BCL, _ = strconv.ParseFloat(fields[26], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.FDIR_BCU, _ = strconv.ParseFloat(fields[27], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ODIR, _ = strconv.ParseFloat(fields[28], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ODIR_BCL, _ = strconv.ParseFloat(fields[29], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ODIR_BCU, _ = strconv.ParseFloat(fields[30], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.FBAR_SPEED, _ = strconv.ParseFloat(fields[31], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.FBAR_SPEED_BCL, _ = strconv.ParseFloat(fields[32], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.FBAR_SPEED_BCU, _ = strconv.ParseFloat(fields[33], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.OBAR_SPEED, _ = strconv.ParseFloat(fields[34], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.OBAR_SPEED_BCL, _ = strconv.ParseFloat(fields[35], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.OBAR_SPEED_BCU, _ = strconv.ParseFloat(fields[36], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.VDIFF_SPEED, _ = strconv.ParseFloat(fields[37], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.VDIFF_SPEED_BCL, _ = strconv.ParseFloat(fields[38], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.VDIFF_SPEED_BCU, _ = strconv.ParseFloat(fields[39], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.VDIFF_DIR, _ = strconv.ParseFloat(fields[40], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.VDIFF_DIR_BCL, _ = strconv.ParseFloat(fields[41], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.VDIFF_DIR_BCU, _ = strconv.ParseFloat(fields[42], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.SPEED_ERR, _ = strconv.ParseFloat(fields[43], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.SPEED_ERR_BCL, _ = strconv.ParseFloat(fields[44], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.SPEED_ERR_BCU, _ = strconv.ParseFloat(fields[45], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.SPEED_ABSERR, _ = strconv.ParseFloat(fields[46], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.SPEED_ABSERR_BCL, _ = strconv.ParseFloat(fields[47], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.SPEED_ABSERR_BCU, _ = strconv.ParseFloat(fields[48], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.DIR_ERR, _ = strconv.ParseFloat(fields[49], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.DIR_ERR_BCL, _ = strconv.ParseFloat(fields[50], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.DIR_ERR_BCU, _ = strconv.ParseFloat(fields[51], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.DIR_ABSERR, _ = strconv.ParseFloat(fields[52], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.DIR_ABSERR_BCL, _ = strconv.ParseFloat(fields[53], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.DIR_ABSERR_BCU, _ = strconv.ParseFloat(fields[54], 64)
-	}
+func (s *STAT_VCNT_data) fill(fields []string) {
+	s.TOTAL.UnmarshalText([]byte(fields[0]))
+	s.FBAR.UnmarshalText([]byte(fields[1]))
+	s.FBAR_BCL.UnmarshalText([]byte(fields[2]))
+	s.FBAR_BCU.UnmarshalText([]byte(fields[3]))
+	s.OBAR.UnmarshalText([]byte(fields[4]))
+	s.OBAR_BCL.UnmarshalText([]byte(fields[5]))
+	s.OBAR_BCU.UnmarshalText([]byte(fields[6]))
+	s.FS_RMS.UnmarshalText([]byte(fields[7]))
+	s.FS_RMS_BCL.UnmarshalText([]byte(fields[8]))
+	s.FS_RMS_BCU.UnmarshalText([]byte(fields[9]))
+	s.OS_RMS.UnmarshalText([]byte(fields[10]))
+	s.OS_RMS_BCL.UnmarshalText([]byte(fields[11]))
+	s.OS_RMS_BCU.UnmarshalText([]byte(fields[12]))
+	s.MSVE.UnmarshalText([]byte(fields[13]))
+	s.MSVE_BCL.UnmarshalText([]byte(fields[14]))
+	s.MSVE_BCU.UnmarshalText([]byte(fields[15]))
+	s.RMSVE.UnmarshalText([]byte(fields[16]))
+	s.RMSVE_BCL.UnmarshalText([]byte(fields[17]))
+	s.RMSVE_BCU.UnmarshalText([]byte(fields[18]))
+	s.FSTDEV.UnmarshalText([]byte(fields[19]))
+	s.FSTDEV_BCL.UnmarshalText([]byte(fields[20]))
+	s.FSTDEV_BCU.UnmarshalText([]byte(fields[21]))
+	s.OSTDEV.UnmarshalText([]byte(fields[22]))
+	s.OSTDEV_BCL.UnmarshalText([]byte(fields[23]))
+	s.OSTDEV_BCU.UnmarshalText([]byte(fields[24]))
+	s.FDIR.UnmarshalText([]byte(fields[25]))
+	s.FDIR_BCL.UnmarshalText([]byte(fields[26]))
+	s.FDIR_BCU.UnmarshalText([]byte(fields[27]))
+	s.ODIR.UnmarshalText([]byte(fields[28]))
+	s.ODIR_BCL.UnmarshalText([]byte(fields[29]))
+	s.ODIR_BCU.UnmarshalText([]byte(fields[30]))
+	s.FBAR_SPEED.UnmarshalText([]byte(fields[31]))
+	s.FBAR_SPEED_BCL.UnmarshalText([]byte(fields[32]))
+	s.FBAR_SPEED_BCU.UnmarshalText([]byte(fields[33]))
+	s.OBAR_SPEED.UnmarshalText([]byte(fields[34]))
+	s.OBAR_SPEED_BCL.UnmarshalText([]byte(fields[35]))
+	s.OBAR_SPEED_BCU.UnmarshalText([]byte(fields[36]))
+	s.VDIFF_SPEED.UnmarshalText([]byte(fields[37]))
+	s.VDIFF_SPEED_BCL.UnmarshalText([]byte(fields[38]))
+	s.VDIFF_SPEED_BCU.UnmarshalText([]byte(fields[39]))
+	s.VDIFF_DIR.UnmarshalText([]byte(fields[40]))
+	s.VDIFF_DIR_BCL.UnmarshalText([]byte(fields[41]))
+	s.VDIFF_DIR_BCU.UnmarshalText([]byte(fields[42]))
+	s.SPEED_ERR.UnmarshalText([]byte(fields[43]))
+	s.SPEED_ERR_BCL.UnmarshalText([]byte(fields[44]))
+	s.SPEED_ERR_BCU.UnmarshalText([]byte(fields[45]))
+	s.SPEED_ABSERR.UnmarshalText([]byte(fields[46]))
+	s.SPEED_ABSERR_BCL.UnmarshalText([]byte(fields[47]))
+	s.SPEED_ABSERR_BCU.UnmarshalText([]byte(fields[48]))
+	s.DIR_ERR.UnmarshalText([]byte(fields[49]))
+	s.DIR_ERR_BCL.UnmarshalText([]byte(fields[50]))
+	s.DIR_ERR_BCU.UnmarshalText([]byte(fields[51]))
+	s.DIR_ABSERR.UnmarshalText([]byte(fields[52]))
+	s.DIR_ABSERR_BCL.UnmarshalText([]byte(fields[53]))
+	s.DIR_ABSERR_BCU.UnmarshalText([]byte(fields[54]))
 }
 
-func (s *STAT_VL1L2) fill_STAT_VL1L2(fields []string) {
-	dataLen := len(fields) - 1
-	i := -1
-	i++
-	if i <= dataLen {
-		s.TOTAL, _ = strconv.Atoi(fields[0])
-	}
-	i++
-	if i <= dataLen {
-		s.UFBAR, _ = strconv.ParseFloat(fields[1], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.VFBAR, _ = strconv.ParseFloat(fields[2], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.UOBAR, _ = strconv.ParseFloat(fields[3], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.VOBAR, _ = strconv.ParseFloat(fields[4], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.UVFOBAR, _ = strconv.ParseFloat(fields[5], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.UVFFBAR, _ = strconv.ParseFloat(fields[6], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.UVOOBAR, _ = strconv.ParseFloat(fields[7], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.F_SPEED_BAR, _ = strconv.ParseFloat(fields[8], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.O_SPEED_BAR, _ = strconv.ParseFloat(fields[9], 64)
-	}
+func (s *STAT_VL1L2_data) fill(fields []string) {
+	s.TOTAL.UnmarshalText([]byte(fields[0]))
+	s.UFBAR.UnmarshalText([]byte(fields[1]))
+	s.VFBAR.UnmarshalText([]byte(fields[2]))
+	s.UOBAR.UnmarshalText([]byte(fields[3]))
+	s.VOBAR.UnmarshalText([]byte(fields[4]))
+	s.UVFOBAR.UnmarshalText([]byte(fields[5]))
+	s.UVFFBAR.UnmarshalText([]byte(fields[6]))
+	s.UVOOBAR.UnmarshalText([]byte(fields[7]))
+	s.F_SPEED_BAR.UnmarshalText([]byte(fields[8]))
+	s.O_SPEED_BAR.UnmarshalText([]byte(fields[9]))
 }
 
-func (s *TCST_PROBRIRW) fill_TCST_PROBRIRW(fields []string) {
-	dataLen := len(fields) - 1
-	i := -1
-	i++
-	if i <= dataLen {
-		s.ALAT, _ = strconv.ParseFloat(fields[0], 64)
+func (s *TCST_PROBRIRW_data) fill(fields []string) {
+	s.ALAT.UnmarshalText([]byte(fields[0]))
+	s.ALON.UnmarshalText([]byte(fields[1]))
+	s.BLAT.UnmarshalText([]byte(fields[2]))
+	s.BLON.UnmarshalText([]byte(fields[3]))
+	s.INITIALS.UnmarshalText([]byte(fields[4]))
+	s.TK_ERR.UnmarshalText([]byte(fields[5]))
+	s.X_ERR.UnmarshalText([]byte(fields[6]))
+	s.Y_ERR.UnmarshalText([]byte(fields[7]))
+	s.ADLAND.UnmarshalText([]byte(fields[8]))
+	s.BDLAND.UnmarshalText([]byte(fields[9]))
+	s.RIRW_BEG.UnmarshalText([]byte(fields[10]))
+	s.RIRW_END.UnmarshalText([]byte(fields[11]))
+	s.RIRW_WINDOW.UnmarshalText([]byte(fields[12]))
+	s.AWIND_END.UnmarshalText([]byte(fields[13]))
+	s.BWIND_BEG.UnmarshalText([]byte(fields[14]))
+	s.BWIND_END.UnmarshalText([]byte(fields[15]))
+	s.BDELTA.UnmarshalText([]byte(fields[16]))
+	s.BDELTA_MAX.UnmarshalText([]byte(fields[17]))
+	s.BLEVEL_BEG.UnmarshalText([]byte(fields[18]))
+	s.BLEVEL_END.UnmarshalText([]byte(fields[19]))
+	// the first field of the repeating fields is the TOTAL, the second field is the 1st dimenSion of the 1st sequence (there might be only one sequence)
+	var value validtypes.ValidInt
+	count, err := strconv.Atoi(fields[20])
+	if err != nil {
+		count = 0
 	}
-	i++
-	if i <= dataLen {
-		s.ALON, _ = strconv.ParseFloat(fields[1], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.BLAT, _ = strconv.ParseFloat(fields[2], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.BLON, _ = strconv.ParseFloat(fields[3], 64)
-	}
-	i++
-	if i <= dataLen {
-		if fields[4] != "NA" {
-			s.INITIALS = fields[4]
-		}
-	}
-	i++
-	if i <= dataLen {
-		s.TK_ERR, _ = strconv.ParseFloat(fields[5], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.X_ERR, _ = strconv.ParseFloat(fields[6], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.Y_ERR, _ = strconv.ParseFloat(fields[7], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ADLAND, _ = strconv.ParseFloat(fields[8], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.BDLAND, _ = strconv.ParseFloat(fields[9], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.RIRW_BEG, _ = strconv.Atoi(fields[10])
-	}
-	i++
-	if i <= dataLen {
-		s.RIRW_END, _ = strconv.Atoi(fields[11])
-	}
-	i++
-	if i <= dataLen {
-		s.RIRW_WINDOW, _ = strconv.Atoi(fields[12])
-	}
-	i++
-	if i <= dataLen {
-		s.AWIND_END, _ = strconv.ParseFloat(fields[13], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.BWIND_BEG, _ = strconv.ParseFloat(fields[14], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.BWIND_END, _ = strconv.ParseFloat(fields[15], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.BDELTA, _ = strconv.ParseFloat(fields[16], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.BDELTA_MAX, _ = strconv.ParseFloat(fields[17], 64)
-	}
-	i++
-	if i <= dataLen {
-		if fields[18] != "NA" {
-			s.BLEVEL_BEG = fields[18]
-		}
-	}
-	i++
-	if i <= dataLen {
-		if fields[19] != "NA" {
-			s.BLEVEL_END = fields[19]
-		}
-	}
-	i++
-	if i <= dataLen { // the first field of the repeating fields is the TOTAL, the second field is the 1st dimenSion of the 1st sequence (there might be only one sequence)
-		var value interface{}
-		count, err := strconv.Atoi(fields[20])
-		if err != nil {
-			count = 0
-		}
-		keyPrefixes := []string{"THRESH_", "PROB_"}
-		s.THRESH = make(map[string]interface{})
-		for group := 1; group <= count; group++ {
-			for index := 21; index <= len(keyPrefixes); index++ {
-				key := fmt.Sprintf("%s_%d", keyPrefixes[index-1], index)
-				if index > len(fields) { // sometimes the data line is truncated - we will set expected data to "NA"
-					value = "NA"
-				} else {
-					value, err = strconv.Atoi(fields[index])
-					if err != nil { // sometimes there can be these NA values in the data, which will be left out of json
-						value = "NA"
-					}
-				}
-				s.THRESH[key] = value
+	keyPrefixes := []string{"THRESH_", "PROB_"}
+	s.THRESH = make(map[string]interface{})
+	for group := 1; group <= count; group++ {
+		for index := 21; index <= len(keyPrefixes); index++ {
+			key := fmt.Sprintf("%s_%d", keyPrefixes[index-1], index)
+			if index > len(fields) { // sometimes the data line is truncated - invalidate that field
+				value.Reset()
+			} else {
+				value.UnmarshalText([]byte(fields[index]))
 			}
+			s.THRESH[key] = value
 		}
 	}
-	i++
-	if i <= dataLen {
-		s.INIT, _ = strconv.Atoi(fields[23])
-	}
+	s.INIT.UnmarshalText([]byte(fields[23]))
 }
 
-func (s *TCST_TCMPR) fill_TCST_TCMPR(fields []string) {
-	dataLen := len(fields) - 1
-	i := -1
-	i++
-	if i <= dataLen {
-		s.TOTAL, _ = strconv.Atoi(fields[0])
-	}
-	i++
-	if i <= dataLen {
-		s.INDEX, _ = strconv.Atoi(fields[1])
-	}
-	i++
-	if i <= dataLen {
-		if fields[2] != "NA" {
-			s.LEVEL = fields[2]
-		}
-	}
-	i++
-	if i <= dataLen {
-		if fields[3] != "NA" {
-			s.WATCH_WARN = fields[3]
-		}
-	}
-	i++
-	if i <= dataLen {
-		if fields[4] != "NA" {
-			s.INITIALS = fields[4]
-		}
-	}
-	i++
-	if i <= dataLen {
-		s.ALAT, _ = strconv.ParseFloat(fields[5], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ALON, _ = strconv.ParseFloat(fields[6], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.BLAT, _ = strconv.ParseFloat(fields[7], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.BLON, _ = strconv.ParseFloat(fields[8], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.TK_ERR, _ = strconv.ParseFloat(fields[9], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.X_ERR, _ = strconv.ParseFloat(fields[10], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.Y_ERR, _ = strconv.ParseFloat(fields[11], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ALTK_ERR, _ = strconv.ParseFloat(fields[12], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.CRTK_ERR, _ = strconv.ParseFloat(fields[13], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ADLAND, _ = strconv.ParseFloat(fields[14], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.BDLAND, _ = strconv.ParseFloat(fields[15], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.AMSLP, _ = strconv.ParseFloat(fields[16], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.BMSLP, _ = strconv.ParseFloat(fields[17], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.AMAX_WIND, _ = strconv.ParseFloat(fields[18], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.BMAX_WIND, _ = strconv.ParseFloat(fields[19], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.AAL_WIND_34, _ = strconv.ParseFloat(fields[20], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.BAL_WIND_34, _ = strconv.ParseFloat(fields[21], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ANE_WIND_34, _ = strconv.ParseFloat(fields[22], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.BNE_WIND_34, _ = strconv.ParseFloat(fields[23], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ASE_WIND_34, _ = strconv.ParseFloat(fields[24], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.BSE_WIND_34, _ = strconv.ParseFloat(fields[25], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ASW_WIND_34, _ = strconv.ParseFloat(fields[26], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.BSW_WIND_34, _ = strconv.ParseFloat(fields[27], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ANW_WIND_34, _ = strconv.ParseFloat(fields[28], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.BNW_WIND_34, _ = strconv.ParseFloat(fields[29], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.AAL_WIND_50, _ = strconv.ParseFloat(fields[30], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.BAL_WIND_50, _ = strconv.ParseFloat(fields[31], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ANE_WIND_50, _ = strconv.ParseFloat(fields[32], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.BNE_WIND_50, _ = strconv.ParseFloat(fields[33], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ASE_WIND_50, _ = strconv.ParseFloat(fields[34], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.BSE_WIND_50, _ = strconv.ParseFloat(fields[35], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ASW_WIND_50, _ = strconv.ParseFloat(fields[36], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.BSW_WIND_50, _ = strconv.ParseFloat(fields[37], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ANW_WIND_50, _ = strconv.ParseFloat(fields[38], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.BNW_WIND_50, _ = strconv.ParseFloat(fields[39], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.AAL_WIND_64, _ = strconv.ParseFloat(fields[40], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.BAL_WIND_64, _ = strconv.ParseFloat(fields[41], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ANE_WIND_64, _ = strconv.ParseFloat(fields[42], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.BNE_WIND_64, _ = strconv.ParseFloat(fields[43], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ASE_WIND_64, _ = strconv.ParseFloat(fields[44], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.BSE_WIND_64, _ = strconv.ParseFloat(fields[45], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ASW_WIND_64, _ = strconv.ParseFloat(fields[46], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.BSW_WIND_64, _ = strconv.ParseFloat(fields[47], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ANW_WIND_64, _ = strconv.ParseFloat(fields[48], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.BNW_WIND_64, _ = strconv.ParseFloat(fields[49], 64)
-	}
-	i++
-	if i <= dataLen {
-		if fields[50] != "NA" {
-			s.ARADP = fields[50]
-		}
-	}
-	i++
-	if i <= dataLen {
-		s.BRADP, _ = strconv.ParseFloat(fields[51], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ARRP, _ = strconv.Atoi(fields[52])
-	}
-	i++
-	if i <= dataLen {
-		s.BRRP, _ = strconv.ParseFloat(fields[53], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.AMRD, _ = strconv.Atoi(fields[54])
-	}
-	i++
-	if i <= dataLen {
-		s.BMRD, _ = strconv.ParseFloat(fields[55], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.AGUSTS, _ = strconv.Atoi(fields[56])
-	}
-	i++
-	if i <= dataLen {
-		s.BGUSTS, _ = strconv.ParseFloat(fields[57], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.AEYE, _ = strconv.Atoi(fields[58])
-	}
-	i++
-	if i <= dataLen {
-		s.BEYE, _ = strconv.ParseFloat(fields[59], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ADIR, _ = strconv.Atoi(fields[60])
-	}
-	i++
-	if i <= dataLen {
-		s.BDIR, _ = strconv.ParseFloat(fields[61], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ASPEED, _ = strconv.Atoi(fields[62])
-	}
-	i++
-	if i <= dataLen {
-		s.BSPEED, _ = strconv.ParseFloat(fields[63], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.ADEPTH, _ = strconv.Atoi(fields[64])
-	}
-	i++
-	if i <= dataLen {
-		s.BDEPTH, _ = strconv.ParseFloat(fields[65], 64)
-	}
-	i++
-	if i <= dataLen {
-		s.INIT, _ = strconv.Atoi(fields[66])
-	}
+func (s *TCST_TCMPR_data) fill(fields []string) {
+	s.TOTAL.UnmarshalText([]byte(fields[0]))
+	s.INDEX.UnmarshalText([]byte(fields[1]))
+	s.LEVEL.UnmarshalText([]byte(fields[2]))
+	s.WATCH_WARN.UnmarshalText([]byte(fields[3]))
+	s.INITIALS.UnmarshalText([]byte(fields[4]))
+	s.ALAT.UnmarshalText([]byte(fields[5]))
+	s.ALON.UnmarshalText([]byte(fields[6]))
+	s.BLAT.UnmarshalText([]byte(fields[7]))
+	s.BLON.UnmarshalText([]byte(fields[8]))
+	s.TK_ERR.UnmarshalText([]byte(fields[9]))
+	s.X_ERR.UnmarshalText([]byte(fields[10]))
+	s.Y_ERR.UnmarshalText([]byte(fields[11]))
+	s.ALTK_ERR.UnmarshalText([]byte(fields[12]))
+	s.CRTK_ERR.UnmarshalText([]byte(fields[13]))
+	s.ADLAND.UnmarshalText([]byte(fields[14]))
+	s.BDLAND.UnmarshalText([]byte(fields[15]))
+	s.AMSLP.UnmarshalText([]byte(fields[16]))
+	s.BMSLP.UnmarshalText([]byte(fields[17]))
+	s.AMAX_WIND.UnmarshalText([]byte(fields[18]))
+	s.BMAX_WIND.UnmarshalText([]byte(fields[19]))
+	s.AAL_WIND_34.UnmarshalText([]byte(fields[20]))
+	s.BAL_WIND_34.UnmarshalText([]byte(fields[21]))
+	s.ANE_WIND_34.UnmarshalText([]byte(fields[22]))
+	s.BNE_WIND_34.UnmarshalText([]byte(fields[23]))
+	s.ASE_WIND_34.UnmarshalText([]byte(fields[24]))
+	s.BSE_WIND_34.UnmarshalText([]byte(fields[25]))
+	s.ASW_WIND_34.UnmarshalText([]byte(fields[26]))
+	s.BSW_WIND_34.UnmarshalText([]byte(fields[27]))
+	s.ANW_WIND_34.UnmarshalText([]byte(fields[28]))
+	s.BNW_WIND_34.UnmarshalText([]byte(fields[29]))
+	s.AAL_WIND_50.UnmarshalText([]byte(fields[30]))
+	s.BAL_WIND_50.UnmarshalText([]byte(fields[31]))
+	s.ANE_WIND_50.UnmarshalText([]byte(fields[32]))
+	s.BNE_WIND_50.UnmarshalText([]byte(fields[33]))
+	s.ASE_WIND_50.UnmarshalText([]byte(fields[34]))
+	s.BSE_WIND_50.UnmarshalText([]byte(fields[35]))
+	s.ASW_WIND_50.UnmarshalText([]byte(fields[36]))
+	s.BSW_WIND_50.UnmarshalText([]byte(fields[37]))
+	s.ANW_WIND_50.UnmarshalText([]byte(fields[38]))
+	s.BNW_WIND_50.UnmarshalText([]byte(fields[39]))
+	s.AAL_WIND_64.UnmarshalText([]byte(fields[40]))
+	s.BAL_WIND_64.UnmarshalText([]byte(fields[41]))
+	s.ANE_WIND_64.UnmarshalText([]byte(fields[42]))
+	s.BNE_WIND_64.UnmarshalText([]byte(fields[43]))
+	s.ASE_WIND_64.UnmarshalText([]byte(fields[44]))
+	s.BSE_WIND_64.UnmarshalText([]byte(fields[45]))
+	s.ASW_WIND_64.UnmarshalText([]byte(fields[46]))
+	s.BSW_WIND_64.UnmarshalText([]byte(fields[47]))
+	s.ANW_WIND_64.UnmarshalText([]byte(fields[48]))
+	s.BNW_WIND_64.UnmarshalText([]byte(fields[49]))
+	s.ARADP.UnmarshalText([]byte(fields[50]))
+	s.BRADP.UnmarshalText([]byte(fields[51]))
+	s.ARRP.UnmarshalText([]byte(fields[52]))
+	s.BRRP.UnmarshalText([]byte(fields[53]))
+	s.AMRD.UnmarshalText([]byte(fields[54]))
+	s.BMRD.UnmarshalText([]byte(fields[55]))
+	s.AGUSTS.UnmarshalText([]byte(fields[56]))
+	s.BGUSTS.UnmarshalText([]byte(fields[57]))
+	s.AEYE.UnmarshalText([]byte(fields[58]))
+	s.BEYE.UnmarshalText([]byte(fields[59]))
+	s.ADIR.UnmarshalText([]byte(fields[60]))
+	s.BDIR.UnmarshalText([]byte(fields[61]))
+	s.ASPEED.UnmarshalText([]byte(fields[62]))
+	s.BSPEED.UnmarshalText([]byte(fields[63]))
+	s.ADEPTH.UnmarshalText([]byte(fields[64]))
+	s.BDEPTH.UnmarshalText([]byte(fields[65]))
+	s.INIT.UnmarshalText([]byte(fields[66]))
 }
 
-// getDocForId functions
-func GetDocForId(fileLineType string, metaDataMap map[string]interface{}, headerData []string, dataData []string, dataKey string) (map[string]interface{}, error) {
-	doc := make(map[string]interface{})
-	// add the metadata to the doc
-	for key, value := range metaDataMap {
-		doc[key] = value
-	}
+// getDocForId function
+// Creates a new doc, header functions and all.
+func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []string, dataData []string, dataKey string) (map[string]interface{}, error) {
+	var statDoc any
 	switch fileLineType {
 	case "STAT_CNT":
-		elem := STAT_CNT{}
-		elem.fill_STAT_CNT_Header(headerData, &doc)
-		elem.fill_STAT_CNT(dataData)
-		if exists := (doc)["data"]; exists == nil {
-			(doc)["data"] = make(map[string]STAT_CNT)
+		elem_header := STAT_CNT_header{}
+		elem_header.fill(headerData)
+		elem_data := STAT_CNT_data{}
+		elem_data.fill(dataData)
+
+		tmp := STAT_CNT{
+			VxMetadata:      metaData,
+			STAT_CNT_header: elem_header,
+			Data:            make(map[string]STAT_CNT_data),
 		}
-		if val, ok := (doc)["data"].(map[string]STAT_CNT); ok {
-			val[dataKey] = elem
-			(doc)["data"] = val
-		}
+		tmp.Data[dataKey] = elem_data
+		statDoc = tmp
 	case "STAT_CTC":
-		elem := STAT_CTC{}
-		elem.fill_STAT_CTC_Header(headerData, &doc)
-		elem.fill_STAT_CTC(dataData)
-		if exists := (doc)["data"]; exists == nil {
-			(doc)["data"] = make(map[string]STAT_CTC)
+		elem_header := STAT_CTC_header{}
+		elem_header.fill(headerData)
+		elem_data := STAT_CTC_data{}
+		elem_data.fill(dataData)
+
+		tmp := STAT_CTC{
+			VxMetadata:      metaData,
+			STAT_CTC_header: elem_header,
+			Data:            make(map[string]STAT_CTC_data),
 		}
-		if val, ok := (doc)["data"].(map[string]STAT_CTC); ok {
-			val[dataKey] = elem
-			(doc)["data"] = val
-		}
+		tmp.Data[dataKey] = elem_data
+		statDoc = tmp
 	case "STAT_CTS":
-		elem := STAT_CTS{}
-		elem.fill_STAT_CTS_Header(headerData, &doc)
-		elem.fill_STAT_CTS(dataData)
-		if exists := (doc)["data"]; exists == nil {
-			(doc)["data"] = make(map[string]STAT_CTS)
+		elem_header := STAT_CTS_header{}
+		elem_header.fill(headerData)
+		elem_data := STAT_CTS_data{}
+		elem_data.fill(dataData)
+
+		tmp := STAT_CTS{
+			VxMetadata:      metaData,
+			STAT_CTS_header: elem_header,
+			Data:            make(map[string]STAT_CTS_data),
 		}
-		if val, ok := (doc)["data"].(map[string]STAT_CTS); ok {
-			val[dataKey] = elem
-			(doc)["data"] = val
-		}
+		tmp.Data[dataKey] = elem_data
+		statDoc = tmp
 	case "STAT_FHO":
-		elem := STAT_FHO{}
-		elem.fill_STAT_FHO_Header(headerData, &doc)
-		elem.fill_STAT_FHO(dataData)
-		if exists := (doc)["data"]; exists == nil {
-			(doc)["data"] = make(map[string]STAT_FHO)
+		elem_header := STAT_FHO_header{}
+		elem_header.fill(headerData)
+		elem_data := STAT_FHO_data{}
+		elem_data.fill(dataData)
+
+		tmp := STAT_FHO{
+			VxMetadata:      metaData,
+			STAT_FHO_header: elem_header,
+			Data:            make(map[string]STAT_FHO_data),
 		}
-		if val, ok := (doc)["data"].(map[string]STAT_FHO); ok {
-			val[dataKey] = elem
-			(doc)["data"] = val
-		}
+		tmp.Data[dataKey] = elem_data
+		statDoc = tmp
 	case "STAT_ISC":
-		elem := STAT_ISC{}
-		elem.fill_STAT_ISC_Header(headerData, &doc)
-		elem.fill_STAT_ISC(dataData)
-		if exists := (doc)["data"]; exists == nil {
-			(doc)["data"] = make(map[string]STAT_ISC)
+		elem_header := STAT_ISC_header{}
+		elem_header.fill(headerData)
+		elem_data := STAT_ISC_data{}
+		elem_data.fill(dataData)
+
+		tmp := STAT_ISC{
+			VxMetadata:      metaData,
+			STAT_ISC_header: elem_header,
+			Data:            make(map[string]STAT_ISC_data),
 		}
-		if val, ok := (doc)["data"].(map[string]STAT_ISC); ok {
-			val[dataKey] = elem
-			(doc)["data"] = val
-		}
+		tmp.Data[dataKey] = elem_data
+		statDoc = tmp
 	case "STAT_MCTC":
-		elem := STAT_MCTC{}
-		elem.fill_STAT_MCTC_Header(headerData, &doc)
-		elem.fill_STAT_MCTC(dataData)
-		if exists := (doc)["data"]; exists == nil {
-			(doc)["data"] = make(map[string]STAT_MCTC)
+		elem_header := STAT_MCTC_header{}
+		elem_header.fill(headerData)
+		elem_data := STAT_MCTC_data{}
+		elem_data.fill(dataData)
+
+		tmp := STAT_MCTC{
+			VxMetadata:       metaData,
+			STAT_MCTC_header: elem_header,
+			Data:             make(map[string]STAT_MCTC_data),
 		}
-		if val, ok := (doc)["data"].(map[string]STAT_MCTC); ok {
-			val[dataKey] = elem
-			(doc)["data"] = val
-		}
+		tmp.Data[dataKey] = elem_data
+		statDoc = tmp
 	case "STAT_MCTS":
-		elem := STAT_MCTS{}
-		elem.fill_STAT_MCTS_Header(headerData, &doc)
-		elem.fill_STAT_MCTS(dataData)
-		if exists := (doc)["data"]; exists == nil {
-			(doc)["data"] = make(map[string]STAT_MCTS)
+		elem_header := STAT_MCTS_header{}
+		elem_header.fill(headerData)
+		elem_data := STAT_MCTS_data{}
+		elem_data.fill(dataData)
+
+		tmp := STAT_MCTS{
+			VxMetadata:       metaData,
+			STAT_MCTS_header: elem_header,
+			Data:             make(map[string]STAT_MCTS_data),
 		}
-		if val, ok := (doc)["data"].(map[string]STAT_MCTS); ok {
-			val[dataKey] = elem
-			(doc)["data"] = val
-		}
+		tmp.Data[dataKey] = elem_data
+		statDoc = tmp
 	case "STAT_MPR":
-		elem := STAT_MPR{}
-		elem.fill_STAT_MPR_Header(headerData, &doc)
-		elem.fill_STAT_MPR(dataData)
-		if exists := (doc)["data"]; exists == nil {
-			(doc)["data"] = make(map[string]STAT_MPR)
+		elem_header := STAT_MPR_header{}
+		elem_header.fill(headerData)
+		elem_data := STAT_MPR_data{}
+		elem_data.fill(dataData)
+
+		tmp := STAT_MPR{
+			VxMetadata:      metaData,
+			STAT_MPR_header: elem_header,
+			Data:            make(map[string]STAT_MPR_data),
 		}
-		if val, ok := (doc)["data"].(map[string]STAT_MPR); ok {
-			val[dataKey] = elem
-			(doc)["data"] = val
-		}
+		tmp.Data[dataKey] = elem_data
+		statDoc = tmp
 	case "STAT_NBRCNT":
-		elem := STAT_NBRCNT{}
-		elem.fill_STAT_NBRCNT_Header(headerData, &doc)
-		elem.fill_STAT_NBRCNT(dataData)
-		if exists := (doc)["data"]; exists == nil {
-			(doc)["data"] = make(map[string]STAT_NBRCNT)
+		elem_header := STAT_NBRCNT_header{}
+		elem_header.fill(headerData)
+		elem_data := STAT_NBRCNT_data{}
+		elem_data.fill(dataData)
+
+		tmp := STAT_NBRCNT{
+			VxMetadata:         metaData,
+			STAT_NBRCNT_header: elem_header,
+			Data:               make(map[string]STAT_NBRCNT_data),
 		}
-		if val, ok := (doc)["data"].(map[string]STAT_NBRCNT); ok {
-			val[dataKey] = elem
-			(doc)["data"] = val
-		}
+		tmp.Data[dataKey] = elem_data
+		statDoc = tmp
 	case "STAT_NBRCTC":
-		elem := STAT_NBRCTC{}
-		elem.fill_STAT_NBRCTC_Header(headerData, &doc)
-		elem.fill_STAT_NBRCTC(dataData)
-		if exists := (doc)["data"]; exists == nil {
-			(doc)["data"] = make(map[string]STAT_NBRCTC)
+		elem_header := STAT_NBRCTC_header{}
+		elem_header.fill(headerData)
+		elem_data := STAT_NBRCTC_data{}
+		elem_data.fill(dataData)
+
+		tmp := STAT_NBRCTC{
+			VxMetadata:         metaData,
+			STAT_NBRCTC_header: elem_header,
+			Data:               make(map[string]STAT_NBRCTC_data),
 		}
-		if val, ok := (doc)["data"].(map[string]STAT_NBRCTC); ok {
-			val[dataKey] = elem
-			(doc)["data"] = val
-		}
+		tmp.Data[dataKey] = elem_data
+		statDoc = tmp
 	case "STAT_NBRCTS":
-		elem := STAT_NBRCTS{}
-		elem.fill_STAT_NBRCTS_Header(headerData, &doc)
-		elem.fill_STAT_NBRCTS(dataData)
-		if exists := (doc)["data"]; exists == nil {
-			(doc)["data"] = make(map[string]STAT_NBRCTS)
+		elem_header := STAT_NBRCTS_header{}
+		elem_header.fill(headerData)
+		elem_data := STAT_NBRCTS_data{}
+		elem_data.fill(dataData)
+
+		tmp := STAT_NBRCTS{
+			VxMetadata:         metaData,
+			STAT_NBRCTS_header: elem_header,
+			Data:               make(map[string]STAT_NBRCTS_data),
 		}
-		if val, ok := (doc)["data"].(map[string]STAT_NBRCTS); ok {
-			val[dataKey] = elem
-			(doc)["data"] = val
-		}
+		tmp.Data[dataKey] = elem_data
+		statDoc = tmp
 	case "STAT_GRAD":
-		elem := STAT_GRAD{}
-		elem.fill_STAT_GRAD_Header(headerData, &doc)
-		elem.fill_STAT_GRAD(dataData)
-		if exists := (doc)["data"]; exists == nil {
-			(doc)["data"] = make(map[string]STAT_GRAD)
+		elem_header := STAT_GRAD_header{}
+		elem_header.fill(headerData)
+		elem_data := STAT_GRAD_data{}
+		elem_data.fill(dataData)
+
+		tmp := STAT_GRAD{
+			VxMetadata:       metaData,
+			STAT_GRAD_header: elem_header,
+			Data:             make(map[string]STAT_GRAD_data),
 		}
-		if val, ok := (doc)["data"].(map[string]STAT_GRAD); ok {
-			val[dataKey] = elem
-			(doc)["data"] = val
-		}
+		tmp.Data[dataKey] = elem_data
+		statDoc = tmp
 	case "STAT_DMAP":
-		elem := STAT_DMAP{}
-		elem.fill_STAT_DMAP_Header(headerData, &doc)
-		elem.fill_STAT_DMAP(dataData)
-		if exists := (doc)["data"]; exists == nil {
-			(doc)["data"] = make(map[string]STAT_DMAP)
+		elem_header := STAT_DMAP_header{}
+		elem_header.fill(headerData)
+		elem_data := STAT_DMAP_data{}
+		elem_data.fill(dataData)
+
+		tmp := STAT_DMAP{
+			VxMetadata:       metaData,
+			STAT_DMAP_header: elem_header,
+			Data:             make(map[string]STAT_DMAP_data),
 		}
-		if val, ok := (doc)["data"].(map[string]STAT_DMAP); ok {
-			val[dataKey] = elem
-			(doc)["data"] = val
-		}
+		tmp.Data[dataKey] = elem_data
+		statDoc = tmp
 	case "STAT_ORANK":
-		elem := STAT_ORANK{}
-		elem.fill_STAT_ORANK_Header(headerData, &doc)
-		elem.fill_STAT_ORANK(dataData)
-		if exists := (doc)["data"]; exists == nil {
-			(doc)["data"] = make(map[string]STAT_ORANK)
+		elem_header := STAT_ORANK_header{}
+		elem_header.fill(headerData)
+		elem_data := STAT_ORANK_data{}
+		elem_data.fill(dataData)
+
+		tmp := STAT_ORANK{
+			VxMetadata:        metaData,
+			STAT_ORANK_header: elem_header,
+			Data:              make(map[string]STAT_ORANK_data),
 		}
-		if val, ok := (doc)["data"].(map[string]STAT_ORANK); ok {
-			val[dataKey] = elem
-			(doc)["data"] = val
-		}
+		tmp.Data[dataKey] = elem_data
+		statDoc = tmp
 	case "STAT_PCT":
-		elem := STAT_PCT{}
-		elem.fill_STAT_PCT_Header(headerData, &doc)
-		elem.fill_STAT_PCT(dataData)
-		if exists := (doc)["data"]; exists == nil {
-			(doc)["data"] = make(map[string]STAT_PCT)
+		elem_header := STAT_PCT_header{}
+		elem_header.fill(headerData)
+		elem_data := STAT_PCT_data{}
+		elem_data.fill(dataData)
+
+		tmp := STAT_PCT{
+			VxMetadata:      metaData,
+			STAT_PCT_header: elem_header,
+			Data:            make(map[string]STAT_PCT_data),
 		}
-		if val, ok := (doc)["data"].(map[string]STAT_PCT); ok {
-			val[dataKey] = elem
-			(doc)["data"] = val
-		}
+		tmp.Data[dataKey] = elem_data
+		statDoc = tmp
 	case "STAT_PJC":
-		elem := STAT_PJC{}
-		elem.fill_STAT_PJC_Header(headerData, &doc)
-		elem.fill_STAT_PJC(dataData)
-		if exists := (doc)["data"]; exists == nil {
-			(doc)["data"] = make(map[string]STAT_PJC)
+		elem_header := STAT_PJC_header{}
+		elem_header.fill(headerData)
+		elem_data := STAT_PJC_data{}
+		elem_data.fill(dataData)
+
+		tmp := STAT_PJC{
+			VxMetadata:      metaData,
+			STAT_PJC_header: elem_header,
+			Data:            make(map[string]STAT_PJC_data),
 		}
-		if val, ok := (doc)["data"].(map[string]STAT_PJC); ok {
-			val[dataKey] = elem
-			(doc)["data"] = val
-		}
+		tmp.Data[dataKey] = elem_data
+		statDoc = tmp
 	case "STAT_PRC":
-		elem := STAT_PRC{}
-		elem.fill_STAT_PRC_Header(headerData, &doc)
-		elem.fill_STAT_PRC(dataData)
-		if exists := (doc)["data"]; exists == nil {
-			(doc)["data"] = make(map[string]STAT_PRC)
+		elem_header := STAT_PRC_header{}
+		elem_header.fill(headerData)
+		elem_data := STAT_PRC_data{}
+		elem_data.fill(dataData)
+
+		tmp := STAT_PRC{
+			VxMetadata:      metaData,
+			STAT_PRC_header: elem_header,
+			Data:            make(map[string]STAT_PRC_data),
 		}
-		if val, ok := (doc)["data"].(map[string]STAT_PRC); ok {
-			val[dataKey] = elem
-			(doc)["data"] = val
-		}
+		tmp.Data[dataKey] = elem_data
+		statDoc = tmp
 	case "STAT_PSTD":
-		elem := STAT_PSTD{}
-		elem.fill_STAT_PSTD_Header(headerData, &doc)
-		elem.fill_STAT_PSTD(dataData)
-		if exists := (doc)["data"]; exists == nil {
-			(doc)["data"] = make(map[string]STAT_PSTD)
+		elem_header := STAT_PSTD_header{}
+		elem_header.fill(headerData)
+		elem_data := STAT_PSTD_data{}
+		elem_data.fill(dataData)
+
+		tmp := STAT_PSTD{
+			VxMetadata:       metaData,
+			STAT_PSTD_header: elem_header,
+			Data:             make(map[string]STAT_PSTD_data),
 		}
-		if val, ok := (doc)["data"].(map[string]STAT_PSTD); ok {
-			val[dataKey] = elem
-			(doc)["data"] = val
-		}
+		tmp.Data[dataKey] = elem_data
+		statDoc = tmp
 	case "STAT_ECLV":
-		elem := STAT_ECLV{}
-		elem.fill_STAT_ECLV_Header(headerData, &doc)
-		elem.fill_STAT_ECLV(dataData)
-		if exists := (doc)["data"]; exists == nil {
-			(doc)["data"] = make(map[string]STAT_ECLV)
+		elem_header := STAT_ECLV_header{}
+		elem_header.fill(headerData)
+		elem_data := STAT_ECLV_data{}
+		elem_data.fill(dataData)
+
+		tmp := STAT_ECLV{
+			VxMetadata:       metaData,
+			STAT_ECLV_header: elem_header,
+			Data:             make(map[string]STAT_ECLV_data),
 		}
-		if val, ok := (doc)["data"].(map[string]STAT_ECLV); ok {
-			val[dataKey] = elem
-			(doc)["data"] = val
-		}
+		tmp.Data[dataKey] = elem_data
+		statDoc = tmp
 	case "STAT_ECNT":
-		elem := STAT_ECNT{}
-		elem.fill_STAT_ECNT_Header(headerData, &doc)
-		elem.fill_STAT_ECNT(dataData)
-		if exists := (doc)["data"]; exists == nil {
-			(doc)["data"] = make(map[string]STAT_ECNT)
+		elem_header := STAT_ECNT_header{}
+		elem_header.fill(headerData)
+		elem_data := STAT_ECNT_data{}
+		elem_data.fill(dataData)
+
+		tmp := STAT_ECNT{
+			VxMetadata:       metaData,
+			STAT_ECNT_header: elem_header,
+			Data:             make(map[string]STAT_ECNT_data),
 		}
-		if val, ok := (doc)["data"].(map[string]STAT_ECNT); ok {
-			val[dataKey] = elem
-			(doc)["data"] = val
-		}
+		tmp.Data[dataKey] = elem_data
+		statDoc = tmp
 	case "STAT_RPS":
-		elem := STAT_RPS{}
-		elem.fill_STAT_RPS_Header(headerData, &doc)
-		elem.fill_STAT_RPS(dataData)
-		if exists := (doc)["data"]; exists == nil {
-			(doc)["data"] = make(map[string]STAT_RPS)
+		elem_header := STAT_RPS_header{}
+		elem_header.fill(headerData)
+		elem_data := STAT_RPS_data{}
+		elem_data.fill(dataData)
+
+		tmp := STAT_RPS{
+			VxMetadata:      metaData,
+			STAT_RPS_header: elem_header,
+			Data:            make(map[string]STAT_RPS_data),
 		}
-		if val, ok := (doc)["data"].(map[string]STAT_RPS); ok {
-			val[dataKey] = elem
-			(doc)["data"] = val
-		}
+		tmp.Data[dataKey] = elem_data
+		statDoc = tmp
 	case "STAT_RHIST":
-		elem := STAT_RHIST{}
-		elem.fill_STAT_RHIST_Header(headerData, &doc)
-		elem.fill_STAT_RHIST(dataData)
-		if exists := (doc)["data"]; exists == nil {
-			(doc)["data"] = make(map[string]STAT_RHIST)
+		elem_header := STAT_RHIST_header{}
+		elem_header.fill(headerData)
+		elem_data := STAT_RHIST_data{}
+		elem_data.fill(dataData)
+
+		tmp := STAT_RHIST{
+			VxMetadata:        metaData,
+			STAT_RHIST_header: elem_header,
+			Data:              make(map[string]STAT_RHIST_data),
 		}
-		if val, ok := (doc)["data"].(map[string]STAT_RHIST); ok {
-			val[dataKey] = elem
-			(doc)["data"] = val
-		}
+		tmp.Data[dataKey] = elem_data
+		statDoc = tmp
 	case "STAT_PHIST":
-		elem := STAT_PHIST{}
-		elem.fill_STAT_PHIST_Header(headerData, &doc)
-		elem.fill_STAT_PHIST(dataData)
-		if exists := (doc)["data"]; exists == nil {
-			(doc)["data"] = make(map[string]STAT_PHIST)
+		elem_header := STAT_PHIST_header{}
+		elem_header.fill(headerData)
+		elem_data := STAT_PHIST_data{}
+		elem_data.fill(dataData)
+
+		tmp := STAT_PHIST{
+			VxMetadata:        metaData,
+			STAT_PHIST_header: elem_header,
+			Data:              make(map[string]STAT_PHIST_data),
 		}
-		if val, ok := (doc)["data"].(map[string]STAT_PHIST); ok {
-			val[dataKey] = elem
-			(doc)["data"] = val
-		}
+		tmp.Data[dataKey] = elem_data
+		statDoc = tmp
 	case "STAT_RELP":
-		elem := STAT_RELP{}
-		elem.fill_STAT_RELP_Header(headerData, &doc)
-		elem.fill_STAT_RELP(dataData)
-		if exists := (doc)["data"]; exists == nil {
-			(doc)["data"] = make(map[string]STAT_RELP)
+		elem_header := STAT_RELP_header{}
+		elem_header.fill(headerData)
+		elem_data := STAT_RELP_data{}
+		elem_data.fill(dataData)
+
+		tmp := STAT_RELP{
+			VxMetadata:       metaData,
+			STAT_RELP_header: elem_header,
+			Data:             make(map[string]STAT_RELP_data),
 		}
-		if val, ok := (doc)["data"].(map[string]STAT_RELP); ok {
-			val[dataKey] = elem
-			(doc)["data"] = val
-		}
+		tmp.Data[dataKey] = elem_data
+		statDoc = tmp
 	case "STAT_SAL1L2":
-		elem := STAT_SAL1L2{}
-		elem.fill_STAT_SAL1L2_Header(headerData, &doc)
-		elem.fill_STAT_SAL1L2(dataData)
-		if exists := (doc)["data"]; exists == nil {
-			(doc)["data"] = make(map[string]STAT_SAL1L2)
+		elem_header := STAT_SAL1L2_header{}
+		elem_header.fill(headerData)
+		elem_data := STAT_SAL1L2_data{}
+		elem_data.fill(dataData)
+
+		tmp := STAT_SAL1L2{
+			VxMetadata:         metaData,
+			STAT_SAL1L2_header: elem_header,
+			Data:               make(map[string]STAT_SAL1L2_data),
 		}
-		if val, ok := (doc)["data"].(map[string]STAT_SAL1L2); ok {
-			val[dataKey] = elem
-			(doc)["data"] = val
-		}
+		tmp.Data[dataKey] = elem_data
+		statDoc = tmp
 	case "STAT_SL1L2":
-		elem := STAT_SL1L2{}
-		elem.fill_STAT_SL1L2_Header(headerData, &doc)
-		elem.fill_STAT_SL1L2(dataData)
-		if exists := (doc)["data"]; exists == nil {
-			(doc)["data"] = make(map[string]STAT_SL1L2)
+		elem_header := STAT_SL1L2_header{}
+		elem_header.fill(headerData)
+		elem_data := STAT_SL1L2_data{}
+		elem_data.fill(dataData)
+
+		tmp := STAT_SL1L2{
+			VxMetadata:        metaData,
+			STAT_SL1L2_header: elem_header,
+			Data:              make(map[string]STAT_SL1L2_data),
 		}
-		if val, ok := (doc)["data"].(map[string]STAT_SL1L2); ok {
-			val[dataKey] = elem
-			(doc)["data"] = val
-		}
+		tmp.Data[dataKey] = elem_data
+		statDoc = tmp
 	case "STAT_SSVAR":
-		elem := STAT_SSVAR{}
-		elem.fill_STAT_SSVAR_Header(headerData, &doc)
-		elem.fill_STAT_SSVAR(dataData)
-		if exists := (doc)["data"]; exists == nil {
-			(doc)["data"] = make(map[string]STAT_SSVAR)
+		elem_header := STAT_SSVAR_header{}
+		elem_header.fill(headerData)
+		elem_data := STAT_SSVAR_data{}
+		elem_data.fill(dataData)
+
+		tmp := STAT_SSVAR{
+			VxMetadata:        metaData,
+			STAT_SSVAR_header: elem_header,
+			Data:              make(map[string]STAT_SSVAR_data),
 		}
-		if val, ok := (doc)["data"].(map[string]STAT_SSVAR); ok {
-			val[dataKey] = elem
-			(doc)["data"] = val
-		}
+		tmp.Data[dataKey] = elem_data
+		statDoc = tmp
 	case "STAT_VAL1L2":
-		elem := STAT_VAL1L2{}
-		elem.fill_STAT_VAL1L2_Header(headerData, &doc)
-		elem.fill_STAT_VAL1L2(dataData)
-		if exists := (doc)["data"]; exists == nil {
-			(doc)["data"] = make(map[string]STAT_VAL1L2)
+		elem_header := STAT_VAL1L2_header{}
+		elem_header.fill(headerData)
+		elem_data := STAT_VAL1L2_data{}
+		elem_data.fill(dataData)
+
+		tmp := STAT_VAL1L2{
+			VxMetadata:         metaData,
+			STAT_VAL1L2_header: elem_header,
+			Data:               make(map[string]STAT_VAL1L2_data),
 		}
-		if val, ok := (doc)["data"].(map[string]STAT_VAL1L2); ok {
-			val[dataKey] = elem
-			(doc)["data"] = val
-		}
+		tmp.Data[dataKey] = elem_data
+		statDoc = tmp
 	case "STAT_VL1L2":
-		elem := STAT_VL1L2{}
-		elem.fill_STAT_VL1L2_Header(headerData, &doc)
-		elem.fill_STAT_VL1L2(dataData)
-		if exists := (doc)["data"]; exists == nil {
-			(doc)["data"] = make(map[string]STAT_VL1L2)
+		elem_header := STAT_VL1L2_header{}
+		elem_header.fill(headerData)
+		elem_data := STAT_VL1L2_data{}
+		elem_data.fill(dataData)
+
+		tmp := STAT_VL1L2{
+			VxMetadata:        metaData,
+			STAT_VL1L2_header: elem_header,
+			Data:              make(map[string]STAT_VL1L2_data),
 		}
-		if val, ok := (doc)["data"].(map[string]STAT_VL1L2); ok {
-			val[dataKey] = elem
-			(doc)["data"] = val
-		}
+		tmp.Data[dataKey] = elem_data
+		statDoc = tmp
 	case "STAT_VCNT":
-		elem := STAT_VCNT{}
-		elem.fill_STAT_VCNT_Header(headerData, &doc)
-		elem.fill_STAT_VCNT(dataData)
-		if exists := (doc)["data"]; exists == nil {
-			(doc)["data"] = make(map[string]STAT_VCNT)
+		elem_header := STAT_VCNT_header{}
+		elem_header.fill(headerData)
+		elem_data := STAT_VCNT_data{}
+		elem_data.fill(dataData)
+
+		tmp := STAT_VCNT{
+			VxMetadata:       metaData,
+			STAT_VCNT_header: elem_header,
+			Data:             make(map[string]STAT_VCNT_data),
 		}
-		if val, ok := (doc)["data"].(map[string]STAT_VCNT); ok {
-			val[dataKey] = elem
-			(doc)["data"] = val
-		}
+		tmp.Data[dataKey] = elem_data
+		statDoc = tmp
 	case "STAT_GENMPR":
-		elem := STAT_GENMPR{}
-		elem.fill_STAT_GENMPR_Header(headerData, &doc)
-		elem.fill_STAT_GENMPR(dataData)
-		if exists := (doc)["data"]; exists == nil {
-			(doc)["data"] = make(map[string]STAT_GENMPR)
+		elem_header := STAT_GENMPR_header{}
+		elem_header.fill(headerData)
+		elem_data := STAT_GENMPR_data{}
+		elem_data.fill(dataData)
+
+		tmp := STAT_GENMPR{
+			VxMetadata:         metaData,
+			STAT_GENMPR_header: elem_header,
+			Data:               make(map[string]STAT_GENMPR_data),
 		}
-		if val, ok := (doc)["data"].(map[string]STAT_GENMPR); ok {
-			val[dataKey] = elem
-			(doc)["data"] = val
-		}
+		tmp.Data[dataKey] = elem_data
+		statDoc = tmp
 	case "MODE_OBJ":
-		elem := MODE_OBJ{}
-		elem.fill_MODE_OBJ_Header(headerData, &doc)
-		elem.fill_MODE_OBJ(dataData)
-		if exists := (doc)["data"]; exists == nil {
-			(doc)["data"] = make(map[string]MODE_OBJ)
+		elem_header := MODE_OBJ_header{}
+		elem_header.fill(headerData)
+		elem_data := MODE_OBJ_data{}
+		elem_data.fill(dataData)
+
+		tmp := MODE_OBJ{
+			VxMetadata:      metaData,
+			MODE_OBJ_header: elem_header,
+			Data:            make(map[string]MODE_OBJ_data),
 		}
-		if val, ok := (doc)["data"].(map[string]MODE_OBJ); ok {
-			val[dataKey] = elem
-			(doc)["data"] = val
-		}
+		tmp.Data[dataKey] = elem_data
+		statDoc = tmp
 	case "MODE_CTS":
-		elem := MODE_CTS{}
-		elem.fill_MODE_CTS_Header(headerData, &doc)
-		elem.fill_MODE_CTS(dataData)
-		if exists := (doc)["data"]; exists == nil {
-			(doc)["data"] = make(map[string]MODE_CTS)
+		elem_header := MODE_CTS_header{}
+		elem_header.fill(headerData)
+		elem_data := MODE_CTS_data{}
+		elem_data.fill(dataData)
+
+		tmp := MODE_CTS{
+			VxMetadata:      metaData,
+			MODE_CTS_header: elem_header,
+			Data:            make(map[string]MODE_CTS_data),
 		}
-		if val, ok := (doc)["data"].(map[string]MODE_CTS); ok {
-			val[dataKey] = elem
-			(doc)["data"] = val
-		}
+		tmp.Data[dataKey] = elem_data
+		statDoc = tmp
 	case "TCST_TCMPR":
-		elem := TCST_TCMPR{}
-		elem.fill_TCST_TCMPR_Header(headerData, &doc)
-		elem.fill_TCST_TCMPR(dataData)
-		if exists := (doc)["data"]; exists == nil {
-			(doc)["data"] = make(map[string]TCST_TCMPR)
+		elem_header := TCST_TCMPR_header{}
+		elem_header.fill(headerData)
+		elem_data := TCST_TCMPR_data{}
+		elem_data.fill(dataData)
+
+		tmp := TCST_TCMPR{
+			VxMetadata:        metaData,
+			TCST_TCMPR_header: elem_header,
+			Data:              make(map[string]TCST_TCMPR_data),
 		}
-		if val, ok := (doc)["data"].(map[string]TCST_TCMPR); ok {
-			val[dataKey] = elem
-			(doc)["data"] = val
-		}
+		tmp.Data[dataKey] = elem_data
+		statDoc = tmp
 	case "TCST_PROBRIRW":
-		elem := TCST_PROBRIRW{}
-		elem.fill_TCST_PROBRIRW_Header(headerData, &doc)
-		elem.fill_TCST_PROBRIRW(dataData)
-		if exists := (doc)["data"]; exists == nil {
-			(doc)["data"] = make(map[string]TCST_PROBRIRW)
+		elem_header := TCST_PROBRIRW_header{}
+		elem_header.fill(headerData)
+		elem_data := TCST_PROBRIRW_data{}
+		elem_data.fill(dataData)
+
+		tmp := TCST_PROBRIRW{
+			VxMetadata:           metaData,
+			TCST_PROBRIRW_header: elem_header,
+			Data:                 make(map[string]TCST_PROBRIRW_data),
 		}
-		if val, ok := (doc)["data"].(map[string]TCST_PROBRIRW); ok {
-			val[dataKey] = elem
-			(doc)["data"] = val
-		}
+		tmp.Data[dataKey] = elem_data
+		statDoc = tmp
 	default:
 		return nil, errors.New("GetDocForId: Unknown file_line type:" + fileLineType)
+	}
+	// Convert our types to a map[string]any by marshaling & unmarshaling through JSON
+	// TODO - would it be advantageous to keep the type longer, e.g. for AddDataElement?
+	jsonBytes, err := json.Marshal(statDoc)
+	if err != nil {
+		return nil, fmt.Errorf("error marshalling TCST_PROBRIRW struct: %w", err)
+	}
+	var doc map[string]any
+	if err := json.Unmarshal(jsonBytes, &doc); err != nil {
+		return nil, fmt.Errorf("error unmarshalling TCST_PROBRIRW to map: %w", err)
 	}
 	return doc, nil
 }
 
-// addDataElement functions
+// addDataElement function
+// Header info has already been set by GetDocForId. Solely adds a new "data" element to the map.
+// doc is expected to be a map representing the "base" struct (E.g. "STAT_CNT") with header, metadata, & data info
 func AddDataElement(dataKey string, fileLineType string, dataData []string, doc *map[string]interface{}) (map[string]interface{}, error) {
 	switch fileLineType {
 	case "STAT_CNT":
-		elem := STAT_CNT{}
-		elem.fill_STAT_CNT(dataData)
-		if val, ok := (*doc)["data"].(map[string]STAT_CNT); ok {
-			val[dataKey] = elem
-			(*doc)["data"] = val
+		elem_data := STAT_CNT_data{}
+		elem_data.fill(dataData)
+		if val, ok := (*doc)["data"].(map[string]STAT_CNT_data); ok {
+			val[dataKey] = elem_data
 		}
 	case "STAT_CTC":
-		elem := STAT_CTC{}
-		elem.fill_STAT_CTC(dataData)
-		if val, ok := (*doc)["data"].(map[string]STAT_CTC); ok {
-			val[dataKey] = elem
-			(*doc)["data"] = val
+		elem_data := STAT_CTC_data{}
+		elem_data.fill(dataData)
+		if val, ok := (*doc)["data"].(map[string]STAT_CTC_data); ok {
+			val[dataKey] = elem_data
 		}
 	case "STAT_CTS":
-		elem := STAT_CTS{}
-		elem.fill_STAT_CTS(dataData)
-		if val, ok := (*doc)["data"].(map[string]STAT_CTS); ok {
-			val[dataKey] = elem
-			(*doc)["data"] = val
+		elem_data := STAT_CTS_data{}
+		elem_data.fill(dataData)
+		if val, ok := (*doc)["data"].(map[string]STAT_CTS_data); ok {
+			val[dataKey] = elem_data
 		}
 	case "STAT_FHO":
-		elem := STAT_FHO{}
-		elem.fill_STAT_FHO(dataData)
-		if val, ok := (*doc)["data"].(map[string]STAT_FHO); ok {
-			val[dataKey] = elem
-			(*doc)["data"] = val
+		elem_data := STAT_FHO_data{}
+		elem_data.fill(dataData)
+		if val, ok := (*doc)["data"].(map[string]STAT_FHO_data); ok {
+			val[dataKey] = elem_data
 		}
 	case "STAT_ISC":
-		elem := STAT_ISC{}
-		elem.fill_STAT_ISC(dataData)
-		if val, ok := (*doc)["data"].(map[string]STAT_ISC); ok {
-			val[dataKey] = elem
-			(*doc)["data"] = val
+		elem_data := STAT_ISC_data{}
+		elem_data.fill(dataData)
+		if val, ok := (*doc)["data"].(map[string]STAT_ISC_data); ok {
+			val[dataKey] = elem_data
 		}
 	case "STAT_MCTC":
-		elem := STAT_MCTC{}
-		elem.fill_STAT_MCTC(dataData)
-		if val, ok := (*doc)["data"].(map[string]STAT_MCTC); ok {
-			val[dataKey] = elem
-			(*doc)["data"] = val
+		elem_data := STAT_MCTC_data{}
+		elem_data.fill(dataData)
+		if val, ok := (*doc)["data"].(map[string]STAT_MCTC_data); ok {
+			val[dataKey] = elem_data
 		}
 	case "STAT_MCTS":
-		elem := STAT_MCTS{}
-		elem.fill_STAT_MCTS(dataData)
-		if val, ok := (*doc)["data"].(map[string]STAT_MCTS); ok {
-			val[dataKey] = elem
-			(*doc)["data"] = val
+		elem_data := STAT_MCTS_data{}
+		elem_data.fill(dataData)
+		if val, ok := (*doc)["data"].(map[string]STAT_MCTS_data); ok {
+			val[dataKey] = elem_data
 		}
 	case "STAT_MPR":
-		elem := STAT_MPR{}
-		elem.fill_STAT_MPR(dataData)
-		if val, ok := (*doc)["data"].(map[string]STAT_MPR); ok {
-			val[dataKey] = elem
-			(*doc)["data"] = val
+		elem_data := STAT_MPR_data{}
+		elem_data.fill(dataData)
+		if val, ok := (*doc)["data"].(map[string]STAT_MPR_data); ok {
+			val[dataKey] = elem_data
 		}
 	case "STAT_NBRCNT":
-		elem := STAT_NBRCNT{}
-		elem.fill_STAT_NBRCNT(dataData)
-		if val, ok := (*doc)["data"].(map[string]STAT_NBRCNT); ok {
-			val[dataKey] = elem
-			(*doc)["data"] = val
+		elem_data := STAT_NBRCNT_data{}
+		elem_data.fill(dataData)
+		if val, ok := (*doc)["data"].(map[string]STAT_NBRCNT_data); ok {
+			val[dataKey] = elem_data
 		}
 	case "STAT_NBRCTC":
-		elem := STAT_NBRCTC{}
-		elem.fill_STAT_NBRCTC(dataData)
-		if val, ok := (*doc)["data"].(map[string]STAT_NBRCTC); ok {
-			val[dataKey] = elem
-			(*doc)["data"] = val
+		elem_data := STAT_NBRCTC_data{}
+		elem_data.fill(dataData)
+		if val, ok := (*doc)["data"].(map[string]STAT_NBRCTC_data); ok {
+			val[dataKey] = elem_data
 		}
 	case "STAT_NBRCTS":
-		elem := STAT_NBRCTS{}
-		elem.fill_STAT_NBRCTS(dataData)
-		if val, ok := (*doc)["data"].(map[string]STAT_NBRCTS); ok {
-			val[dataKey] = elem
-			(*doc)["data"] = val
+		elem_data := STAT_NBRCTS_data{}
+		elem_data.fill(dataData)
+		if val, ok := (*doc)["data"].(map[string]STAT_NBRCTS_data); ok {
+			val[dataKey] = elem_data
 		}
 	case "STAT_GRAD":
-		elem := STAT_GRAD{}
-		elem.fill_STAT_GRAD(dataData)
-		if val, ok := (*doc)["data"].(map[string]STAT_GRAD); ok {
-			val[dataKey] = elem
-			(*doc)["data"] = val
+		elem_data := STAT_GRAD_data{}
+		elem_data.fill(dataData)
+		if val, ok := (*doc)["data"].(map[string]STAT_GRAD_data); ok {
+			val[dataKey] = elem_data
 		}
 	case "STAT_DMAP":
-		elem := STAT_DMAP{}
-		elem.fill_STAT_DMAP(dataData)
-		if val, ok := (*doc)["data"].(map[string]STAT_DMAP); ok {
-			val[dataKey] = elem
-			(*doc)["data"] = val
+		elem_data := STAT_DMAP_data{}
+		elem_data.fill(dataData)
+		if val, ok := (*doc)["data"].(map[string]STAT_DMAP_data); ok {
+			val[dataKey] = elem_data
 		}
 	case "STAT_ORANK":
-		elem := STAT_ORANK{}
-		elem.fill_STAT_ORANK(dataData)
-		if val, ok := (*doc)["data"].(map[string]STAT_ORANK); ok {
-			val[dataKey] = elem
-			(*doc)["data"] = val
+		elem_data := STAT_ORANK_data{}
+		elem_data.fill(dataData)
+		if val, ok := (*doc)["data"].(map[string]STAT_ORANK_data); ok {
+			val[dataKey] = elem_data
 		}
 	case "STAT_PCT":
-		elem := STAT_PCT{}
-		elem.fill_STAT_PCT(dataData)
-		if val, ok := (*doc)["data"].(map[string]STAT_PCT); ok {
-			val[dataKey] = elem
-			(*doc)["data"] = val
+		elem_data := STAT_PCT_data{}
+		elem_data.fill(dataData)
+		if val, ok := (*doc)["data"].(map[string]STAT_PCT_data); ok {
+			val[dataKey] = elem_data
 		}
 	case "STAT_PJC":
-		elem := STAT_PJC{}
-		elem.fill_STAT_PJC(dataData)
-		if val, ok := (*doc)["data"].(map[string]STAT_PJC); ok {
-			val[dataKey] = elem
-			(*doc)["data"] = val
+		elem_data := STAT_PJC_data{}
+		elem_data.fill(dataData)
+		if val, ok := (*doc)["data"].(map[string]STAT_PJC_data); ok {
+			val[dataKey] = elem_data
 		}
 	case "STAT_PRC":
-		elem := STAT_PRC{}
-		elem.fill_STAT_PRC(dataData)
-		if val, ok := (*doc)["data"].(map[string]STAT_PRC); ok {
-			val[dataKey] = elem
-			(*doc)["data"] = val
+		elem_data := STAT_PRC_data{}
+		elem_data.fill(dataData)
+		if val, ok := (*doc)["data"].(map[string]STAT_PRC_data); ok {
+			val[dataKey] = elem_data
 		}
 	case "STAT_PSTD":
-		elem := STAT_PSTD{}
-		elem.fill_STAT_PSTD(dataData)
-		if val, ok := (*doc)["data"].(map[string]STAT_PSTD); ok {
-			val[dataKey] = elem
-			(*doc)["data"] = val
+		elem_data := STAT_PSTD_data{}
+		elem_data.fill(dataData)
+		if val, ok := (*doc)["data"].(map[string]STAT_PSTD_data); ok {
+			val[dataKey] = elem_data
 		}
 	case "STAT_ECLV":
-		elem := STAT_ECLV{}
-		elem.fill_STAT_ECLV(dataData)
-		if val, ok := (*doc)["data"].(map[string]STAT_ECLV); ok {
-			val[dataKey] = elem
-			(*doc)["data"] = val
+		elem_data := STAT_ECLV_data{}
+		elem_data.fill(dataData)
+		if val, ok := (*doc)["data"].(map[string]STAT_ECLV_data); ok {
+			val[dataKey] = elem_data
 		}
 	case "STAT_ECNT":
-		elem := STAT_ECNT{}
-		elem.fill_STAT_ECNT(dataData)
-		if val, ok := (*doc)["data"].(map[string]STAT_ECNT); ok {
-			val[dataKey] = elem
-			(*doc)["data"] = val
+		elem_data := STAT_ECNT_data{}
+		elem_data.fill(dataData)
+		if val, ok := (*doc)["data"].(map[string]STAT_ECNT_data); ok {
+			val[dataKey] = elem_data
 		}
 	case "STAT_RPS":
-		elem := STAT_RPS{}
-		elem.fill_STAT_RPS(dataData)
-		if val, ok := (*doc)["data"].(map[string]STAT_RPS); ok {
-			val[dataKey] = elem
-			(*doc)["data"] = val
+		elem_data := STAT_RPS_data{}
+		elem_data.fill(dataData)
+		if val, ok := (*doc)["data"].(map[string]STAT_RPS_data); ok {
+			val[dataKey] = elem_data
 		}
 	case "STAT_RHIST":
-		elem := STAT_RHIST{}
-		elem.fill_STAT_RHIST(dataData)
-		if val, ok := (*doc)["data"].(map[string]STAT_RHIST); ok {
-			val[dataKey] = elem
-			(*doc)["data"] = val
+		elem_data := STAT_RHIST_data{}
+		elem_data.fill(dataData)
+		if val, ok := (*doc)["data"].(map[string]STAT_RHIST_data); ok {
+			val[dataKey] = elem_data
 		}
 	case "STAT_PHIST":
-		elem := STAT_PHIST{}
-		elem.fill_STAT_PHIST(dataData)
-		if val, ok := (*doc)["data"].(map[string]STAT_PHIST); ok {
-			val[dataKey] = elem
-			(*doc)["data"] = val
+		elem_data := STAT_PHIST_data{}
+		elem_data.fill(dataData)
+		if val, ok := (*doc)["data"].(map[string]STAT_PHIST_data); ok {
+			val[dataKey] = elem_data
 		}
 	case "STAT_RELP":
-		elem := STAT_RELP{}
-		elem.fill_STAT_RELP(dataData)
-		if val, ok := (*doc)["data"].(map[string]STAT_RELP); ok {
-			val[dataKey] = elem
-			(*doc)["data"] = val
+		elem_data := STAT_RELP_data{}
+		elem_data.fill(dataData)
+		if val, ok := (*doc)["data"].(map[string]STAT_RELP_data); ok {
+			val[dataKey] = elem_data
 		}
 	case "STAT_SAL1L2":
-		elem := STAT_SAL1L2{}
-		elem.fill_STAT_SAL1L2(dataData)
-		if val, ok := (*doc)["data"].(map[string]STAT_SAL1L2); ok {
-			val[dataKey] = elem
-			(*doc)["data"] = val
+		elem_data := STAT_SAL1L2_data{}
+		elem_data.fill(dataData)
+		if val, ok := (*doc)["data"].(map[string]STAT_SAL1L2_data); ok {
+			val[dataKey] = elem_data
 		}
 	case "STAT_SL1L2":
-		elem := STAT_SL1L2{}
-		elem.fill_STAT_SL1L2(dataData)
-		if val, ok := (*doc)["data"].(map[string]STAT_SL1L2); ok {
-			val[dataKey] = elem
-			(*doc)["data"] = val
+		elem_data := STAT_SL1L2_data{}
+		elem_data.fill(dataData)
+		if val, ok := (*doc)["data"].(map[string]STAT_SL1L2_data); ok {
+			val[dataKey] = elem_data
 		}
 	case "STAT_SSVAR":
-		elem := STAT_SSVAR{}
-		elem.fill_STAT_SSVAR(dataData)
-		if val, ok := (*doc)["data"].(map[string]STAT_SSVAR); ok {
-			val[dataKey] = elem
-			(*doc)["data"] = val
+		elem_data := STAT_SSVAR_data{}
+		elem_data.fill(dataData)
+		if val, ok := (*doc)["data"].(map[string]STAT_SSVAR_data); ok {
+			val[dataKey] = elem_data
 		}
 	case "STAT_VAL1L2":
-		elem := STAT_VAL1L2{}
-		elem.fill_STAT_VAL1L2(dataData)
-		if val, ok := (*doc)["data"].(map[string]STAT_VAL1L2); ok {
-			val[dataKey] = elem
-			(*doc)["data"] = val
+		elem_data := STAT_VAL1L2_data{}
+		elem_data.fill(dataData)
+		if val, ok := (*doc)["data"].(map[string]STAT_VAL1L2_data); ok {
+			val[dataKey] = elem_data
 		}
 	case "STAT_VL1L2":
-		elem := STAT_VL1L2{}
-		elem.fill_STAT_VL1L2(dataData)
-		if val, ok := (*doc)["data"].(map[string]STAT_VL1L2); ok {
-			val[dataKey] = elem
-			(*doc)["data"] = val
+		elem_data := STAT_VL1L2_data{}
+		elem_data.fill(dataData)
+		if val, ok := (*doc)["data"].(map[string]STAT_VL1L2_data); ok {
+			val[dataKey] = elem_data
 		}
 	case "STAT_VCNT":
-		elem := STAT_VCNT{}
-		elem.fill_STAT_VCNT(dataData)
-		if val, ok := (*doc)["data"].(map[string]STAT_VCNT); ok {
-			val[dataKey] = elem
-			(*doc)["data"] = val
+		elem_data := STAT_VCNT_data{}
+		elem_data.fill(dataData)
+		if val, ok := (*doc)["data"].(map[string]STAT_VCNT_data); ok {
+			val[dataKey] = elem_data
 		}
 	case "STAT_GENMPR":
-		elem := STAT_GENMPR{}
-		elem.fill_STAT_GENMPR(dataData)
-		if val, ok := (*doc)["data"].(map[string]STAT_GENMPR); ok {
-			val[dataKey] = elem
-			(*doc)["data"] = val
+		elem_data := STAT_GENMPR_data{}
+		elem_data.fill(dataData)
+		if val, ok := (*doc)["data"].(map[string]STAT_GENMPR_data); ok {
+			val[dataKey] = elem_data
 		}
 	case "MODE_OBJ":
-		elem := MODE_OBJ{}
-		elem.fill_MODE_OBJ(dataData)
-		if val, ok := (*doc)["data"].(map[string]MODE_OBJ); ok {
-			val[dataKey] = elem
-			(*doc)["data"] = val
+		elem_data := MODE_OBJ_data{}
+		elem_data.fill(dataData)
+		if val, ok := (*doc)["data"].(map[string]MODE_OBJ_data); ok {
+			val[dataKey] = elem_data
 		}
 	case "MODE_CTS":
-		elem := MODE_CTS{}
-		elem.fill_MODE_CTS(dataData)
-		if val, ok := (*doc)["data"].(map[string]MODE_CTS); ok {
-			val[dataKey] = elem
-			(*doc)["data"] = val
+		elem_data := MODE_CTS_data{}
+		elem_data.fill(dataData)
+		if val, ok := (*doc)["data"].(map[string]MODE_CTS_data); ok {
+			val[dataKey] = elem_data
 		}
 	case "TCST_TCMPR":
-		elem := TCST_TCMPR{}
-		elem.fill_TCST_TCMPR(dataData)
-		if val, ok := (*doc)["data"].(map[string]TCST_TCMPR); ok {
-			val[dataKey] = elem
-			(*doc)["data"] = val
+		elem_data := TCST_TCMPR_data{}
+		elem_data.fill(dataData)
+		if val, ok := (*doc)["data"].(map[string]TCST_TCMPR_data); ok {
+			val[dataKey] = elem_data
 		}
 	case "TCST_PROBRIRW":
-		elem := TCST_PROBRIRW{}
-		elem.fill_TCST_PROBRIRW(dataData)
-		if val, ok := (*doc)["data"].(map[string]TCST_PROBRIRW); ok {
-			val[dataKey] = elem
-			(*doc)["data"] = val
+		elem_data := TCST_PROBRIRW_data{}
+		elem_data.fill(dataData)
+		if val, ok := (*doc)["data"].(map[string]TCST_PROBRIRW_data); ok {
+			val[dataKey] = elem_data
 		}
 	default:
 		return nil, errors.New("AddDataElement: Unknown file_line type:" + fileLineType)
