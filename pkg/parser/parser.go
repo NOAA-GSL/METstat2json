@@ -60,6 +60,7 @@ is not nil, it is added to the document map. If the external document is nil, a 
 
 const DOC_NOT_FOUND = "document not found"
 
+// Gets the MET version from the stat file data line so that we can determine which linetypes module to use.
 func getParserVersion(dataLine string) (string, error) {
 	metVersion := strings.ToLower(strings.Fields(dataLine)[0])
 	metVersionParts := strings.Split(metVersion, ".")
@@ -70,6 +71,11 @@ func getParserVersion(dataLine string) (string, error) {
 	return lineVersion, nil
 }
 
+// Main entrypoint to the library. Ideally, this should be the only thing consumers need to call.
+// Parses the headerLine & dataLine passed to it and adds it to the collection of JSON docs pointed to by docPtr.
+// (docPtr is a map[string]interface where key = docID & value = doc struct with header & data)
+// Uses the fileName to deduce the doc type.
+// dataSetName should be a <=10 char name which identifies the dataset.
 func ParseLine(dataSetName string, headerLine string, dataLine string, docPtr *map[string]interface{}, fileName string, getExternalDocForId func(id string) (map[string]interface{}, error)) (map[string]interface{}, error) {
 	// recover from unexpected errors
 	defer func() {
@@ -95,7 +101,8 @@ func ParseLine(dataSetName string, headerLine string, dataLine string, docPtr *m
 	if dataLine == "" {
 		return *docPtr, fmt.Errorf("empty data line")
 	}
-	// make sure we have the basename here
+
+	// Filter out VIM *.swp and MacOS DS_STORE files.
 	fileName = filepath.Base(fileName)
 	filePathParts := strings.Split(fileName, ".")
 	fileType := strings.ToUpper(filePathParts[1])
@@ -137,7 +144,7 @@ func ParseLine(dataSetName string, headerLine string, dataLine string, docPtr *m
 	}
 	// GetId will fill in the id field of the metaData struct with the constructed id
 	// metadata doesn't change between versions, we just use the latest one. Same with DOC
-	metaData, _err := util.GetId(dataSetName, tmpHeaderData, &util.VxMetadata{Subset: "MET", Type: "DD", SubType: "MET"})
+	metaData, _err := util.GetId(tmpHeaderData, &util.VxMetadata{Subset: "MET", Type: "DD", SubType: "MET", DataSetName: dataSetName})
 	if _err != nil {
 		return *docPtr, fmt.Errorf("error getting id from line %s: %w", dataLine, _err)
 	}
@@ -153,33 +160,28 @@ func ParseLine(dataSetName string, headerLine string, dataLine string, docPtr *m
 			(*docPtr)[metaData.ID] = externalExistingDoc
 		} else {
 			// have to create a new document for this id
-			metaDataMap, _err := getMetaDataMap(metaData)
-			if _err != nil {
-				return *docPtr, _err
-			}
+
 			// create a new document for the new metaData.ID
 			// This function will also fill in the headerData fields
 			// indexed by dataKey value in the document.
 			// The document needs to be of the correct version.
 			switch parserVersion {
 			case "v10_0":
-				(*docPtr)[metaData.ID], _err = v10_0.GetDocForId(fileLineType, metaDataMap, headerData, dataData, dataKey)
+				(*docPtr)[metaData.ID], _err = v10_0.GetDocForId(fileLineType, metaData, headerData, dataData, dataKey)
 			case "v10_1":
-				(*docPtr)[metaData.ID], _err = v10_1.GetDocForId(fileLineType, metaDataMap, headerData, dataData, dataKey)
+				(*docPtr)[metaData.ID], _err = v10_1.GetDocForId(fileLineType, metaData, headerData, dataData, dataKey)
 			case "v11_0":
-				(*docPtr)[metaData.ID], _err = v11_0.GetDocForId(fileLineType, metaDataMap, headerData, dataData, dataKey)
+				(*docPtr)[metaData.ID], _err = v11_0.GetDocForId(fileLineType, metaData, headerData, dataData, dataKey)
 			case "v11_1":
-				(*docPtr)[metaData.ID], _err = v11_1.GetDocForId(fileLineType, metaDataMap, headerData, dataData, dataKey)
+				(*docPtr)[metaData.ID], _err = v11_1.GetDocForId(fileLineType, metaData, headerData, dataData, dataKey)
 			case "v12_0":
-				(*docPtr)[metaData.ID], _err = v12_0.GetDocForId(fileLineType, metaDataMap, headerData, dataData, dataKey)
+				(*docPtr)[metaData.ID], _err = v12_0.GetDocForId(fileLineType, metaData, headerData, dataData, dataKey)
 			default:
 				return *docPtr, fmt.Errorf("unsupported version %s", parserVersion)
 			}
 			if _err != nil || (*docPtr)[metaData.ID] == nil {
 				return *docPtr, fmt.Errorf("error creating doc for file: %s error: %w", fileName, _err)
 			}
-			// add the dataSetName to the header - dataSetName is not part of the structure
-			(*docPtr)[metaData.ID].(map[string]interface{})["dataSetName"] = dataSetName
 			// return the new doc - the doc was created and the data was added to it
 			return *docPtr, _err
 		}

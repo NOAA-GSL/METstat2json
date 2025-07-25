@@ -75,10 +75,11 @@ var MetSrcFiles = []string{
 //
 //nolint:tagliatelle // We need these fields to match other metadata fields in our documents.
 type VxMetadata struct {
-	ID      string `json:"id"`
-	Subset  string `json:"subset"`
-	Type    string `json:"type"`
-	SubType string `json:"subtype"`
+	ID          string `json:"id"`
+	Subset      string `json:"subset"`
+	Type        string `json:"type"`
+	SubType     string `json:"subtype"`
+	DataSetName string `json:"dataSetName"`
 }
 
 type DataKeyEntry struct {
@@ -450,8 +451,9 @@ func GetHeaderValue(headerFields []string, headerData []string, field string) (s
 	return "", nil
 }
 
-func GetId(dataSetName string, tmpHeaderData []string, metaData *VxMetadata) (VxMetadata, error) {
-	idElems := []string{metaData.Subset, metaData.Type, metaData.SubType, dataSetName}
+// Creates the doc ID - joins all header & metadata fields with ":" as a separator.
+func GetId(tmpHeaderData []string, metaData *VxMetadata) (VxMetadata, error) {
+	idElems := []string{metaData.Subset, metaData.Type, metaData.SubType, metaData.DataSetName}
 	idElems = append(idElems, tmpHeaderData...)
 	id := strings.Join(idElems, ":")
 	if len(id) > 250 {
