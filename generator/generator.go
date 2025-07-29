@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"flag"
 	"fmt"
 	"io"
@@ -9,6 +10,7 @@ import (
 	"regexp"
 	"slices"
 	"strings"
+	"text/template"
 
 	"github.com/dtcenter/METstat2json/pkg/util"
 )
@@ -77,39 +79,44 @@ function. See the notes in that function for more information.
 */
 
 func main() {
-	type HeaderStructs map[string]string
-	type DataStructs map[string]string
-
 	// Using the header definitions in the appropriate version of data/table_files/met_header_columns_X.X.txt
 	// currently 12.0 to get the required header column definitions and then using
 	// using the https://raw.githubusercontent.com/dtcenter/MET/refs/heads/main_v12.0/docs/Users_Guide
 	// to get the stat field types. We create a map of field names to field types. Then we have to re-iterate
 	// over the header definitions to create the structs and functions to fill the structs.
 	// read the header columns file
+
+	// 1. Gather data from MET files
 	var version string
 	flag.StringVar(&version, "version", "", "Specify the parser version (e.g., -version=v12.0|v11.1|v11.0|v10.1|v10.0)")
 	flag.Parse()
 	parserVersion := strings.ReplaceAll(version, ".", "_")
-	err := setMetVersion(parserVersion)
-	if err != nil {
+	if err := setMetVersion(parserVersion); err != nil {
 		fmt.Println("error setting MET version: ", err)
 		os.Exit(1)
 	}
 	met_header_columns_lines, fieldNameMap := getColumnLinesAndMapForUrl(metHeaderColumnsFileUrl)
-	metDataTypesForLines := make(map[string]string)
-	metDataTypesForLines = fillMetDataMapFromSrcFiles(metDataTypesForLines, fieldNameMap)
+	metDataTypesForLines := fillMetDataMapFromSrcFiles(make(map[string]string), fieldNameMap)
 	metDataTypesForLines = fillMetDataMapFromUserGuide(metDataTypesForLines, fieldNameMap)
+
+	// 2. Assemble code generation data
+	type DocumentStructs map[string]string
+	type HeaderStructs map[string]string
+	type DataStructs map[string]string
+
 	// Use a map to keep track of unique headerStructs and dataStructs.
-	structs := make(map[string]string)
+	documentStructs := make(DocumentStructs)
 	dataStructs := make(DataStructs)
 	headerStructs := make(HeaderStructs)
 	// fill...Funcs are the same as header and data Structs but for the fill functions
 	fillHeaderFuncs := make(HeaderStructs)
 	fillDataFuncs := make(DataStructs)
 	// create the getDocFoID function
-	docIDString := "func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []string, dataData []string, dataKey string) (map[string]interface{}, error) {\n\tvar statDoc any\n\t" +
-		"\tswitch fileLineType {\n"
-	addDataElementString := "func AddDataElement(dataKey string, fileLineType string, dataData []string, doc *map[string]interface{}) (map[string]interface{}, error) {\n\tswitch fileLineType {\n"
+	docIDString := `func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []string, dataData []string, dataKey string) (map[string]interface{}, error) {
+	var statDoc any
+	switch fileLineType {`
+	addDataElementString := `func AddDataElement(dataKey string, fileLineType string, dataData []string, doc *map[string]interface{}) (map[string]interface{}, error) {
+	switch fileLineType {`
 	// iterate through every line in the met_header_columns file to create the getDocId case and the structs and functions for each met header column line
 	var structName, structBody, dataStructName, headerStructName, headerStructString, fillHeaderString string
 	for _, line := range met_header_columns_lines {
@@ -124,7 +131,7 @@ func main() {
 		// create the header struct string and the fillHeader function string
 		structName, structBody, dataStructName, headerStructName, headerStructString, fillHeaderString, docIDString, addDataElementString = getHeaderStructureString(fileType, lineType, docIDString, addDataElementString, headerFields, metDataTypesForLines)
 		// add the combined struct string to the slice for printing later
-		structs[structName] = structBody
+		documentStructs[structName] = structBody
 		// add the header struct string to the map for printing later
 		headerStructs[headerStructName] = headerStructString
 		// add the fillHeader function string to the map for printing later
@@ -134,9 +141,12 @@ func main() {
 		dataStructs[dataStructName] = dataStruct
 		fillDataFuncs[dataStructName] = fillStructureString
 	}
+
+	// 3. Generate code using templates
+
 	// end the switch statements in the getDocForId and addDataElementStrings now that the line loop is over
-	// docIDString += "\tdefault:\n\t\treturn nil, errors.New(\"GetDocForId: Unknown file_line type:\" + fileLineType)\n\t}\n\treturn doc, nil\n}\n"
-	docIDString += fmt.Sprintf(`	default:
+	docIDString += fmt.Sprintf(`
+default:
 		return nil, errors.New("GetDocForId: Unknown file_line type:" + fileLineType)
 	}
 	// Convert our types to a map[string]any by marshaling & unmarshaling through JSON
@@ -153,51 +163,70 @@ func main() {
 	}
 	`, structName, structName,
 	)
-	addDataElementString += "\tdefault:\n\t\treturn nil, errors.New(\"AddDataElement: Unknown file_line type:\" + fileLineType)\n\t}\n\treturn *doc, nil\n}\n"
+	addDataElementString += `
+	default:
+		return nil, errors.New("AddDataElement: Unknown file_line type:" + fileLineType)
+	}
+	return *doc, nil
+	}
+	`
 
 	// print the package - header structs, fillHeader functions, data structs, fillStructure functions, getDocForId functions, addDataElement functions
-	fmt.Println("package " + parserVersion)
-	fmt.Println("")
-	fmt.Println("import (\n\t\"strconv\"\n\t\"errors\"\n\t\"fmt\"\n\t\"time\"\n\t\"github.com/dtcenter/METstat2json/pkg/validtypes\"\n\t\"github.com/dtcenter/METstat2json/pkg/util\"\n)")
-	fmt.Println("\n/*\nTHIS CODE IS AUTOMATICALLY GENERATED - DO NOT EDIT THIS CODE")
-	fmt.Println("To modify this code - modify the generator.go file and run the generator.go program")
-	fmt.Println("cd  <repo_root>")
-	fmt.Println("go run generator -version=v12.0 > pkg/linetypes/v12_0/linetypes.go\n*/")
-	fmt.Println("")
+	fmt.Printf(`package %s
+import (
+	"strconv"
+	"errors"
+	"fmt"
+	"time"
+	"github.com/dtcenter/METstat2json/pkg/validtypes"
+	"github.com/dtcenter/METstat2json/pkg/util"
+)
+/*
+THIS CODE IS AUTOMATICALLY GENERATED - DO NOT EDIT THIS CODE
+To modify this code - modify the generator.go file and run the generator.go program
+cd  <repo_root>
+go run generator -version=v12.0 > pkg/linetypes/v12_0/linetypes.go
+*/
+`, parserVersion)
 
 	// print the combined structs in order
-	fmt.Println("")
-	fmt.Println("//Document struct definitions")
-	sKeys := getSortedKeys(structs)
+	fmt.Print(`
+// Document struct definitions
+`)
+	sKeys := getSortedKeys(documentStructs)
 	for _, key := range sKeys {
-		fmt.Println(structs[key])
+		fmt.Println(documentStructs[key])
 	}
 	// print the header structs in order
-	fmt.Println("")
-	fmt.Println("//Header struct definitions")
+	fmt.Print(`
+// Header struct definitions
+`)
 	hsKeys := getSortedKeys(headerStructs)
 	for _, key := range hsKeys {
 		fmt.Println(headerStructs[key])
 	}
 	// print the fillHeader functions in order
-	fmt.Println("")
-	fmt.Println("//fillHeader functions")
+	fmt.Print(`
+// fillHeader functions
+`)
 	fhKeys := getSortedKeys(fillHeaderFuncs)
 	for _, key := range fhKeys {
 		fmt.Println(fillHeaderFuncs[key])
 	}
 
 	// print the data structs in order
-	fmt.Println("")
-	fmt.Println("//line data struct definitions")
+	fmt.Print(`
+// line data struct definitions
+`)
 	dsKeys := getSortedKeys(dataStructs)
 	for _, key := range dsKeys {
 		fmt.Println(dataStructs[key])
 	}
 
 	// print the fillStructure functions in order
-	fmt.Println("")
-	fmt.Println("//fillStructure functions")
+	fmt.Print(`
+// fillStructure functions
+`)
 	fdfKeys := getSortedKeys(fillDataFuncs)
 	for _, key := range fdfKeys {
 		// print the function
@@ -205,17 +234,18 @@ func main() {
 	}
 
 	// print the getDocForId functions
-	fmt.Println("")
-	fmt.Println("//getDocForId function")
-	fmt.Println("// Creates a new doc, header functions and all.")
+	fmt.Print(`
+// getDocForId function
+// Creates a new doc, header functions and all.
+`)
 	fmt.Println(docIDString)
 
 	// print the addDataElement functions
-	fmt.Println("")
-	fmt.Println("//addDataElement function")
-	fmt.Println("// Header info has already been set by GetDocForId. Solely adds a new \"data\" element to the map.")
-	fmt.Println("// doc is expected to be a map representing the \"base\" struct (E.g. \"STAT_CNT\") with header, metadata, & data info")
-
+	fmt.Print(`
+// addDataElement function
+// Header info has already been set by GetDocForId. Solely adds a new "data" element to the map.
+// doc is expected to be a map representing the "base" struct (E.g. "STAT_CNT") with header, metadata, & data info
+`)
 	fmt.Println(addDataElementString)
 
 	// print the DateFieldNames
@@ -257,6 +287,60 @@ func getFileLineType(line string) (string, string, string, error) {
 	return fieldStr, fileType, lineType, nil
 }
 
+type documentStructData struct {
+	DocumentStructName string
+	HeaderStructName   string
+	DataStructName     string
+}
+
+type headerStructData struct {
+	DocumentStructName string
+	HeaderStructName   string
+	Fields             []structField
+}
+
+type dataStructData struct {
+	DataStructName string
+	Fields         []structField
+}
+
+type structField struct {
+	Name     string
+	Type     string
+	JSONName string
+}
+
+// A wrapper function to generate the "document" struct definitions via template
+func createDocumentStruct(data documentStructData) string {
+	structTemplate := template.Must(template.New("struct").Parse(`
+// Represents a complete {{.DocumentStructName}} document
+type {{.DocumentStructName}} struct {
+    util.VxMetadata
+    {{.HeaderStructName}}
+    Data map[string]{{.DataStructName}} ` + "`json:\"data\"`" + `
+}
+`))
+	var buf bytes.Buffer
+	structTemplate.Execute(&buf, data)
+	return buf.String()
+}
+
+// A wrapper function to generate the "header" struct definitions via template
+func createHeaderStruct(data headerStructData) string {
+	headerStructTemplate := template.Must(template.New("headerStruct").Parse(`
+// Represents the header field of a {{.DocumentStructName}} document
+// TODO - there are only 4 of these headers - MODE, MTD, STAT, and TCST. This can be represented more efficiently.
+type {{.HeaderStructName}} struct {
+{{- range .Fields }}
+	{{ .Name }} {{ .Type }} ` + "`json:\"{{ .JSONName }}\"`" + `
+{{- end }}
+}
+	`))
+	var buf bytes.Buffer
+	headerStructTemplate.Execute(&buf, data)
+	return buf.String()
+}
+
 func getHeaderStructureString(fileType string, lineType string, getDocIDString string, addDataElementString string, headerFields []string, metDataTypesForLines map[string]string) (string, string, string, string, string, string, string, string) {
 	/* The header struct is created from the headerFields and the fillHeader function is created from the headerFields
 	There are a few data types that require special attention, i.e
@@ -267,48 +351,58 @@ func getHeaderStructureString(fileType string, lineType string, getDocIDString s
 	only one forecast can reside in the data section if it is indexed by the LEAD field. The answer
 	to this is to move the INIT field to the data section.
 	*/
+
+	// Create data structure names
 	structName := fmt.Sprintf("%s_%s", fileType, lineType)
 	dataStructName := fmt.Sprintf("%s_data", structName)
 	headerStructName := fmt.Sprintf("%s_header", structName)
-	structBody := fmt.Sprintf("type %s struct { \nutil.VxMetadata\n%s\nData map[string]%s `json:\"data\"` }", structName, headerStructName, dataStructName) // TODO(IAN) - do we need to add util.VxMetadata & dataSetName to the struct? They're currently only added to the map[string]interface
+
+	structBody := createDocumentStruct(documentStructData{DocumentStructName: structName, HeaderStructName: headerStructName, DataStructName: dataStructName})
 
 	dataKeyMap := util.DataKeyMap[fileType+"_"+lineType]
 	keyFields := dataKeyMap.DataKey
 	headerDisallowed := dataKeyMap.HeaderDisallow // list of disallowed fields
-	headerStructString := fmt.Sprintf("type %s struct {\n", headerStructName)
 	if fileType == "MODE" || fileType == "MTD" {
 		// these file types do not have a LINE_TYPE field in the header definition
 		// from the met_header_columns file. We add a LINE_TYPE field to the header struct
 		// and the fillHeader function
 		headerFields = append(headerFields, `LINE_TYPE`)
 	}
+
+	// Create headerStructs
+	headerStructFields := []structField{}
+
 	fillHeaderString := fmt.Sprintf("func (s *%s) fill(fields []string){\n", headerStructName)
 
-	getDocIDString += fmt.Sprintf("\tcase \"%s\":\n", structName)
-	getDocIDString += fmt.Sprintf("\t\telem_header := %s{}\n", headerStructName)
-	getDocIDString += "\t\telem_header.fill(headerData)\n"
-	getDocIDString += fmt.Sprintf("\t\telem_data := %s{}\n", dataStructName)
-	getDocIDString += "\t\telem_data.fill(dataData)\n\n"
-	getDocIDString += fmt.Sprintf("tmp := %s{\n", structName)
-	getDocIDString += "VxMetadata: metaData,\n"
-	getDocIDString += fmt.Sprintf("%s: elem_header,\n", headerStructName)
-	getDocIDString += fmt.Sprintf("Data: make(map[string]%s),\n}\n", dataStructName)
-	getDocIDString += "tmp.Data[dataKey] = elem_data\n"
-	getDocIDString += "statDoc = tmp\n"
+	getDocIDStringTemplate := template.Must(template.New("docIDPart").Parse(`
+case "{{.DocumentStructName}}":
+	elem_header := {{.HeaderStructName}}{}
+	elem_header.fill(headerData)
+	elem_data := {{.DataStructName}}{}
+	elem_data.fill(dataData)
 
-	addDataElementString += fmt.Sprintf("\tcase \"%s\":\n", structName)
-	addDataElementString += fmt.Sprintf("\t\telem_data := %s{}\n", dataStructName)
-	addDataElementString += "\t\telem_data.fill(dataData)\n"
-	addDataElementString += fmt.Sprintf("\t\tif val, ok := (*doc)[\"data\"].(map[string]%s); ok {\n", dataStructName)
-	addDataElementString += "\t\t\tval[dataKey] = elem_data\n}\n"
-
-	// find the maximum length of the header fields for formatting (padding)
-	padding := 0
-	for _, term := range headerFields {
-		if len(term) > padding {
-			padding = len(term)
-		}
+	tmp := {{.DocumentStructName}}{
+		VxMetadata:        metaData,
+		{{.HeaderStructName}}: elem_header,
+		Data:              make(map[string]{{.DataStructName}}),
 	}
+	tmp.Data[dataKey] = elem_data
+	statDoc = tmp`))
+	var buf bytes.Buffer
+	getDocIDStringTemplate.Execute(&buf, documentStructData{DocumentStructName: structName, HeaderStructName: headerStructName, DataStructName: dataStructName})
+	getDocIDString += buf.String()
+
+	addDataElementTemplate := template.Must(template.New("docIDPart").Parse(`
+	case "{{.DocumentStructName}}":
+	elem_data := {{.DataStructName}}{}
+	elem_data.fill(dataData)
+	if val, ok := (*doc)["data"].(map[string]{{.DataStructName}}); ok {
+		val[dataKey] = elem_data
+	}`))
+	var buf2 bytes.Buffer
+	addDataElementTemplate.Execute(&buf2, documentStructData{DocumentStructName: structName, HeaderStructName: headerStructName, DataStructName: dataStructName})
+	addDataElementString += buf2.String()
+
 	for _i, term := range headerFields {
 		// skip the dataKey fields
 		isDataKey := false
@@ -329,7 +423,7 @@ func getHeaderStructureString(fileType string, lineType string, getDocIDString s
 		name := strings.ToUpper(term)
 		_, dataType := getDataType(term, &metDataTypesForLines)
 		jsonName := strings.ToUpper(name)
-		headerStructString += fmt.Sprintf("    %-*s %s `json:\"%s\"`\n", padding, name, dataType, jsonName)
+		headerStructFields = append(headerStructFields, structField{Name: name, Type: dataType, JSONName: jsonName})
 		if term == "LINE_TYPE" && (fileType == "MODE" || fileType == "MTD") {
 			// these file types do not have a LINE_TYPE field in the header definition
 			// from the met_header_columns file. We add a LINE_TYPE field to the header struct
@@ -340,7 +434,7 @@ func getHeaderStructureString(fileType string, lineType string, getDocIDString s
 			fillHeaderString += fmt.Sprintf("\ts.%s.UnmarshalText([]byte(fields[%d]))\n", name, _i)
 		}
 	}
-	headerStructString += "}\n"
+	headerStructString := createHeaderStruct(headerStructData{DocumentStructName: structName, HeaderStructName: headerStructName, Fields: headerStructFields})
 	fillHeaderString += "}\n"
 	return structName, structBody, dataStructName, headerStructName, headerStructString, fillHeaderString, getDocIDString, addDataElementString
 }
