@@ -27,196 +27,274 @@ go run generator -version=v12.0 > pkg/linetypes/v12_0/linetypes.go
 */
 
 // Document struct definitions
+
+// Represents a complete MODE_CTS document
 type MODE_CTS struct {
 	util.VxMetadata
 	MODE_CTS_header
 	Data map[string]MODE_CTS_data `json:"data"`
 }
+
+// Represents a complete MODE_OBJ document
 type MODE_OBJ struct {
 	util.VxMetadata
 	MODE_OBJ_header
 	Data map[string]MODE_OBJ_data `json:"data"`
 }
+
+// Represents a complete STAT_CNT document
 type STAT_CNT struct {
 	util.VxMetadata
 	STAT_CNT_header
 	Data map[string]STAT_CNT_data `json:"data"`
 }
+
+// Represents a complete STAT_CTC document
 type STAT_CTC struct {
 	util.VxMetadata
 	STAT_CTC_header
 	Data map[string]STAT_CTC_data `json:"data"`
 }
+
+// Represents a complete STAT_CTS document
 type STAT_CTS struct {
 	util.VxMetadata
 	STAT_CTS_header
 	Data map[string]STAT_CTS_data `json:"data"`
 }
+
+// Represents a complete STAT_DMAP document
 type STAT_DMAP struct {
 	util.VxMetadata
 	STAT_DMAP_header
 	Data map[string]STAT_DMAP_data `json:"data"`
 }
+
+// Represents a complete STAT_ECLV document
 type STAT_ECLV struct {
 	util.VxMetadata
 	STAT_ECLV_header
 	Data map[string]STAT_ECLV_data `json:"data"`
 }
+
+// Represents a complete STAT_ECNT document
 type STAT_ECNT struct {
 	util.VxMetadata
 	STAT_ECNT_header
 	Data map[string]STAT_ECNT_data `json:"data"`
 }
+
+// Represents a complete STAT_FHO document
 type STAT_FHO struct {
 	util.VxMetadata
 	STAT_FHO_header
 	Data map[string]STAT_FHO_data `json:"data"`
 }
+
+// Represents a complete STAT_GENMPR document
 type STAT_GENMPR struct {
 	util.VxMetadata
 	STAT_GENMPR_header
 	Data map[string]STAT_GENMPR_data `json:"data"`
 }
+
+// Represents a complete STAT_GRAD document
 type STAT_GRAD struct {
 	util.VxMetadata
 	STAT_GRAD_header
 	Data map[string]STAT_GRAD_data `json:"data"`
 }
+
+// Represents a complete STAT_ISC document
 type STAT_ISC struct {
 	util.VxMetadata
 	STAT_ISC_header
 	Data map[string]STAT_ISC_data `json:"data"`
 }
+
+// Represents a complete STAT_MCTC document
 type STAT_MCTC struct {
 	util.VxMetadata
 	STAT_MCTC_header
 	Data map[string]STAT_MCTC_data `json:"data"`
 }
+
+// Represents a complete STAT_MCTS document
 type STAT_MCTS struct {
 	util.VxMetadata
 	STAT_MCTS_header
 	Data map[string]STAT_MCTS_data `json:"data"`
 }
+
+// Represents a complete STAT_MPR document
 type STAT_MPR struct {
 	util.VxMetadata
 	STAT_MPR_header
 	Data map[string]STAT_MPR_data `json:"data"`
 }
+
+// Represents a complete STAT_NBRCNT document
 type STAT_NBRCNT struct {
 	util.VxMetadata
 	STAT_NBRCNT_header
 	Data map[string]STAT_NBRCNT_data `json:"data"`
 }
+
+// Represents a complete STAT_NBRCTC document
 type STAT_NBRCTC struct {
 	util.VxMetadata
 	STAT_NBRCTC_header
 	Data map[string]STAT_NBRCTC_data `json:"data"`
 }
+
+// Represents a complete STAT_NBRCTS document
 type STAT_NBRCTS struct {
 	util.VxMetadata
 	STAT_NBRCTS_header
 	Data map[string]STAT_NBRCTS_data `json:"data"`
 }
+
+// Represents a complete STAT_ORANK document
 type STAT_ORANK struct {
 	util.VxMetadata
 	STAT_ORANK_header
 	Data map[string]STAT_ORANK_data `json:"data"`
 }
+
+// Represents a complete STAT_PCT document
 type STAT_PCT struct {
 	util.VxMetadata
 	STAT_PCT_header
 	Data map[string]STAT_PCT_data `json:"data"`
 }
+
+// Represents a complete STAT_PHIST document
 type STAT_PHIST struct {
 	util.VxMetadata
 	STAT_PHIST_header
 	Data map[string]STAT_PHIST_data `json:"data"`
 }
+
+// Represents a complete STAT_PJC document
 type STAT_PJC struct {
 	util.VxMetadata
 	STAT_PJC_header
 	Data map[string]STAT_PJC_data `json:"data"`
 }
+
+// Represents a complete STAT_PRC document
 type STAT_PRC struct {
 	util.VxMetadata
 	STAT_PRC_header
 	Data map[string]STAT_PRC_data `json:"data"`
 }
+
+// Represents a complete STAT_PSTD document
 type STAT_PSTD struct {
 	util.VxMetadata
 	STAT_PSTD_header
 	Data map[string]STAT_PSTD_data `json:"data"`
 }
+
+// Represents a complete STAT_RELP document
 type STAT_RELP struct {
 	util.VxMetadata
 	STAT_RELP_header
 	Data map[string]STAT_RELP_data `json:"data"`
 }
+
+// Represents a complete STAT_RHIST document
 type STAT_RHIST struct {
 	util.VxMetadata
 	STAT_RHIST_header
 	Data map[string]STAT_RHIST_data `json:"data"`
 }
+
+// Represents a complete STAT_RPS document
 type STAT_RPS struct {
 	util.VxMetadata
 	STAT_RPS_header
 	Data map[string]STAT_RPS_data `json:"data"`
 }
+
+// Represents a complete STAT_SAL1L2 document
 type STAT_SAL1L2 struct {
 	util.VxMetadata
 	STAT_SAL1L2_header
 	Data map[string]STAT_SAL1L2_data `json:"data"`
 }
+
+// Represents a complete STAT_SEEPS document
 type STAT_SEEPS struct {
 	util.VxMetadata
 	STAT_SEEPS_header
 	Data map[string]STAT_SEEPS_data `json:"data"`
 }
+
+// Represents a complete STAT_SEEPS_MPR document
 type STAT_SEEPS_MPR struct {
 	util.VxMetadata
 	STAT_SEEPS_MPR_header
 	Data map[string]STAT_SEEPS_MPR_data `json:"data"`
 }
+
+// Represents a complete STAT_SL1L2 document
 type STAT_SL1L2 struct {
 	util.VxMetadata
 	STAT_SL1L2_header
 	Data map[string]STAT_SL1L2_data `json:"data"`
 }
+
+// Represents a complete STAT_SSIDX document
 type STAT_SSIDX struct {
 	util.VxMetadata
 	STAT_SSIDX_header
 	Data map[string]STAT_SSIDX_data `json:"data"`
 }
+
+// Represents a complete STAT_SSVAR document
 type STAT_SSVAR struct {
 	util.VxMetadata
 	STAT_SSVAR_header
 	Data map[string]STAT_SSVAR_data `json:"data"`
 }
+
+// Represents a complete STAT_VAL1L2 document
 type STAT_VAL1L2 struct {
 	util.VxMetadata
 	STAT_VAL1L2_header
 	Data map[string]STAT_VAL1L2_data `json:"data"`
 }
+
+// Represents a complete STAT_VCNT document
 type STAT_VCNT struct {
 	util.VxMetadata
 	STAT_VCNT_header
 	Data map[string]STAT_VCNT_data `json:"data"`
 }
+
+// Represents a complete STAT_VL1L2 document
 type STAT_VL1L2 struct {
 	util.VxMetadata
 	STAT_VL1L2_header
 	Data map[string]STAT_VL1L2_data `json:"data"`
 }
+
+// Represents a complete TCST_PROBRIRW document
 type TCST_PROBRIRW struct {
 	util.VxMetadata
 	TCST_PROBRIRW_header
 	Data map[string]TCST_PROBRIRW_data `json:"data"`
 }
+
+// Represents a complete TCST_TCDIAG document
 type TCST_TCDIAG struct {
 	util.VxMetadata
 	TCST_TCDIAG_header
 	Data map[string]TCST_TCDIAG_data `json:"data"`
 }
+
+// Represents a complete TCST_TCMPR document
 type TCST_TCMPR struct {
 	util.VxMetadata
 	TCST_TCMPR_header
@@ -224,6 +302,9 @@ type TCST_TCMPR struct {
 }
 
 // Header struct definitions
+
+// Represents the header field of a MODE_CTS document
+// TODO - there are only 4 of these headers - MODE, MTD, STAT, and TCST. This can be represented more efficiently.
 type MODE_CTS_header struct {
 	VERSION    validtypes.ValidString `json:"VERSION"`
 	MODEL      validtypes.ValidString `json:"MODEL"`
@@ -249,6 +330,8 @@ type MODE_CTS_header struct {
 	LINE_TYPE  validtypes.ValidString `json:"LINE_TYPE"`
 }
 
+// Represents the header field of a MODE_OBJ document
+// TODO - there are only 4 of these headers - MODE, MTD, STAT, and TCST. This can be represented more efficiently.
 type MODE_OBJ_header struct {
 	VERSION    validtypes.ValidString `json:"VERSION"`
 	MODEL      validtypes.ValidString `json:"MODEL"`
@@ -274,6 +357,8 @@ type MODE_OBJ_header struct {
 	LINE_TYPE  validtypes.ValidString `json:"LINE_TYPE"`
 }
 
+// Represents the header field of a STAT_CNT document
+// TODO - there are only 4 of these headers - MODE, MTD, STAT, and TCST. This can be represented more efficiently.
 type STAT_CNT_header struct {
 	VERSION        validtypes.ValidString `json:"VERSION"`
 	MODEL          validtypes.ValidString `json:"MODEL"`
@@ -300,6 +385,8 @@ type STAT_CNT_header struct {
 	LINE_TYPE      validtypes.ValidString `json:"LINE_TYPE"`
 }
 
+// Represents the header field of a STAT_CTC document
+// TODO - there are only 4 of these headers - MODE, MTD, STAT, and TCST. This can be represented more efficiently.
 type STAT_CTC_header struct {
 	VERSION        validtypes.ValidString `json:"VERSION"`
 	MODEL          validtypes.ValidString `json:"MODEL"`
@@ -326,6 +413,8 @@ type STAT_CTC_header struct {
 	LINE_TYPE      validtypes.ValidString `json:"LINE_TYPE"`
 }
 
+// Represents the header field of a STAT_CTS document
+// TODO - there are only 4 of these headers - MODE, MTD, STAT, and TCST. This can be represented more efficiently.
 type STAT_CTS_header struct {
 	VERSION        validtypes.ValidString `json:"VERSION"`
 	MODEL          validtypes.ValidString `json:"MODEL"`
@@ -352,6 +441,8 @@ type STAT_CTS_header struct {
 	LINE_TYPE      validtypes.ValidString `json:"LINE_TYPE"`
 }
 
+// Represents the header field of a STAT_DMAP document
+// TODO - there are only 4 of these headers - MODE, MTD, STAT, and TCST. This can be represented more efficiently.
 type STAT_DMAP_header struct {
 	VERSION        validtypes.ValidString `json:"VERSION"`
 	MODEL          validtypes.ValidString `json:"MODEL"`
@@ -378,6 +469,8 @@ type STAT_DMAP_header struct {
 	LINE_TYPE      validtypes.ValidString `json:"LINE_TYPE"`
 }
 
+// Represents the header field of a STAT_ECLV document
+// TODO - there are only 4 of these headers - MODE, MTD, STAT, and TCST. This can be represented more efficiently.
 type STAT_ECLV_header struct {
 	VERSION        validtypes.ValidString `json:"VERSION"`
 	MODEL          validtypes.ValidString `json:"MODEL"`
@@ -404,6 +497,8 @@ type STAT_ECLV_header struct {
 	LINE_TYPE      validtypes.ValidString `json:"LINE_TYPE"`
 }
 
+// Represents the header field of a STAT_ECNT document
+// TODO - there are only 4 of these headers - MODE, MTD, STAT, and TCST. This can be represented more efficiently.
 type STAT_ECNT_header struct {
 	VERSION        validtypes.ValidString `json:"VERSION"`
 	MODEL          validtypes.ValidString `json:"MODEL"`
@@ -430,6 +525,8 @@ type STAT_ECNT_header struct {
 	LINE_TYPE      validtypes.ValidString `json:"LINE_TYPE"`
 }
 
+// Represents the header field of a STAT_FHO document
+// TODO - there are only 4 of these headers - MODE, MTD, STAT, and TCST. This can be represented more efficiently.
 type STAT_FHO_header struct {
 	VERSION        validtypes.ValidString `json:"VERSION"`
 	MODEL          validtypes.ValidString `json:"MODEL"`
@@ -456,6 +553,8 @@ type STAT_FHO_header struct {
 	LINE_TYPE      validtypes.ValidString `json:"LINE_TYPE"`
 }
 
+// Represents the header field of a STAT_GENMPR document
+// TODO - there are only 4 of these headers - MODE, MTD, STAT, and TCST. This can be represented more efficiently.
 type STAT_GENMPR_header struct {
 	VERSION        validtypes.ValidString `json:"VERSION"`
 	MODEL          validtypes.ValidString `json:"MODEL"`
@@ -482,6 +581,8 @@ type STAT_GENMPR_header struct {
 	LINE_TYPE      validtypes.ValidString `json:"LINE_TYPE"`
 }
 
+// Represents the header field of a STAT_GRAD document
+// TODO - there are only 4 of these headers - MODE, MTD, STAT, and TCST. This can be represented more efficiently.
 type STAT_GRAD_header struct {
 	VERSION        validtypes.ValidString `json:"VERSION"`
 	MODEL          validtypes.ValidString `json:"MODEL"`
@@ -508,6 +609,8 @@ type STAT_GRAD_header struct {
 	LINE_TYPE      validtypes.ValidString `json:"LINE_TYPE"`
 }
 
+// Represents the header field of a STAT_ISC document
+// TODO - there are only 4 of these headers - MODE, MTD, STAT, and TCST. This can be represented more efficiently.
 type STAT_ISC_header struct {
 	VERSION        validtypes.ValidString `json:"VERSION"`
 	MODEL          validtypes.ValidString `json:"MODEL"`
@@ -534,6 +637,8 @@ type STAT_ISC_header struct {
 	LINE_TYPE      validtypes.ValidString `json:"LINE_TYPE"`
 }
 
+// Represents the header field of a STAT_MCTC document
+// TODO - there are only 4 of these headers - MODE, MTD, STAT, and TCST. This can be represented more efficiently.
 type STAT_MCTC_header struct {
 	VERSION        validtypes.ValidString `json:"VERSION"`
 	MODEL          validtypes.ValidString `json:"MODEL"`
@@ -560,6 +665,8 @@ type STAT_MCTC_header struct {
 	LINE_TYPE      validtypes.ValidString `json:"LINE_TYPE"`
 }
 
+// Represents the header field of a STAT_MCTS document
+// TODO - there are only 4 of these headers - MODE, MTD, STAT, and TCST. This can be represented more efficiently.
 type STAT_MCTS_header struct {
 	VERSION        validtypes.ValidString `json:"VERSION"`
 	MODEL          validtypes.ValidString `json:"MODEL"`
@@ -586,6 +693,8 @@ type STAT_MCTS_header struct {
 	LINE_TYPE      validtypes.ValidString `json:"LINE_TYPE"`
 }
 
+// Represents the header field of a STAT_MPR document
+// TODO - there are only 4 of these headers - MODE, MTD, STAT, and TCST. This can be represented more efficiently.
 type STAT_MPR_header struct {
 	VERSION        validtypes.ValidString `json:"VERSION"`
 	MODEL          validtypes.ValidString `json:"MODEL"`
@@ -612,6 +721,8 @@ type STAT_MPR_header struct {
 	LINE_TYPE      validtypes.ValidString `json:"LINE_TYPE"`
 }
 
+// Represents the header field of a STAT_NBRCNT document
+// TODO - there are only 4 of these headers - MODE, MTD, STAT, and TCST. This can be represented more efficiently.
 type STAT_NBRCNT_header struct {
 	VERSION        validtypes.ValidString `json:"VERSION"`
 	MODEL          validtypes.ValidString `json:"MODEL"`
@@ -638,6 +749,8 @@ type STAT_NBRCNT_header struct {
 	LINE_TYPE      validtypes.ValidString `json:"LINE_TYPE"`
 }
 
+// Represents the header field of a STAT_NBRCTC document
+// TODO - there are only 4 of these headers - MODE, MTD, STAT, and TCST. This can be represented more efficiently.
 type STAT_NBRCTC_header struct {
 	VERSION        validtypes.ValidString `json:"VERSION"`
 	MODEL          validtypes.ValidString `json:"MODEL"`
@@ -664,6 +777,8 @@ type STAT_NBRCTC_header struct {
 	LINE_TYPE      validtypes.ValidString `json:"LINE_TYPE"`
 }
 
+// Represents the header field of a STAT_NBRCTS document
+// TODO - there are only 4 of these headers - MODE, MTD, STAT, and TCST. This can be represented more efficiently.
 type STAT_NBRCTS_header struct {
 	VERSION        validtypes.ValidString `json:"VERSION"`
 	MODEL          validtypes.ValidString `json:"MODEL"`
@@ -690,6 +805,8 @@ type STAT_NBRCTS_header struct {
 	LINE_TYPE      validtypes.ValidString `json:"LINE_TYPE"`
 }
 
+// Represents the header field of a STAT_ORANK document
+// TODO - there are only 4 of these headers - MODE, MTD, STAT, and TCST. This can be represented more efficiently.
 type STAT_ORANK_header struct {
 	VERSION        validtypes.ValidString `json:"VERSION"`
 	MODEL          validtypes.ValidString `json:"MODEL"`
@@ -716,6 +833,8 @@ type STAT_ORANK_header struct {
 	LINE_TYPE      validtypes.ValidString `json:"LINE_TYPE"`
 }
 
+// Represents the header field of a STAT_PCT document
+// TODO - there are only 4 of these headers - MODE, MTD, STAT, and TCST. This can be represented more efficiently.
 type STAT_PCT_header struct {
 	VERSION        validtypes.ValidString `json:"VERSION"`
 	MODEL          validtypes.ValidString `json:"MODEL"`
@@ -742,6 +861,8 @@ type STAT_PCT_header struct {
 	LINE_TYPE      validtypes.ValidString `json:"LINE_TYPE"`
 }
 
+// Represents the header field of a STAT_PHIST document
+// TODO - there are only 4 of these headers - MODE, MTD, STAT, and TCST. This can be represented more efficiently.
 type STAT_PHIST_header struct {
 	VERSION        validtypes.ValidString `json:"VERSION"`
 	MODEL          validtypes.ValidString `json:"MODEL"`
@@ -768,6 +889,8 @@ type STAT_PHIST_header struct {
 	LINE_TYPE      validtypes.ValidString `json:"LINE_TYPE"`
 }
 
+// Represents the header field of a STAT_PJC document
+// TODO - there are only 4 of these headers - MODE, MTD, STAT, and TCST. This can be represented more efficiently.
 type STAT_PJC_header struct {
 	VERSION        validtypes.ValidString `json:"VERSION"`
 	MODEL          validtypes.ValidString `json:"MODEL"`
@@ -794,6 +917,8 @@ type STAT_PJC_header struct {
 	LINE_TYPE      validtypes.ValidString `json:"LINE_TYPE"`
 }
 
+// Represents the header field of a STAT_PRC document
+// TODO - there are only 4 of these headers - MODE, MTD, STAT, and TCST. This can be represented more efficiently.
 type STAT_PRC_header struct {
 	VERSION        validtypes.ValidString `json:"VERSION"`
 	MODEL          validtypes.ValidString `json:"MODEL"`
@@ -820,6 +945,8 @@ type STAT_PRC_header struct {
 	LINE_TYPE      validtypes.ValidString `json:"LINE_TYPE"`
 }
 
+// Represents the header field of a STAT_PSTD document
+// TODO - there are only 4 of these headers - MODE, MTD, STAT, and TCST. This can be represented more efficiently.
 type STAT_PSTD_header struct {
 	VERSION        validtypes.ValidString `json:"VERSION"`
 	MODEL          validtypes.ValidString `json:"MODEL"`
@@ -846,6 +973,8 @@ type STAT_PSTD_header struct {
 	LINE_TYPE      validtypes.ValidString `json:"LINE_TYPE"`
 }
 
+// Represents the header field of a STAT_RELP document
+// TODO - there are only 4 of these headers - MODE, MTD, STAT, and TCST. This can be represented more efficiently.
 type STAT_RELP_header struct {
 	VERSION        validtypes.ValidString `json:"VERSION"`
 	MODEL          validtypes.ValidString `json:"MODEL"`
@@ -872,6 +1001,8 @@ type STAT_RELP_header struct {
 	LINE_TYPE      validtypes.ValidString `json:"LINE_TYPE"`
 }
 
+// Represents the header field of a STAT_RHIST document
+// TODO - there are only 4 of these headers - MODE, MTD, STAT, and TCST. This can be represented more efficiently.
 type STAT_RHIST_header struct {
 	VERSION        validtypes.ValidString `json:"VERSION"`
 	MODEL          validtypes.ValidString `json:"MODEL"`
@@ -898,6 +1029,8 @@ type STAT_RHIST_header struct {
 	LINE_TYPE      validtypes.ValidString `json:"LINE_TYPE"`
 }
 
+// Represents the header field of a STAT_RPS document
+// TODO - there are only 4 of these headers - MODE, MTD, STAT, and TCST. This can be represented more efficiently.
 type STAT_RPS_header struct {
 	VERSION        validtypes.ValidString `json:"VERSION"`
 	MODEL          validtypes.ValidString `json:"MODEL"`
@@ -924,6 +1057,8 @@ type STAT_RPS_header struct {
 	LINE_TYPE      validtypes.ValidString `json:"LINE_TYPE"`
 }
 
+// Represents the header field of a STAT_SAL1L2 document
+// TODO - there are only 4 of these headers - MODE, MTD, STAT, and TCST. This can be represented more efficiently.
 type STAT_SAL1L2_header struct {
 	VERSION        validtypes.ValidString `json:"VERSION"`
 	MODEL          validtypes.ValidString `json:"MODEL"`
@@ -950,6 +1085,8 @@ type STAT_SAL1L2_header struct {
 	LINE_TYPE      validtypes.ValidString `json:"LINE_TYPE"`
 }
 
+// Represents the header field of a STAT_SEEPS_MPR document
+// TODO - there are only 4 of these headers - MODE, MTD, STAT, and TCST. This can be represented more efficiently.
 type STAT_SEEPS_MPR_header struct {
 	VERSION        validtypes.ValidString `json:"VERSION"`
 	MODEL          validtypes.ValidString `json:"MODEL"`
@@ -976,6 +1113,8 @@ type STAT_SEEPS_MPR_header struct {
 	LINE_TYPE      validtypes.ValidString `json:"LINE_TYPE"`
 }
 
+// Represents the header field of a STAT_SEEPS document
+// TODO - there are only 4 of these headers - MODE, MTD, STAT, and TCST. This can be represented more efficiently.
 type STAT_SEEPS_header struct {
 	VERSION        validtypes.ValidString `json:"VERSION"`
 	MODEL          validtypes.ValidString `json:"MODEL"`
@@ -1002,6 +1141,8 @@ type STAT_SEEPS_header struct {
 	LINE_TYPE      validtypes.ValidString `json:"LINE_TYPE"`
 }
 
+// Represents the header field of a STAT_SL1L2 document
+// TODO - there are only 4 of these headers - MODE, MTD, STAT, and TCST. This can be represented more efficiently.
 type STAT_SL1L2_header struct {
 	VERSION        validtypes.ValidString `json:"VERSION"`
 	MODEL          validtypes.ValidString `json:"MODEL"`
@@ -1028,6 +1169,8 @@ type STAT_SL1L2_header struct {
 	LINE_TYPE      validtypes.ValidString `json:"LINE_TYPE"`
 }
 
+// Represents the header field of a STAT_SSIDX document
+// TODO - there are only 4 of these headers - MODE, MTD, STAT, and TCST. This can be represented more efficiently.
 type STAT_SSIDX_header struct {
 	VERSION        validtypes.ValidString `json:"VERSION"`
 	MODEL          validtypes.ValidString `json:"MODEL"`
@@ -1054,6 +1197,8 @@ type STAT_SSIDX_header struct {
 	LINE_TYPE      validtypes.ValidString `json:"LINE_TYPE"`
 }
 
+// Represents the header field of a STAT_SSVAR document
+// TODO - there are only 4 of these headers - MODE, MTD, STAT, and TCST. This can be represented more efficiently.
 type STAT_SSVAR_header struct {
 	VERSION        validtypes.ValidString `json:"VERSION"`
 	MODEL          validtypes.ValidString `json:"MODEL"`
@@ -1080,6 +1225,8 @@ type STAT_SSVAR_header struct {
 	LINE_TYPE      validtypes.ValidString `json:"LINE_TYPE"`
 }
 
+// Represents the header field of a STAT_VAL1L2 document
+// TODO - there are only 4 of these headers - MODE, MTD, STAT, and TCST. This can be represented more efficiently.
 type STAT_VAL1L2_header struct {
 	VERSION        validtypes.ValidString `json:"VERSION"`
 	MODEL          validtypes.ValidString `json:"MODEL"`
@@ -1106,6 +1253,8 @@ type STAT_VAL1L2_header struct {
 	LINE_TYPE      validtypes.ValidString `json:"LINE_TYPE"`
 }
 
+// Represents the header field of a STAT_VCNT document
+// TODO - there are only 4 of these headers - MODE, MTD, STAT, and TCST. This can be represented more efficiently.
 type STAT_VCNT_header struct {
 	VERSION        validtypes.ValidString `json:"VERSION"`
 	MODEL          validtypes.ValidString `json:"MODEL"`
@@ -1132,6 +1281,8 @@ type STAT_VCNT_header struct {
 	LINE_TYPE      validtypes.ValidString `json:"LINE_TYPE"`
 }
 
+// Represents the header field of a STAT_VL1L2 document
+// TODO - there are only 4 of these headers - MODE, MTD, STAT, and TCST. This can be represented more efficiently.
 type STAT_VL1L2_header struct {
 	VERSION        validtypes.ValidString `json:"VERSION"`
 	MODEL          validtypes.ValidString `json:"MODEL"`
@@ -1158,6 +1309,8 @@ type STAT_VL1L2_header struct {
 	LINE_TYPE      validtypes.ValidString `json:"LINE_TYPE"`
 }
 
+// Represents the header field of a TCST_PROBRIRW document
+// TODO - there are only 4 of these headers - MODE, MTD, STAT, and TCST. This can be represented more efficiently.
 type TCST_PROBRIRW_header struct {
 	VERSION    validtypes.ValidString `json:"VERSION"`
 	AMODEL     validtypes.ValidString `json:"AMODEL"`
@@ -1173,6 +1326,8 @@ type TCST_PROBRIRW_header struct {
 	LINE_TYPE  validtypes.ValidString `json:"LINE_TYPE"`
 }
 
+// Represents the header field of a TCST_TCDIAG document
+// TODO - there are only 4 of these headers - MODE, MTD, STAT, and TCST. This can be represented more efficiently.
 type TCST_TCDIAG_header struct {
 	VERSION    validtypes.ValidString `json:"VERSION"`
 	AMODEL     validtypes.ValidString `json:"AMODEL"`
@@ -1188,6 +1343,8 @@ type TCST_TCDIAG_header struct {
 	LINE_TYPE  validtypes.ValidString `json:"LINE_TYPE"`
 }
 
+// Represents the header field of a TCST_TCMPR document
+// TODO - there are only 4 of these headers - MODE, MTD, STAT, and TCST. This can be represented more efficiently.
 type TCST_TCMPR_header struct {
 	VERSION    validtypes.ValidString `json:"VERSION"`
 	AMODEL     validtypes.ValidString `json:"AMODEL"`
@@ -2183,7 +2340,7 @@ func (s *TCST_TCMPR_header) fill(fields []string) {
 	s.LINE_TYPE.UnmarshalText([]byte(fields[13]))
 }
 
-//line data struct definitions
+// line data struct definitions
 type MODE_CTS_data struct {
 	FIELD validtypes.ValidString `json:"FIELD,omitzero"`
 	TOTAL validtypes.ValidInt    `json:"TOTAL,omitzero"`
