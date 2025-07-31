@@ -183,6 +183,14 @@ To modify this code - modify the generator.go file and run the generator.go prog
 cd  <repo_root>
 go run generator -version=v12.0 > pkg/linetypes/v12_0/linetypes.go
 */
+
+// Helper function to reduce boilerplate for using errors.Join()
+func appendErrorWithContext(errs *[]error, fieldName string, err error) {
+    if err != nil {
+        *errs = append(*errs, fmt.Errorf("%%s: %%w", fieldName, err))
+    }
+}
+
 `, parserVersion)
 }
 
@@ -297,7 +305,7 @@ func createDocumentStruct(data documentStructData) string {
 type {{.DocumentStructName}} struct {
     util.VxMetadata
     {{.HeaderStructName}}
-    Data map[string]{{.DataStructName}} ` + "`json:\"data\"`" + `
+    Data map[string]{{.DataStructName}} ` + "`json:\"data\"` //nolint:tagliatelle" + `
 }
 `))
 	var buf bytes.Buffer
@@ -407,20 +415,23 @@ func getHeaderFillFields(headerFields []string, fileType string, lineType string
 func createHeaderFillMethod(data headerFillMethodData) string {
 	headerFillMethodTemplate := template.Must(template.New("headerStruct").Parse(`
 // Sets {{ .HeaderStructName }} struct's fields
-func (s *{{ .HeaderStructName }}) fill(fields []string) {
+func (s *{{ .HeaderStructName }}) fill(fields []string) error {
 	{{/*
 	expectedNumFields := {{ len .Fields }} // Length of the FieldNames slice from the template
 	if len(fields) != expectedNumFields {
 		return // TODO - return an error
 	}
 	*/}}
+	var errs []error
+
 	{{- range .Fields }}
 	{{- if .HardCodeLineType}}
-	s.LINE_TYPE.UnmarshalText([]byte("{{ $.DocumentStructName }}")) //hardcode the LINE_TYPE
+	appendErrorWithContext(&errs, "LINE_TYPE", s.LINE_TYPE.UnmarshalText([]byte("{{ $.DocumentStructName }}"))) //hardcode the LINE_TYPE
 	{{- else}}
-	s.{{ .Name }}.UnmarshalText([]byte(fields[{{ .Index }}]))
+	appendErrorWithContext(&errs, "{{ .Name }}", s.{{ .Name }}.UnmarshalText([]byte(fields[{{ .Index }}])))
 	{{- end }}
 	{{- end }}
+	return errors.Join(errs...)
 }`))
 	var buf bytes.Buffer
 	headerFillMethodTemplate.Execute(&buf, data)
@@ -540,7 +551,8 @@ func createDataFillMethod(data dataFillMethodData) string {
 	dataFillMethodTemplate.Funcs(template.FuncMap{"add": add}) // Add the custom "add" function
 	dataFillMethodTemplate = template.Must(dataFillMethodTemplate.Parse(`
 // Sets {{ .DataStructName }} struct's fields
-func (s *{{ .DataStructName }}) fill(fields []string) {
+func (s *{{ .DataStructName }}) fill(fields []string) error {
+	var errs []error
 	{{- range .Fields }}
 	{{- if .IsNCAT }}
 	// these values seem to always be ints (or "NA")
@@ -558,7 +570,7 @@ func (s *{{ .DataStructName }}) fill(fields []string) {
 			if index >= len(fields) {
 				value.Reset()
 			} else {
-				value.UnmarshalText([]byte(fields[index]))
+				appendErrorWithContext(&errs, "{{ .Name }}", value.UnmarshalText([]byte(fields[index])))
 			}
 			s.{{ .Name }}[key] = value
 		}
@@ -578,15 +590,16 @@ func (s *{{ .DataStructName }}) fill(fields []string) {
 			if index > len(fields) { // sometimes the data line is truncated - invalidate that field
 				value.Reset()
 			} else {
-				value.UnmarshalText([]byte(fields[index]))
+				appendErrorWithContext(&errs, "{{ .Name }}", value.UnmarshalText([]byte(fields[index])))
 			}
 			s.{{ .Name }}[key] = value
 		}
 	}
 	{{- else}}
-	s.{{ .Name }}.UnmarshalText([]byte(fields[{{ .Index }}]))
+	appendErrorWithContext(&errs, "{{ .Name }}", s.{{ .Name }}.UnmarshalText([]byte(fields[{{ .Index }}])))
 	{{- end }}
 	{{- end }}
+	return errors.Join(errs...)
 }`))
 	var buf bytes.Buffer
 	dataFillMethodTemplate.Execute(&buf, data)
@@ -603,13 +616,15 @@ func createGetDocForIDFunction(data getDocForIDData) string {
 // Creates a new doc, header functions and all.
 func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []string, dataData []string, dataKey string) (map[string]interface{}, error) {
 	var statDoc any
+	var errs []error
+
 	switch fileLineType {
 	{{- range .Documents }}
 	case "{{ .DocumentStructName }}":
 		elem_header := {{ .HeaderStructName }}{}
-		elem_header.fill(headerData)
+		appendErrorWithContext(&errs, "{{ .HeaderStructName }}", elem_header.fill(headerData))
 		elem_data := {{ .DataStructName }}{}
-		elem_data.fill(dataData)
+		appendErrorWithContext(&errs, "{{ .DataStructName }}", elem_data.fill(dataData))
 
 		tmp := {{ .DocumentStructName }}{
 			VxMetadata:        metaData,
@@ -625,14 +640,11 @@ func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []str
 	// Convert our types to a map[string]any by marshaling & unmarshaling through JSON
 	// TODO - would it be advantageous to keep the type longer, e.g. for AddDataElement?
 	jsonBytes, err := json.Marshal(statDoc)
-	if err != nil {
-		return nil, fmt.Errorf("error marshalling statDoc to struct: %w", err)
-	}
+	appendErrorWithContext(&errs, "MarshalJSON", err)
 	var doc map[string]any
-	if err := json.Unmarshal(jsonBytes, &doc); err != nil {
-		return nil, fmt.Errorf("error unmarshalling statDoc to map: %w", err)
-	}
-	return doc, nil
+	err = json.Unmarshal(jsonBytes, &doc)
+	appendErrorWithContext(&errs, "UnmarshalJSON", err)
+	return doc, errors.Join(errs...)
 }
 	`))
 	var buf bytes.Buffer
@@ -650,19 +662,21 @@ func createAddDataElementFunction(data addDataElementData) string {
 // Header info has already been set by GetDocForId. Solely adds a new "data" element to the map.
 // doc is expected to be a map representing the "base" struct (E.g. "STAT_CNT") with header, metadata, & data info
 func AddDataElement(dataKey string, fileLineType string, dataData []string, doc *map[string]interface{}) (map[string]interface{}, error) {
+	var errs []error
+
 	switch fileLineType {
 	{{- range .Documents }}
 	case "{{.DocumentStructName}}":
 		elem_data := {{.DataStructName}}{}
-		elem_data.fill(dataData)
-		if val, ok := (*doc)["data"].(map[string]{{.DataStructName}}); ok {
+		appendErrorWithContext(&errs, "{{ .DataStructName }}", elem_data.fill(dataData))
+		if val, ok := (*doc)["data"].(map[string]{{ .DataStructName }}); ok {
 			val[dataKey] = elem_data
 		}
 	{{- end }}
 	default:
 		return nil, errors.New("AddDataElement: Unknown file_line type:" + fileLineType)
 	}
-	return *doc, nil
+	return *doc, errors.Join(errs...)
 }
 	`))
 	var buf bytes.Buffer

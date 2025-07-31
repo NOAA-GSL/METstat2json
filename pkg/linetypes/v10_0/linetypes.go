@@ -17,251 +17,258 @@ cd  <repo_root>
 go run generator -version=v12.0 > pkg/linetypes/v12_0/linetypes.go
 */
 
+// Helper function to reduce boilerplate for using errors.Join()
+func appendErrorWithContext(errs *[]error, fieldName string, err error) {
+	if err != nil {
+		*errs = append(*errs, fmt.Errorf("%s: %w", fieldName, err))
+	}
+}
+
 // Document struct definitions
 
 // Represents a complete MODE_CTS document
 type MODE_CTS struct {
 	util.VxMetadata
 	MODE_CTS_header
-	Data map[string]MODE_CTS_data `json:"data"`
+	Data map[string]MODE_CTS_data `json:"data"` //nolint:tagliatelle
 }
 
 // Represents a complete MODE_OBJ document
 type MODE_OBJ struct {
 	util.VxMetadata
 	MODE_OBJ_header
-	Data map[string]MODE_OBJ_data `json:"data"`
+	Data map[string]MODE_OBJ_data `json:"data"` //nolint:tagliatelle
 }
 
 // Represents a complete STAT_CNT document
 type STAT_CNT struct {
 	util.VxMetadata
 	STAT_CNT_header
-	Data map[string]STAT_CNT_data `json:"data"`
+	Data map[string]STAT_CNT_data `json:"data"` //nolint:tagliatelle
 }
 
 // Represents a complete STAT_CTC document
 type STAT_CTC struct {
 	util.VxMetadata
 	STAT_CTC_header
-	Data map[string]STAT_CTC_data `json:"data"`
+	Data map[string]STAT_CTC_data `json:"data"` //nolint:tagliatelle
 }
 
 // Represents a complete STAT_CTS document
 type STAT_CTS struct {
 	util.VxMetadata
 	STAT_CTS_header
-	Data map[string]STAT_CTS_data `json:"data"`
+	Data map[string]STAT_CTS_data `json:"data"` //nolint:tagliatelle
 }
 
 // Represents a complete STAT_DMAP document
 type STAT_DMAP struct {
 	util.VxMetadata
 	STAT_DMAP_header
-	Data map[string]STAT_DMAP_data `json:"data"`
+	Data map[string]STAT_DMAP_data `json:"data"` //nolint:tagliatelle
 }
 
 // Represents a complete STAT_ECLV document
 type STAT_ECLV struct {
 	util.VxMetadata
 	STAT_ECLV_header
-	Data map[string]STAT_ECLV_data `json:"data"`
+	Data map[string]STAT_ECLV_data `json:"data"` //nolint:tagliatelle
 }
 
 // Represents a complete STAT_ECNT document
 type STAT_ECNT struct {
 	util.VxMetadata
 	STAT_ECNT_header
-	Data map[string]STAT_ECNT_data `json:"data"`
+	Data map[string]STAT_ECNT_data `json:"data"` //nolint:tagliatelle
 }
 
 // Represents a complete STAT_FHO document
 type STAT_FHO struct {
 	util.VxMetadata
 	STAT_FHO_header
-	Data map[string]STAT_FHO_data `json:"data"`
+	Data map[string]STAT_FHO_data `json:"data"` //nolint:tagliatelle
 }
 
 // Represents a complete STAT_GENMPR document
 type STAT_GENMPR struct {
 	util.VxMetadata
 	STAT_GENMPR_header
-	Data map[string]STAT_GENMPR_data `json:"data"`
+	Data map[string]STAT_GENMPR_data `json:"data"` //nolint:tagliatelle
 }
 
 // Represents a complete STAT_GRAD document
 type STAT_GRAD struct {
 	util.VxMetadata
 	STAT_GRAD_header
-	Data map[string]STAT_GRAD_data `json:"data"`
+	Data map[string]STAT_GRAD_data `json:"data"` //nolint:tagliatelle
 }
 
 // Represents a complete STAT_ISC document
 type STAT_ISC struct {
 	util.VxMetadata
 	STAT_ISC_header
-	Data map[string]STAT_ISC_data `json:"data"`
+	Data map[string]STAT_ISC_data `json:"data"` //nolint:tagliatelle
 }
 
 // Represents a complete STAT_MCTC document
 type STAT_MCTC struct {
 	util.VxMetadata
 	STAT_MCTC_header
-	Data map[string]STAT_MCTC_data `json:"data"`
+	Data map[string]STAT_MCTC_data `json:"data"` //nolint:tagliatelle
 }
 
 // Represents a complete STAT_MCTS document
 type STAT_MCTS struct {
 	util.VxMetadata
 	STAT_MCTS_header
-	Data map[string]STAT_MCTS_data `json:"data"`
+	Data map[string]STAT_MCTS_data `json:"data"` //nolint:tagliatelle
 }
 
 // Represents a complete STAT_MPR document
 type STAT_MPR struct {
 	util.VxMetadata
 	STAT_MPR_header
-	Data map[string]STAT_MPR_data `json:"data"`
+	Data map[string]STAT_MPR_data `json:"data"` //nolint:tagliatelle
 }
 
 // Represents a complete STAT_NBRCNT document
 type STAT_NBRCNT struct {
 	util.VxMetadata
 	STAT_NBRCNT_header
-	Data map[string]STAT_NBRCNT_data `json:"data"`
+	Data map[string]STAT_NBRCNT_data `json:"data"` //nolint:tagliatelle
 }
 
 // Represents a complete STAT_NBRCTC document
 type STAT_NBRCTC struct {
 	util.VxMetadata
 	STAT_NBRCTC_header
-	Data map[string]STAT_NBRCTC_data `json:"data"`
+	Data map[string]STAT_NBRCTC_data `json:"data"` //nolint:tagliatelle
 }
 
 // Represents a complete STAT_NBRCTS document
 type STAT_NBRCTS struct {
 	util.VxMetadata
 	STAT_NBRCTS_header
-	Data map[string]STAT_NBRCTS_data `json:"data"`
+	Data map[string]STAT_NBRCTS_data `json:"data"` //nolint:tagliatelle
 }
 
 // Represents a complete STAT_ORANK document
 type STAT_ORANK struct {
 	util.VxMetadata
 	STAT_ORANK_header
-	Data map[string]STAT_ORANK_data `json:"data"`
+	Data map[string]STAT_ORANK_data `json:"data"` //nolint:tagliatelle
 }
 
 // Represents a complete STAT_PCT document
 type STAT_PCT struct {
 	util.VxMetadata
 	STAT_PCT_header
-	Data map[string]STAT_PCT_data `json:"data"`
+	Data map[string]STAT_PCT_data `json:"data"` //nolint:tagliatelle
 }
 
 // Represents a complete STAT_PHIST document
 type STAT_PHIST struct {
 	util.VxMetadata
 	STAT_PHIST_header
-	Data map[string]STAT_PHIST_data `json:"data"`
+	Data map[string]STAT_PHIST_data `json:"data"` //nolint:tagliatelle
 }
 
 // Represents a complete STAT_PJC document
 type STAT_PJC struct {
 	util.VxMetadata
 	STAT_PJC_header
-	Data map[string]STAT_PJC_data `json:"data"`
+	Data map[string]STAT_PJC_data `json:"data"` //nolint:tagliatelle
 }
 
 // Represents a complete STAT_PRC document
 type STAT_PRC struct {
 	util.VxMetadata
 	STAT_PRC_header
-	Data map[string]STAT_PRC_data `json:"data"`
+	Data map[string]STAT_PRC_data `json:"data"` //nolint:tagliatelle
 }
 
 // Represents a complete STAT_PSTD document
 type STAT_PSTD struct {
 	util.VxMetadata
 	STAT_PSTD_header
-	Data map[string]STAT_PSTD_data `json:"data"`
+	Data map[string]STAT_PSTD_data `json:"data"` //nolint:tagliatelle
 }
 
 // Represents a complete STAT_RELP document
 type STAT_RELP struct {
 	util.VxMetadata
 	STAT_RELP_header
-	Data map[string]STAT_RELP_data `json:"data"`
+	Data map[string]STAT_RELP_data `json:"data"` //nolint:tagliatelle
 }
 
 // Represents a complete STAT_RHIST document
 type STAT_RHIST struct {
 	util.VxMetadata
 	STAT_RHIST_header
-	Data map[string]STAT_RHIST_data `json:"data"`
+	Data map[string]STAT_RHIST_data `json:"data"` //nolint:tagliatelle
 }
 
 // Represents a complete STAT_RPS document
 type STAT_RPS struct {
 	util.VxMetadata
 	STAT_RPS_header
-	Data map[string]STAT_RPS_data `json:"data"`
+	Data map[string]STAT_RPS_data `json:"data"` //nolint:tagliatelle
 }
 
 // Represents a complete STAT_SAL1L2 document
 type STAT_SAL1L2 struct {
 	util.VxMetadata
 	STAT_SAL1L2_header
-	Data map[string]STAT_SAL1L2_data `json:"data"`
+	Data map[string]STAT_SAL1L2_data `json:"data"` //nolint:tagliatelle
 }
 
 // Represents a complete STAT_SL1L2 document
 type STAT_SL1L2 struct {
 	util.VxMetadata
 	STAT_SL1L2_header
-	Data map[string]STAT_SL1L2_data `json:"data"`
+	Data map[string]STAT_SL1L2_data `json:"data"` //nolint:tagliatelle
 }
 
 // Represents a complete STAT_SSVAR document
 type STAT_SSVAR struct {
 	util.VxMetadata
 	STAT_SSVAR_header
-	Data map[string]STAT_SSVAR_data `json:"data"`
+	Data map[string]STAT_SSVAR_data `json:"data"` //nolint:tagliatelle
 }
 
 // Represents a complete STAT_VAL1L2 document
 type STAT_VAL1L2 struct {
 	util.VxMetadata
 	STAT_VAL1L2_header
-	Data map[string]STAT_VAL1L2_data `json:"data"`
+	Data map[string]STAT_VAL1L2_data `json:"data"` //nolint:tagliatelle
 }
 
 // Represents a complete STAT_VCNT document
 type STAT_VCNT struct {
 	util.VxMetadata
 	STAT_VCNT_header
-	Data map[string]STAT_VCNT_data `json:"data"`
+	Data map[string]STAT_VCNT_data `json:"data"` //nolint:tagliatelle
 }
 
 // Represents a complete STAT_VL1L2 document
 type STAT_VL1L2 struct {
 	util.VxMetadata
 	STAT_VL1L2_header
-	Data map[string]STAT_VL1L2_data `json:"data"`
+	Data map[string]STAT_VL1L2_data `json:"data"` //nolint:tagliatelle
 }
 
 // Represents a complete TCST_PROBRIRW document
 type TCST_PROBRIRW struct {
 	util.VxMetadata
 	TCST_PROBRIRW_header
-	Data map[string]TCST_PROBRIRW_data `json:"data"`
+	Data map[string]TCST_PROBRIRW_data `json:"data"` //nolint:tagliatelle
 }
 
 // Represents a complete TCST_TCMPR document
 type TCST_TCMPR struct {
 	util.VxMetadata
 	TCST_TCMPR_header
-	Data map[string]TCST_TCMPR_data `json:"data"`
+	Data map[string]TCST_TCMPR_data `json:"data"` //nolint:tagliatelle
 }
 
 // Header struct definitions
@@ -1225,924 +1232,994 @@ type TCST_TCMPR_header struct {
 // fillHeader functions
 
 // Sets MODE_CTS_header struct's fields
-func (s *MODE_CTS_header) fill(fields []string) {
-	s.VERSION.UnmarshalText([]byte(fields[0]))
-	s.MODEL.UnmarshalText([]byte(fields[1]))
-	s.N_VALID.UnmarshalText([]byte(fields[2]))
-	s.GRID_RES.UnmarshalText([]byte(fields[3]))
-	s.DESC.UnmarshalText([]byte(fields[4]))
-	s.FCST_VALID.UnmarshalText([]byte(fields[6]))
-	s.FCST_ACCUM.UnmarshalText([]byte(fields[7]))
-	s.OBS_LEAD.UnmarshalText([]byte(fields[8]))
-	s.OBS_VALID.UnmarshalText([]byte(fields[9]))
-	s.OBS_ACCUM.UnmarshalText([]byte(fields[10]))
-	s.FCST_RAD.UnmarshalText([]byte(fields[11]))
-	s.FCST_THR.UnmarshalText([]byte(fields[12]))
-	s.OBS_RAD.UnmarshalText([]byte(fields[13]))
-	s.OBS_THR.UnmarshalText([]byte(fields[14]))
-	s.FCST_VAR.UnmarshalText([]byte(fields[15]))
-	s.FCST_UNITS.UnmarshalText([]byte(fields[16]))
-	s.FCST_LEV.UnmarshalText([]byte(fields[17]))
-	s.OBS_VAR.UnmarshalText([]byte(fields[18]))
-	s.OBS_UNITS.UnmarshalText([]byte(fields[19]))
-	s.OBS_LEV.UnmarshalText([]byte(fields[20]))
-	s.OBTYPE.UnmarshalText([]byte(fields[21]))
-	s.LINE_TYPE.UnmarshalText([]byte("MODE_CTS")) // hardcode the LINE_TYPE
+func (s *MODE_CTS_header) fill(fields []string) error {
+	var errs []error
+	appendErrorWithContext(&errs, "VERSION", s.VERSION.UnmarshalText([]byte(fields[0])))
+	appendErrorWithContext(&errs, "MODEL", s.MODEL.UnmarshalText([]byte(fields[1])))
+	appendErrorWithContext(&errs, "N_VALID", s.N_VALID.UnmarshalText([]byte(fields[2])))
+	appendErrorWithContext(&errs, "GRID_RES", s.GRID_RES.UnmarshalText([]byte(fields[3])))
+	appendErrorWithContext(&errs, "DESC", s.DESC.UnmarshalText([]byte(fields[4])))
+	appendErrorWithContext(&errs, "FCST_VALID", s.FCST_VALID.UnmarshalText([]byte(fields[6])))
+	appendErrorWithContext(&errs, "FCST_ACCUM", s.FCST_ACCUM.UnmarshalText([]byte(fields[7])))
+	appendErrorWithContext(&errs, "OBS_LEAD", s.OBS_LEAD.UnmarshalText([]byte(fields[8])))
+	appendErrorWithContext(&errs, "OBS_VALID", s.OBS_VALID.UnmarshalText([]byte(fields[9])))
+	appendErrorWithContext(&errs, "OBS_ACCUM", s.OBS_ACCUM.UnmarshalText([]byte(fields[10])))
+	appendErrorWithContext(&errs, "FCST_RAD", s.FCST_RAD.UnmarshalText([]byte(fields[11])))
+	appendErrorWithContext(&errs, "FCST_THR", s.FCST_THR.UnmarshalText([]byte(fields[12])))
+	appendErrorWithContext(&errs, "OBS_RAD", s.OBS_RAD.UnmarshalText([]byte(fields[13])))
+	appendErrorWithContext(&errs, "OBS_THR", s.OBS_THR.UnmarshalText([]byte(fields[14])))
+	appendErrorWithContext(&errs, "FCST_VAR", s.FCST_VAR.UnmarshalText([]byte(fields[15])))
+	appendErrorWithContext(&errs, "FCST_UNITS", s.FCST_UNITS.UnmarshalText([]byte(fields[16])))
+	appendErrorWithContext(&errs, "FCST_LEV", s.FCST_LEV.UnmarshalText([]byte(fields[17])))
+	appendErrorWithContext(&errs, "OBS_VAR", s.OBS_VAR.UnmarshalText([]byte(fields[18])))
+	appendErrorWithContext(&errs, "OBS_UNITS", s.OBS_UNITS.UnmarshalText([]byte(fields[19])))
+	appendErrorWithContext(&errs, "OBS_LEV", s.OBS_LEV.UnmarshalText([]byte(fields[20])))
+	appendErrorWithContext(&errs, "OBTYPE", s.OBTYPE.UnmarshalText([]byte(fields[21])))
+	appendErrorWithContext(&errs, "LINE_TYPE", s.LINE_TYPE.UnmarshalText([]byte("MODE_CTS"))) // hardcode the LINE_TYPE
+	return errors.Join(errs...)
 }
 
 // Sets MODE_OBJ_header struct's fields
-func (s *MODE_OBJ_header) fill(fields []string) {
-	s.VERSION.UnmarshalText([]byte(fields[0]))
-	s.MODEL.UnmarshalText([]byte(fields[1]))
-	s.N_VALID.UnmarshalText([]byte(fields[2]))
-	s.GRID_RES.UnmarshalText([]byte(fields[3]))
-	s.DESC.UnmarshalText([]byte(fields[4]))
-	s.FCST_VALID.UnmarshalText([]byte(fields[6]))
-	s.FCST_ACCUM.UnmarshalText([]byte(fields[7]))
-	s.OBS_LEAD.UnmarshalText([]byte(fields[8]))
-	s.OBS_VALID.UnmarshalText([]byte(fields[9]))
-	s.OBS_ACCUM.UnmarshalText([]byte(fields[10]))
-	s.FCST_RAD.UnmarshalText([]byte(fields[11]))
-	s.FCST_THR.UnmarshalText([]byte(fields[12]))
-	s.OBS_RAD.UnmarshalText([]byte(fields[13]))
-	s.OBS_THR.UnmarshalText([]byte(fields[14]))
-	s.FCST_VAR.UnmarshalText([]byte(fields[15]))
-	s.FCST_UNITS.UnmarshalText([]byte(fields[16]))
-	s.FCST_LEV.UnmarshalText([]byte(fields[17]))
-	s.OBS_VAR.UnmarshalText([]byte(fields[18]))
-	s.OBS_UNITS.UnmarshalText([]byte(fields[19]))
-	s.OBS_LEV.UnmarshalText([]byte(fields[20]))
-	s.OBTYPE.UnmarshalText([]byte(fields[21]))
-	s.LINE_TYPE.UnmarshalText([]byte("MODE_OBJ")) // hardcode the LINE_TYPE
+func (s *MODE_OBJ_header) fill(fields []string) error {
+	var errs []error
+	appendErrorWithContext(&errs, "VERSION", s.VERSION.UnmarshalText([]byte(fields[0])))
+	appendErrorWithContext(&errs, "MODEL", s.MODEL.UnmarshalText([]byte(fields[1])))
+	appendErrorWithContext(&errs, "N_VALID", s.N_VALID.UnmarshalText([]byte(fields[2])))
+	appendErrorWithContext(&errs, "GRID_RES", s.GRID_RES.UnmarshalText([]byte(fields[3])))
+	appendErrorWithContext(&errs, "DESC", s.DESC.UnmarshalText([]byte(fields[4])))
+	appendErrorWithContext(&errs, "FCST_VALID", s.FCST_VALID.UnmarshalText([]byte(fields[6])))
+	appendErrorWithContext(&errs, "FCST_ACCUM", s.FCST_ACCUM.UnmarshalText([]byte(fields[7])))
+	appendErrorWithContext(&errs, "OBS_LEAD", s.OBS_LEAD.UnmarshalText([]byte(fields[8])))
+	appendErrorWithContext(&errs, "OBS_VALID", s.OBS_VALID.UnmarshalText([]byte(fields[9])))
+	appendErrorWithContext(&errs, "OBS_ACCUM", s.OBS_ACCUM.UnmarshalText([]byte(fields[10])))
+	appendErrorWithContext(&errs, "FCST_RAD", s.FCST_RAD.UnmarshalText([]byte(fields[11])))
+	appendErrorWithContext(&errs, "FCST_THR", s.FCST_THR.UnmarshalText([]byte(fields[12])))
+	appendErrorWithContext(&errs, "OBS_RAD", s.OBS_RAD.UnmarshalText([]byte(fields[13])))
+	appendErrorWithContext(&errs, "OBS_THR", s.OBS_THR.UnmarshalText([]byte(fields[14])))
+	appendErrorWithContext(&errs, "FCST_VAR", s.FCST_VAR.UnmarshalText([]byte(fields[15])))
+	appendErrorWithContext(&errs, "FCST_UNITS", s.FCST_UNITS.UnmarshalText([]byte(fields[16])))
+	appendErrorWithContext(&errs, "FCST_LEV", s.FCST_LEV.UnmarshalText([]byte(fields[17])))
+	appendErrorWithContext(&errs, "OBS_VAR", s.OBS_VAR.UnmarshalText([]byte(fields[18])))
+	appendErrorWithContext(&errs, "OBS_UNITS", s.OBS_UNITS.UnmarshalText([]byte(fields[19])))
+	appendErrorWithContext(&errs, "OBS_LEV", s.OBS_LEV.UnmarshalText([]byte(fields[20])))
+	appendErrorWithContext(&errs, "OBTYPE", s.OBTYPE.UnmarshalText([]byte(fields[21])))
+	appendErrorWithContext(&errs, "LINE_TYPE", s.LINE_TYPE.UnmarshalText([]byte("MODE_OBJ"))) // hardcode the LINE_TYPE
+	return errors.Join(errs...)
 }
 
 // Sets STAT_CNT_header struct's fields
-func (s *STAT_CNT_header) fill(fields []string) {
-	s.VERSION.UnmarshalText([]byte(fields[0]))
-	s.MODEL.UnmarshalText([]byte(fields[1]))
-	s.DESC.UnmarshalText([]byte(fields[2]))
-	s.FCST_VALID_BEG.UnmarshalText([]byte(fields[4]))
-	s.FCST_VALID_END.UnmarshalText([]byte(fields[5]))
-	s.OBS_LEAD.UnmarshalText([]byte(fields[6]))
-	s.OBS_VALID_BEG.UnmarshalText([]byte(fields[7]))
-	s.OBS_VALID_END.UnmarshalText([]byte(fields[8]))
-	s.FCST_VAR.UnmarshalText([]byte(fields[9]))
-	s.FCST_UNITS.UnmarshalText([]byte(fields[10]))
-	s.FCST_LEV.UnmarshalText([]byte(fields[11]))
-	s.OBS_VAR.UnmarshalText([]byte(fields[12]))
-	s.OBS_UNITS.UnmarshalText([]byte(fields[13]))
-	s.OBS_LEV.UnmarshalText([]byte(fields[14]))
-	s.OBTYPE.UnmarshalText([]byte(fields[15]))
-	s.VX_MASK.UnmarshalText([]byte(fields[16]))
-	s.INTERP_MTHD.UnmarshalText([]byte(fields[17]))
-	s.INTERP_PNTS.UnmarshalText([]byte(fields[18]))
-	s.FCST_THRESH.UnmarshalText([]byte(fields[19]))
-	s.OBS_THRESH.UnmarshalText([]byte(fields[20]))
-	s.COV_THRESH.UnmarshalText([]byte(fields[21]))
-	s.ALPHA.UnmarshalText([]byte(fields[22]))
-	s.LINE_TYPE.UnmarshalText([]byte(fields[23]))
+func (s *STAT_CNT_header) fill(fields []string) error {
+	var errs []error
+	appendErrorWithContext(&errs, "VERSION", s.VERSION.UnmarshalText([]byte(fields[0])))
+	appendErrorWithContext(&errs, "MODEL", s.MODEL.UnmarshalText([]byte(fields[1])))
+	appendErrorWithContext(&errs, "DESC", s.DESC.UnmarshalText([]byte(fields[2])))
+	appendErrorWithContext(&errs, "FCST_VALID_BEG", s.FCST_VALID_BEG.UnmarshalText([]byte(fields[4])))
+	appendErrorWithContext(&errs, "FCST_VALID_END", s.FCST_VALID_END.UnmarshalText([]byte(fields[5])))
+	appendErrorWithContext(&errs, "OBS_LEAD", s.OBS_LEAD.UnmarshalText([]byte(fields[6])))
+	appendErrorWithContext(&errs, "OBS_VALID_BEG", s.OBS_VALID_BEG.UnmarshalText([]byte(fields[7])))
+	appendErrorWithContext(&errs, "OBS_VALID_END", s.OBS_VALID_END.UnmarshalText([]byte(fields[8])))
+	appendErrorWithContext(&errs, "FCST_VAR", s.FCST_VAR.UnmarshalText([]byte(fields[9])))
+	appendErrorWithContext(&errs, "FCST_UNITS", s.FCST_UNITS.UnmarshalText([]byte(fields[10])))
+	appendErrorWithContext(&errs, "FCST_LEV", s.FCST_LEV.UnmarshalText([]byte(fields[11])))
+	appendErrorWithContext(&errs, "OBS_VAR", s.OBS_VAR.UnmarshalText([]byte(fields[12])))
+	appendErrorWithContext(&errs, "OBS_UNITS", s.OBS_UNITS.UnmarshalText([]byte(fields[13])))
+	appendErrorWithContext(&errs, "OBS_LEV", s.OBS_LEV.UnmarshalText([]byte(fields[14])))
+	appendErrorWithContext(&errs, "OBTYPE", s.OBTYPE.UnmarshalText([]byte(fields[15])))
+	appendErrorWithContext(&errs, "VX_MASK", s.VX_MASK.UnmarshalText([]byte(fields[16])))
+	appendErrorWithContext(&errs, "INTERP_MTHD", s.INTERP_MTHD.UnmarshalText([]byte(fields[17])))
+	appendErrorWithContext(&errs, "INTERP_PNTS", s.INTERP_PNTS.UnmarshalText([]byte(fields[18])))
+	appendErrorWithContext(&errs, "FCST_THRESH", s.FCST_THRESH.UnmarshalText([]byte(fields[19])))
+	appendErrorWithContext(&errs, "OBS_THRESH", s.OBS_THRESH.UnmarshalText([]byte(fields[20])))
+	appendErrorWithContext(&errs, "COV_THRESH", s.COV_THRESH.UnmarshalText([]byte(fields[21])))
+	appendErrorWithContext(&errs, "ALPHA", s.ALPHA.UnmarshalText([]byte(fields[22])))
+	appendErrorWithContext(&errs, "LINE_TYPE", s.LINE_TYPE.UnmarshalText([]byte(fields[23])))
+	return errors.Join(errs...)
 }
 
 // Sets STAT_CTC_header struct's fields
-func (s *STAT_CTC_header) fill(fields []string) {
-	s.VERSION.UnmarshalText([]byte(fields[0]))
-	s.MODEL.UnmarshalText([]byte(fields[1]))
-	s.DESC.UnmarshalText([]byte(fields[2]))
-	s.FCST_VALID_BEG.UnmarshalText([]byte(fields[4]))
-	s.FCST_VALID_END.UnmarshalText([]byte(fields[5]))
-	s.OBS_LEAD.UnmarshalText([]byte(fields[6]))
-	s.OBS_VALID_BEG.UnmarshalText([]byte(fields[7]))
-	s.OBS_VALID_END.UnmarshalText([]byte(fields[8]))
-	s.FCST_VAR.UnmarshalText([]byte(fields[9]))
-	s.FCST_UNITS.UnmarshalText([]byte(fields[10]))
-	s.FCST_LEV.UnmarshalText([]byte(fields[11]))
-	s.OBS_VAR.UnmarshalText([]byte(fields[12]))
-	s.OBS_UNITS.UnmarshalText([]byte(fields[13]))
-	s.OBS_LEV.UnmarshalText([]byte(fields[14]))
-	s.OBTYPE.UnmarshalText([]byte(fields[15]))
-	s.VX_MASK.UnmarshalText([]byte(fields[16]))
-	s.INTERP_MTHD.UnmarshalText([]byte(fields[17]))
-	s.INTERP_PNTS.UnmarshalText([]byte(fields[18]))
-	s.FCST_THRESH.UnmarshalText([]byte(fields[19]))
-	s.OBS_THRESH.UnmarshalText([]byte(fields[20]))
-	s.COV_THRESH.UnmarshalText([]byte(fields[21]))
-	s.ALPHA.UnmarshalText([]byte(fields[22]))
-	s.LINE_TYPE.UnmarshalText([]byte(fields[23]))
+func (s *STAT_CTC_header) fill(fields []string) error {
+	var errs []error
+	appendErrorWithContext(&errs, "VERSION", s.VERSION.UnmarshalText([]byte(fields[0])))
+	appendErrorWithContext(&errs, "MODEL", s.MODEL.UnmarshalText([]byte(fields[1])))
+	appendErrorWithContext(&errs, "DESC", s.DESC.UnmarshalText([]byte(fields[2])))
+	appendErrorWithContext(&errs, "FCST_VALID_BEG", s.FCST_VALID_BEG.UnmarshalText([]byte(fields[4])))
+	appendErrorWithContext(&errs, "FCST_VALID_END", s.FCST_VALID_END.UnmarshalText([]byte(fields[5])))
+	appendErrorWithContext(&errs, "OBS_LEAD", s.OBS_LEAD.UnmarshalText([]byte(fields[6])))
+	appendErrorWithContext(&errs, "OBS_VALID_BEG", s.OBS_VALID_BEG.UnmarshalText([]byte(fields[7])))
+	appendErrorWithContext(&errs, "OBS_VALID_END", s.OBS_VALID_END.UnmarshalText([]byte(fields[8])))
+	appendErrorWithContext(&errs, "FCST_VAR", s.FCST_VAR.UnmarshalText([]byte(fields[9])))
+	appendErrorWithContext(&errs, "FCST_UNITS", s.FCST_UNITS.UnmarshalText([]byte(fields[10])))
+	appendErrorWithContext(&errs, "FCST_LEV", s.FCST_LEV.UnmarshalText([]byte(fields[11])))
+	appendErrorWithContext(&errs, "OBS_VAR", s.OBS_VAR.UnmarshalText([]byte(fields[12])))
+	appendErrorWithContext(&errs, "OBS_UNITS", s.OBS_UNITS.UnmarshalText([]byte(fields[13])))
+	appendErrorWithContext(&errs, "OBS_LEV", s.OBS_LEV.UnmarshalText([]byte(fields[14])))
+	appendErrorWithContext(&errs, "OBTYPE", s.OBTYPE.UnmarshalText([]byte(fields[15])))
+	appendErrorWithContext(&errs, "VX_MASK", s.VX_MASK.UnmarshalText([]byte(fields[16])))
+	appendErrorWithContext(&errs, "INTERP_MTHD", s.INTERP_MTHD.UnmarshalText([]byte(fields[17])))
+	appendErrorWithContext(&errs, "INTERP_PNTS", s.INTERP_PNTS.UnmarshalText([]byte(fields[18])))
+	appendErrorWithContext(&errs, "FCST_THRESH", s.FCST_THRESH.UnmarshalText([]byte(fields[19])))
+	appendErrorWithContext(&errs, "OBS_THRESH", s.OBS_THRESH.UnmarshalText([]byte(fields[20])))
+	appendErrorWithContext(&errs, "COV_THRESH", s.COV_THRESH.UnmarshalText([]byte(fields[21])))
+	appendErrorWithContext(&errs, "ALPHA", s.ALPHA.UnmarshalText([]byte(fields[22])))
+	appendErrorWithContext(&errs, "LINE_TYPE", s.LINE_TYPE.UnmarshalText([]byte(fields[23])))
+	return errors.Join(errs...)
 }
 
 // Sets STAT_CTS_header struct's fields
-func (s *STAT_CTS_header) fill(fields []string) {
-	s.VERSION.UnmarshalText([]byte(fields[0]))
-	s.MODEL.UnmarshalText([]byte(fields[1]))
-	s.DESC.UnmarshalText([]byte(fields[2]))
-	s.FCST_VALID_BEG.UnmarshalText([]byte(fields[4]))
-	s.FCST_VALID_END.UnmarshalText([]byte(fields[5]))
-	s.OBS_LEAD.UnmarshalText([]byte(fields[6]))
-	s.OBS_VALID_BEG.UnmarshalText([]byte(fields[7]))
-	s.OBS_VALID_END.UnmarshalText([]byte(fields[8]))
-	s.FCST_VAR.UnmarshalText([]byte(fields[9]))
-	s.FCST_UNITS.UnmarshalText([]byte(fields[10]))
-	s.FCST_LEV.UnmarshalText([]byte(fields[11]))
-	s.OBS_VAR.UnmarshalText([]byte(fields[12]))
-	s.OBS_UNITS.UnmarshalText([]byte(fields[13]))
-	s.OBS_LEV.UnmarshalText([]byte(fields[14]))
-	s.OBTYPE.UnmarshalText([]byte(fields[15]))
-	s.VX_MASK.UnmarshalText([]byte(fields[16]))
-	s.INTERP_MTHD.UnmarshalText([]byte(fields[17]))
-	s.INTERP_PNTS.UnmarshalText([]byte(fields[18]))
-	s.FCST_THRESH.UnmarshalText([]byte(fields[19]))
-	s.OBS_THRESH.UnmarshalText([]byte(fields[20]))
-	s.COV_THRESH.UnmarshalText([]byte(fields[21]))
-	s.ALPHA.UnmarshalText([]byte(fields[22]))
-	s.LINE_TYPE.UnmarshalText([]byte(fields[23]))
+func (s *STAT_CTS_header) fill(fields []string) error {
+	var errs []error
+	appendErrorWithContext(&errs, "VERSION", s.VERSION.UnmarshalText([]byte(fields[0])))
+	appendErrorWithContext(&errs, "MODEL", s.MODEL.UnmarshalText([]byte(fields[1])))
+	appendErrorWithContext(&errs, "DESC", s.DESC.UnmarshalText([]byte(fields[2])))
+	appendErrorWithContext(&errs, "FCST_VALID_BEG", s.FCST_VALID_BEG.UnmarshalText([]byte(fields[4])))
+	appendErrorWithContext(&errs, "FCST_VALID_END", s.FCST_VALID_END.UnmarshalText([]byte(fields[5])))
+	appendErrorWithContext(&errs, "OBS_LEAD", s.OBS_LEAD.UnmarshalText([]byte(fields[6])))
+	appendErrorWithContext(&errs, "OBS_VALID_BEG", s.OBS_VALID_BEG.UnmarshalText([]byte(fields[7])))
+	appendErrorWithContext(&errs, "OBS_VALID_END", s.OBS_VALID_END.UnmarshalText([]byte(fields[8])))
+	appendErrorWithContext(&errs, "FCST_VAR", s.FCST_VAR.UnmarshalText([]byte(fields[9])))
+	appendErrorWithContext(&errs, "FCST_UNITS", s.FCST_UNITS.UnmarshalText([]byte(fields[10])))
+	appendErrorWithContext(&errs, "FCST_LEV", s.FCST_LEV.UnmarshalText([]byte(fields[11])))
+	appendErrorWithContext(&errs, "OBS_VAR", s.OBS_VAR.UnmarshalText([]byte(fields[12])))
+	appendErrorWithContext(&errs, "OBS_UNITS", s.OBS_UNITS.UnmarshalText([]byte(fields[13])))
+	appendErrorWithContext(&errs, "OBS_LEV", s.OBS_LEV.UnmarshalText([]byte(fields[14])))
+	appendErrorWithContext(&errs, "OBTYPE", s.OBTYPE.UnmarshalText([]byte(fields[15])))
+	appendErrorWithContext(&errs, "VX_MASK", s.VX_MASK.UnmarshalText([]byte(fields[16])))
+	appendErrorWithContext(&errs, "INTERP_MTHD", s.INTERP_MTHD.UnmarshalText([]byte(fields[17])))
+	appendErrorWithContext(&errs, "INTERP_PNTS", s.INTERP_PNTS.UnmarshalText([]byte(fields[18])))
+	appendErrorWithContext(&errs, "FCST_THRESH", s.FCST_THRESH.UnmarshalText([]byte(fields[19])))
+	appendErrorWithContext(&errs, "OBS_THRESH", s.OBS_THRESH.UnmarshalText([]byte(fields[20])))
+	appendErrorWithContext(&errs, "COV_THRESH", s.COV_THRESH.UnmarshalText([]byte(fields[21])))
+	appendErrorWithContext(&errs, "ALPHA", s.ALPHA.UnmarshalText([]byte(fields[22])))
+	appendErrorWithContext(&errs, "LINE_TYPE", s.LINE_TYPE.UnmarshalText([]byte(fields[23])))
+	return errors.Join(errs...)
 }
 
 // Sets STAT_DMAP_header struct's fields
-func (s *STAT_DMAP_header) fill(fields []string) {
-	s.VERSION.UnmarshalText([]byte(fields[0]))
-	s.MODEL.UnmarshalText([]byte(fields[1]))
-	s.DESC.UnmarshalText([]byte(fields[2]))
-	s.FCST_VALID_BEG.UnmarshalText([]byte(fields[4]))
-	s.FCST_VALID_END.UnmarshalText([]byte(fields[5]))
-	s.OBS_LEAD.UnmarshalText([]byte(fields[6]))
-	s.OBS_VALID_BEG.UnmarshalText([]byte(fields[7]))
-	s.OBS_VALID_END.UnmarshalText([]byte(fields[8]))
-	s.FCST_VAR.UnmarshalText([]byte(fields[9]))
-	s.FCST_UNITS.UnmarshalText([]byte(fields[10]))
-	s.FCST_LEV.UnmarshalText([]byte(fields[11]))
-	s.OBS_VAR.UnmarshalText([]byte(fields[12]))
-	s.OBS_UNITS.UnmarshalText([]byte(fields[13]))
-	s.OBS_LEV.UnmarshalText([]byte(fields[14]))
-	s.OBTYPE.UnmarshalText([]byte(fields[15]))
-	s.VX_MASK.UnmarshalText([]byte(fields[16]))
-	s.INTERP_MTHD.UnmarshalText([]byte(fields[17]))
-	s.INTERP_PNTS.UnmarshalText([]byte(fields[18]))
-	s.FCST_THRESH.UnmarshalText([]byte(fields[19]))
-	s.OBS_THRESH.UnmarshalText([]byte(fields[20]))
-	s.COV_THRESH.UnmarshalText([]byte(fields[21]))
-	s.ALPHA.UnmarshalText([]byte(fields[22]))
-	s.LINE_TYPE.UnmarshalText([]byte(fields[23]))
+func (s *STAT_DMAP_header) fill(fields []string) error {
+	var errs []error
+	appendErrorWithContext(&errs, "VERSION", s.VERSION.UnmarshalText([]byte(fields[0])))
+	appendErrorWithContext(&errs, "MODEL", s.MODEL.UnmarshalText([]byte(fields[1])))
+	appendErrorWithContext(&errs, "DESC", s.DESC.UnmarshalText([]byte(fields[2])))
+	appendErrorWithContext(&errs, "FCST_VALID_BEG", s.FCST_VALID_BEG.UnmarshalText([]byte(fields[4])))
+	appendErrorWithContext(&errs, "FCST_VALID_END", s.FCST_VALID_END.UnmarshalText([]byte(fields[5])))
+	appendErrorWithContext(&errs, "OBS_LEAD", s.OBS_LEAD.UnmarshalText([]byte(fields[6])))
+	appendErrorWithContext(&errs, "OBS_VALID_BEG", s.OBS_VALID_BEG.UnmarshalText([]byte(fields[7])))
+	appendErrorWithContext(&errs, "OBS_VALID_END", s.OBS_VALID_END.UnmarshalText([]byte(fields[8])))
+	appendErrorWithContext(&errs, "FCST_VAR", s.FCST_VAR.UnmarshalText([]byte(fields[9])))
+	appendErrorWithContext(&errs, "FCST_UNITS", s.FCST_UNITS.UnmarshalText([]byte(fields[10])))
+	appendErrorWithContext(&errs, "FCST_LEV", s.FCST_LEV.UnmarshalText([]byte(fields[11])))
+	appendErrorWithContext(&errs, "OBS_VAR", s.OBS_VAR.UnmarshalText([]byte(fields[12])))
+	appendErrorWithContext(&errs, "OBS_UNITS", s.OBS_UNITS.UnmarshalText([]byte(fields[13])))
+	appendErrorWithContext(&errs, "OBS_LEV", s.OBS_LEV.UnmarshalText([]byte(fields[14])))
+	appendErrorWithContext(&errs, "OBTYPE", s.OBTYPE.UnmarshalText([]byte(fields[15])))
+	appendErrorWithContext(&errs, "VX_MASK", s.VX_MASK.UnmarshalText([]byte(fields[16])))
+	appendErrorWithContext(&errs, "INTERP_MTHD", s.INTERP_MTHD.UnmarshalText([]byte(fields[17])))
+	appendErrorWithContext(&errs, "INTERP_PNTS", s.INTERP_PNTS.UnmarshalText([]byte(fields[18])))
+	appendErrorWithContext(&errs, "FCST_THRESH", s.FCST_THRESH.UnmarshalText([]byte(fields[19])))
+	appendErrorWithContext(&errs, "OBS_THRESH", s.OBS_THRESH.UnmarshalText([]byte(fields[20])))
+	appendErrorWithContext(&errs, "COV_THRESH", s.COV_THRESH.UnmarshalText([]byte(fields[21])))
+	appendErrorWithContext(&errs, "ALPHA", s.ALPHA.UnmarshalText([]byte(fields[22])))
+	appendErrorWithContext(&errs, "LINE_TYPE", s.LINE_TYPE.UnmarshalText([]byte(fields[23])))
+	return errors.Join(errs...)
 }
 
 // Sets STAT_ECLV_header struct's fields
-func (s *STAT_ECLV_header) fill(fields []string) {
-	s.VERSION.UnmarshalText([]byte(fields[0]))
-	s.MODEL.UnmarshalText([]byte(fields[1]))
-	s.DESC.UnmarshalText([]byte(fields[2]))
-	s.FCST_VALID_BEG.UnmarshalText([]byte(fields[4]))
-	s.FCST_VALID_END.UnmarshalText([]byte(fields[5]))
-	s.OBS_LEAD.UnmarshalText([]byte(fields[6]))
-	s.OBS_VALID_BEG.UnmarshalText([]byte(fields[7]))
-	s.OBS_VALID_END.UnmarshalText([]byte(fields[8]))
-	s.FCST_VAR.UnmarshalText([]byte(fields[9]))
-	s.FCST_UNITS.UnmarshalText([]byte(fields[10]))
-	s.FCST_LEV.UnmarshalText([]byte(fields[11]))
-	s.OBS_VAR.UnmarshalText([]byte(fields[12]))
-	s.OBS_UNITS.UnmarshalText([]byte(fields[13]))
-	s.OBS_LEV.UnmarshalText([]byte(fields[14]))
-	s.OBTYPE.UnmarshalText([]byte(fields[15]))
-	s.VX_MASK.UnmarshalText([]byte(fields[16]))
-	s.INTERP_MTHD.UnmarshalText([]byte(fields[17]))
-	s.INTERP_PNTS.UnmarshalText([]byte(fields[18]))
-	s.FCST_THRESH.UnmarshalText([]byte(fields[19]))
-	s.OBS_THRESH.UnmarshalText([]byte(fields[20]))
-	s.COV_THRESH.UnmarshalText([]byte(fields[21]))
-	s.ALPHA.UnmarshalText([]byte(fields[22]))
-	s.LINE_TYPE.UnmarshalText([]byte(fields[23]))
+func (s *STAT_ECLV_header) fill(fields []string) error {
+	var errs []error
+	appendErrorWithContext(&errs, "VERSION", s.VERSION.UnmarshalText([]byte(fields[0])))
+	appendErrorWithContext(&errs, "MODEL", s.MODEL.UnmarshalText([]byte(fields[1])))
+	appendErrorWithContext(&errs, "DESC", s.DESC.UnmarshalText([]byte(fields[2])))
+	appendErrorWithContext(&errs, "FCST_VALID_BEG", s.FCST_VALID_BEG.UnmarshalText([]byte(fields[4])))
+	appendErrorWithContext(&errs, "FCST_VALID_END", s.FCST_VALID_END.UnmarshalText([]byte(fields[5])))
+	appendErrorWithContext(&errs, "OBS_LEAD", s.OBS_LEAD.UnmarshalText([]byte(fields[6])))
+	appendErrorWithContext(&errs, "OBS_VALID_BEG", s.OBS_VALID_BEG.UnmarshalText([]byte(fields[7])))
+	appendErrorWithContext(&errs, "OBS_VALID_END", s.OBS_VALID_END.UnmarshalText([]byte(fields[8])))
+	appendErrorWithContext(&errs, "FCST_VAR", s.FCST_VAR.UnmarshalText([]byte(fields[9])))
+	appendErrorWithContext(&errs, "FCST_UNITS", s.FCST_UNITS.UnmarshalText([]byte(fields[10])))
+	appendErrorWithContext(&errs, "FCST_LEV", s.FCST_LEV.UnmarshalText([]byte(fields[11])))
+	appendErrorWithContext(&errs, "OBS_VAR", s.OBS_VAR.UnmarshalText([]byte(fields[12])))
+	appendErrorWithContext(&errs, "OBS_UNITS", s.OBS_UNITS.UnmarshalText([]byte(fields[13])))
+	appendErrorWithContext(&errs, "OBS_LEV", s.OBS_LEV.UnmarshalText([]byte(fields[14])))
+	appendErrorWithContext(&errs, "OBTYPE", s.OBTYPE.UnmarshalText([]byte(fields[15])))
+	appendErrorWithContext(&errs, "VX_MASK", s.VX_MASK.UnmarshalText([]byte(fields[16])))
+	appendErrorWithContext(&errs, "INTERP_MTHD", s.INTERP_MTHD.UnmarshalText([]byte(fields[17])))
+	appendErrorWithContext(&errs, "INTERP_PNTS", s.INTERP_PNTS.UnmarshalText([]byte(fields[18])))
+	appendErrorWithContext(&errs, "FCST_THRESH", s.FCST_THRESH.UnmarshalText([]byte(fields[19])))
+	appendErrorWithContext(&errs, "OBS_THRESH", s.OBS_THRESH.UnmarshalText([]byte(fields[20])))
+	appendErrorWithContext(&errs, "COV_THRESH", s.COV_THRESH.UnmarshalText([]byte(fields[21])))
+	appendErrorWithContext(&errs, "ALPHA", s.ALPHA.UnmarshalText([]byte(fields[22])))
+	appendErrorWithContext(&errs, "LINE_TYPE", s.LINE_TYPE.UnmarshalText([]byte(fields[23])))
+	return errors.Join(errs...)
 }
 
 // Sets STAT_ECNT_header struct's fields
-func (s *STAT_ECNT_header) fill(fields []string) {
-	s.VERSION.UnmarshalText([]byte(fields[0]))
-	s.MODEL.UnmarshalText([]byte(fields[1]))
-	s.DESC.UnmarshalText([]byte(fields[2]))
-	s.FCST_VALID_BEG.UnmarshalText([]byte(fields[4]))
-	s.FCST_VALID_END.UnmarshalText([]byte(fields[5]))
-	s.OBS_LEAD.UnmarshalText([]byte(fields[6]))
-	s.OBS_VALID_BEG.UnmarshalText([]byte(fields[7]))
-	s.OBS_VALID_END.UnmarshalText([]byte(fields[8]))
-	s.FCST_VAR.UnmarshalText([]byte(fields[9]))
-	s.FCST_UNITS.UnmarshalText([]byte(fields[10]))
-	s.FCST_LEV.UnmarshalText([]byte(fields[11]))
-	s.OBS_VAR.UnmarshalText([]byte(fields[12]))
-	s.OBS_UNITS.UnmarshalText([]byte(fields[13]))
-	s.OBS_LEV.UnmarshalText([]byte(fields[14]))
-	s.OBTYPE.UnmarshalText([]byte(fields[15]))
-	s.VX_MASK.UnmarshalText([]byte(fields[16]))
-	s.INTERP_MTHD.UnmarshalText([]byte(fields[17]))
-	s.INTERP_PNTS.UnmarshalText([]byte(fields[18]))
-	s.FCST_THRESH.UnmarshalText([]byte(fields[19]))
-	s.OBS_THRESH.UnmarshalText([]byte(fields[20]))
-	s.COV_THRESH.UnmarshalText([]byte(fields[21]))
-	s.ALPHA.UnmarshalText([]byte(fields[22]))
-	s.LINE_TYPE.UnmarshalText([]byte(fields[23]))
+func (s *STAT_ECNT_header) fill(fields []string) error {
+	var errs []error
+	appendErrorWithContext(&errs, "VERSION", s.VERSION.UnmarshalText([]byte(fields[0])))
+	appendErrorWithContext(&errs, "MODEL", s.MODEL.UnmarshalText([]byte(fields[1])))
+	appendErrorWithContext(&errs, "DESC", s.DESC.UnmarshalText([]byte(fields[2])))
+	appendErrorWithContext(&errs, "FCST_VALID_BEG", s.FCST_VALID_BEG.UnmarshalText([]byte(fields[4])))
+	appendErrorWithContext(&errs, "FCST_VALID_END", s.FCST_VALID_END.UnmarshalText([]byte(fields[5])))
+	appendErrorWithContext(&errs, "OBS_LEAD", s.OBS_LEAD.UnmarshalText([]byte(fields[6])))
+	appendErrorWithContext(&errs, "OBS_VALID_BEG", s.OBS_VALID_BEG.UnmarshalText([]byte(fields[7])))
+	appendErrorWithContext(&errs, "OBS_VALID_END", s.OBS_VALID_END.UnmarshalText([]byte(fields[8])))
+	appendErrorWithContext(&errs, "FCST_VAR", s.FCST_VAR.UnmarshalText([]byte(fields[9])))
+	appendErrorWithContext(&errs, "FCST_UNITS", s.FCST_UNITS.UnmarshalText([]byte(fields[10])))
+	appendErrorWithContext(&errs, "FCST_LEV", s.FCST_LEV.UnmarshalText([]byte(fields[11])))
+	appendErrorWithContext(&errs, "OBS_VAR", s.OBS_VAR.UnmarshalText([]byte(fields[12])))
+	appendErrorWithContext(&errs, "OBS_UNITS", s.OBS_UNITS.UnmarshalText([]byte(fields[13])))
+	appendErrorWithContext(&errs, "OBS_LEV", s.OBS_LEV.UnmarshalText([]byte(fields[14])))
+	appendErrorWithContext(&errs, "OBTYPE", s.OBTYPE.UnmarshalText([]byte(fields[15])))
+	appendErrorWithContext(&errs, "VX_MASK", s.VX_MASK.UnmarshalText([]byte(fields[16])))
+	appendErrorWithContext(&errs, "INTERP_MTHD", s.INTERP_MTHD.UnmarshalText([]byte(fields[17])))
+	appendErrorWithContext(&errs, "INTERP_PNTS", s.INTERP_PNTS.UnmarshalText([]byte(fields[18])))
+	appendErrorWithContext(&errs, "FCST_THRESH", s.FCST_THRESH.UnmarshalText([]byte(fields[19])))
+	appendErrorWithContext(&errs, "OBS_THRESH", s.OBS_THRESH.UnmarshalText([]byte(fields[20])))
+	appendErrorWithContext(&errs, "COV_THRESH", s.COV_THRESH.UnmarshalText([]byte(fields[21])))
+	appendErrorWithContext(&errs, "ALPHA", s.ALPHA.UnmarshalText([]byte(fields[22])))
+	appendErrorWithContext(&errs, "LINE_TYPE", s.LINE_TYPE.UnmarshalText([]byte(fields[23])))
+	return errors.Join(errs...)
 }
 
 // Sets STAT_FHO_header struct's fields
-func (s *STAT_FHO_header) fill(fields []string) {
-	s.VERSION.UnmarshalText([]byte(fields[0]))
-	s.MODEL.UnmarshalText([]byte(fields[1]))
-	s.DESC.UnmarshalText([]byte(fields[2]))
-	s.FCST_VALID_BEG.UnmarshalText([]byte(fields[4]))
-	s.FCST_VALID_END.UnmarshalText([]byte(fields[5]))
-	s.OBS_LEAD.UnmarshalText([]byte(fields[6]))
-	s.OBS_VALID_BEG.UnmarshalText([]byte(fields[7]))
-	s.OBS_VALID_END.UnmarshalText([]byte(fields[8]))
-	s.FCST_VAR.UnmarshalText([]byte(fields[9]))
-	s.FCST_UNITS.UnmarshalText([]byte(fields[10]))
-	s.FCST_LEV.UnmarshalText([]byte(fields[11]))
-	s.OBS_VAR.UnmarshalText([]byte(fields[12]))
-	s.OBS_UNITS.UnmarshalText([]byte(fields[13]))
-	s.OBS_LEV.UnmarshalText([]byte(fields[14]))
-	s.OBTYPE.UnmarshalText([]byte(fields[15]))
-	s.VX_MASK.UnmarshalText([]byte(fields[16]))
-	s.INTERP_MTHD.UnmarshalText([]byte(fields[17]))
-	s.INTERP_PNTS.UnmarshalText([]byte(fields[18]))
-	s.FCST_THRESH.UnmarshalText([]byte(fields[19]))
-	s.OBS_THRESH.UnmarshalText([]byte(fields[20]))
-	s.COV_THRESH.UnmarshalText([]byte(fields[21]))
-	s.ALPHA.UnmarshalText([]byte(fields[22]))
-	s.LINE_TYPE.UnmarshalText([]byte(fields[23]))
+func (s *STAT_FHO_header) fill(fields []string) error {
+	var errs []error
+	appendErrorWithContext(&errs, "VERSION", s.VERSION.UnmarshalText([]byte(fields[0])))
+	appendErrorWithContext(&errs, "MODEL", s.MODEL.UnmarshalText([]byte(fields[1])))
+	appendErrorWithContext(&errs, "DESC", s.DESC.UnmarshalText([]byte(fields[2])))
+	appendErrorWithContext(&errs, "FCST_VALID_BEG", s.FCST_VALID_BEG.UnmarshalText([]byte(fields[4])))
+	appendErrorWithContext(&errs, "FCST_VALID_END", s.FCST_VALID_END.UnmarshalText([]byte(fields[5])))
+	appendErrorWithContext(&errs, "OBS_LEAD", s.OBS_LEAD.UnmarshalText([]byte(fields[6])))
+	appendErrorWithContext(&errs, "OBS_VALID_BEG", s.OBS_VALID_BEG.UnmarshalText([]byte(fields[7])))
+	appendErrorWithContext(&errs, "OBS_VALID_END", s.OBS_VALID_END.UnmarshalText([]byte(fields[8])))
+	appendErrorWithContext(&errs, "FCST_VAR", s.FCST_VAR.UnmarshalText([]byte(fields[9])))
+	appendErrorWithContext(&errs, "FCST_UNITS", s.FCST_UNITS.UnmarshalText([]byte(fields[10])))
+	appendErrorWithContext(&errs, "FCST_LEV", s.FCST_LEV.UnmarshalText([]byte(fields[11])))
+	appendErrorWithContext(&errs, "OBS_VAR", s.OBS_VAR.UnmarshalText([]byte(fields[12])))
+	appendErrorWithContext(&errs, "OBS_UNITS", s.OBS_UNITS.UnmarshalText([]byte(fields[13])))
+	appendErrorWithContext(&errs, "OBS_LEV", s.OBS_LEV.UnmarshalText([]byte(fields[14])))
+	appendErrorWithContext(&errs, "OBTYPE", s.OBTYPE.UnmarshalText([]byte(fields[15])))
+	appendErrorWithContext(&errs, "VX_MASK", s.VX_MASK.UnmarshalText([]byte(fields[16])))
+	appendErrorWithContext(&errs, "INTERP_MTHD", s.INTERP_MTHD.UnmarshalText([]byte(fields[17])))
+	appendErrorWithContext(&errs, "INTERP_PNTS", s.INTERP_PNTS.UnmarshalText([]byte(fields[18])))
+	appendErrorWithContext(&errs, "FCST_THRESH", s.FCST_THRESH.UnmarshalText([]byte(fields[19])))
+	appendErrorWithContext(&errs, "OBS_THRESH", s.OBS_THRESH.UnmarshalText([]byte(fields[20])))
+	appendErrorWithContext(&errs, "COV_THRESH", s.COV_THRESH.UnmarshalText([]byte(fields[21])))
+	appendErrorWithContext(&errs, "ALPHA", s.ALPHA.UnmarshalText([]byte(fields[22])))
+	appendErrorWithContext(&errs, "LINE_TYPE", s.LINE_TYPE.UnmarshalText([]byte(fields[23])))
+	return errors.Join(errs...)
 }
 
 // Sets STAT_GENMPR_header struct's fields
-func (s *STAT_GENMPR_header) fill(fields []string) {
-	s.VERSION.UnmarshalText([]byte(fields[0]))
-	s.MODEL.UnmarshalText([]byte(fields[1]))
-	s.DESC.UnmarshalText([]byte(fields[2]))
-	s.FCST_VALID_BEG.UnmarshalText([]byte(fields[4]))
-	s.FCST_VALID_END.UnmarshalText([]byte(fields[5]))
-	s.OBS_LEAD.UnmarshalText([]byte(fields[6]))
-	s.OBS_VALID_BEG.UnmarshalText([]byte(fields[7]))
-	s.OBS_VALID_END.UnmarshalText([]byte(fields[8]))
-	s.FCST_VAR.UnmarshalText([]byte(fields[9]))
-	s.FCST_UNITS.UnmarshalText([]byte(fields[10]))
-	s.FCST_LEV.UnmarshalText([]byte(fields[11]))
-	s.OBS_VAR.UnmarshalText([]byte(fields[12]))
-	s.OBS_UNITS.UnmarshalText([]byte(fields[13]))
-	s.OBS_LEV.UnmarshalText([]byte(fields[14]))
-	s.OBTYPE.UnmarshalText([]byte(fields[15]))
-	s.VX_MASK.UnmarshalText([]byte(fields[16]))
-	s.INTERP_MTHD.UnmarshalText([]byte(fields[17]))
-	s.INTERP_PNTS.UnmarshalText([]byte(fields[18]))
-	s.FCST_THRESH.UnmarshalText([]byte(fields[19]))
-	s.OBS_THRESH.UnmarshalText([]byte(fields[20]))
-	s.COV_THRESH.UnmarshalText([]byte(fields[21]))
-	s.ALPHA.UnmarshalText([]byte(fields[22]))
-	s.LINE_TYPE.UnmarshalText([]byte(fields[23]))
+func (s *STAT_GENMPR_header) fill(fields []string) error {
+	var errs []error
+	appendErrorWithContext(&errs, "VERSION", s.VERSION.UnmarshalText([]byte(fields[0])))
+	appendErrorWithContext(&errs, "MODEL", s.MODEL.UnmarshalText([]byte(fields[1])))
+	appendErrorWithContext(&errs, "DESC", s.DESC.UnmarshalText([]byte(fields[2])))
+	appendErrorWithContext(&errs, "FCST_VALID_BEG", s.FCST_VALID_BEG.UnmarshalText([]byte(fields[4])))
+	appendErrorWithContext(&errs, "FCST_VALID_END", s.FCST_VALID_END.UnmarshalText([]byte(fields[5])))
+	appendErrorWithContext(&errs, "OBS_LEAD", s.OBS_LEAD.UnmarshalText([]byte(fields[6])))
+	appendErrorWithContext(&errs, "OBS_VALID_BEG", s.OBS_VALID_BEG.UnmarshalText([]byte(fields[7])))
+	appendErrorWithContext(&errs, "OBS_VALID_END", s.OBS_VALID_END.UnmarshalText([]byte(fields[8])))
+	appendErrorWithContext(&errs, "FCST_VAR", s.FCST_VAR.UnmarshalText([]byte(fields[9])))
+	appendErrorWithContext(&errs, "FCST_UNITS", s.FCST_UNITS.UnmarshalText([]byte(fields[10])))
+	appendErrorWithContext(&errs, "FCST_LEV", s.FCST_LEV.UnmarshalText([]byte(fields[11])))
+	appendErrorWithContext(&errs, "OBS_VAR", s.OBS_VAR.UnmarshalText([]byte(fields[12])))
+	appendErrorWithContext(&errs, "OBS_UNITS", s.OBS_UNITS.UnmarshalText([]byte(fields[13])))
+	appendErrorWithContext(&errs, "OBS_LEV", s.OBS_LEV.UnmarshalText([]byte(fields[14])))
+	appendErrorWithContext(&errs, "OBTYPE", s.OBTYPE.UnmarshalText([]byte(fields[15])))
+	appendErrorWithContext(&errs, "VX_MASK", s.VX_MASK.UnmarshalText([]byte(fields[16])))
+	appendErrorWithContext(&errs, "INTERP_MTHD", s.INTERP_MTHD.UnmarshalText([]byte(fields[17])))
+	appendErrorWithContext(&errs, "INTERP_PNTS", s.INTERP_PNTS.UnmarshalText([]byte(fields[18])))
+	appendErrorWithContext(&errs, "FCST_THRESH", s.FCST_THRESH.UnmarshalText([]byte(fields[19])))
+	appendErrorWithContext(&errs, "OBS_THRESH", s.OBS_THRESH.UnmarshalText([]byte(fields[20])))
+	appendErrorWithContext(&errs, "COV_THRESH", s.COV_THRESH.UnmarshalText([]byte(fields[21])))
+	appendErrorWithContext(&errs, "ALPHA", s.ALPHA.UnmarshalText([]byte(fields[22])))
+	appendErrorWithContext(&errs, "LINE_TYPE", s.LINE_TYPE.UnmarshalText([]byte(fields[23])))
+	return errors.Join(errs...)
 }
 
 // Sets STAT_GRAD_header struct's fields
-func (s *STAT_GRAD_header) fill(fields []string) {
-	s.VERSION.UnmarshalText([]byte(fields[0]))
-	s.MODEL.UnmarshalText([]byte(fields[1]))
-	s.DESC.UnmarshalText([]byte(fields[2]))
-	s.FCST_VALID_BEG.UnmarshalText([]byte(fields[4]))
-	s.FCST_VALID_END.UnmarshalText([]byte(fields[5]))
-	s.OBS_LEAD.UnmarshalText([]byte(fields[6]))
-	s.OBS_VALID_BEG.UnmarshalText([]byte(fields[7]))
-	s.OBS_VALID_END.UnmarshalText([]byte(fields[8]))
-	s.FCST_VAR.UnmarshalText([]byte(fields[9]))
-	s.FCST_UNITS.UnmarshalText([]byte(fields[10]))
-	s.FCST_LEV.UnmarshalText([]byte(fields[11]))
-	s.OBS_VAR.UnmarshalText([]byte(fields[12]))
-	s.OBS_UNITS.UnmarshalText([]byte(fields[13]))
-	s.OBS_LEV.UnmarshalText([]byte(fields[14]))
-	s.OBTYPE.UnmarshalText([]byte(fields[15]))
-	s.VX_MASK.UnmarshalText([]byte(fields[16]))
-	s.INTERP_MTHD.UnmarshalText([]byte(fields[17]))
-	s.INTERP_PNTS.UnmarshalText([]byte(fields[18]))
-	s.FCST_THRESH.UnmarshalText([]byte(fields[19]))
-	s.OBS_THRESH.UnmarshalText([]byte(fields[20]))
-	s.COV_THRESH.UnmarshalText([]byte(fields[21]))
-	s.ALPHA.UnmarshalText([]byte(fields[22]))
-	s.LINE_TYPE.UnmarshalText([]byte(fields[23]))
+func (s *STAT_GRAD_header) fill(fields []string) error {
+	var errs []error
+	appendErrorWithContext(&errs, "VERSION", s.VERSION.UnmarshalText([]byte(fields[0])))
+	appendErrorWithContext(&errs, "MODEL", s.MODEL.UnmarshalText([]byte(fields[1])))
+	appendErrorWithContext(&errs, "DESC", s.DESC.UnmarshalText([]byte(fields[2])))
+	appendErrorWithContext(&errs, "FCST_VALID_BEG", s.FCST_VALID_BEG.UnmarshalText([]byte(fields[4])))
+	appendErrorWithContext(&errs, "FCST_VALID_END", s.FCST_VALID_END.UnmarshalText([]byte(fields[5])))
+	appendErrorWithContext(&errs, "OBS_LEAD", s.OBS_LEAD.UnmarshalText([]byte(fields[6])))
+	appendErrorWithContext(&errs, "OBS_VALID_BEG", s.OBS_VALID_BEG.UnmarshalText([]byte(fields[7])))
+	appendErrorWithContext(&errs, "OBS_VALID_END", s.OBS_VALID_END.UnmarshalText([]byte(fields[8])))
+	appendErrorWithContext(&errs, "FCST_VAR", s.FCST_VAR.UnmarshalText([]byte(fields[9])))
+	appendErrorWithContext(&errs, "FCST_UNITS", s.FCST_UNITS.UnmarshalText([]byte(fields[10])))
+	appendErrorWithContext(&errs, "FCST_LEV", s.FCST_LEV.UnmarshalText([]byte(fields[11])))
+	appendErrorWithContext(&errs, "OBS_VAR", s.OBS_VAR.UnmarshalText([]byte(fields[12])))
+	appendErrorWithContext(&errs, "OBS_UNITS", s.OBS_UNITS.UnmarshalText([]byte(fields[13])))
+	appendErrorWithContext(&errs, "OBS_LEV", s.OBS_LEV.UnmarshalText([]byte(fields[14])))
+	appendErrorWithContext(&errs, "OBTYPE", s.OBTYPE.UnmarshalText([]byte(fields[15])))
+	appendErrorWithContext(&errs, "VX_MASK", s.VX_MASK.UnmarshalText([]byte(fields[16])))
+	appendErrorWithContext(&errs, "INTERP_MTHD", s.INTERP_MTHD.UnmarshalText([]byte(fields[17])))
+	appendErrorWithContext(&errs, "INTERP_PNTS", s.INTERP_PNTS.UnmarshalText([]byte(fields[18])))
+	appendErrorWithContext(&errs, "FCST_THRESH", s.FCST_THRESH.UnmarshalText([]byte(fields[19])))
+	appendErrorWithContext(&errs, "OBS_THRESH", s.OBS_THRESH.UnmarshalText([]byte(fields[20])))
+	appendErrorWithContext(&errs, "COV_THRESH", s.COV_THRESH.UnmarshalText([]byte(fields[21])))
+	appendErrorWithContext(&errs, "ALPHA", s.ALPHA.UnmarshalText([]byte(fields[22])))
+	appendErrorWithContext(&errs, "LINE_TYPE", s.LINE_TYPE.UnmarshalText([]byte(fields[23])))
+	return errors.Join(errs...)
 }
 
 // Sets STAT_ISC_header struct's fields
-func (s *STAT_ISC_header) fill(fields []string) {
-	s.VERSION.UnmarshalText([]byte(fields[0]))
-	s.MODEL.UnmarshalText([]byte(fields[1]))
-	s.DESC.UnmarshalText([]byte(fields[2]))
-	s.FCST_VALID_BEG.UnmarshalText([]byte(fields[4]))
-	s.FCST_VALID_END.UnmarshalText([]byte(fields[5]))
-	s.OBS_LEAD.UnmarshalText([]byte(fields[6]))
-	s.OBS_VALID_BEG.UnmarshalText([]byte(fields[7]))
-	s.OBS_VALID_END.UnmarshalText([]byte(fields[8]))
-	s.FCST_VAR.UnmarshalText([]byte(fields[9]))
-	s.FCST_UNITS.UnmarshalText([]byte(fields[10]))
-	s.FCST_LEV.UnmarshalText([]byte(fields[11]))
-	s.OBS_VAR.UnmarshalText([]byte(fields[12]))
-	s.OBS_UNITS.UnmarshalText([]byte(fields[13]))
-	s.OBS_LEV.UnmarshalText([]byte(fields[14]))
-	s.OBTYPE.UnmarshalText([]byte(fields[15]))
-	s.VX_MASK.UnmarshalText([]byte(fields[16]))
-	s.INTERP_MTHD.UnmarshalText([]byte(fields[17]))
-	s.INTERP_PNTS.UnmarshalText([]byte(fields[18]))
-	s.FCST_THRESH.UnmarshalText([]byte(fields[19]))
-	s.OBS_THRESH.UnmarshalText([]byte(fields[20]))
-	s.COV_THRESH.UnmarshalText([]byte(fields[21]))
-	s.ALPHA.UnmarshalText([]byte(fields[22]))
-	s.LINE_TYPE.UnmarshalText([]byte(fields[23]))
+func (s *STAT_ISC_header) fill(fields []string) error {
+	var errs []error
+	appendErrorWithContext(&errs, "VERSION", s.VERSION.UnmarshalText([]byte(fields[0])))
+	appendErrorWithContext(&errs, "MODEL", s.MODEL.UnmarshalText([]byte(fields[1])))
+	appendErrorWithContext(&errs, "DESC", s.DESC.UnmarshalText([]byte(fields[2])))
+	appendErrorWithContext(&errs, "FCST_VALID_BEG", s.FCST_VALID_BEG.UnmarshalText([]byte(fields[4])))
+	appendErrorWithContext(&errs, "FCST_VALID_END", s.FCST_VALID_END.UnmarshalText([]byte(fields[5])))
+	appendErrorWithContext(&errs, "OBS_LEAD", s.OBS_LEAD.UnmarshalText([]byte(fields[6])))
+	appendErrorWithContext(&errs, "OBS_VALID_BEG", s.OBS_VALID_BEG.UnmarshalText([]byte(fields[7])))
+	appendErrorWithContext(&errs, "OBS_VALID_END", s.OBS_VALID_END.UnmarshalText([]byte(fields[8])))
+	appendErrorWithContext(&errs, "FCST_VAR", s.FCST_VAR.UnmarshalText([]byte(fields[9])))
+	appendErrorWithContext(&errs, "FCST_UNITS", s.FCST_UNITS.UnmarshalText([]byte(fields[10])))
+	appendErrorWithContext(&errs, "FCST_LEV", s.FCST_LEV.UnmarshalText([]byte(fields[11])))
+	appendErrorWithContext(&errs, "OBS_VAR", s.OBS_VAR.UnmarshalText([]byte(fields[12])))
+	appendErrorWithContext(&errs, "OBS_UNITS", s.OBS_UNITS.UnmarshalText([]byte(fields[13])))
+	appendErrorWithContext(&errs, "OBS_LEV", s.OBS_LEV.UnmarshalText([]byte(fields[14])))
+	appendErrorWithContext(&errs, "OBTYPE", s.OBTYPE.UnmarshalText([]byte(fields[15])))
+	appendErrorWithContext(&errs, "VX_MASK", s.VX_MASK.UnmarshalText([]byte(fields[16])))
+	appendErrorWithContext(&errs, "INTERP_MTHD", s.INTERP_MTHD.UnmarshalText([]byte(fields[17])))
+	appendErrorWithContext(&errs, "INTERP_PNTS", s.INTERP_PNTS.UnmarshalText([]byte(fields[18])))
+	appendErrorWithContext(&errs, "FCST_THRESH", s.FCST_THRESH.UnmarshalText([]byte(fields[19])))
+	appendErrorWithContext(&errs, "OBS_THRESH", s.OBS_THRESH.UnmarshalText([]byte(fields[20])))
+	appendErrorWithContext(&errs, "COV_THRESH", s.COV_THRESH.UnmarshalText([]byte(fields[21])))
+	appendErrorWithContext(&errs, "ALPHA", s.ALPHA.UnmarshalText([]byte(fields[22])))
+	appendErrorWithContext(&errs, "LINE_TYPE", s.LINE_TYPE.UnmarshalText([]byte(fields[23])))
+	return errors.Join(errs...)
 }
 
 // Sets STAT_MCTC_header struct's fields
-func (s *STAT_MCTC_header) fill(fields []string) {
-	s.VERSION.UnmarshalText([]byte(fields[0]))
-	s.MODEL.UnmarshalText([]byte(fields[1]))
-	s.DESC.UnmarshalText([]byte(fields[2]))
-	s.FCST_VALID_BEG.UnmarshalText([]byte(fields[4]))
-	s.FCST_VALID_END.UnmarshalText([]byte(fields[5]))
-	s.OBS_LEAD.UnmarshalText([]byte(fields[6]))
-	s.OBS_VALID_BEG.UnmarshalText([]byte(fields[7]))
-	s.OBS_VALID_END.UnmarshalText([]byte(fields[8]))
-	s.FCST_VAR.UnmarshalText([]byte(fields[9]))
-	s.FCST_UNITS.UnmarshalText([]byte(fields[10]))
-	s.FCST_LEV.UnmarshalText([]byte(fields[11]))
-	s.OBS_VAR.UnmarshalText([]byte(fields[12]))
-	s.OBS_UNITS.UnmarshalText([]byte(fields[13]))
-	s.OBS_LEV.UnmarshalText([]byte(fields[14]))
-	s.OBTYPE.UnmarshalText([]byte(fields[15]))
-	s.VX_MASK.UnmarshalText([]byte(fields[16]))
-	s.INTERP_MTHD.UnmarshalText([]byte(fields[17]))
-	s.INTERP_PNTS.UnmarshalText([]byte(fields[18]))
-	s.FCST_THRESH.UnmarshalText([]byte(fields[19]))
-	s.OBS_THRESH.UnmarshalText([]byte(fields[20]))
-	s.COV_THRESH.UnmarshalText([]byte(fields[21]))
-	s.ALPHA.UnmarshalText([]byte(fields[22]))
-	s.LINE_TYPE.UnmarshalText([]byte(fields[23]))
+func (s *STAT_MCTC_header) fill(fields []string) error {
+	var errs []error
+	appendErrorWithContext(&errs, "VERSION", s.VERSION.UnmarshalText([]byte(fields[0])))
+	appendErrorWithContext(&errs, "MODEL", s.MODEL.UnmarshalText([]byte(fields[1])))
+	appendErrorWithContext(&errs, "DESC", s.DESC.UnmarshalText([]byte(fields[2])))
+	appendErrorWithContext(&errs, "FCST_VALID_BEG", s.FCST_VALID_BEG.UnmarshalText([]byte(fields[4])))
+	appendErrorWithContext(&errs, "FCST_VALID_END", s.FCST_VALID_END.UnmarshalText([]byte(fields[5])))
+	appendErrorWithContext(&errs, "OBS_LEAD", s.OBS_LEAD.UnmarshalText([]byte(fields[6])))
+	appendErrorWithContext(&errs, "OBS_VALID_BEG", s.OBS_VALID_BEG.UnmarshalText([]byte(fields[7])))
+	appendErrorWithContext(&errs, "OBS_VALID_END", s.OBS_VALID_END.UnmarshalText([]byte(fields[8])))
+	appendErrorWithContext(&errs, "FCST_VAR", s.FCST_VAR.UnmarshalText([]byte(fields[9])))
+	appendErrorWithContext(&errs, "FCST_UNITS", s.FCST_UNITS.UnmarshalText([]byte(fields[10])))
+	appendErrorWithContext(&errs, "FCST_LEV", s.FCST_LEV.UnmarshalText([]byte(fields[11])))
+	appendErrorWithContext(&errs, "OBS_VAR", s.OBS_VAR.UnmarshalText([]byte(fields[12])))
+	appendErrorWithContext(&errs, "OBS_UNITS", s.OBS_UNITS.UnmarshalText([]byte(fields[13])))
+	appendErrorWithContext(&errs, "OBS_LEV", s.OBS_LEV.UnmarshalText([]byte(fields[14])))
+	appendErrorWithContext(&errs, "OBTYPE", s.OBTYPE.UnmarshalText([]byte(fields[15])))
+	appendErrorWithContext(&errs, "VX_MASK", s.VX_MASK.UnmarshalText([]byte(fields[16])))
+	appendErrorWithContext(&errs, "INTERP_MTHD", s.INTERP_MTHD.UnmarshalText([]byte(fields[17])))
+	appendErrorWithContext(&errs, "INTERP_PNTS", s.INTERP_PNTS.UnmarshalText([]byte(fields[18])))
+	appendErrorWithContext(&errs, "FCST_THRESH", s.FCST_THRESH.UnmarshalText([]byte(fields[19])))
+	appendErrorWithContext(&errs, "OBS_THRESH", s.OBS_THRESH.UnmarshalText([]byte(fields[20])))
+	appendErrorWithContext(&errs, "COV_THRESH", s.COV_THRESH.UnmarshalText([]byte(fields[21])))
+	appendErrorWithContext(&errs, "ALPHA", s.ALPHA.UnmarshalText([]byte(fields[22])))
+	appendErrorWithContext(&errs, "LINE_TYPE", s.LINE_TYPE.UnmarshalText([]byte(fields[23])))
+	return errors.Join(errs...)
 }
 
 // Sets STAT_MCTS_header struct's fields
-func (s *STAT_MCTS_header) fill(fields []string) {
-	s.VERSION.UnmarshalText([]byte(fields[0]))
-	s.MODEL.UnmarshalText([]byte(fields[1]))
-	s.DESC.UnmarshalText([]byte(fields[2]))
-	s.FCST_VALID_BEG.UnmarshalText([]byte(fields[4]))
-	s.FCST_VALID_END.UnmarshalText([]byte(fields[5]))
-	s.OBS_LEAD.UnmarshalText([]byte(fields[6]))
-	s.OBS_VALID_BEG.UnmarshalText([]byte(fields[7]))
-	s.OBS_VALID_END.UnmarshalText([]byte(fields[8]))
-	s.FCST_VAR.UnmarshalText([]byte(fields[9]))
-	s.FCST_UNITS.UnmarshalText([]byte(fields[10]))
-	s.FCST_LEV.UnmarshalText([]byte(fields[11]))
-	s.OBS_VAR.UnmarshalText([]byte(fields[12]))
-	s.OBS_UNITS.UnmarshalText([]byte(fields[13]))
-	s.OBS_LEV.UnmarshalText([]byte(fields[14]))
-	s.OBTYPE.UnmarshalText([]byte(fields[15]))
-	s.VX_MASK.UnmarshalText([]byte(fields[16]))
-	s.INTERP_MTHD.UnmarshalText([]byte(fields[17]))
-	s.INTERP_PNTS.UnmarshalText([]byte(fields[18]))
-	s.FCST_THRESH.UnmarshalText([]byte(fields[19]))
-	s.OBS_THRESH.UnmarshalText([]byte(fields[20]))
-	s.COV_THRESH.UnmarshalText([]byte(fields[21]))
-	s.ALPHA.UnmarshalText([]byte(fields[22]))
-	s.LINE_TYPE.UnmarshalText([]byte(fields[23]))
+func (s *STAT_MCTS_header) fill(fields []string) error {
+	var errs []error
+	appendErrorWithContext(&errs, "VERSION", s.VERSION.UnmarshalText([]byte(fields[0])))
+	appendErrorWithContext(&errs, "MODEL", s.MODEL.UnmarshalText([]byte(fields[1])))
+	appendErrorWithContext(&errs, "DESC", s.DESC.UnmarshalText([]byte(fields[2])))
+	appendErrorWithContext(&errs, "FCST_VALID_BEG", s.FCST_VALID_BEG.UnmarshalText([]byte(fields[4])))
+	appendErrorWithContext(&errs, "FCST_VALID_END", s.FCST_VALID_END.UnmarshalText([]byte(fields[5])))
+	appendErrorWithContext(&errs, "OBS_LEAD", s.OBS_LEAD.UnmarshalText([]byte(fields[6])))
+	appendErrorWithContext(&errs, "OBS_VALID_BEG", s.OBS_VALID_BEG.UnmarshalText([]byte(fields[7])))
+	appendErrorWithContext(&errs, "OBS_VALID_END", s.OBS_VALID_END.UnmarshalText([]byte(fields[8])))
+	appendErrorWithContext(&errs, "FCST_VAR", s.FCST_VAR.UnmarshalText([]byte(fields[9])))
+	appendErrorWithContext(&errs, "FCST_UNITS", s.FCST_UNITS.UnmarshalText([]byte(fields[10])))
+	appendErrorWithContext(&errs, "FCST_LEV", s.FCST_LEV.UnmarshalText([]byte(fields[11])))
+	appendErrorWithContext(&errs, "OBS_VAR", s.OBS_VAR.UnmarshalText([]byte(fields[12])))
+	appendErrorWithContext(&errs, "OBS_UNITS", s.OBS_UNITS.UnmarshalText([]byte(fields[13])))
+	appendErrorWithContext(&errs, "OBS_LEV", s.OBS_LEV.UnmarshalText([]byte(fields[14])))
+	appendErrorWithContext(&errs, "OBTYPE", s.OBTYPE.UnmarshalText([]byte(fields[15])))
+	appendErrorWithContext(&errs, "VX_MASK", s.VX_MASK.UnmarshalText([]byte(fields[16])))
+	appendErrorWithContext(&errs, "INTERP_MTHD", s.INTERP_MTHD.UnmarshalText([]byte(fields[17])))
+	appendErrorWithContext(&errs, "INTERP_PNTS", s.INTERP_PNTS.UnmarshalText([]byte(fields[18])))
+	appendErrorWithContext(&errs, "FCST_THRESH", s.FCST_THRESH.UnmarshalText([]byte(fields[19])))
+	appendErrorWithContext(&errs, "OBS_THRESH", s.OBS_THRESH.UnmarshalText([]byte(fields[20])))
+	appendErrorWithContext(&errs, "COV_THRESH", s.COV_THRESH.UnmarshalText([]byte(fields[21])))
+	appendErrorWithContext(&errs, "ALPHA", s.ALPHA.UnmarshalText([]byte(fields[22])))
+	appendErrorWithContext(&errs, "LINE_TYPE", s.LINE_TYPE.UnmarshalText([]byte(fields[23])))
+	return errors.Join(errs...)
 }
 
 // Sets STAT_MPR_header struct's fields
-func (s *STAT_MPR_header) fill(fields []string) {
-	s.VERSION.UnmarshalText([]byte(fields[0]))
-	s.MODEL.UnmarshalText([]byte(fields[1]))
-	s.DESC.UnmarshalText([]byte(fields[2]))
-	s.FCST_VALID_BEG.UnmarshalText([]byte(fields[4]))
-	s.FCST_VALID_END.UnmarshalText([]byte(fields[5]))
-	s.OBS_LEAD.UnmarshalText([]byte(fields[6]))
-	s.OBS_VALID_BEG.UnmarshalText([]byte(fields[7]))
-	s.OBS_VALID_END.UnmarshalText([]byte(fields[8]))
-	s.FCST_VAR.UnmarshalText([]byte(fields[9]))
-	s.FCST_UNITS.UnmarshalText([]byte(fields[10]))
-	s.FCST_LEV.UnmarshalText([]byte(fields[11]))
-	s.OBS_VAR.UnmarshalText([]byte(fields[12]))
-	s.OBS_UNITS.UnmarshalText([]byte(fields[13]))
-	s.OBS_LEV.UnmarshalText([]byte(fields[14]))
-	s.OBTYPE.UnmarshalText([]byte(fields[15]))
-	s.VX_MASK.UnmarshalText([]byte(fields[16]))
-	s.INTERP_MTHD.UnmarshalText([]byte(fields[17]))
-	s.INTERP_PNTS.UnmarshalText([]byte(fields[18]))
-	s.FCST_THRESH.UnmarshalText([]byte(fields[19]))
-	s.OBS_THRESH.UnmarshalText([]byte(fields[20]))
-	s.COV_THRESH.UnmarshalText([]byte(fields[21]))
-	s.ALPHA.UnmarshalText([]byte(fields[22]))
-	s.LINE_TYPE.UnmarshalText([]byte(fields[23]))
+func (s *STAT_MPR_header) fill(fields []string) error {
+	var errs []error
+	appendErrorWithContext(&errs, "VERSION", s.VERSION.UnmarshalText([]byte(fields[0])))
+	appendErrorWithContext(&errs, "MODEL", s.MODEL.UnmarshalText([]byte(fields[1])))
+	appendErrorWithContext(&errs, "DESC", s.DESC.UnmarshalText([]byte(fields[2])))
+	appendErrorWithContext(&errs, "FCST_VALID_BEG", s.FCST_VALID_BEG.UnmarshalText([]byte(fields[4])))
+	appendErrorWithContext(&errs, "FCST_VALID_END", s.FCST_VALID_END.UnmarshalText([]byte(fields[5])))
+	appendErrorWithContext(&errs, "OBS_LEAD", s.OBS_LEAD.UnmarshalText([]byte(fields[6])))
+	appendErrorWithContext(&errs, "OBS_VALID_BEG", s.OBS_VALID_BEG.UnmarshalText([]byte(fields[7])))
+	appendErrorWithContext(&errs, "OBS_VALID_END", s.OBS_VALID_END.UnmarshalText([]byte(fields[8])))
+	appendErrorWithContext(&errs, "FCST_VAR", s.FCST_VAR.UnmarshalText([]byte(fields[9])))
+	appendErrorWithContext(&errs, "FCST_UNITS", s.FCST_UNITS.UnmarshalText([]byte(fields[10])))
+	appendErrorWithContext(&errs, "FCST_LEV", s.FCST_LEV.UnmarshalText([]byte(fields[11])))
+	appendErrorWithContext(&errs, "OBS_VAR", s.OBS_VAR.UnmarshalText([]byte(fields[12])))
+	appendErrorWithContext(&errs, "OBS_UNITS", s.OBS_UNITS.UnmarshalText([]byte(fields[13])))
+	appendErrorWithContext(&errs, "OBS_LEV", s.OBS_LEV.UnmarshalText([]byte(fields[14])))
+	appendErrorWithContext(&errs, "OBTYPE", s.OBTYPE.UnmarshalText([]byte(fields[15])))
+	appendErrorWithContext(&errs, "VX_MASK", s.VX_MASK.UnmarshalText([]byte(fields[16])))
+	appendErrorWithContext(&errs, "INTERP_MTHD", s.INTERP_MTHD.UnmarshalText([]byte(fields[17])))
+	appendErrorWithContext(&errs, "INTERP_PNTS", s.INTERP_PNTS.UnmarshalText([]byte(fields[18])))
+	appendErrorWithContext(&errs, "FCST_THRESH", s.FCST_THRESH.UnmarshalText([]byte(fields[19])))
+	appendErrorWithContext(&errs, "OBS_THRESH", s.OBS_THRESH.UnmarshalText([]byte(fields[20])))
+	appendErrorWithContext(&errs, "COV_THRESH", s.COV_THRESH.UnmarshalText([]byte(fields[21])))
+	appendErrorWithContext(&errs, "ALPHA", s.ALPHA.UnmarshalText([]byte(fields[22])))
+	appendErrorWithContext(&errs, "LINE_TYPE", s.LINE_TYPE.UnmarshalText([]byte(fields[23])))
+	return errors.Join(errs...)
 }
 
 // Sets STAT_NBRCNT_header struct's fields
-func (s *STAT_NBRCNT_header) fill(fields []string) {
-	s.VERSION.UnmarshalText([]byte(fields[0]))
-	s.MODEL.UnmarshalText([]byte(fields[1]))
-	s.DESC.UnmarshalText([]byte(fields[2]))
-	s.FCST_VALID_BEG.UnmarshalText([]byte(fields[4]))
-	s.FCST_VALID_END.UnmarshalText([]byte(fields[5]))
-	s.OBS_LEAD.UnmarshalText([]byte(fields[6]))
-	s.OBS_VALID_BEG.UnmarshalText([]byte(fields[7]))
-	s.OBS_VALID_END.UnmarshalText([]byte(fields[8]))
-	s.FCST_VAR.UnmarshalText([]byte(fields[9]))
-	s.FCST_UNITS.UnmarshalText([]byte(fields[10]))
-	s.FCST_LEV.UnmarshalText([]byte(fields[11]))
-	s.OBS_VAR.UnmarshalText([]byte(fields[12]))
-	s.OBS_UNITS.UnmarshalText([]byte(fields[13]))
-	s.OBS_LEV.UnmarshalText([]byte(fields[14]))
-	s.OBTYPE.UnmarshalText([]byte(fields[15]))
-	s.VX_MASK.UnmarshalText([]byte(fields[16]))
-	s.INTERP_MTHD.UnmarshalText([]byte(fields[17]))
-	s.INTERP_PNTS.UnmarshalText([]byte(fields[18]))
-	s.FCST_THRESH.UnmarshalText([]byte(fields[19]))
-	s.OBS_THRESH.UnmarshalText([]byte(fields[20]))
-	s.COV_THRESH.UnmarshalText([]byte(fields[21]))
-	s.ALPHA.UnmarshalText([]byte(fields[22]))
-	s.LINE_TYPE.UnmarshalText([]byte(fields[23]))
+func (s *STAT_NBRCNT_header) fill(fields []string) error {
+	var errs []error
+	appendErrorWithContext(&errs, "VERSION", s.VERSION.UnmarshalText([]byte(fields[0])))
+	appendErrorWithContext(&errs, "MODEL", s.MODEL.UnmarshalText([]byte(fields[1])))
+	appendErrorWithContext(&errs, "DESC", s.DESC.UnmarshalText([]byte(fields[2])))
+	appendErrorWithContext(&errs, "FCST_VALID_BEG", s.FCST_VALID_BEG.UnmarshalText([]byte(fields[4])))
+	appendErrorWithContext(&errs, "FCST_VALID_END", s.FCST_VALID_END.UnmarshalText([]byte(fields[5])))
+	appendErrorWithContext(&errs, "OBS_LEAD", s.OBS_LEAD.UnmarshalText([]byte(fields[6])))
+	appendErrorWithContext(&errs, "OBS_VALID_BEG", s.OBS_VALID_BEG.UnmarshalText([]byte(fields[7])))
+	appendErrorWithContext(&errs, "OBS_VALID_END", s.OBS_VALID_END.UnmarshalText([]byte(fields[8])))
+	appendErrorWithContext(&errs, "FCST_VAR", s.FCST_VAR.UnmarshalText([]byte(fields[9])))
+	appendErrorWithContext(&errs, "FCST_UNITS", s.FCST_UNITS.UnmarshalText([]byte(fields[10])))
+	appendErrorWithContext(&errs, "FCST_LEV", s.FCST_LEV.UnmarshalText([]byte(fields[11])))
+	appendErrorWithContext(&errs, "OBS_VAR", s.OBS_VAR.UnmarshalText([]byte(fields[12])))
+	appendErrorWithContext(&errs, "OBS_UNITS", s.OBS_UNITS.UnmarshalText([]byte(fields[13])))
+	appendErrorWithContext(&errs, "OBS_LEV", s.OBS_LEV.UnmarshalText([]byte(fields[14])))
+	appendErrorWithContext(&errs, "OBTYPE", s.OBTYPE.UnmarshalText([]byte(fields[15])))
+	appendErrorWithContext(&errs, "VX_MASK", s.VX_MASK.UnmarshalText([]byte(fields[16])))
+	appendErrorWithContext(&errs, "INTERP_MTHD", s.INTERP_MTHD.UnmarshalText([]byte(fields[17])))
+	appendErrorWithContext(&errs, "INTERP_PNTS", s.INTERP_PNTS.UnmarshalText([]byte(fields[18])))
+	appendErrorWithContext(&errs, "FCST_THRESH", s.FCST_THRESH.UnmarshalText([]byte(fields[19])))
+	appendErrorWithContext(&errs, "OBS_THRESH", s.OBS_THRESH.UnmarshalText([]byte(fields[20])))
+	appendErrorWithContext(&errs, "COV_THRESH", s.COV_THRESH.UnmarshalText([]byte(fields[21])))
+	appendErrorWithContext(&errs, "ALPHA", s.ALPHA.UnmarshalText([]byte(fields[22])))
+	appendErrorWithContext(&errs, "LINE_TYPE", s.LINE_TYPE.UnmarshalText([]byte(fields[23])))
+	return errors.Join(errs...)
 }
 
 // Sets STAT_NBRCTC_header struct's fields
-func (s *STAT_NBRCTC_header) fill(fields []string) {
-	s.VERSION.UnmarshalText([]byte(fields[0]))
-	s.MODEL.UnmarshalText([]byte(fields[1]))
-	s.DESC.UnmarshalText([]byte(fields[2]))
-	s.FCST_VALID_BEG.UnmarshalText([]byte(fields[4]))
-	s.FCST_VALID_END.UnmarshalText([]byte(fields[5]))
-	s.OBS_LEAD.UnmarshalText([]byte(fields[6]))
-	s.OBS_VALID_BEG.UnmarshalText([]byte(fields[7]))
-	s.OBS_VALID_END.UnmarshalText([]byte(fields[8]))
-	s.FCST_VAR.UnmarshalText([]byte(fields[9]))
-	s.FCST_UNITS.UnmarshalText([]byte(fields[10]))
-	s.FCST_LEV.UnmarshalText([]byte(fields[11]))
-	s.OBS_VAR.UnmarshalText([]byte(fields[12]))
-	s.OBS_UNITS.UnmarshalText([]byte(fields[13]))
-	s.OBS_LEV.UnmarshalText([]byte(fields[14]))
-	s.OBTYPE.UnmarshalText([]byte(fields[15]))
-	s.VX_MASK.UnmarshalText([]byte(fields[16]))
-	s.INTERP_MTHD.UnmarshalText([]byte(fields[17]))
-	s.INTERP_PNTS.UnmarshalText([]byte(fields[18]))
-	s.FCST_THRESH.UnmarshalText([]byte(fields[19]))
-	s.OBS_THRESH.UnmarshalText([]byte(fields[20]))
-	s.COV_THRESH.UnmarshalText([]byte(fields[21]))
-	s.ALPHA.UnmarshalText([]byte(fields[22]))
-	s.LINE_TYPE.UnmarshalText([]byte(fields[23]))
+func (s *STAT_NBRCTC_header) fill(fields []string) error {
+	var errs []error
+	appendErrorWithContext(&errs, "VERSION", s.VERSION.UnmarshalText([]byte(fields[0])))
+	appendErrorWithContext(&errs, "MODEL", s.MODEL.UnmarshalText([]byte(fields[1])))
+	appendErrorWithContext(&errs, "DESC", s.DESC.UnmarshalText([]byte(fields[2])))
+	appendErrorWithContext(&errs, "FCST_VALID_BEG", s.FCST_VALID_BEG.UnmarshalText([]byte(fields[4])))
+	appendErrorWithContext(&errs, "FCST_VALID_END", s.FCST_VALID_END.UnmarshalText([]byte(fields[5])))
+	appendErrorWithContext(&errs, "OBS_LEAD", s.OBS_LEAD.UnmarshalText([]byte(fields[6])))
+	appendErrorWithContext(&errs, "OBS_VALID_BEG", s.OBS_VALID_BEG.UnmarshalText([]byte(fields[7])))
+	appendErrorWithContext(&errs, "OBS_VALID_END", s.OBS_VALID_END.UnmarshalText([]byte(fields[8])))
+	appendErrorWithContext(&errs, "FCST_VAR", s.FCST_VAR.UnmarshalText([]byte(fields[9])))
+	appendErrorWithContext(&errs, "FCST_UNITS", s.FCST_UNITS.UnmarshalText([]byte(fields[10])))
+	appendErrorWithContext(&errs, "FCST_LEV", s.FCST_LEV.UnmarshalText([]byte(fields[11])))
+	appendErrorWithContext(&errs, "OBS_VAR", s.OBS_VAR.UnmarshalText([]byte(fields[12])))
+	appendErrorWithContext(&errs, "OBS_UNITS", s.OBS_UNITS.UnmarshalText([]byte(fields[13])))
+	appendErrorWithContext(&errs, "OBS_LEV", s.OBS_LEV.UnmarshalText([]byte(fields[14])))
+	appendErrorWithContext(&errs, "OBTYPE", s.OBTYPE.UnmarshalText([]byte(fields[15])))
+	appendErrorWithContext(&errs, "VX_MASK", s.VX_MASK.UnmarshalText([]byte(fields[16])))
+	appendErrorWithContext(&errs, "INTERP_MTHD", s.INTERP_MTHD.UnmarshalText([]byte(fields[17])))
+	appendErrorWithContext(&errs, "INTERP_PNTS", s.INTERP_PNTS.UnmarshalText([]byte(fields[18])))
+	appendErrorWithContext(&errs, "FCST_THRESH", s.FCST_THRESH.UnmarshalText([]byte(fields[19])))
+	appendErrorWithContext(&errs, "OBS_THRESH", s.OBS_THRESH.UnmarshalText([]byte(fields[20])))
+	appendErrorWithContext(&errs, "COV_THRESH", s.COV_THRESH.UnmarshalText([]byte(fields[21])))
+	appendErrorWithContext(&errs, "ALPHA", s.ALPHA.UnmarshalText([]byte(fields[22])))
+	appendErrorWithContext(&errs, "LINE_TYPE", s.LINE_TYPE.UnmarshalText([]byte(fields[23])))
+	return errors.Join(errs...)
 }
 
 // Sets STAT_NBRCTS_header struct's fields
-func (s *STAT_NBRCTS_header) fill(fields []string) {
-	s.VERSION.UnmarshalText([]byte(fields[0]))
-	s.MODEL.UnmarshalText([]byte(fields[1]))
-	s.DESC.UnmarshalText([]byte(fields[2]))
-	s.FCST_VALID_BEG.UnmarshalText([]byte(fields[4]))
-	s.FCST_VALID_END.UnmarshalText([]byte(fields[5]))
-	s.OBS_LEAD.UnmarshalText([]byte(fields[6]))
-	s.OBS_VALID_BEG.UnmarshalText([]byte(fields[7]))
-	s.OBS_VALID_END.UnmarshalText([]byte(fields[8]))
-	s.FCST_VAR.UnmarshalText([]byte(fields[9]))
-	s.FCST_UNITS.UnmarshalText([]byte(fields[10]))
-	s.FCST_LEV.UnmarshalText([]byte(fields[11]))
-	s.OBS_VAR.UnmarshalText([]byte(fields[12]))
-	s.OBS_UNITS.UnmarshalText([]byte(fields[13]))
-	s.OBS_LEV.UnmarshalText([]byte(fields[14]))
-	s.OBTYPE.UnmarshalText([]byte(fields[15]))
-	s.VX_MASK.UnmarshalText([]byte(fields[16]))
-	s.INTERP_MTHD.UnmarshalText([]byte(fields[17]))
-	s.INTERP_PNTS.UnmarshalText([]byte(fields[18]))
-	s.FCST_THRESH.UnmarshalText([]byte(fields[19]))
-	s.OBS_THRESH.UnmarshalText([]byte(fields[20]))
-	s.COV_THRESH.UnmarshalText([]byte(fields[21]))
-	s.ALPHA.UnmarshalText([]byte(fields[22]))
-	s.LINE_TYPE.UnmarshalText([]byte(fields[23]))
+func (s *STAT_NBRCTS_header) fill(fields []string) error {
+	var errs []error
+	appendErrorWithContext(&errs, "VERSION", s.VERSION.UnmarshalText([]byte(fields[0])))
+	appendErrorWithContext(&errs, "MODEL", s.MODEL.UnmarshalText([]byte(fields[1])))
+	appendErrorWithContext(&errs, "DESC", s.DESC.UnmarshalText([]byte(fields[2])))
+	appendErrorWithContext(&errs, "FCST_VALID_BEG", s.FCST_VALID_BEG.UnmarshalText([]byte(fields[4])))
+	appendErrorWithContext(&errs, "FCST_VALID_END", s.FCST_VALID_END.UnmarshalText([]byte(fields[5])))
+	appendErrorWithContext(&errs, "OBS_LEAD", s.OBS_LEAD.UnmarshalText([]byte(fields[6])))
+	appendErrorWithContext(&errs, "OBS_VALID_BEG", s.OBS_VALID_BEG.UnmarshalText([]byte(fields[7])))
+	appendErrorWithContext(&errs, "OBS_VALID_END", s.OBS_VALID_END.UnmarshalText([]byte(fields[8])))
+	appendErrorWithContext(&errs, "FCST_VAR", s.FCST_VAR.UnmarshalText([]byte(fields[9])))
+	appendErrorWithContext(&errs, "FCST_UNITS", s.FCST_UNITS.UnmarshalText([]byte(fields[10])))
+	appendErrorWithContext(&errs, "FCST_LEV", s.FCST_LEV.UnmarshalText([]byte(fields[11])))
+	appendErrorWithContext(&errs, "OBS_VAR", s.OBS_VAR.UnmarshalText([]byte(fields[12])))
+	appendErrorWithContext(&errs, "OBS_UNITS", s.OBS_UNITS.UnmarshalText([]byte(fields[13])))
+	appendErrorWithContext(&errs, "OBS_LEV", s.OBS_LEV.UnmarshalText([]byte(fields[14])))
+	appendErrorWithContext(&errs, "OBTYPE", s.OBTYPE.UnmarshalText([]byte(fields[15])))
+	appendErrorWithContext(&errs, "VX_MASK", s.VX_MASK.UnmarshalText([]byte(fields[16])))
+	appendErrorWithContext(&errs, "INTERP_MTHD", s.INTERP_MTHD.UnmarshalText([]byte(fields[17])))
+	appendErrorWithContext(&errs, "INTERP_PNTS", s.INTERP_PNTS.UnmarshalText([]byte(fields[18])))
+	appendErrorWithContext(&errs, "FCST_THRESH", s.FCST_THRESH.UnmarshalText([]byte(fields[19])))
+	appendErrorWithContext(&errs, "OBS_THRESH", s.OBS_THRESH.UnmarshalText([]byte(fields[20])))
+	appendErrorWithContext(&errs, "COV_THRESH", s.COV_THRESH.UnmarshalText([]byte(fields[21])))
+	appendErrorWithContext(&errs, "ALPHA", s.ALPHA.UnmarshalText([]byte(fields[22])))
+	appendErrorWithContext(&errs, "LINE_TYPE", s.LINE_TYPE.UnmarshalText([]byte(fields[23])))
+	return errors.Join(errs...)
 }
 
 // Sets STAT_ORANK_header struct's fields
-func (s *STAT_ORANK_header) fill(fields []string) {
-	s.VERSION.UnmarshalText([]byte(fields[0]))
-	s.MODEL.UnmarshalText([]byte(fields[1]))
-	s.DESC.UnmarshalText([]byte(fields[2]))
-	s.FCST_VALID_BEG.UnmarshalText([]byte(fields[4]))
-	s.FCST_VALID_END.UnmarshalText([]byte(fields[5]))
-	s.OBS_LEAD.UnmarshalText([]byte(fields[6]))
-	s.OBS_VALID_BEG.UnmarshalText([]byte(fields[7]))
-	s.OBS_VALID_END.UnmarshalText([]byte(fields[8]))
-	s.FCST_VAR.UnmarshalText([]byte(fields[9]))
-	s.FCST_UNITS.UnmarshalText([]byte(fields[10]))
-	s.FCST_LEV.UnmarshalText([]byte(fields[11]))
-	s.OBS_VAR.UnmarshalText([]byte(fields[12]))
-	s.OBS_UNITS.UnmarshalText([]byte(fields[13]))
-	s.OBS_LEV.UnmarshalText([]byte(fields[14]))
-	s.OBTYPE.UnmarshalText([]byte(fields[15]))
-	s.VX_MASK.UnmarshalText([]byte(fields[16]))
-	s.INTERP_MTHD.UnmarshalText([]byte(fields[17]))
-	s.INTERP_PNTS.UnmarshalText([]byte(fields[18]))
-	s.FCST_THRESH.UnmarshalText([]byte(fields[19]))
-	s.OBS_THRESH.UnmarshalText([]byte(fields[20]))
-	s.COV_THRESH.UnmarshalText([]byte(fields[21]))
-	s.ALPHA.UnmarshalText([]byte(fields[22]))
-	s.LINE_TYPE.UnmarshalText([]byte(fields[23]))
+func (s *STAT_ORANK_header) fill(fields []string) error {
+	var errs []error
+	appendErrorWithContext(&errs, "VERSION", s.VERSION.UnmarshalText([]byte(fields[0])))
+	appendErrorWithContext(&errs, "MODEL", s.MODEL.UnmarshalText([]byte(fields[1])))
+	appendErrorWithContext(&errs, "DESC", s.DESC.UnmarshalText([]byte(fields[2])))
+	appendErrorWithContext(&errs, "FCST_VALID_BEG", s.FCST_VALID_BEG.UnmarshalText([]byte(fields[4])))
+	appendErrorWithContext(&errs, "FCST_VALID_END", s.FCST_VALID_END.UnmarshalText([]byte(fields[5])))
+	appendErrorWithContext(&errs, "OBS_LEAD", s.OBS_LEAD.UnmarshalText([]byte(fields[6])))
+	appendErrorWithContext(&errs, "OBS_VALID_BEG", s.OBS_VALID_BEG.UnmarshalText([]byte(fields[7])))
+	appendErrorWithContext(&errs, "OBS_VALID_END", s.OBS_VALID_END.UnmarshalText([]byte(fields[8])))
+	appendErrorWithContext(&errs, "FCST_VAR", s.FCST_VAR.UnmarshalText([]byte(fields[9])))
+	appendErrorWithContext(&errs, "FCST_UNITS", s.FCST_UNITS.UnmarshalText([]byte(fields[10])))
+	appendErrorWithContext(&errs, "FCST_LEV", s.FCST_LEV.UnmarshalText([]byte(fields[11])))
+	appendErrorWithContext(&errs, "OBS_VAR", s.OBS_VAR.UnmarshalText([]byte(fields[12])))
+	appendErrorWithContext(&errs, "OBS_UNITS", s.OBS_UNITS.UnmarshalText([]byte(fields[13])))
+	appendErrorWithContext(&errs, "OBS_LEV", s.OBS_LEV.UnmarshalText([]byte(fields[14])))
+	appendErrorWithContext(&errs, "OBTYPE", s.OBTYPE.UnmarshalText([]byte(fields[15])))
+	appendErrorWithContext(&errs, "VX_MASK", s.VX_MASK.UnmarshalText([]byte(fields[16])))
+	appendErrorWithContext(&errs, "INTERP_MTHD", s.INTERP_MTHD.UnmarshalText([]byte(fields[17])))
+	appendErrorWithContext(&errs, "INTERP_PNTS", s.INTERP_PNTS.UnmarshalText([]byte(fields[18])))
+	appendErrorWithContext(&errs, "FCST_THRESH", s.FCST_THRESH.UnmarshalText([]byte(fields[19])))
+	appendErrorWithContext(&errs, "OBS_THRESH", s.OBS_THRESH.UnmarshalText([]byte(fields[20])))
+	appendErrorWithContext(&errs, "COV_THRESH", s.COV_THRESH.UnmarshalText([]byte(fields[21])))
+	appendErrorWithContext(&errs, "ALPHA", s.ALPHA.UnmarshalText([]byte(fields[22])))
+	appendErrorWithContext(&errs, "LINE_TYPE", s.LINE_TYPE.UnmarshalText([]byte(fields[23])))
+	return errors.Join(errs...)
 }
 
 // Sets STAT_PCT_header struct's fields
-func (s *STAT_PCT_header) fill(fields []string) {
-	s.VERSION.UnmarshalText([]byte(fields[0]))
-	s.MODEL.UnmarshalText([]byte(fields[1]))
-	s.DESC.UnmarshalText([]byte(fields[2]))
-	s.FCST_VALID_BEG.UnmarshalText([]byte(fields[4]))
-	s.FCST_VALID_END.UnmarshalText([]byte(fields[5]))
-	s.OBS_LEAD.UnmarshalText([]byte(fields[6]))
-	s.OBS_VALID_BEG.UnmarshalText([]byte(fields[7]))
-	s.OBS_VALID_END.UnmarshalText([]byte(fields[8]))
-	s.FCST_VAR.UnmarshalText([]byte(fields[9]))
-	s.FCST_UNITS.UnmarshalText([]byte(fields[10]))
-	s.FCST_LEV.UnmarshalText([]byte(fields[11]))
-	s.OBS_VAR.UnmarshalText([]byte(fields[12]))
-	s.OBS_UNITS.UnmarshalText([]byte(fields[13]))
-	s.OBS_LEV.UnmarshalText([]byte(fields[14]))
-	s.OBTYPE.UnmarshalText([]byte(fields[15]))
-	s.VX_MASK.UnmarshalText([]byte(fields[16]))
-	s.INTERP_MTHD.UnmarshalText([]byte(fields[17]))
-	s.INTERP_PNTS.UnmarshalText([]byte(fields[18]))
-	s.FCST_THRESH.UnmarshalText([]byte(fields[19]))
-	s.OBS_THRESH.UnmarshalText([]byte(fields[20]))
-	s.COV_THRESH.UnmarshalText([]byte(fields[21]))
-	s.ALPHA.UnmarshalText([]byte(fields[22]))
-	s.LINE_TYPE.UnmarshalText([]byte(fields[23]))
+func (s *STAT_PCT_header) fill(fields []string) error {
+	var errs []error
+	appendErrorWithContext(&errs, "VERSION", s.VERSION.UnmarshalText([]byte(fields[0])))
+	appendErrorWithContext(&errs, "MODEL", s.MODEL.UnmarshalText([]byte(fields[1])))
+	appendErrorWithContext(&errs, "DESC", s.DESC.UnmarshalText([]byte(fields[2])))
+	appendErrorWithContext(&errs, "FCST_VALID_BEG", s.FCST_VALID_BEG.UnmarshalText([]byte(fields[4])))
+	appendErrorWithContext(&errs, "FCST_VALID_END", s.FCST_VALID_END.UnmarshalText([]byte(fields[5])))
+	appendErrorWithContext(&errs, "OBS_LEAD", s.OBS_LEAD.UnmarshalText([]byte(fields[6])))
+	appendErrorWithContext(&errs, "OBS_VALID_BEG", s.OBS_VALID_BEG.UnmarshalText([]byte(fields[7])))
+	appendErrorWithContext(&errs, "OBS_VALID_END", s.OBS_VALID_END.UnmarshalText([]byte(fields[8])))
+	appendErrorWithContext(&errs, "FCST_VAR", s.FCST_VAR.UnmarshalText([]byte(fields[9])))
+	appendErrorWithContext(&errs, "FCST_UNITS", s.FCST_UNITS.UnmarshalText([]byte(fields[10])))
+	appendErrorWithContext(&errs, "FCST_LEV", s.FCST_LEV.UnmarshalText([]byte(fields[11])))
+	appendErrorWithContext(&errs, "OBS_VAR", s.OBS_VAR.UnmarshalText([]byte(fields[12])))
+	appendErrorWithContext(&errs, "OBS_UNITS", s.OBS_UNITS.UnmarshalText([]byte(fields[13])))
+	appendErrorWithContext(&errs, "OBS_LEV", s.OBS_LEV.UnmarshalText([]byte(fields[14])))
+	appendErrorWithContext(&errs, "OBTYPE", s.OBTYPE.UnmarshalText([]byte(fields[15])))
+	appendErrorWithContext(&errs, "VX_MASK", s.VX_MASK.UnmarshalText([]byte(fields[16])))
+	appendErrorWithContext(&errs, "INTERP_MTHD", s.INTERP_MTHD.UnmarshalText([]byte(fields[17])))
+	appendErrorWithContext(&errs, "INTERP_PNTS", s.INTERP_PNTS.UnmarshalText([]byte(fields[18])))
+	appendErrorWithContext(&errs, "FCST_THRESH", s.FCST_THRESH.UnmarshalText([]byte(fields[19])))
+	appendErrorWithContext(&errs, "OBS_THRESH", s.OBS_THRESH.UnmarshalText([]byte(fields[20])))
+	appendErrorWithContext(&errs, "COV_THRESH", s.COV_THRESH.UnmarshalText([]byte(fields[21])))
+	appendErrorWithContext(&errs, "ALPHA", s.ALPHA.UnmarshalText([]byte(fields[22])))
+	appendErrorWithContext(&errs, "LINE_TYPE", s.LINE_TYPE.UnmarshalText([]byte(fields[23])))
+	return errors.Join(errs...)
 }
 
 // Sets STAT_PHIST_header struct's fields
-func (s *STAT_PHIST_header) fill(fields []string) {
-	s.VERSION.UnmarshalText([]byte(fields[0]))
-	s.MODEL.UnmarshalText([]byte(fields[1]))
-	s.DESC.UnmarshalText([]byte(fields[2]))
-	s.FCST_VALID_BEG.UnmarshalText([]byte(fields[4]))
-	s.FCST_VALID_END.UnmarshalText([]byte(fields[5]))
-	s.OBS_LEAD.UnmarshalText([]byte(fields[6]))
-	s.OBS_VALID_BEG.UnmarshalText([]byte(fields[7]))
-	s.OBS_VALID_END.UnmarshalText([]byte(fields[8]))
-	s.FCST_VAR.UnmarshalText([]byte(fields[9]))
-	s.FCST_UNITS.UnmarshalText([]byte(fields[10]))
-	s.FCST_LEV.UnmarshalText([]byte(fields[11]))
-	s.OBS_VAR.UnmarshalText([]byte(fields[12]))
-	s.OBS_UNITS.UnmarshalText([]byte(fields[13]))
-	s.OBS_LEV.UnmarshalText([]byte(fields[14]))
-	s.OBTYPE.UnmarshalText([]byte(fields[15]))
-	s.VX_MASK.UnmarshalText([]byte(fields[16]))
-	s.INTERP_MTHD.UnmarshalText([]byte(fields[17]))
-	s.INTERP_PNTS.UnmarshalText([]byte(fields[18]))
-	s.FCST_THRESH.UnmarshalText([]byte(fields[19]))
-	s.OBS_THRESH.UnmarshalText([]byte(fields[20]))
-	s.COV_THRESH.UnmarshalText([]byte(fields[21]))
-	s.ALPHA.UnmarshalText([]byte(fields[22]))
-	s.LINE_TYPE.UnmarshalText([]byte(fields[23]))
+func (s *STAT_PHIST_header) fill(fields []string) error {
+	var errs []error
+	appendErrorWithContext(&errs, "VERSION", s.VERSION.UnmarshalText([]byte(fields[0])))
+	appendErrorWithContext(&errs, "MODEL", s.MODEL.UnmarshalText([]byte(fields[1])))
+	appendErrorWithContext(&errs, "DESC", s.DESC.UnmarshalText([]byte(fields[2])))
+	appendErrorWithContext(&errs, "FCST_VALID_BEG", s.FCST_VALID_BEG.UnmarshalText([]byte(fields[4])))
+	appendErrorWithContext(&errs, "FCST_VALID_END", s.FCST_VALID_END.UnmarshalText([]byte(fields[5])))
+	appendErrorWithContext(&errs, "OBS_LEAD", s.OBS_LEAD.UnmarshalText([]byte(fields[6])))
+	appendErrorWithContext(&errs, "OBS_VALID_BEG", s.OBS_VALID_BEG.UnmarshalText([]byte(fields[7])))
+	appendErrorWithContext(&errs, "OBS_VALID_END", s.OBS_VALID_END.UnmarshalText([]byte(fields[8])))
+	appendErrorWithContext(&errs, "FCST_VAR", s.FCST_VAR.UnmarshalText([]byte(fields[9])))
+	appendErrorWithContext(&errs, "FCST_UNITS", s.FCST_UNITS.UnmarshalText([]byte(fields[10])))
+	appendErrorWithContext(&errs, "FCST_LEV", s.FCST_LEV.UnmarshalText([]byte(fields[11])))
+	appendErrorWithContext(&errs, "OBS_VAR", s.OBS_VAR.UnmarshalText([]byte(fields[12])))
+	appendErrorWithContext(&errs, "OBS_UNITS", s.OBS_UNITS.UnmarshalText([]byte(fields[13])))
+	appendErrorWithContext(&errs, "OBS_LEV", s.OBS_LEV.UnmarshalText([]byte(fields[14])))
+	appendErrorWithContext(&errs, "OBTYPE", s.OBTYPE.UnmarshalText([]byte(fields[15])))
+	appendErrorWithContext(&errs, "VX_MASK", s.VX_MASK.UnmarshalText([]byte(fields[16])))
+	appendErrorWithContext(&errs, "INTERP_MTHD", s.INTERP_MTHD.UnmarshalText([]byte(fields[17])))
+	appendErrorWithContext(&errs, "INTERP_PNTS", s.INTERP_PNTS.UnmarshalText([]byte(fields[18])))
+	appendErrorWithContext(&errs, "FCST_THRESH", s.FCST_THRESH.UnmarshalText([]byte(fields[19])))
+	appendErrorWithContext(&errs, "OBS_THRESH", s.OBS_THRESH.UnmarshalText([]byte(fields[20])))
+	appendErrorWithContext(&errs, "COV_THRESH", s.COV_THRESH.UnmarshalText([]byte(fields[21])))
+	appendErrorWithContext(&errs, "ALPHA", s.ALPHA.UnmarshalText([]byte(fields[22])))
+	appendErrorWithContext(&errs, "LINE_TYPE", s.LINE_TYPE.UnmarshalText([]byte(fields[23])))
+	return errors.Join(errs...)
 }
 
 // Sets STAT_PJC_header struct's fields
-func (s *STAT_PJC_header) fill(fields []string) {
-	s.VERSION.UnmarshalText([]byte(fields[0]))
-	s.MODEL.UnmarshalText([]byte(fields[1]))
-	s.DESC.UnmarshalText([]byte(fields[2]))
-	s.FCST_VALID_BEG.UnmarshalText([]byte(fields[4]))
-	s.FCST_VALID_END.UnmarshalText([]byte(fields[5]))
-	s.OBS_LEAD.UnmarshalText([]byte(fields[6]))
-	s.OBS_VALID_BEG.UnmarshalText([]byte(fields[7]))
-	s.OBS_VALID_END.UnmarshalText([]byte(fields[8]))
-	s.FCST_VAR.UnmarshalText([]byte(fields[9]))
-	s.FCST_UNITS.UnmarshalText([]byte(fields[10]))
-	s.FCST_LEV.UnmarshalText([]byte(fields[11]))
-	s.OBS_VAR.UnmarshalText([]byte(fields[12]))
-	s.OBS_UNITS.UnmarshalText([]byte(fields[13]))
-	s.OBS_LEV.UnmarshalText([]byte(fields[14]))
-	s.OBTYPE.UnmarshalText([]byte(fields[15]))
-	s.VX_MASK.UnmarshalText([]byte(fields[16]))
-	s.INTERP_MTHD.UnmarshalText([]byte(fields[17]))
-	s.INTERP_PNTS.UnmarshalText([]byte(fields[18]))
-	s.FCST_THRESH.UnmarshalText([]byte(fields[19]))
-	s.OBS_THRESH.UnmarshalText([]byte(fields[20]))
-	s.COV_THRESH.UnmarshalText([]byte(fields[21]))
-	s.ALPHA.UnmarshalText([]byte(fields[22]))
-	s.LINE_TYPE.UnmarshalText([]byte(fields[23]))
+func (s *STAT_PJC_header) fill(fields []string) error {
+	var errs []error
+	appendErrorWithContext(&errs, "VERSION", s.VERSION.UnmarshalText([]byte(fields[0])))
+	appendErrorWithContext(&errs, "MODEL", s.MODEL.UnmarshalText([]byte(fields[1])))
+	appendErrorWithContext(&errs, "DESC", s.DESC.UnmarshalText([]byte(fields[2])))
+	appendErrorWithContext(&errs, "FCST_VALID_BEG", s.FCST_VALID_BEG.UnmarshalText([]byte(fields[4])))
+	appendErrorWithContext(&errs, "FCST_VALID_END", s.FCST_VALID_END.UnmarshalText([]byte(fields[5])))
+	appendErrorWithContext(&errs, "OBS_LEAD", s.OBS_LEAD.UnmarshalText([]byte(fields[6])))
+	appendErrorWithContext(&errs, "OBS_VALID_BEG", s.OBS_VALID_BEG.UnmarshalText([]byte(fields[7])))
+	appendErrorWithContext(&errs, "OBS_VALID_END", s.OBS_VALID_END.UnmarshalText([]byte(fields[8])))
+	appendErrorWithContext(&errs, "FCST_VAR", s.FCST_VAR.UnmarshalText([]byte(fields[9])))
+	appendErrorWithContext(&errs, "FCST_UNITS", s.FCST_UNITS.UnmarshalText([]byte(fields[10])))
+	appendErrorWithContext(&errs, "FCST_LEV", s.FCST_LEV.UnmarshalText([]byte(fields[11])))
+	appendErrorWithContext(&errs, "OBS_VAR", s.OBS_VAR.UnmarshalText([]byte(fields[12])))
+	appendErrorWithContext(&errs, "OBS_UNITS", s.OBS_UNITS.UnmarshalText([]byte(fields[13])))
+	appendErrorWithContext(&errs, "OBS_LEV", s.OBS_LEV.UnmarshalText([]byte(fields[14])))
+	appendErrorWithContext(&errs, "OBTYPE", s.OBTYPE.UnmarshalText([]byte(fields[15])))
+	appendErrorWithContext(&errs, "VX_MASK", s.VX_MASK.UnmarshalText([]byte(fields[16])))
+	appendErrorWithContext(&errs, "INTERP_MTHD", s.INTERP_MTHD.UnmarshalText([]byte(fields[17])))
+	appendErrorWithContext(&errs, "INTERP_PNTS", s.INTERP_PNTS.UnmarshalText([]byte(fields[18])))
+	appendErrorWithContext(&errs, "FCST_THRESH", s.FCST_THRESH.UnmarshalText([]byte(fields[19])))
+	appendErrorWithContext(&errs, "OBS_THRESH", s.OBS_THRESH.UnmarshalText([]byte(fields[20])))
+	appendErrorWithContext(&errs, "COV_THRESH", s.COV_THRESH.UnmarshalText([]byte(fields[21])))
+	appendErrorWithContext(&errs, "ALPHA", s.ALPHA.UnmarshalText([]byte(fields[22])))
+	appendErrorWithContext(&errs, "LINE_TYPE", s.LINE_TYPE.UnmarshalText([]byte(fields[23])))
+	return errors.Join(errs...)
 }
 
 // Sets STAT_PRC_header struct's fields
-func (s *STAT_PRC_header) fill(fields []string) {
-	s.VERSION.UnmarshalText([]byte(fields[0]))
-	s.MODEL.UnmarshalText([]byte(fields[1]))
-	s.DESC.UnmarshalText([]byte(fields[2]))
-	s.FCST_VALID_BEG.UnmarshalText([]byte(fields[4]))
-	s.FCST_VALID_END.UnmarshalText([]byte(fields[5]))
-	s.OBS_LEAD.UnmarshalText([]byte(fields[6]))
-	s.OBS_VALID_BEG.UnmarshalText([]byte(fields[7]))
-	s.OBS_VALID_END.UnmarshalText([]byte(fields[8]))
-	s.FCST_VAR.UnmarshalText([]byte(fields[9]))
-	s.FCST_UNITS.UnmarshalText([]byte(fields[10]))
-	s.FCST_LEV.UnmarshalText([]byte(fields[11]))
-	s.OBS_VAR.UnmarshalText([]byte(fields[12]))
-	s.OBS_UNITS.UnmarshalText([]byte(fields[13]))
-	s.OBS_LEV.UnmarshalText([]byte(fields[14]))
-	s.OBTYPE.UnmarshalText([]byte(fields[15]))
-	s.VX_MASK.UnmarshalText([]byte(fields[16]))
-	s.INTERP_MTHD.UnmarshalText([]byte(fields[17]))
-	s.INTERP_PNTS.UnmarshalText([]byte(fields[18]))
-	s.FCST_THRESH.UnmarshalText([]byte(fields[19]))
-	s.OBS_THRESH.UnmarshalText([]byte(fields[20]))
-	s.COV_THRESH.UnmarshalText([]byte(fields[21]))
-	s.ALPHA.UnmarshalText([]byte(fields[22]))
-	s.LINE_TYPE.UnmarshalText([]byte(fields[23]))
+func (s *STAT_PRC_header) fill(fields []string) error {
+	var errs []error
+	appendErrorWithContext(&errs, "VERSION", s.VERSION.UnmarshalText([]byte(fields[0])))
+	appendErrorWithContext(&errs, "MODEL", s.MODEL.UnmarshalText([]byte(fields[1])))
+	appendErrorWithContext(&errs, "DESC", s.DESC.UnmarshalText([]byte(fields[2])))
+	appendErrorWithContext(&errs, "FCST_VALID_BEG", s.FCST_VALID_BEG.UnmarshalText([]byte(fields[4])))
+	appendErrorWithContext(&errs, "FCST_VALID_END", s.FCST_VALID_END.UnmarshalText([]byte(fields[5])))
+	appendErrorWithContext(&errs, "OBS_LEAD", s.OBS_LEAD.UnmarshalText([]byte(fields[6])))
+	appendErrorWithContext(&errs, "OBS_VALID_BEG", s.OBS_VALID_BEG.UnmarshalText([]byte(fields[7])))
+	appendErrorWithContext(&errs, "OBS_VALID_END", s.OBS_VALID_END.UnmarshalText([]byte(fields[8])))
+	appendErrorWithContext(&errs, "FCST_VAR", s.FCST_VAR.UnmarshalText([]byte(fields[9])))
+	appendErrorWithContext(&errs, "FCST_UNITS", s.FCST_UNITS.UnmarshalText([]byte(fields[10])))
+	appendErrorWithContext(&errs, "FCST_LEV", s.FCST_LEV.UnmarshalText([]byte(fields[11])))
+	appendErrorWithContext(&errs, "OBS_VAR", s.OBS_VAR.UnmarshalText([]byte(fields[12])))
+	appendErrorWithContext(&errs, "OBS_UNITS", s.OBS_UNITS.UnmarshalText([]byte(fields[13])))
+	appendErrorWithContext(&errs, "OBS_LEV", s.OBS_LEV.UnmarshalText([]byte(fields[14])))
+	appendErrorWithContext(&errs, "OBTYPE", s.OBTYPE.UnmarshalText([]byte(fields[15])))
+	appendErrorWithContext(&errs, "VX_MASK", s.VX_MASK.UnmarshalText([]byte(fields[16])))
+	appendErrorWithContext(&errs, "INTERP_MTHD", s.INTERP_MTHD.UnmarshalText([]byte(fields[17])))
+	appendErrorWithContext(&errs, "INTERP_PNTS", s.INTERP_PNTS.UnmarshalText([]byte(fields[18])))
+	appendErrorWithContext(&errs, "FCST_THRESH", s.FCST_THRESH.UnmarshalText([]byte(fields[19])))
+	appendErrorWithContext(&errs, "OBS_THRESH", s.OBS_THRESH.UnmarshalText([]byte(fields[20])))
+	appendErrorWithContext(&errs, "COV_THRESH", s.COV_THRESH.UnmarshalText([]byte(fields[21])))
+	appendErrorWithContext(&errs, "ALPHA", s.ALPHA.UnmarshalText([]byte(fields[22])))
+	appendErrorWithContext(&errs, "LINE_TYPE", s.LINE_TYPE.UnmarshalText([]byte(fields[23])))
+	return errors.Join(errs...)
 }
 
 // Sets STAT_PSTD_header struct's fields
-func (s *STAT_PSTD_header) fill(fields []string) {
-	s.VERSION.UnmarshalText([]byte(fields[0]))
-	s.MODEL.UnmarshalText([]byte(fields[1]))
-	s.DESC.UnmarshalText([]byte(fields[2]))
-	s.FCST_VALID_BEG.UnmarshalText([]byte(fields[4]))
-	s.FCST_VALID_END.UnmarshalText([]byte(fields[5]))
-	s.OBS_LEAD.UnmarshalText([]byte(fields[6]))
-	s.OBS_VALID_BEG.UnmarshalText([]byte(fields[7]))
-	s.OBS_VALID_END.UnmarshalText([]byte(fields[8]))
-	s.FCST_VAR.UnmarshalText([]byte(fields[9]))
-	s.FCST_UNITS.UnmarshalText([]byte(fields[10]))
-	s.FCST_LEV.UnmarshalText([]byte(fields[11]))
-	s.OBS_VAR.UnmarshalText([]byte(fields[12]))
-	s.OBS_UNITS.UnmarshalText([]byte(fields[13]))
-	s.OBS_LEV.UnmarshalText([]byte(fields[14]))
-	s.OBTYPE.UnmarshalText([]byte(fields[15]))
-	s.VX_MASK.UnmarshalText([]byte(fields[16]))
-	s.INTERP_MTHD.UnmarshalText([]byte(fields[17]))
-	s.INTERP_PNTS.UnmarshalText([]byte(fields[18]))
-	s.FCST_THRESH.UnmarshalText([]byte(fields[19]))
-	s.OBS_THRESH.UnmarshalText([]byte(fields[20]))
-	s.COV_THRESH.UnmarshalText([]byte(fields[21]))
-	s.ALPHA.UnmarshalText([]byte(fields[22]))
-	s.LINE_TYPE.UnmarshalText([]byte(fields[23]))
+func (s *STAT_PSTD_header) fill(fields []string) error {
+	var errs []error
+	appendErrorWithContext(&errs, "VERSION", s.VERSION.UnmarshalText([]byte(fields[0])))
+	appendErrorWithContext(&errs, "MODEL", s.MODEL.UnmarshalText([]byte(fields[1])))
+	appendErrorWithContext(&errs, "DESC", s.DESC.UnmarshalText([]byte(fields[2])))
+	appendErrorWithContext(&errs, "FCST_VALID_BEG", s.FCST_VALID_BEG.UnmarshalText([]byte(fields[4])))
+	appendErrorWithContext(&errs, "FCST_VALID_END", s.FCST_VALID_END.UnmarshalText([]byte(fields[5])))
+	appendErrorWithContext(&errs, "OBS_LEAD", s.OBS_LEAD.UnmarshalText([]byte(fields[6])))
+	appendErrorWithContext(&errs, "OBS_VALID_BEG", s.OBS_VALID_BEG.UnmarshalText([]byte(fields[7])))
+	appendErrorWithContext(&errs, "OBS_VALID_END", s.OBS_VALID_END.UnmarshalText([]byte(fields[8])))
+	appendErrorWithContext(&errs, "FCST_VAR", s.FCST_VAR.UnmarshalText([]byte(fields[9])))
+	appendErrorWithContext(&errs, "FCST_UNITS", s.FCST_UNITS.UnmarshalText([]byte(fields[10])))
+	appendErrorWithContext(&errs, "FCST_LEV", s.FCST_LEV.UnmarshalText([]byte(fields[11])))
+	appendErrorWithContext(&errs, "OBS_VAR", s.OBS_VAR.UnmarshalText([]byte(fields[12])))
+	appendErrorWithContext(&errs, "OBS_UNITS", s.OBS_UNITS.UnmarshalText([]byte(fields[13])))
+	appendErrorWithContext(&errs, "OBS_LEV", s.OBS_LEV.UnmarshalText([]byte(fields[14])))
+	appendErrorWithContext(&errs, "OBTYPE", s.OBTYPE.UnmarshalText([]byte(fields[15])))
+	appendErrorWithContext(&errs, "VX_MASK", s.VX_MASK.UnmarshalText([]byte(fields[16])))
+	appendErrorWithContext(&errs, "INTERP_MTHD", s.INTERP_MTHD.UnmarshalText([]byte(fields[17])))
+	appendErrorWithContext(&errs, "INTERP_PNTS", s.INTERP_PNTS.UnmarshalText([]byte(fields[18])))
+	appendErrorWithContext(&errs, "FCST_THRESH", s.FCST_THRESH.UnmarshalText([]byte(fields[19])))
+	appendErrorWithContext(&errs, "OBS_THRESH", s.OBS_THRESH.UnmarshalText([]byte(fields[20])))
+	appendErrorWithContext(&errs, "COV_THRESH", s.COV_THRESH.UnmarshalText([]byte(fields[21])))
+	appendErrorWithContext(&errs, "ALPHA", s.ALPHA.UnmarshalText([]byte(fields[22])))
+	appendErrorWithContext(&errs, "LINE_TYPE", s.LINE_TYPE.UnmarshalText([]byte(fields[23])))
+	return errors.Join(errs...)
 }
 
 // Sets STAT_RELP_header struct's fields
-func (s *STAT_RELP_header) fill(fields []string) {
-	s.VERSION.UnmarshalText([]byte(fields[0]))
-	s.MODEL.UnmarshalText([]byte(fields[1]))
-	s.DESC.UnmarshalText([]byte(fields[2]))
-	s.FCST_VALID_BEG.UnmarshalText([]byte(fields[4]))
-	s.FCST_VALID_END.UnmarshalText([]byte(fields[5]))
-	s.OBS_LEAD.UnmarshalText([]byte(fields[6]))
-	s.OBS_VALID_BEG.UnmarshalText([]byte(fields[7]))
-	s.OBS_VALID_END.UnmarshalText([]byte(fields[8]))
-	s.FCST_VAR.UnmarshalText([]byte(fields[9]))
-	s.FCST_UNITS.UnmarshalText([]byte(fields[10]))
-	s.FCST_LEV.UnmarshalText([]byte(fields[11]))
-	s.OBS_VAR.UnmarshalText([]byte(fields[12]))
-	s.OBS_UNITS.UnmarshalText([]byte(fields[13]))
-	s.OBS_LEV.UnmarshalText([]byte(fields[14]))
-	s.OBTYPE.UnmarshalText([]byte(fields[15]))
-	s.VX_MASK.UnmarshalText([]byte(fields[16]))
-	s.INTERP_MTHD.UnmarshalText([]byte(fields[17]))
-	s.INTERP_PNTS.UnmarshalText([]byte(fields[18]))
-	s.FCST_THRESH.UnmarshalText([]byte(fields[19]))
-	s.OBS_THRESH.UnmarshalText([]byte(fields[20]))
-	s.COV_THRESH.UnmarshalText([]byte(fields[21]))
-	s.ALPHA.UnmarshalText([]byte(fields[22]))
-	s.LINE_TYPE.UnmarshalText([]byte(fields[23]))
+func (s *STAT_RELP_header) fill(fields []string) error {
+	var errs []error
+	appendErrorWithContext(&errs, "VERSION", s.VERSION.UnmarshalText([]byte(fields[0])))
+	appendErrorWithContext(&errs, "MODEL", s.MODEL.UnmarshalText([]byte(fields[1])))
+	appendErrorWithContext(&errs, "DESC", s.DESC.UnmarshalText([]byte(fields[2])))
+	appendErrorWithContext(&errs, "FCST_VALID_BEG", s.FCST_VALID_BEG.UnmarshalText([]byte(fields[4])))
+	appendErrorWithContext(&errs, "FCST_VALID_END", s.FCST_VALID_END.UnmarshalText([]byte(fields[5])))
+	appendErrorWithContext(&errs, "OBS_LEAD", s.OBS_LEAD.UnmarshalText([]byte(fields[6])))
+	appendErrorWithContext(&errs, "OBS_VALID_BEG", s.OBS_VALID_BEG.UnmarshalText([]byte(fields[7])))
+	appendErrorWithContext(&errs, "OBS_VALID_END", s.OBS_VALID_END.UnmarshalText([]byte(fields[8])))
+	appendErrorWithContext(&errs, "FCST_VAR", s.FCST_VAR.UnmarshalText([]byte(fields[9])))
+	appendErrorWithContext(&errs, "FCST_UNITS", s.FCST_UNITS.UnmarshalText([]byte(fields[10])))
+	appendErrorWithContext(&errs, "FCST_LEV", s.FCST_LEV.UnmarshalText([]byte(fields[11])))
+	appendErrorWithContext(&errs, "OBS_VAR", s.OBS_VAR.UnmarshalText([]byte(fields[12])))
+	appendErrorWithContext(&errs, "OBS_UNITS", s.OBS_UNITS.UnmarshalText([]byte(fields[13])))
+	appendErrorWithContext(&errs, "OBS_LEV", s.OBS_LEV.UnmarshalText([]byte(fields[14])))
+	appendErrorWithContext(&errs, "OBTYPE", s.OBTYPE.UnmarshalText([]byte(fields[15])))
+	appendErrorWithContext(&errs, "VX_MASK", s.VX_MASK.UnmarshalText([]byte(fields[16])))
+	appendErrorWithContext(&errs, "INTERP_MTHD", s.INTERP_MTHD.UnmarshalText([]byte(fields[17])))
+	appendErrorWithContext(&errs, "INTERP_PNTS", s.INTERP_PNTS.UnmarshalText([]byte(fields[18])))
+	appendErrorWithContext(&errs, "FCST_THRESH", s.FCST_THRESH.UnmarshalText([]byte(fields[19])))
+	appendErrorWithContext(&errs, "OBS_THRESH", s.OBS_THRESH.UnmarshalText([]byte(fields[20])))
+	appendErrorWithContext(&errs, "COV_THRESH", s.COV_THRESH.UnmarshalText([]byte(fields[21])))
+	appendErrorWithContext(&errs, "ALPHA", s.ALPHA.UnmarshalText([]byte(fields[22])))
+	appendErrorWithContext(&errs, "LINE_TYPE", s.LINE_TYPE.UnmarshalText([]byte(fields[23])))
+	return errors.Join(errs...)
 }
 
 // Sets STAT_RHIST_header struct's fields
-func (s *STAT_RHIST_header) fill(fields []string) {
-	s.VERSION.UnmarshalText([]byte(fields[0]))
-	s.MODEL.UnmarshalText([]byte(fields[1]))
-	s.DESC.UnmarshalText([]byte(fields[2]))
-	s.FCST_VALID_BEG.UnmarshalText([]byte(fields[4]))
-	s.FCST_VALID_END.UnmarshalText([]byte(fields[5]))
-	s.OBS_LEAD.UnmarshalText([]byte(fields[6]))
-	s.OBS_VALID_BEG.UnmarshalText([]byte(fields[7]))
-	s.OBS_VALID_END.UnmarshalText([]byte(fields[8]))
-	s.FCST_VAR.UnmarshalText([]byte(fields[9]))
-	s.FCST_UNITS.UnmarshalText([]byte(fields[10]))
-	s.FCST_LEV.UnmarshalText([]byte(fields[11]))
-	s.OBS_VAR.UnmarshalText([]byte(fields[12]))
-	s.OBS_UNITS.UnmarshalText([]byte(fields[13]))
-	s.OBS_LEV.UnmarshalText([]byte(fields[14]))
-	s.OBTYPE.UnmarshalText([]byte(fields[15]))
-	s.VX_MASK.UnmarshalText([]byte(fields[16]))
-	s.INTERP_MTHD.UnmarshalText([]byte(fields[17]))
-	s.INTERP_PNTS.UnmarshalText([]byte(fields[18]))
-	s.FCST_THRESH.UnmarshalText([]byte(fields[19]))
-	s.OBS_THRESH.UnmarshalText([]byte(fields[20]))
-	s.COV_THRESH.UnmarshalText([]byte(fields[21]))
-	s.ALPHA.UnmarshalText([]byte(fields[22]))
-	s.LINE_TYPE.UnmarshalText([]byte(fields[23]))
+func (s *STAT_RHIST_header) fill(fields []string) error {
+	var errs []error
+	appendErrorWithContext(&errs, "VERSION", s.VERSION.UnmarshalText([]byte(fields[0])))
+	appendErrorWithContext(&errs, "MODEL", s.MODEL.UnmarshalText([]byte(fields[1])))
+	appendErrorWithContext(&errs, "DESC", s.DESC.UnmarshalText([]byte(fields[2])))
+	appendErrorWithContext(&errs, "FCST_VALID_BEG", s.FCST_VALID_BEG.UnmarshalText([]byte(fields[4])))
+	appendErrorWithContext(&errs, "FCST_VALID_END", s.FCST_VALID_END.UnmarshalText([]byte(fields[5])))
+	appendErrorWithContext(&errs, "OBS_LEAD", s.OBS_LEAD.UnmarshalText([]byte(fields[6])))
+	appendErrorWithContext(&errs, "OBS_VALID_BEG", s.OBS_VALID_BEG.UnmarshalText([]byte(fields[7])))
+	appendErrorWithContext(&errs, "OBS_VALID_END", s.OBS_VALID_END.UnmarshalText([]byte(fields[8])))
+	appendErrorWithContext(&errs, "FCST_VAR", s.FCST_VAR.UnmarshalText([]byte(fields[9])))
+	appendErrorWithContext(&errs, "FCST_UNITS", s.FCST_UNITS.UnmarshalText([]byte(fields[10])))
+	appendErrorWithContext(&errs, "FCST_LEV", s.FCST_LEV.UnmarshalText([]byte(fields[11])))
+	appendErrorWithContext(&errs, "OBS_VAR", s.OBS_VAR.UnmarshalText([]byte(fields[12])))
+	appendErrorWithContext(&errs, "OBS_UNITS", s.OBS_UNITS.UnmarshalText([]byte(fields[13])))
+	appendErrorWithContext(&errs, "OBS_LEV", s.OBS_LEV.UnmarshalText([]byte(fields[14])))
+	appendErrorWithContext(&errs, "OBTYPE", s.OBTYPE.UnmarshalText([]byte(fields[15])))
+	appendErrorWithContext(&errs, "VX_MASK", s.VX_MASK.UnmarshalText([]byte(fields[16])))
+	appendErrorWithContext(&errs, "INTERP_MTHD", s.INTERP_MTHD.UnmarshalText([]byte(fields[17])))
+	appendErrorWithContext(&errs, "INTERP_PNTS", s.INTERP_PNTS.UnmarshalText([]byte(fields[18])))
+	appendErrorWithContext(&errs, "FCST_THRESH", s.FCST_THRESH.UnmarshalText([]byte(fields[19])))
+	appendErrorWithContext(&errs, "OBS_THRESH", s.OBS_THRESH.UnmarshalText([]byte(fields[20])))
+	appendErrorWithContext(&errs, "COV_THRESH", s.COV_THRESH.UnmarshalText([]byte(fields[21])))
+	appendErrorWithContext(&errs, "ALPHA", s.ALPHA.UnmarshalText([]byte(fields[22])))
+	appendErrorWithContext(&errs, "LINE_TYPE", s.LINE_TYPE.UnmarshalText([]byte(fields[23])))
+	return errors.Join(errs...)
 }
 
 // Sets STAT_RPS_header struct's fields
-func (s *STAT_RPS_header) fill(fields []string) {
-	s.VERSION.UnmarshalText([]byte(fields[0]))
-	s.MODEL.UnmarshalText([]byte(fields[1]))
-	s.DESC.UnmarshalText([]byte(fields[2]))
-	s.FCST_VALID_BEG.UnmarshalText([]byte(fields[4]))
-	s.FCST_VALID_END.UnmarshalText([]byte(fields[5]))
-	s.OBS_LEAD.UnmarshalText([]byte(fields[6]))
-	s.OBS_VALID_BEG.UnmarshalText([]byte(fields[7]))
-	s.OBS_VALID_END.UnmarshalText([]byte(fields[8]))
-	s.FCST_VAR.UnmarshalText([]byte(fields[9]))
-	s.FCST_UNITS.UnmarshalText([]byte(fields[10]))
-	s.FCST_LEV.UnmarshalText([]byte(fields[11]))
-	s.OBS_VAR.UnmarshalText([]byte(fields[12]))
-	s.OBS_UNITS.UnmarshalText([]byte(fields[13]))
-	s.OBS_LEV.UnmarshalText([]byte(fields[14]))
-	s.OBTYPE.UnmarshalText([]byte(fields[15]))
-	s.VX_MASK.UnmarshalText([]byte(fields[16]))
-	s.INTERP_MTHD.UnmarshalText([]byte(fields[17]))
-	s.INTERP_PNTS.UnmarshalText([]byte(fields[18]))
-	s.FCST_THRESH.UnmarshalText([]byte(fields[19]))
-	s.OBS_THRESH.UnmarshalText([]byte(fields[20]))
-	s.COV_THRESH.UnmarshalText([]byte(fields[21]))
-	s.ALPHA.UnmarshalText([]byte(fields[22]))
-	s.LINE_TYPE.UnmarshalText([]byte(fields[23]))
+func (s *STAT_RPS_header) fill(fields []string) error {
+	var errs []error
+	appendErrorWithContext(&errs, "VERSION", s.VERSION.UnmarshalText([]byte(fields[0])))
+	appendErrorWithContext(&errs, "MODEL", s.MODEL.UnmarshalText([]byte(fields[1])))
+	appendErrorWithContext(&errs, "DESC", s.DESC.UnmarshalText([]byte(fields[2])))
+	appendErrorWithContext(&errs, "FCST_VALID_BEG", s.FCST_VALID_BEG.UnmarshalText([]byte(fields[4])))
+	appendErrorWithContext(&errs, "FCST_VALID_END", s.FCST_VALID_END.UnmarshalText([]byte(fields[5])))
+	appendErrorWithContext(&errs, "OBS_LEAD", s.OBS_LEAD.UnmarshalText([]byte(fields[6])))
+	appendErrorWithContext(&errs, "OBS_VALID_BEG", s.OBS_VALID_BEG.UnmarshalText([]byte(fields[7])))
+	appendErrorWithContext(&errs, "OBS_VALID_END", s.OBS_VALID_END.UnmarshalText([]byte(fields[8])))
+	appendErrorWithContext(&errs, "FCST_VAR", s.FCST_VAR.UnmarshalText([]byte(fields[9])))
+	appendErrorWithContext(&errs, "FCST_UNITS", s.FCST_UNITS.UnmarshalText([]byte(fields[10])))
+	appendErrorWithContext(&errs, "FCST_LEV", s.FCST_LEV.UnmarshalText([]byte(fields[11])))
+	appendErrorWithContext(&errs, "OBS_VAR", s.OBS_VAR.UnmarshalText([]byte(fields[12])))
+	appendErrorWithContext(&errs, "OBS_UNITS", s.OBS_UNITS.UnmarshalText([]byte(fields[13])))
+	appendErrorWithContext(&errs, "OBS_LEV", s.OBS_LEV.UnmarshalText([]byte(fields[14])))
+	appendErrorWithContext(&errs, "OBTYPE", s.OBTYPE.UnmarshalText([]byte(fields[15])))
+	appendErrorWithContext(&errs, "VX_MASK", s.VX_MASK.UnmarshalText([]byte(fields[16])))
+	appendErrorWithContext(&errs, "INTERP_MTHD", s.INTERP_MTHD.UnmarshalText([]byte(fields[17])))
+	appendErrorWithContext(&errs, "INTERP_PNTS", s.INTERP_PNTS.UnmarshalText([]byte(fields[18])))
+	appendErrorWithContext(&errs, "FCST_THRESH", s.FCST_THRESH.UnmarshalText([]byte(fields[19])))
+	appendErrorWithContext(&errs, "OBS_THRESH", s.OBS_THRESH.UnmarshalText([]byte(fields[20])))
+	appendErrorWithContext(&errs, "COV_THRESH", s.COV_THRESH.UnmarshalText([]byte(fields[21])))
+	appendErrorWithContext(&errs, "ALPHA", s.ALPHA.UnmarshalText([]byte(fields[22])))
+	appendErrorWithContext(&errs, "LINE_TYPE", s.LINE_TYPE.UnmarshalText([]byte(fields[23])))
+	return errors.Join(errs...)
 }
 
 // Sets STAT_SAL1L2_header struct's fields
-func (s *STAT_SAL1L2_header) fill(fields []string) {
-	s.VERSION.UnmarshalText([]byte(fields[0]))
-	s.MODEL.UnmarshalText([]byte(fields[1]))
-	s.DESC.UnmarshalText([]byte(fields[2]))
-	s.FCST_VALID_BEG.UnmarshalText([]byte(fields[4]))
-	s.FCST_VALID_END.UnmarshalText([]byte(fields[5]))
-	s.OBS_LEAD.UnmarshalText([]byte(fields[6]))
-	s.OBS_VALID_BEG.UnmarshalText([]byte(fields[7]))
-	s.OBS_VALID_END.UnmarshalText([]byte(fields[8]))
-	s.FCST_VAR.UnmarshalText([]byte(fields[9]))
-	s.FCST_UNITS.UnmarshalText([]byte(fields[10]))
-	s.FCST_LEV.UnmarshalText([]byte(fields[11]))
-	s.OBS_VAR.UnmarshalText([]byte(fields[12]))
-	s.OBS_UNITS.UnmarshalText([]byte(fields[13]))
-	s.OBS_LEV.UnmarshalText([]byte(fields[14]))
-	s.OBTYPE.UnmarshalText([]byte(fields[15]))
-	s.VX_MASK.UnmarshalText([]byte(fields[16]))
-	s.INTERP_MTHD.UnmarshalText([]byte(fields[17]))
-	s.INTERP_PNTS.UnmarshalText([]byte(fields[18]))
-	s.FCST_THRESH.UnmarshalText([]byte(fields[19]))
-	s.OBS_THRESH.UnmarshalText([]byte(fields[20]))
-	s.COV_THRESH.UnmarshalText([]byte(fields[21]))
-	s.ALPHA.UnmarshalText([]byte(fields[22]))
-	s.LINE_TYPE.UnmarshalText([]byte(fields[23]))
+func (s *STAT_SAL1L2_header) fill(fields []string) error {
+	var errs []error
+	appendErrorWithContext(&errs, "VERSION", s.VERSION.UnmarshalText([]byte(fields[0])))
+	appendErrorWithContext(&errs, "MODEL", s.MODEL.UnmarshalText([]byte(fields[1])))
+	appendErrorWithContext(&errs, "DESC", s.DESC.UnmarshalText([]byte(fields[2])))
+	appendErrorWithContext(&errs, "FCST_VALID_BEG", s.FCST_VALID_BEG.UnmarshalText([]byte(fields[4])))
+	appendErrorWithContext(&errs, "FCST_VALID_END", s.FCST_VALID_END.UnmarshalText([]byte(fields[5])))
+	appendErrorWithContext(&errs, "OBS_LEAD", s.OBS_LEAD.UnmarshalText([]byte(fields[6])))
+	appendErrorWithContext(&errs, "OBS_VALID_BEG", s.OBS_VALID_BEG.UnmarshalText([]byte(fields[7])))
+	appendErrorWithContext(&errs, "OBS_VALID_END", s.OBS_VALID_END.UnmarshalText([]byte(fields[8])))
+	appendErrorWithContext(&errs, "FCST_VAR", s.FCST_VAR.UnmarshalText([]byte(fields[9])))
+	appendErrorWithContext(&errs, "FCST_UNITS", s.FCST_UNITS.UnmarshalText([]byte(fields[10])))
+	appendErrorWithContext(&errs, "FCST_LEV", s.FCST_LEV.UnmarshalText([]byte(fields[11])))
+	appendErrorWithContext(&errs, "OBS_VAR", s.OBS_VAR.UnmarshalText([]byte(fields[12])))
+	appendErrorWithContext(&errs, "OBS_UNITS", s.OBS_UNITS.UnmarshalText([]byte(fields[13])))
+	appendErrorWithContext(&errs, "OBS_LEV", s.OBS_LEV.UnmarshalText([]byte(fields[14])))
+	appendErrorWithContext(&errs, "OBTYPE", s.OBTYPE.UnmarshalText([]byte(fields[15])))
+	appendErrorWithContext(&errs, "VX_MASK", s.VX_MASK.UnmarshalText([]byte(fields[16])))
+	appendErrorWithContext(&errs, "INTERP_MTHD", s.INTERP_MTHD.UnmarshalText([]byte(fields[17])))
+	appendErrorWithContext(&errs, "INTERP_PNTS", s.INTERP_PNTS.UnmarshalText([]byte(fields[18])))
+	appendErrorWithContext(&errs, "FCST_THRESH", s.FCST_THRESH.UnmarshalText([]byte(fields[19])))
+	appendErrorWithContext(&errs, "OBS_THRESH", s.OBS_THRESH.UnmarshalText([]byte(fields[20])))
+	appendErrorWithContext(&errs, "COV_THRESH", s.COV_THRESH.UnmarshalText([]byte(fields[21])))
+	appendErrorWithContext(&errs, "ALPHA", s.ALPHA.UnmarshalText([]byte(fields[22])))
+	appendErrorWithContext(&errs, "LINE_TYPE", s.LINE_TYPE.UnmarshalText([]byte(fields[23])))
+	return errors.Join(errs...)
 }
 
 // Sets STAT_SL1L2_header struct's fields
-func (s *STAT_SL1L2_header) fill(fields []string) {
-	s.VERSION.UnmarshalText([]byte(fields[0]))
-	s.MODEL.UnmarshalText([]byte(fields[1]))
-	s.DESC.UnmarshalText([]byte(fields[2]))
-	s.FCST_VALID_BEG.UnmarshalText([]byte(fields[4]))
-	s.FCST_VALID_END.UnmarshalText([]byte(fields[5]))
-	s.OBS_LEAD.UnmarshalText([]byte(fields[6]))
-	s.OBS_VALID_BEG.UnmarshalText([]byte(fields[7]))
-	s.OBS_VALID_END.UnmarshalText([]byte(fields[8]))
-	s.FCST_VAR.UnmarshalText([]byte(fields[9]))
-	s.FCST_UNITS.UnmarshalText([]byte(fields[10]))
-	s.FCST_LEV.UnmarshalText([]byte(fields[11]))
-	s.OBS_VAR.UnmarshalText([]byte(fields[12]))
-	s.OBS_UNITS.UnmarshalText([]byte(fields[13]))
-	s.OBS_LEV.UnmarshalText([]byte(fields[14]))
-	s.OBTYPE.UnmarshalText([]byte(fields[15]))
-	s.VX_MASK.UnmarshalText([]byte(fields[16]))
-	s.INTERP_MTHD.UnmarshalText([]byte(fields[17]))
-	s.INTERP_PNTS.UnmarshalText([]byte(fields[18]))
-	s.FCST_THRESH.UnmarshalText([]byte(fields[19]))
-	s.OBS_THRESH.UnmarshalText([]byte(fields[20]))
-	s.COV_THRESH.UnmarshalText([]byte(fields[21]))
-	s.ALPHA.UnmarshalText([]byte(fields[22]))
-	s.LINE_TYPE.UnmarshalText([]byte(fields[23]))
+func (s *STAT_SL1L2_header) fill(fields []string) error {
+	var errs []error
+	appendErrorWithContext(&errs, "VERSION", s.VERSION.UnmarshalText([]byte(fields[0])))
+	appendErrorWithContext(&errs, "MODEL", s.MODEL.UnmarshalText([]byte(fields[1])))
+	appendErrorWithContext(&errs, "DESC", s.DESC.UnmarshalText([]byte(fields[2])))
+	appendErrorWithContext(&errs, "FCST_VALID_BEG", s.FCST_VALID_BEG.UnmarshalText([]byte(fields[4])))
+	appendErrorWithContext(&errs, "FCST_VALID_END", s.FCST_VALID_END.UnmarshalText([]byte(fields[5])))
+	appendErrorWithContext(&errs, "OBS_LEAD", s.OBS_LEAD.UnmarshalText([]byte(fields[6])))
+	appendErrorWithContext(&errs, "OBS_VALID_BEG", s.OBS_VALID_BEG.UnmarshalText([]byte(fields[7])))
+	appendErrorWithContext(&errs, "OBS_VALID_END", s.OBS_VALID_END.UnmarshalText([]byte(fields[8])))
+	appendErrorWithContext(&errs, "FCST_VAR", s.FCST_VAR.UnmarshalText([]byte(fields[9])))
+	appendErrorWithContext(&errs, "FCST_UNITS", s.FCST_UNITS.UnmarshalText([]byte(fields[10])))
+	appendErrorWithContext(&errs, "FCST_LEV", s.FCST_LEV.UnmarshalText([]byte(fields[11])))
+	appendErrorWithContext(&errs, "OBS_VAR", s.OBS_VAR.UnmarshalText([]byte(fields[12])))
+	appendErrorWithContext(&errs, "OBS_UNITS", s.OBS_UNITS.UnmarshalText([]byte(fields[13])))
+	appendErrorWithContext(&errs, "OBS_LEV", s.OBS_LEV.UnmarshalText([]byte(fields[14])))
+	appendErrorWithContext(&errs, "OBTYPE", s.OBTYPE.UnmarshalText([]byte(fields[15])))
+	appendErrorWithContext(&errs, "VX_MASK", s.VX_MASK.UnmarshalText([]byte(fields[16])))
+	appendErrorWithContext(&errs, "INTERP_MTHD", s.INTERP_MTHD.UnmarshalText([]byte(fields[17])))
+	appendErrorWithContext(&errs, "INTERP_PNTS", s.INTERP_PNTS.UnmarshalText([]byte(fields[18])))
+	appendErrorWithContext(&errs, "FCST_THRESH", s.FCST_THRESH.UnmarshalText([]byte(fields[19])))
+	appendErrorWithContext(&errs, "OBS_THRESH", s.OBS_THRESH.UnmarshalText([]byte(fields[20])))
+	appendErrorWithContext(&errs, "COV_THRESH", s.COV_THRESH.UnmarshalText([]byte(fields[21])))
+	appendErrorWithContext(&errs, "ALPHA", s.ALPHA.UnmarshalText([]byte(fields[22])))
+	appendErrorWithContext(&errs, "LINE_TYPE", s.LINE_TYPE.UnmarshalText([]byte(fields[23])))
+	return errors.Join(errs...)
 }
 
 // Sets STAT_SSVAR_header struct's fields
-func (s *STAT_SSVAR_header) fill(fields []string) {
-	s.VERSION.UnmarshalText([]byte(fields[0]))
-	s.MODEL.UnmarshalText([]byte(fields[1]))
-	s.DESC.UnmarshalText([]byte(fields[2]))
-	s.FCST_VALID_BEG.UnmarshalText([]byte(fields[4]))
-	s.FCST_VALID_END.UnmarshalText([]byte(fields[5]))
-	s.OBS_LEAD.UnmarshalText([]byte(fields[6]))
-	s.OBS_VALID_BEG.UnmarshalText([]byte(fields[7]))
-	s.OBS_VALID_END.UnmarshalText([]byte(fields[8]))
-	s.FCST_VAR.UnmarshalText([]byte(fields[9]))
-	s.FCST_UNITS.UnmarshalText([]byte(fields[10]))
-	s.FCST_LEV.UnmarshalText([]byte(fields[11]))
-	s.OBS_VAR.UnmarshalText([]byte(fields[12]))
-	s.OBS_UNITS.UnmarshalText([]byte(fields[13]))
-	s.OBS_LEV.UnmarshalText([]byte(fields[14]))
-	s.OBTYPE.UnmarshalText([]byte(fields[15]))
-	s.VX_MASK.UnmarshalText([]byte(fields[16]))
-	s.INTERP_MTHD.UnmarshalText([]byte(fields[17]))
-	s.INTERP_PNTS.UnmarshalText([]byte(fields[18]))
-	s.FCST_THRESH.UnmarshalText([]byte(fields[19]))
-	s.OBS_THRESH.UnmarshalText([]byte(fields[20]))
-	s.COV_THRESH.UnmarshalText([]byte(fields[21]))
-	s.ALPHA.UnmarshalText([]byte(fields[22]))
-	s.LINE_TYPE.UnmarshalText([]byte(fields[23]))
+func (s *STAT_SSVAR_header) fill(fields []string) error {
+	var errs []error
+	appendErrorWithContext(&errs, "VERSION", s.VERSION.UnmarshalText([]byte(fields[0])))
+	appendErrorWithContext(&errs, "MODEL", s.MODEL.UnmarshalText([]byte(fields[1])))
+	appendErrorWithContext(&errs, "DESC", s.DESC.UnmarshalText([]byte(fields[2])))
+	appendErrorWithContext(&errs, "FCST_VALID_BEG", s.FCST_VALID_BEG.UnmarshalText([]byte(fields[4])))
+	appendErrorWithContext(&errs, "FCST_VALID_END", s.FCST_VALID_END.UnmarshalText([]byte(fields[5])))
+	appendErrorWithContext(&errs, "OBS_LEAD", s.OBS_LEAD.UnmarshalText([]byte(fields[6])))
+	appendErrorWithContext(&errs, "OBS_VALID_BEG", s.OBS_VALID_BEG.UnmarshalText([]byte(fields[7])))
+	appendErrorWithContext(&errs, "OBS_VALID_END", s.OBS_VALID_END.UnmarshalText([]byte(fields[8])))
+	appendErrorWithContext(&errs, "FCST_VAR", s.FCST_VAR.UnmarshalText([]byte(fields[9])))
+	appendErrorWithContext(&errs, "FCST_UNITS", s.FCST_UNITS.UnmarshalText([]byte(fields[10])))
+	appendErrorWithContext(&errs, "FCST_LEV", s.FCST_LEV.UnmarshalText([]byte(fields[11])))
+	appendErrorWithContext(&errs, "OBS_VAR", s.OBS_VAR.UnmarshalText([]byte(fields[12])))
+	appendErrorWithContext(&errs, "OBS_UNITS", s.OBS_UNITS.UnmarshalText([]byte(fields[13])))
+	appendErrorWithContext(&errs, "OBS_LEV", s.OBS_LEV.UnmarshalText([]byte(fields[14])))
+	appendErrorWithContext(&errs, "OBTYPE", s.OBTYPE.UnmarshalText([]byte(fields[15])))
+	appendErrorWithContext(&errs, "VX_MASK", s.VX_MASK.UnmarshalText([]byte(fields[16])))
+	appendErrorWithContext(&errs, "INTERP_MTHD", s.INTERP_MTHD.UnmarshalText([]byte(fields[17])))
+	appendErrorWithContext(&errs, "INTERP_PNTS", s.INTERP_PNTS.UnmarshalText([]byte(fields[18])))
+	appendErrorWithContext(&errs, "FCST_THRESH", s.FCST_THRESH.UnmarshalText([]byte(fields[19])))
+	appendErrorWithContext(&errs, "OBS_THRESH", s.OBS_THRESH.UnmarshalText([]byte(fields[20])))
+	appendErrorWithContext(&errs, "COV_THRESH", s.COV_THRESH.UnmarshalText([]byte(fields[21])))
+	appendErrorWithContext(&errs, "ALPHA", s.ALPHA.UnmarshalText([]byte(fields[22])))
+	appendErrorWithContext(&errs, "LINE_TYPE", s.LINE_TYPE.UnmarshalText([]byte(fields[23])))
+	return errors.Join(errs...)
 }
 
 // Sets STAT_VAL1L2_header struct's fields
-func (s *STAT_VAL1L2_header) fill(fields []string) {
-	s.VERSION.UnmarshalText([]byte(fields[0]))
-	s.MODEL.UnmarshalText([]byte(fields[1]))
-	s.DESC.UnmarshalText([]byte(fields[2]))
-	s.FCST_VALID_BEG.UnmarshalText([]byte(fields[4]))
-	s.FCST_VALID_END.UnmarshalText([]byte(fields[5]))
-	s.OBS_LEAD.UnmarshalText([]byte(fields[6]))
-	s.OBS_VALID_BEG.UnmarshalText([]byte(fields[7]))
-	s.OBS_VALID_END.UnmarshalText([]byte(fields[8]))
-	s.FCST_VAR.UnmarshalText([]byte(fields[9]))
-	s.FCST_UNITS.UnmarshalText([]byte(fields[10]))
-	s.FCST_LEV.UnmarshalText([]byte(fields[11]))
-	s.OBS_VAR.UnmarshalText([]byte(fields[12]))
-	s.OBS_UNITS.UnmarshalText([]byte(fields[13]))
-	s.OBS_LEV.UnmarshalText([]byte(fields[14]))
-	s.OBTYPE.UnmarshalText([]byte(fields[15]))
-	s.VX_MASK.UnmarshalText([]byte(fields[16]))
-	s.INTERP_MTHD.UnmarshalText([]byte(fields[17]))
-	s.INTERP_PNTS.UnmarshalText([]byte(fields[18]))
-	s.FCST_THRESH.UnmarshalText([]byte(fields[19]))
-	s.OBS_THRESH.UnmarshalText([]byte(fields[20]))
-	s.COV_THRESH.UnmarshalText([]byte(fields[21]))
-	s.ALPHA.UnmarshalText([]byte(fields[22]))
-	s.LINE_TYPE.UnmarshalText([]byte(fields[23]))
+func (s *STAT_VAL1L2_header) fill(fields []string) error {
+	var errs []error
+	appendErrorWithContext(&errs, "VERSION", s.VERSION.UnmarshalText([]byte(fields[0])))
+	appendErrorWithContext(&errs, "MODEL", s.MODEL.UnmarshalText([]byte(fields[1])))
+	appendErrorWithContext(&errs, "DESC", s.DESC.UnmarshalText([]byte(fields[2])))
+	appendErrorWithContext(&errs, "FCST_VALID_BEG", s.FCST_VALID_BEG.UnmarshalText([]byte(fields[4])))
+	appendErrorWithContext(&errs, "FCST_VALID_END", s.FCST_VALID_END.UnmarshalText([]byte(fields[5])))
+	appendErrorWithContext(&errs, "OBS_LEAD", s.OBS_LEAD.UnmarshalText([]byte(fields[6])))
+	appendErrorWithContext(&errs, "OBS_VALID_BEG", s.OBS_VALID_BEG.UnmarshalText([]byte(fields[7])))
+	appendErrorWithContext(&errs, "OBS_VALID_END", s.OBS_VALID_END.UnmarshalText([]byte(fields[8])))
+	appendErrorWithContext(&errs, "FCST_VAR", s.FCST_VAR.UnmarshalText([]byte(fields[9])))
+	appendErrorWithContext(&errs, "FCST_UNITS", s.FCST_UNITS.UnmarshalText([]byte(fields[10])))
+	appendErrorWithContext(&errs, "FCST_LEV", s.FCST_LEV.UnmarshalText([]byte(fields[11])))
+	appendErrorWithContext(&errs, "OBS_VAR", s.OBS_VAR.UnmarshalText([]byte(fields[12])))
+	appendErrorWithContext(&errs, "OBS_UNITS", s.OBS_UNITS.UnmarshalText([]byte(fields[13])))
+	appendErrorWithContext(&errs, "OBS_LEV", s.OBS_LEV.UnmarshalText([]byte(fields[14])))
+	appendErrorWithContext(&errs, "OBTYPE", s.OBTYPE.UnmarshalText([]byte(fields[15])))
+	appendErrorWithContext(&errs, "VX_MASK", s.VX_MASK.UnmarshalText([]byte(fields[16])))
+	appendErrorWithContext(&errs, "INTERP_MTHD", s.INTERP_MTHD.UnmarshalText([]byte(fields[17])))
+	appendErrorWithContext(&errs, "INTERP_PNTS", s.INTERP_PNTS.UnmarshalText([]byte(fields[18])))
+	appendErrorWithContext(&errs, "FCST_THRESH", s.FCST_THRESH.UnmarshalText([]byte(fields[19])))
+	appendErrorWithContext(&errs, "OBS_THRESH", s.OBS_THRESH.UnmarshalText([]byte(fields[20])))
+	appendErrorWithContext(&errs, "COV_THRESH", s.COV_THRESH.UnmarshalText([]byte(fields[21])))
+	appendErrorWithContext(&errs, "ALPHA", s.ALPHA.UnmarshalText([]byte(fields[22])))
+	appendErrorWithContext(&errs, "LINE_TYPE", s.LINE_TYPE.UnmarshalText([]byte(fields[23])))
+	return errors.Join(errs...)
 }
 
 // Sets STAT_VCNT_header struct's fields
-func (s *STAT_VCNT_header) fill(fields []string) {
-	s.VERSION.UnmarshalText([]byte(fields[0]))
-	s.MODEL.UnmarshalText([]byte(fields[1]))
-	s.DESC.UnmarshalText([]byte(fields[2]))
-	s.FCST_VALID_BEG.UnmarshalText([]byte(fields[4]))
-	s.FCST_VALID_END.UnmarshalText([]byte(fields[5]))
-	s.OBS_LEAD.UnmarshalText([]byte(fields[6]))
-	s.OBS_VALID_BEG.UnmarshalText([]byte(fields[7]))
-	s.OBS_VALID_END.UnmarshalText([]byte(fields[8]))
-	s.FCST_VAR.UnmarshalText([]byte(fields[9]))
-	s.FCST_UNITS.UnmarshalText([]byte(fields[10]))
-	s.FCST_LEV.UnmarshalText([]byte(fields[11]))
-	s.OBS_VAR.UnmarshalText([]byte(fields[12]))
-	s.OBS_UNITS.UnmarshalText([]byte(fields[13]))
-	s.OBS_LEV.UnmarshalText([]byte(fields[14]))
-	s.OBTYPE.UnmarshalText([]byte(fields[15]))
-	s.VX_MASK.UnmarshalText([]byte(fields[16]))
-	s.INTERP_MTHD.UnmarshalText([]byte(fields[17]))
-	s.INTERP_PNTS.UnmarshalText([]byte(fields[18]))
-	s.FCST_THRESH.UnmarshalText([]byte(fields[19]))
-	s.OBS_THRESH.UnmarshalText([]byte(fields[20]))
-	s.COV_THRESH.UnmarshalText([]byte(fields[21]))
-	s.ALPHA.UnmarshalText([]byte(fields[22]))
-	s.LINE_TYPE.UnmarshalText([]byte(fields[23]))
+func (s *STAT_VCNT_header) fill(fields []string) error {
+	var errs []error
+	appendErrorWithContext(&errs, "VERSION", s.VERSION.UnmarshalText([]byte(fields[0])))
+	appendErrorWithContext(&errs, "MODEL", s.MODEL.UnmarshalText([]byte(fields[1])))
+	appendErrorWithContext(&errs, "DESC", s.DESC.UnmarshalText([]byte(fields[2])))
+	appendErrorWithContext(&errs, "FCST_VALID_BEG", s.FCST_VALID_BEG.UnmarshalText([]byte(fields[4])))
+	appendErrorWithContext(&errs, "FCST_VALID_END", s.FCST_VALID_END.UnmarshalText([]byte(fields[5])))
+	appendErrorWithContext(&errs, "OBS_LEAD", s.OBS_LEAD.UnmarshalText([]byte(fields[6])))
+	appendErrorWithContext(&errs, "OBS_VALID_BEG", s.OBS_VALID_BEG.UnmarshalText([]byte(fields[7])))
+	appendErrorWithContext(&errs, "OBS_VALID_END", s.OBS_VALID_END.UnmarshalText([]byte(fields[8])))
+	appendErrorWithContext(&errs, "FCST_VAR", s.FCST_VAR.UnmarshalText([]byte(fields[9])))
+	appendErrorWithContext(&errs, "FCST_UNITS", s.FCST_UNITS.UnmarshalText([]byte(fields[10])))
+	appendErrorWithContext(&errs, "FCST_LEV", s.FCST_LEV.UnmarshalText([]byte(fields[11])))
+	appendErrorWithContext(&errs, "OBS_VAR", s.OBS_VAR.UnmarshalText([]byte(fields[12])))
+	appendErrorWithContext(&errs, "OBS_UNITS", s.OBS_UNITS.UnmarshalText([]byte(fields[13])))
+	appendErrorWithContext(&errs, "OBS_LEV", s.OBS_LEV.UnmarshalText([]byte(fields[14])))
+	appendErrorWithContext(&errs, "OBTYPE", s.OBTYPE.UnmarshalText([]byte(fields[15])))
+	appendErrorWithContext(&errs, "VX_MASK", s.VX_MASK.UnmarshalText([]byte(fields[16])))
+	appendErrorWithContext(&errs, "INTERP_MTHD", s.INTERP_MTHD.UnmarshalText([]byte(fields[17])))
+	appendErrorWithContext(&errs, "INTERP_PNTS", s.INTERP_PNTS.UnmarshalText([]byte(fields[18])))
+	appendErrorWithContext(&errs, "FCST_THRESH", s.FCST_THRESH.UnmarshalText([]byte(fields[19])))
+	appendErrorWithContext(&errs, "OBS_THRESH", s.OBS_THRESH.UnmarshalText([]byte(fields[20])))
+	appendErrorWithContext(&errs, "COV_THRESH", s.COV_THRESH.UnmarshalText([]byte(fields[21])))
+	appendErrorWithContext(&errs, "ALPHA", s.ALPHA.UnmarshalText([]byte(fields[22])))
+	appendErrorWithContext(&errs, "LINE_TYPE", s.LINE_TYPE.UnmarshalText([]byte(fields[23])))
+	return errors.Join(errs...)
 }
 
 // Sets STAT_VL1L2_header struct's fields
-func (s *STAT_VL1L2_header) fill(fields []string) {
-	s.VERSION.UnmarshalText([]byte(fields[0]))
-	s.MODEL.UnmarshalText([]byte(fields[1]))
-	s.DESC.UnmarshalText([]byte(fields[2]))
-	s.FCST_VALID_BEG.UnmarshalText([]byte(fields[4]))
-	s.FCST_VALID_END.UnmarshalText([]byte(fields[5]))
-	s.OBS_LEAD.UnmarshalText([]byte(fields[6]))
-	s.OBS_VALID_BEG.UnmarshalText([]byte(fields[7]))
-	s.OBS_VALID_END.UnmarshalText([]byte(fields[8]))
-	s.FCST_VAR.UnmarshalText([]byte(fields[9]))
-	s.FCST_UNITS.UnmarshalText([]byte(fields[10]))
-	s.FCST_LEV.UnmarshalText([]byte(fields[11]))
-	s.OBS_VAR.UnmarshalText([]byte(fields[12]))
-	s.OBS_UNITS.UnmarshalText([]byte(fields[13]))
-	s.OBS_LEV.UnmarshalText([]byte(fields[14]))
-	s.OBTYPE.UnmarshalText([]byte(fields[15]))
-	s.VX_MASK.UnmarshalText([]byte(fields[16]))
-	s.INTERP_MTHD.UnmarshalText([]byte(fields[17]))
-	s.INTERP_PNTS.UnmarshalText([]byte(fields[18]))
-	s.FCST_THRESH.UnmarshalText([]byte(fields[19]))
-	s.OBS_THRESH.UnmarshalText([]byte(fields[20]))
-	s.COV_THRESH.UnmarshalText([]byte(fields[21]))
-	s.ALPHA.UnmarshalText([]byte(fields[22]))
-	s.LINE_TYPE.UnmarshalText([]byte(fields[23]))
+func (s *STAT_VL1L2_header) fill(fields []string) error {
+	var errs []error
+	appendErrorWithContext(&errs, "VERSION", s.VERSION.UnmarshalText([]byte(fields[0])))
+	appendErrorWithContext(&errs, "MODEL", s.MODEL.UnmarshalText([]byte(fields[1])))
+	appendErrorWithContext(&errs, "DESC", s.DESC.UnmarshalText([]byte(fields[2])))
+	appendErrorWithContext(&errs, "FCST_VALID_BEG", s.FCST_VALID_BEG.UnmarshalText([]byte(fields[4])))
+	appendErrorWithContext(&errs, "FCST_VALID_END", s.FCST_VALID_END.UnmarshalText([]byte(fields[5])))
+	appendErrorWithContext(&errs, "OBS_LEAD", s.OBS_LEAD.UnmarshalText([]byte(fields[6])))
+	appendErrorWithContext(&errs, "OBS_VALID_BEG", s.OBS_VALID_BEG.UnmarshalText([]byte(fields[7])))
+	appendErrorWithContext(&errs, "OBS_VALID_END", s.OBS_VALID_END.UnmarshalText([]byte(fields[8])))
+	appendErrorWithContext(&errs, "FCST_VAR", s.FCST_VAR.UnmarshalText([]byte(fields[9])))
+	appendErrorWithContext(&errs, "FCST_UNITS", s.FCST_UNITS.UnmarshalText([]byte(fields[10])))
+	appendErrorWithContext(&errs, "FCST_LEV", s.FCST_LEV.UnmarshalText([]byte(fields[11])))
+	appendErrorWithContext(&errs, "OBS_VAR", s.OBS_VAR.UnmarshalText([]byte(fields[12])))
+	appendErrorWithContext(&errs, "OBS_UNITS", s.OBS_UNITS.UnmarshalText([]byte(fields[13])))
+	appendErrorWithContext(&errs, "OBS_LEV", s.OBS_LEV.UnmarshalText([]byte(fields[14])))
+	appendErrorWithContext(&errs, "OBTYPE", s.OBTYPE.UnmarshalText([]byte(fields[15])))
+	appendErrorWithContext(&errs, "VX_MASK", s.VX_MASK.UnmarshalText([]byte(fields[16])))
+	appendErrorWithContext(&errs, "INTERP_MTHD", s.INTERP_MTHD.UnmarshalText([]byte(fields[17])))
+	appendErrorWithContext(&errs, "INTERP_PNTS", s.INTERP_PNTS.UnmarshalText([]byte(fields[18])))
+	appendErrorWithContext(&errs, "FCST_THRESH", s.FCST_THRESH.UnmarshalText([]byte(fields[19])))
+	appendErrorWithContext(&errs, "OBS_THRESH", s.OBS_THRESH.UnmarshalText([]byte(fields[20])))
+	appendErrorWithContext(&errs, "COV_THRESH", s.COV_THRESH.UnmarshalText([]byte(fields[21])))
+	appendErrorWithContext(&errs, "ALPHA", s.ALPHA.UnmarshalText([]byte(fields[22])))
+	appendErrorWithContext(&errs, "LINE_TYPE", s.LINE_TYPE.UnmarshalText([]byte(fields[23])))
+	return errors.Join(errs...)
 }
 
 // Sets TCST_PROBRIRW_header struct's fields
-func (s *TCST_PROBRIRW_header) fill(fields []string) {
-	s.VERSION.UnmarshalText([]byte(fields[0]))
-	s.AMODEL.UnmarshalText([]byte(fields[1]))
-	s.BMODEL.UnmarshalText([]byte(fields[2]))
-	s.DESC.UnmarshalText([]byte(fields[3]))
-	s.STORM_ID.UnmarshalText([]byte(fields[4]))
-	s.BASIN.UnmarshalText([]byte(fields[5]))
-	s.CYCLONE.UnmarshalText([]byte(fields[6]))
-	s.STORM_NAME.UnmarshalText([]byte(fields[7]))
-	s.VALID.UnmarshalText([]byte(fields[10]))
-	s.INIT_MASK.UnmarshalText([]byte(fields[11]))
-	s.VALID_MASK.UnmarshalText([]byte(fields[12]))
-	s.LINE_TYPE.UnmarshalText([]byte(fields[13]))
+func (s *TCST_PROBRIRW_header) fill(fields []string) error {
+	var errs []error
+	appendErrorWithContext(&errs, "VERSION", s.VERSION.UnmarshalText([]byte(fields[0])))
+	appendErrorWithContext(&errs, "AMODEL", s.AMODEL.UnmarshalText([]byte(fields[1])))
+	appendErrorWithContext(&errs, "BMODEL", s.BMODEL.UnmarshalText([]byte(fields[2])))
+	appendErrorWithContext(&errs, "DESC", s.DESC.UnmarshalText([]byte(fields[3])))
+	appendErrorWithContext(&errs, "STORM_ID", s.STORM_ID.UnmarshalText([]byte(fields[4])))
+	appendErrorWithContext(&errs, "BASIN", s.BASIN.UnmarshalText([]byte(fields[5])))
+	appendErrorWithContext(&errs, "CYCLONE", s.CYCLONE.UnmarshalText([]byte(fields[6])))
+	appendErrorWithContext(&errs, "STORM_NAME", s.STORM_NAME.UnmarshalText([]byte(fields[7])))
+	appendErrorWithContext(&errs, "VALID", s.VALID.UnmarshalText([]byte(fields[10])))
+	appendErrorWithContext(&errs, "INIT_MASK", s.INIT_MASK.UnmarshalText([]byte(fields[11])))
+	appendErrorWithContext(&errs, "VALID_MASK", s.VALID_MASK.UnmarshalText([]byte(fields[12])))
+	appendErrorWithContext(&errs, "LINE_TYPE", s.LINE_TYPE.UnmarshalText([]byte(fields[13])))
+	return errors.Join(errs...)
 }
 
 // Sets TCST_TCMPR_header struct's fields
-func (s *TCST_TCMPR_header) fill(fields []string) {
-	s.VERSION.UnmarshalText([]byte(fields[0]))
-	s.AMODEL.UnmarshalText([]byte(fields[1]))
-	s.BMODEL.UnmarshalText([]byte(fields[2]))
-	s.DESC.UnmarshalText([]byte(fields[3]))
-	s.STORM_ID.UnmarshalText([]byte(fields[4]))
-	s.BASIN.UnmarshalText([]byte(fields[5]))
-	s.CYCLONE.UnmarshalText([]byte(fields[6]))
-	s.STORM_NAME.UnmarshalText([]byte(fields[7]))
-	s.VALID.UnmarshalText([]byte(fields[10]))
-	s.INIT_MASK.UnmarshalText([]byte(fields[11]))
-	s.VALID_MASK.UnmarshalText([]byte(fields[12]))
-	s.LINE_TYPE.UnmarshalText([]byte(fields[13]))
+func (s *TCST_TCMPR_header) fill(fields []string) error {
+	var errs []error
+	appendErrorWithContext(&errs, "VERSION", s.VERSION.UnmarshalText([]byte(fields[0])))
+	appendErrorWithContext(&errs, "AMODEL", s.AMODEL.UnmarshalText([]byte(fields[1])))
+	appendErrorWithContext(&errs, "BMODEL", s.BMODEL.UnmarshalText([]byte(fields[2])))
+	appendErrorWithContext(&errs, "DESC", s.DESC.UnmarshalText([]byte(fields[3])))
+	appendErrorWithContext(&errs, "STORM_ID", s.STORM_ID.UnmarshalText([]byte(fields[4])))
+	appendErrorWithContext(&errs, "BASIN", s.BASIN.UnmarshalText([]byte(fields[5])))
+	appendErrorWithContext(&errs, "CYCLONE", s.CYCLONE.UnmarshalText([]byte(fields[6])))
+	appendErrorWithContext(&errs, "STORM_NAME", s.STORM_NAME.UnmarshalText([]byte(fields[7])))
+	appendErrorWithContext(&errs, "VALID", s.VALID.UnmarshalText([]byte(fields[10])))
+	appendErrorWithContext(&errs, "INIT_MASK", s.INIT_MASK.UnmarshalText([]byte(fields[11])))
+	appendErrorWithContext(&errs, "VALID_MASK", s.VALID_MASK.UnmarshalText([]byte(fields[12])))
+	appendErrorWithContext(&errs, "LINE_TYPE", s.LINE_TYPE.UnmarshalText([]byte(fields[13])))
+	return errors.Join(errs...)
 }
 
 // line data struct definitions
@@ -3006,305 +3083,318 @@ type TCST_TCMPR_data struct {
 // fillStructure functions
 
 // Sets MODE_CTS_data struct's fields
-func (s *MODE_CTS_data) fill(fields []string) {
-	s.FIELD.UnmarshalText([]byte(fields[0]))
-	s.TOTAL.UnmarshalText([]byte(fields[1]))
-	s.FY_OY.UnmarshalText([]byte(fields[2]))
-	s.FY_ON.UnmarshalText([]byte(fields[3]))
-	s.FN_OY.UnmarshalText([]byte(fields[4]))
-	s.FN_ON.UnmarshalText([]byte(fields[5]))
-	s.BASER.UnmarshalText([]byte(fields[6]))
-	s.FMEAN.UnmarshalText([]byte(fields[7]))
-	s.ACC.UnmarshalText([]byte(fields[8]))
-	s.FBIAS.UnmarshalText([]byte(fields[9]))
-	s.PODY.UnmarshalText([]byte(fields[10]))
-	s.PODN.UnmarshalText([]byte(fields[11]))
-	s.POFD.UnmarshalText([]byte(fields[12]))
-	s.FAR.UnmarshalText([]byte(fields[13]))
-	s.CSI.UnmarshalText([]byte(fields[14]))
-	s.GSS.UnmarshalText([]byte(fields[15]))
-	s.HK.UnmarshalText([]byte(fields[16]))
-	s.HSS.UnmarshalText([]byte(fields[17]))
-	s.ODDS.UnmarshalText([]byte(fields[18]))
+func (s *MODE_CTS_data) fill(fields []string) error {
+	var errs []error
+	appendErrorWithContext(&errs, "FIELD", s.FIELD.UnmarshalText([]byte(fields[0])))
+	appendErrorWithContext(&errs, "TOTAL", s.TOTAL.UnmarshalText([]byte(fields[1])))
+	appendErrorWithContext(&errs, "FY_OY", s.FY_OY.UnmarshalText([]byte(fields[2])))
+	appendErrorWithContext(&errs, "FY_ON", s.FY_ON.UnmarshalText([]byte(fields[3])))
+	appendErrorWithContext(&errs, "FN_OY", s.FN_OY.UnmarshalText([]byte(fields[4])))
+	appendErrorWithContext(&errs, "FN_ON", s.FN_ON.UnmarshalText([]byte(fields[5])))
+	appendErrorWithContext(&errs, "BASER", s.BASER.UnmarshalText([]byte(fields[6])))
+	appendErrorWithContext(&errs, "FMEAN", s.FMEAN.UnmarshalText([]byte(fields[7])))
+	appendErrorWithContext(&errs, "ACC", s.ACC.UnmarshalText([]byte(fields[8])))
+	appendErrorWithContext(&errs, "FBIAS", s.FBIAS.UnmarshalText([]byte(fields[9])))
+	appendErrorWithContext(&errs, "PODY", s.PODY.UnmarshalText([]byte(fields[10])))
+	appendErrorWithContext(&errs, "PODN", s.PODN.UnmarshalText([]byte(fields[11])))
+	appendErrorWithContext(&errs, "POFD", s.POFD.UnmarshalText([]byte(fields[12])))
+	appendErrorWithContext(&errs, "FAR", s.FAR.UnmarshalText([]byte(fields[13])))
+	appendErrorWithContext(&errs, "CSI", s.CSI.UnmarshalText([]byte(fields[14])))
+	appendErrorWithContext(&errs, "GSS", s.GSS.UnmarshalText([]byte(fields[15])))
+	appendErrorWithContext(&errs, "HK", s.HK.UnmarshalText([]byte(fields[16])))
+	appendErrorWithContext(&errs, "HSS", s.HSS.UnmarshalText([]byte(fields[17])))
+	appendErrorWithContext(&errs, "ODDS", s.ODDS.UnmarshalText([]byte(fields[18])))
+	return errors.Join(errs...)
 }
 
 // Sets MODE_OBJ_data struct's fields
-func (s *MODE_OBJ_data) fill(fields []string) {
-	s.OBJECT_ID.UnmarshalText([]byte(fields[0]))
-	s.OBJECT_CAT.UnmarshalText([]byte(fields[1]))
-	s.CENTROID_X.UnmarshalText([]byte(fields[2]))
-	s.CENTROID_Y.UnmarshalText([]byte(fields[3]))
-	s.CENTROID_LAT.UnmarshalText([]byte(fields[4]))
-	s.CENTROID_LON.UnmarshalText([]byte(fields[5]))
-	s.AXIS_ANG.UnmarshalText([]byte(fields[6]))
-	s.LENGTH.UnmarshalText([]byte(fields[7]))
-	s.WIDTH.UnmarshalText([]byte(fields[8]))
-	s.AREA.UnmarshalText([]byte(fields[9]))
-	s.AREA_THRESH.UnmarshalText([]byte(fields[10]))
-	s.CURVATURE.UnmarshalText([]byte(fields[11]))
-	s.CURVATURE_X.UnmarshalText([]byte(fields[12]))
-	s.CURVATURE_Y.UnmarshalText([]byte(fields[13]))
-	s.COMPLEXITY.UnmarshalText([]byte(fields[14]))
-	s.INTENSITY_10.UnmarshalText([]byte(fields[15]))
-	s.INTENSITY_25.UnmarshalText([]byte(fields[16]))
-	s.INTENSITY_50.UnmarshalText([]byte(fields[17]))
-	s.INTENSITY_75.UnmarshalText([]byte(fields[18]))
-	s.INTENSITY_90.UnmarshalText([]byte(fields[19]))
-	s.INTENSITY_USER.UnmarshalText([]byte(fields[20]))
-	s.INTENSITY_SUM.UnmarshalText([]byte(fields[21]))
-	s.CENTROID_DIST.UnmarshalText([]byte(fields[22]))
-	s.BOUNDARY_DIST.UnmarshalText([]byte(fields[23]))
-	s.CONVEX_HULL_DIST.UnmarshalText([]byte(fields[24]))
-	s.ANGLE_DIFF.UnmarshalText([]byte(fields[25]))
-	s.ASPECT_DIFF.UnmarshalText([]byte(fields[26]))
-	s.AREA_RATIO.UnmarshalText([]byte(fields[27]))
-	s.INTERSECTION_AREA.UnmarshalText([]byte(fields[28]))
-	s.UNION_AREA.UnmarshalText([]byte(fields[29]))
-	s.SYMMETRIC_DIFF.UnmarshalText([]byte(fields[30]))
-	s.INTERSECTION_OVER_AREA.UnmarshalText([]byte(fields[31]))
-	s.CURVATURE_RATIO.UnmarshalText([]byte(fields[32]))
-	s.COMPLEXITY_RATIO.UnmarshalText([]byte(fields[33]))
-	s.PERCENTILE_INTENSITY_RATIO.UnmarshalText([]byte(fields[34]))
-	s.INTEREST.UnmarshalText([]byte(fields[35]))
+func (s *MODE_OBJ_data) fill(fields []string) error {
+	var errs []error
+	appendErrorWithContext(&errs, "OBJECT_ID", s.OBJECT_ID.UnmarshalText([]byte(fields[0])))
+	appendErrorWithContext(&errs, "OBJECT_CAT", s.OBJECT_CAT.UnmarshalText([]byte(fields[1])))
+	appendErrorWithContext(&errs, "CENTROID_X", s.CENTROID_X.UnmarshalText([]byte(fields[2])))
+	appendErrorWithContext(&errs, "CENTROID_Y", s.CENTROID_Y.UnmarshalText([]byte(fields[3])))
+	appendErrorWithContext(&errs, "CENTROID_LAT", s.CENTROID_LAT.UnmarshalText([]byte(fields[4])))
+	appendErrorWithContext(&errs, "CENTROID_LON", s.CENTROID_LON.UnmarshalText([]byte(fields[5])))
+	appendErrorWithContext(&errs, "AXIS_ANG", s.AXIS_ANG.UnmarshalText([]byte(fields[6])))
+	appendErrorWithContext(&errs, "LENGTH", s.LENGTH.UnmarshalText([]byte(fields[7])))
+	appendErrorWithContext(&errs, "WIDTH", s.WIDTH.UnmarshalText([]byte(fields[8])))
+	appendErrorWithContext(&errs, "AREA", s.AREA.UnmarshalText([]byte(fields[9])))
+	appendErrorWithContext(&errs, "AREA_THRESH", s.AREA_THRESH.UnmarshalText([]byte(fields[10])))
+	appendErrorWithContext(&errs, "CURVATURE", s.CURVATURE.UnmarshalText([]byte(fields[11])))
+	appendErrorWithContext(&errs, "CURVATURE_X", s.CURVATURE_X.UnmarshalText([]byte(fields[12])))
+	appendErrorWithContext(&errs, "CURVATURE_Y", s.CURVATURE_Y.UnmarshalText([]byte(fields[13])))
+	appendErrorWithContext(&errs, "COMPLEXITY", s.COMPLEXITY.UnmarshalText([]byte(fields[14])))
+	appendErrorWithContext(&errs, "INTENSITY_10", s.INTENSITY_10.UnmarshalText([]byte(fields[15])))
+	appendErrorWithContext(&errs, "INTENSITY_25", s.INTENSITY_25.UnmarshalText([]byte(fields[16])))
+	appendErrorWithContext(&errs, "INTENSITY_50", s.INTENSITY_50.UnmarshalText([]byte(fields[17])))
+	appendErrorWithContext(&errs, "INTENSITY_75", s.INTENSITY_75.UnmarshalText([]byte(fields[18])))
+	appendErrorWithContext(&errs, "INTENSITY_90", s.INTENSITY_90.UnmarshalText([]byte(fields[19])))
+	appendErrorWithContext(&errs, "INTENSITY_USER", s.INTENSITY_USER.UnmarshalText([]byte(fields[20])))
+	appendErrorWithContext(&errs, "INTENSITY_SUM", s.INTENSITY_SUM.UnmarshalText([]byte(fields[21])))
+	appendErrorWithContext(&errs, "CENTROID_DIST", s.CENTROID_DIST.UnmarshalText([]byte(fields[22])))
+	appendErrorWithContext(&errs, "BOUNDARY_DIST", s.BOUNDARY_DIST.UnmarshalText([]byte(fields[23])))
+	appendErrorWithContext(&errs, "CONVEX_HULL_DIST", s.CONVEX_HULL_DIST.UnmarshalText([]byte(fields[24])))
+	appendErrorWithContext(&errs, "ANGLE_DIFF", s.ANGLE_DIFF.UnmarshalText([]byte(fields[25])))
+	appendErrorWithContext(&errs, "ASPECT_DIFF", s.ASPECT_DIFF.UnmarshalText([]byte(fields[26])))
+	appendErrorWithContext(&errs, "AREA_RATIO", s.AREA_RATIO.UnmarshalText([]byte(fields[27])))
+	appendErrorWithContext(&errs, "INTERSECTION_AREA", s.INTERSECTION_AREA.UnmarshalText([]byte(fields[28])))
+	appendErrorWithContext(&errs, "UNION_AREA", s.UNION_AREA.UnmarshalText([]byte(fields[29])))
+	appendErrorWithContext(&errs, "SYMMETRIC_DIFF", s.SYMMETRIC_DIFF.UnmarshalText([]byte(fields[30])))
+	appendErrorWithContext(&errs, "INTERSECTION_OVER_AREA", s.INTERSECTION_OVER_AREA.UnmarshalText([]byte(fields[31])))
+	appendErrorWithContext(&errs, "CURVATURE_RATIO", s.CURVATURE_RATIO.UnmarshalText([]byte(fields[32])))
+	appendErrorWithContext(&errs, "COMPLEXITY_RATIO", s.COMPLEXITY_RATIO.UnmarshalText([]byte(fields[33])))
+	appendErrorWithContext(&errs, "PERCENTILE_INTENSITY_RATIO", s.PERCENTILE_INTENSITY_RATIO.UnmarshalText([]byte(fields[34])))
+	appendErrorWithContext(&errs, "INTEREST", s.INTEREST.UnmarshalText([]byte(fields[35])))
+	return errors.Join(errs...)
 }
 
 // Sets STAT_CNT_data struct's fields
-func (s *STAT_CNT_data) fill(fields []string) {
-	s.TOTAL.UnmarshalText([]byte(fields[0]))
-	s.FBAR.UnmarshalText([]byte(fields[1]))
-	s.FBAR_NCL.UnmarshalText([]byte(fields[2]))
-	s.FBAR_NCU.UnmarshalText([]byte(fields[3]))
-	s.FBAR_BCL.UnmarshalText([]byte(fields[4]))
-	s.FBAR_BCU.UnmarshalText([]byte(fields[5]))
-	s.FSTDEV.UnmarshalText([]byte(fields[6]))
-	s.FSTDEV_NCL.UnmarshalText([]byte(fields[7]))
-	s.FSTDEV_NCU.UnmarshalText([]byte(fields[8]))
-	s.FSTDEV_BCL.UnmarshalText([]byte(fields[9]))
-	s.FSTDEV_BCU.UnmarshalText([]byte(fields[10]))
-	s.OBAR.UnmarshalText([]byte(fields[11]))
-	s.OBAR_NCL.UnmarshalText([]byte(fields[12]))
-	s.OBAR_NCU.UnmarshalText([]byte(fields[13]))
-	s.OBAR_BCL.UnmarshalText([]byte(fields[14]))
-	s.OBAR_BCU.UnmarshalText([]byte(fields[15]))
-	s.OSTDEV.UnmarshalText([]byte(fields[16]))
-	s.OSTDEV_NCL.UnmarshalText([]byte(fields[17]))
-	s.OSTDEV_NCU.UnmarshalText([]byte(fields[18]))
-	s.OSTDEV_BCL.UnmarshalText([]byte(fields[19]))
-	s.OSTDEV_BCU.UnmarshalText([]byte(fields[20]))
-	s.PR_CORR.UnmarshalText([]byte(fields[21]))
-	s.PR_CORR_NCL.UnmarshalText([]byte(fields[22]))
-	s.PR_CORR_NCU.UnmarshalText([]byte(fields[23]))
-	s.PR_CORR_BCL.UnmarshalText([]byte(fields[24]))
-	s.PR_CORR_BCU.UnmarshalText([]byte(fields[25]))
-	s.SP_CORR.UnmarshalText([]byte(fields[26]))
-	s.KT_CORR.UnmarshalText([]byte(fields[27]))
-	s.RANKS.UnmarshalText([]byte(fields[28]))
-	s.FRANK_TIES.UnmarshalText([]byte(fields[29]))
-	s.ORANK_TIES.UnmarshalText([]byte(fields[30]))
-	s.ME.UnmarshalText([]byte(fields[31]))
-	s.ME_NCL.UnmarshalText([]byte(fields[32]))
-	s.ME_NCU.UnmarshalText([]byte(fields[33]))
-	s.ME_BCL.UnmarshalText([]byte(fields[34]))
-	s.ME_BCU.UnmarshalText([]byte(fields[35]))
-	s.ESTDEV.UnmarshalText([]byte(fields[36]))
-	s.ESTDEV_NCL.UnmarshalText([]byte(fields[37]))
-	s.ESTDEV_NCU.UnmarshalText([]byte(fields[38]))
-	s.ESTDEV_BCL.UnmarshalText([]byte(fields[39]))
-	s.ESTDEV_BCU.UnmarshalText([]byte(fields[40]))
-	s.MBIAS.UnmarshalText([]byte(fields[41]))
-	s.MBIAS_BCL.UnmarshalText([]byte(fields[42]))
-	s.MBIAS_BCU.UnmarshalText([]byte(fields[43]))
-	s.MAE.UnmarshalText([]byte(fields[44]))
-	s.MAE_BCL.UnmarshalText([]byte(fields[45]))
-	s.MAE_BCU.UnmarshalText([]byte(fields[46]))
-	s.MSE.UnmarshalText([]byte(fields[47]))
-	s.MSE_BCL.UnmarshalText([]byte(fields[48]))
-	s.MSE_BCU.UnmarshalText([]byte(fields[49]))
-	s.BCMSE.UnmarshalText([]byte(fields[50]))
-	s.BCMSE_BCL.UnmarshalText([]byte(fields[51]))
-	s.BCMSE_BCU.UnmarshalText([]byte(fields[52]))
-	s.RMSE.UnmarshalText([]byte(fields[53]))
-	s.RMSE_BCL.UnmarshalText([]byte(fields[54]))
-	s.RMSE_BCU.UnmarshalText([]byte(fields[55]))
-	s.E10.UnmarshalText([]byte(fields[56]))
-	s.E10_BCL.UnmarshalText([]byte(fields[57]))
-	s.E10_BCU.UnmarshalText([]byte(fields[58]))
-	s.E25.UnmarshalText([]byte(fields[59]))
-	s.E25_BCL.UnmarshalText([]byte(fields[60]))
-	s.E25_BCU.UnmarshalText([]byte(fields[61]))
-	s.E50.UnmarshalText([]byte(fields[62]))
-	s.E50_BCL.UnmarshalText([]byte(fields[63]))
-	s.E50_BCU.UnmarshalText([]byte(fields[64]))
-	s.E75.UnmarshalText([]byte(fields[65]))
-	s.E75_BCL.UnmarshalText([]byte(fields[66]))
-	s.E75_BCU.UnmarshalText([]byte(fields[67]))
-	s.E90.UnmarshalText([]byte(fields[68]))
-	s.E90_BCL.UnmarshalText([]byte(fields[69]))
-	s.E90_BCU.UnmarshalText([]byte(fields[70]))
-	s.EIQR.UnmarshalText([]byte(fields[71]))
-	s.EIQR_BCL.UnmarshalText([]byte(fields[72]))
-	s.EIQR_BCU.UnmarshalText([]byte(fields[73]))
-	s.MAD.UnmarshalText([]byte(fields[74]))
-	s.MAD_BCL.UnmarshalText([]byte(fields[75]))
-	s.MAD_BCU.UnmarshalText([]byte(fields[76]))
-	s.ANOM_CORR.UnmarshalText([]byte(fields[77]))
-	s.ANOM_CORR_NCL.UnmarshalText([]byte(fields[78]))
-	s.ANOM_CORR_NCU.UnmarshalText([]byte(fields[79]))
-	s.ANOM_CORR_BCL.UnmarshalText([]byte(fields[80]))
-	s.ANOM_CORR_BCU.UnmarshalText([]byte(fields[81]))
-	s.ME2.UnmarshalText([]byte(fields[82]))
-	s.ME2_BCL.UnmarshalText([]byte(fields[83]))
-	s.ME2_BCU.UnmarshalText([]byte(fields[84]))
-	s.MSESS.UnmarshalText([]byte(fields[85]))
-	s.MSESS_BCL.UnmarshalText([]byte(fields[86]))
-	s.MSESS_BCU.UnmarshalText([]byte(fields[87]))
-	s.RMSFA.UnmarshalText([]byte(fields[88]))
-	s.RMSFA_BCL.UnmarshalText([]byte(fields[89]))
-	s.RMSFA_BCU.UnmarshalText([]byte(fields[90]))
-	s.RMSOA.UnmarshalText([]byte(fields[91]))
-	s.RMSOA_BCL.UnmarshalText([]byte(fields[92]))
-	s.RMSOA_BCU.UnmarshalText([]byte(fields[93]))
-	s.ANOM_CORR_UNCNTR.UnmarshalText([]byte(fields[94]))
-	s.ANOM_CORR_UNCNTR_BCL.UnmarshalText([]byte(fields[95]))
-	s.ANOM_CORR_UNCNTR_BCU.UnmarshalText([]byte(fields[96]))
+func (s *STAT_CNT_data) fill(fields []string) error {
+	var errs []error
+	appendErrorWithContext(&errs, "TOTAL", s.TOTAL.UnmarshalText([]byte(fields[0])))
+	appendErrorWithContext(&errs, "FBAR", s.FBAR.UnmarshalText([]byte(fields[1])))
+	appendErrorWithContext(&errs, "FBAR_NCL", s.FBAR_NCL.UnmarshalText([]byte(fields[2])))
+	appendErrorWithContext(&errs, "FBAR_NCU", s.FBAR_NCU.UnmarshalText([]byte(fields[3])))
+	appendErrorWithContext(&errs, "FBAR_BCL", s.FBAR_BCL.UnmarshalText([]byte(fields[4])))
+	appendErrorWithContext(&errs, "FBAR_BCU", s.FBAR_BCU.UnmarshalText([]byte(fields[5])))
+	appendErrorWithContext(&errs, "FSTDEV", s.FSTDEV.UnmarshalText([]byte(fields[6])))
+	appendErrorWithContext(&errs, "FSTDEV_NCL", s.FSTDEV_NCL.UnmarshalText([]byte(fields[7])))
+	appendErrorWithContext(&errs, "FSTDEV_NCU", s.FSTDEV_NCU.UnmarshalText([]byte(fields[8])))
+	appendErrorWithContext(&errs, "FSTDEV_BCL", s.FSTDEV_BCL.UnmarshalText([]byte(fields[9])))
+	appendErrorWithContext(&errs, "FSTDEV_BCU", s.FSTDEV_BCU.UnmarshalText([]byte(fields[10])))
+	appendErrorWithContext(&errs, "OBAR", s.OBAR.UnmarshalText([]byte(fields[11])))
+	appendErrorWithContext(&errs, "OBAR_NCL", s.OBAR_NCL.UnmarshalText([]byte(fields[12])))
+	appendErrorWithContext(&errs, "OBAR_NCU", s.OBAR_NCU.UnmarshalText([]byte(fields[13])))
+	appendErrorWithContext(&errs, "OBAR_BCL", s.OBAR_BCL.UnmarshalText([]byte(fields[14])))
+	appendErrorWithContext(&errs, "OBAR_BCU", s.OBAR_BCU.UnmarshalText([]byte(fields[15])))
+	appendErrorWithContext(&errs, "OSTDEV", s.OSTDEV.UnmarshalText([]byte(fields[16])))
+	appendErrorWithContext(&errs, "OSTDEV_NCL", s.OSTDEV_NCL.UnmarshalText([]byte(fields[17])))
+	appendErrorWithContext(&errs, "OSTDEV_NCU", s.OSTDEV_NCU.UnmarshalText([]byte(fields[18])))
+	appendErrorWithContext(&errs, "OSTDEV_BCL", s.OSTDEV_BCL.UnmarshalText([]byte(fields[19])))
+	appendErrorWithContext(&errs, "OSTDEV_BCU", s.OSTDEV_BCU.UnmarshalText([]byte(fields[20])))
+	appendErrorWithContext(&errs, "PR_CORR", s.PR_CORR.UnmarshalText([]byte(fields[21])))
+	appendErrorWithContext(&errs, "PR_CORR_NCL", s.PR_CORR_NCL.UnmarshalText([]byte(fields[22])))
+	appendErrorWithContext(&errs, "PR_CORR_NCU", s.PR_CORR_NCU.UnmarshalText([]byte(fields[23])))
+	appendErrorWithContext(&errs, "PR_CORR_BCL", s.PR_CORR_BCL.UnmarshalText([]byte(fields[24])))
+	appendErrorWithContext(&errs, "PR_CORR_BCU", s.PR_CORR_BCU.UnmarshalText([]byte(fields[25])))
+	appendErrorWithContext(&errs, "SP_CORR", s.SP_CORR.UnmarshalText([]byte(fields[26])))
+	appendErrorWithContext(&errs, "KT_CORR", s.KT_CORR.UnmarshalText([]byte(fields[27])))
+	appendErrorWithContext(&errs, "RANKS", s.RANKS.UnmarshalText([]byte(fields[28])))
+	appendErrorWithContext(&errs, "FRANK_TIES", s.FRANK_TIES.UnmarshalText([]byte(fields[29])))
+	appendErrorWithContext(&errs, "ORANK_TIES", s.ORANK_TIES.UnmarshalText([]byte(fields[30])))
+	appendErrorWithContext(&errs, "ME", s.ME.UnmarshalText([]byte(fields[31])))
+	appendErrorWithContext(&errs, "ME_NCL", s.ME_NCL.UnmarshalText([]byte(fields[32])))
+	appendErrorWithContext(&errs, "ME_NCU", s.ME_NCU.UnmarshalText([]byte(fields[33])))
+	appendErrorWithContext(&errs, "ME_BCL", s.ME_BCL.UnmarshalText([]byte(fields[34])))
+	appendErrorWithContext(&errs, "ME_BCU", s.ME_BCU.UnmarshalText([]byte(fields[35])))
+	appendErrorWithContext(&errs, "ESTDEV", s.ESTDEV.UnmarshalText([]byte(fields[36])))
+	appendErrorWithContext(&errs, "ESTDEV_NCL", s.ESTDEV_NCL.UnmarshalText([]byte(fields[37])))
+	appendErrorWithContext(&errs, "ESTDEV_NCU", s.ESTDEV_NCU.UnmarshalText([]byte(fields[38])))
+	appendErrorWithContext(&errs, "ESTDEV_BCL", s.ESTDEV_BCL.UnmarshalText([]byte(fields[39])))
+	appendErrorWithContext(&errs, "ESTDEV_BCU", s.ESTDEV_BCU.UnmarshalText([]byte(fields[40])))
+	appendErrorWithContext(&errs, "MBIAS", s.MBIAS.UnmarshalText([]byte(fields[41])))
+	appendErrorWithContext(&errs, "MBIAS_BCL", s.MBIAS_BCL.UnmarshalText([]byte(fields[42])))
+	appendErrorWithContext(&errs, "MBIAS_BCU", s.MBIAS_BCU.UnmarshalText([]byte(fields[43])))
+	appendErrorWithContext(&errs, "MAE", s.MAE.UnmarshalText([]byte(fields[44])))
+	appendErrorWithContext(&errs, "MAE_BCL", s.MAE_BCL.UnmarshalText([]byte(fields[45])))
+	appendErrorWithContext(&errs, "MAE_BCU", s.MAE_BCU.UnmarshalText([]byte(fields[46])))
+	appendErrorWithContext(&errs, "MSE", s.MSE.UnmarshalText([]byte(fields[47])))
+	appendErrorWithContext(&errs, "MSE_BCL", s.MSE_BCL.UnmarshalText([]byte(fields[48])))
+	appendErrorWithContext(&errs, "MSE_BCU", s.MSE_BCU.UnmarshalText([]byte(fields[49])))
+	appendErrorWithContext(&errs, "BCMSE", s.BCMSE.UnmarshalText([]byte(fields[50])))
+	appendErrorWithContext(&errs, "BCMSE_BCL", s.BCMSE_BCL.UnmarshalText([]byte(fields[51])))
+	appendErrorWithContext(&errs, "BCMSE_BCU", s.BCMSE_BCU.UnmarshalText([]byte(fields[52])))
+	appendErrorWithContext(&errs, "RMSE", s.RMSE.UnmarshalText([]byte(fields[53])))
+	appendErrorWithContext(&errs, "RMSE_BCL", s.RMSE_BCL.UnmarshalText([]byte(fields[54])))
+	appendErrorWithContext(&errs, "RMSE_BCU", s.RMSE_BCU.UnmarshalText([]byte(fields[55])))
+	appendErrorWithContext(&errs, "E10", s.E10.UnmarshalText([]byte(fields[56])))
+	appendErrorWithContext(&errs, "E10_BCL", s.E10_BCL.UnmarshalText([]byte(fields[57])))
+	appendErrorWithContext(&errs, "E10_BCU", s.E10_BCU.UnmarshalText([]byte(fields[58])))
+	appendErrorWithContext(&errs, "E25", s.E25.UnmarshalText([]byte(fields[59])))
+	appendErrorWithContext(&errs, "E25_BCL", s.E25_BCL.UnmarshalText([]byte(fields[60])))
+	appendErrorWithContext(&errs, "E25_BCU", s.E25_BCU.UnmarshalText([]byte(fields[61])))
+	appendErrorWithContext(&errs, "E50", s.E50.UnmarshalText([]byte(fields[62])))
+	appendErrorWithContext(&errs, "E50_BCL", s.E50_BCL.UnmarshalText([]byte(fields[63])))
+	appendErrorWithContext(&errs, "E50_BCU", s.E50_BCU.UnmarshalText([]byte(fields[64])))
+	appendErrorWithContext(&errs, "E75", s.E75.UnmarshalText([]byte(fields[65])))
+	appendErrorWithContext(&errs, "E75_BCL", s.E75_BCL.UnmarshalText([]byte(fields[66])))
+	appendErrorWithContext(&errs, "E75_BCU", s.E75_BCU.UnmarshalText([]byte(fields[67])))
+	appendErrorWithContext(&errs, "E90", s.E90.UnmarshalText([]byte(fields[68])))
+	appendErrorWithContext(&errs, "E90_BCL", s.E90_BCL.UnmarshalText([]byte(fields[69])))
+	appendErrorWithContext(&errs, "E90_BCU", s.E90_BCU.UnmarshalText([]byte(fields[70])))
+	appendErrorWithContext(&errs, "EIQR", s.EIQR.UnmarshalText([]byte(fields[71])))
+	appendErrorWithContext(&errs, "EIQR_BCL", s.EIQR_BCL.UnmarshalText([]byte(fields[72])))
+	appendErrorWithContext(&errs, "EIQR_BCU", s.EIQR_BCU.UnmarshalText([]byte(fields[73])))
+	appendErrorWithContext(&errs, "MAD", s.MAD.UnmarshalText([]byte(fields[74])))
+	appendErrorWithContext(&errs, "MAD_BCL", s.MAD_BCL.UnmarshalText([]byte(fields[75])))
+	appendErrorWithContext(&errs, "MAD_BCU", s.MAD_BCU.UnmarshalText([]byte(fields[76])))
+	appendErrorWithContext(&errs, "ANOM_CORR", s.ANOM_CORR.UnmarshalText([]byte(fields[77])))
+	appendErrorWithContext(&errs, "ANOM_CORR_NCL", s.ANOM_CORR_NCL.UnmarshalText([]byte(fields[78])))
+	appendErrorWithContext(&errs, "ANOM_CORR_NCU", s.ANOM_CORR_NCU.UnmarshalText([]byte(fields[79])))
+	appendErrorWithContext(&errs, "ANOM_CORR_BCL", s.ANOM_CORR_BCL.UnmarshalText([]byte(fields[80])))
+	appendErrorWithContext(&errs, "ANOM_CORR_BCU", s.ANOM_CORR_BCU.UnmarshalText([]byte(fields[81])))
+	appendErrorWithContext(&errs, "ME2", s.ME2.UnmarshalText([]byte(fields[82])))
+	appendErrorWithContext(&errs, "ME2_BCL", s.ME2_BCL.UnmarshalText([]byte(fields[83])))
+	appendErrorWithContext(&errs, "ME2_BCU", s.ME2_BCU.UnmarshalText([]byte(fields[84])))
+	appendErrorWithContext(&errs, "MSESS", s.MSESS.UnmarshalText([]byte(fields[85])))
+	appendErrorWithContext(&errs, "MSESS_BCL", s.MSESS_BCL.UnmarshalText([]byte(fields[86])))
+	appendErrorWithContext(&errs, "MSESS_BCU", s.MSESS_BCU.UnmarshalText([]byte(fields[87])))
+	appendErrorWithContext(&errs, "RMSFA", s.RMSFA.UnmarshalText([]byte(fields[88])))
+	appendErrorWithContext(&errs, "RMSFA_BCL", s.RMSFA_BCL.UnmarshalText([]byte(fields[89])))
+	appendErrorWithContext(&errs, "RMSFA_BCU", s.RMSFA_BCU.UnmarshalText([]byte(fields[90])))
+	appendErrorWithContext(&errs, "RMSOA", s.RMSOA.UnmarshalText([]byte(fields[91])))
+	appendErrorWithContext(&errs, "RMSOA_BCL", s.RMSOA_BCL.UnmarshalText([]byte(fields[92])))
+	appendErrorWithContext(&errs, "RMSOA_BCU", s.RMSOA_BCU.UnmarshalText([]byte(fields[93])))
+	appendErrorWithContext(&errs, "ANOM_CORR_UNCNTR", s.ANOM_CORR_UNCNTR.UnmarshalText([]byte(fields[94])))
+	appendErrorWithContext(&errs, "ANOM_CORR_UNCNTR_BCL", s.ANOM_CORR_UNCNTR_BCL.UnmarshalText([]byte(fields[95])))
+	appendErrorWithContext(&errs, "ANOM_CORR_UNCNTR_BCU", s.ANOM_CORR_UNCNTR_BCU.UnmarshalText([]byte(fields[96])))
+	return errors.Join(errs...)
 }
 
 // Sets STAT_CTC_data struct's fields
-func (s *STAT_CTC_data) fill(fields []string) {
-	s.TOTAL.UnmarshalText([]byte(fields[0]))
-	s.FY_OY.UnmarshalText([]byte(fields[1]))
-	s.FY_ON.UnmarshalText([]byte(fields[2]))
-	s.FN_OY.UnmarshalText([]byte(fields[3]))
-	s.FN_ON.UnmarshalText([]byte(fields[4]))
+func (s *STAT_CTC_data) fill(fields []string) error {
+	var errs []error
+	appendErrorWithContext(&errs, "TOTAL", s.TOTAL.UnmarshalText([]byte(fields[0])))
+	appendErrorWithContext(&errs, "FY_OY", s.FY_OY.UnmarshalText([]byte(fields[1])))
+	appendErrorWithContext(&errs, "FY_ON", s.FY_ON.UnmarshalText([]byte(fields[2])))
+	appendErrorWithContext(&errs, "FN_OY", s.FN_OY.UnmarshalText([]byte(fields[3])))
+	appendErrorWithContext(&errs, "FN_ON", s.FN_ON.UnmarshalText([]byte(fields[4])))
+	return errors.Join(errs...)
 }
 
 // Sets STAT_CTS_data struct's fields
-func (s *STAT_CTS_data) fill(fields []string) {
-	s.TOTAL.UnmarshalText([]byte(fields[0]))
-	s.BASER.UnmarshalText([]byte(fields[1]))
-	s.BASER_NCL.UnmarshalText([]byte(fields[2]))
-	s.BASER_NCU.UnmarshalText([]byte(fields[3]))
-	s.BASER_BCL.UnmarshalText([]byte(fields[4]))
-	s.BASER_BCU.UnmarshalText([]byte(fields[5]))
-	s.FMEAN.UnmarshalText([]byte(fields[6]))
-	s.FMEAN_NCL.UnmarshalText([]byte(fields[7]))
-	s.FMEAN_NCU.UnmarshalText([]byte(fields[8]))
-	s.FMEAN_BCL.UnmarshalText([]byte(fields[9]))
-	s.FMEAN_BCU.UnmarshalText([]byte(fields[10]))
-	s.ACC.UnmarshalText([]byte(fields[11]))
-	s.ACC_NCL.UnmarshalText([]byte(fields[12]))
-	s.ACC_NCU.UnmarshalText([]byte(fields[13]))
-	s.ACC_BCL.UnmarshalText([]byte(fields[14]))
-	s.ACC_BCU.UnmarshalText([]byte(fields[15]))
-	s.FBIAS.UnmarshalText([]byte(fields[16]))
-	s.FBIAS_BCL.UnmarshalText([]byte(fields[17]))
-	s.FBIAS_BCU.UnmarshalText([]byte(fields[18]))
-	s.PODY.UnmarshalText([]byte(fields[19]))
-	s.PODY_NCL.UnmarshalText([]byte(fields[20]))
-	s.PODY_NCU.UnmarshalText([]byte(fields[21]))
-	s.PODY_BCL.UnmarshalText([]byte(fields[22]))
-	s.PODY_BCU.UnmarshalText([]byte(fields[23]))
-	s.PODN.UnmarshalText([]byte(fields[24]))
-	s.PODN_NCL.UnmarshalText([]byte(fields[25]))
-	s.PODN_NCU.UnmarshalText([]byte(fields[26]))
-	s.PODN_BCL.UnmarshalText([]byte(fields[27]))
-	s.PODN_BCU.UnmarshalText([]byte(fields[28]))
-	s.POFD.UnmarshalText([]byte(fields[29]))
-	s.POFD_NCL.UnmarshalText([]byte(fields[30]))
-	s.POFD_NCU.UnmarshalText([]byte(fields[31]))
-	s.POFD_BCL.UnmarshalText([]byte(fields[32]))
-	s.POFD_BCU.UnmarshalText([]byte(fields[33]))
-	s.FAR.UnmarshalText([]byte(fields[34]))
-	s.FAR_NCL.UnmarshalText([]byte(fields[35]))
-	s.FAR_NCU.UnmarshalText([]byte(fields[36]))
-	s.FAR_BCL.UnmarshalText([]byte(fields[37]))
-	s.FAR_BCU.UnmarshalText([]byte(fields[38]))
-	s.CSI.UnmarshalText([]byte(fields[39]))
-	s.CSI_NCL.UnmarshalText([]byte(fields[40]))
-	s.CSI_NCU.UnmarshalText([]byte(fields[41]))
-	s.CSI_BCL.UnmarshalText([]byte(fields[42]))
-	s.CSI_BCU.UnmarshalText([]byte(fields[43]))
-	s.GSS.UnmarshalText([]byte(fields[44]))
-	s.GSS_BCL.UnmarshalText([]byte(fields[45]))
-	s.GSS_BCU.UnmarshalText([]byte(fields[46]))
-	s.HK.UnmarshalText([]byte(fields[47]))
-	s.HK_NCL.UnmarshalText([]byte(fields[48]))
-	s.HK_NCU.UnmarshalText([]byte(fields[49]))
-	s.HK_BCL.UnmarshalText([]byte(fields[50]))
-	s.HK_BCU.UnmarshalText([]byte(fields[51]))
-	s.HSS.UnmarshalText([]byte(fields[52]))
-	s.HSS_BCL.UnmarshalText([]byte(fields[53]))
-	s.HSS_BCU.UnmarshalText([]byte(fields[54]))
-	s.ODDS.UnmarshalText([]byte(fields[55]))
-	s.ODDS_NCL.UnmarshalText([]byte(fields[56]))
-	s.ODDS_NCU.UnmarshalText([]byte(fields[57]))
-	s.ODDS_BCL.UnmarshalText([]byte(fields[58]))
-	s.ODDS_BCU.UnmarshalText([]byte(fields[59]))
-	s.LODDS.UnmarshalText([]byte(fields[60]))
-	s.LODDS_NCL.UnmarshalText([]byte(fields[61]))
-	s.LODDS_NCU.UnmarshalText([]byte(fields[62]))
-	s.LODDS_BCL.UnmarshalText([]byte(fields[63]))
-	s.LODDS_BCU.UnmarshalText([]byte(fields[64]))
-	s.ORSS.UnmarshalText([]byte(fields[65]))
-	s.ORSS_NCL.UnmarshalText([]byte(fields[66]))
-	s.ORSS_NCU.UnmarshalText([]byte(fields[67]))
-	s.ORSS_BCL.UnmarshalText([]byte(fields[68]))
-	s.ORSS_BCU.UnmarshalText([]byte(fields[69]))
-	s.EDS.UnmarshalText([]byte(fields[70]))
-	s.EDS_NCL.UnmarshalText([]byte(fields[71]))
-	s.EDS_NCU.UnmarshalText([]byte(fields[72]))
-	s.EDS_BCL.UnmarshalText([]byte(fields[73]))
-	s.EDS_BCU.UnmarshalText([]byte(fields[74]))
-	s.SEDS.UnmarshalText([]byte(fields[75]))
-	s.SEDS_NCL.UnmarshalText([]byte(fields[76]))
-	s.SEDS_NCU.UnmarshalText([]byte(fields[77]))
-	s.SEDS_BCL.UnmarshalText([]byte(fields[78]))
-	s.SEDS_BCU.UnmarshalText([]byte(fields[79]))
-	s.EDI.UnmarshalText([]byte(fields[80]))
-	s.EDI_NCL.UnmarshalText([]byte(fields[81]))
-	s.EDI_NCU.UnmarshalText([]byte(fields[82]))
-	s.EDI_BCL.UnmarshalText([]byte(fields[83]))
-	s.EDI_BCU.UnmarshalText([]byte(fields[84]))
-	s.SEDI.UnmarshalText([]byte(fields[85]))
-	s.SEDI_NCL.UnmarshalText([]byte(fields[86]))
-	s.SEDI_NCU.UnmarshalText([]byte(fields[87]))
-	s.SEDI_BCL.UnmarshalText([]byte(fields[88]))
-	s.SEDI_BCU.UnmarshalText([]byte(fields[89]))
-	s.BAGSS.UnmarshalText([]byte(fields[90]))
-	s.BAGSS_BCL.UnmarshalText([]byte(fields[91]))
-	s.BAGSS_BCU.UnmarshalText([]byte(fields[92]))
+func (s *STAT_CTS_data) fill(fields []string) error {
+	var errs []error
+	appendErrorWithContext(&errs, "TOTAL", s.TOTAL.UnmarshalText([]byte(fields[0])))
+	appendErrorWithContext(&errs, "BASER", s.BASER.UnmarshalText([]byte(fields[1])))
+	appendErrorWithContext(&errs, "BASER_NCL", s.BASER_NCL.UnmarshalText([]byte(fields[2])))
+	appendErrorWithContext(&errs, "BASER_NCU", s.BASER_NCU.UnmarshalText([]byte(fields[3])))
+	appendErrorWithContext(&errs, "BASER_BCL", s.BASER_BCL.UnmarshalText([]byte(fields[4])))
+	appendErrorWithContext(&errs, "BASER_BCU", s.BASER_BCU.UnmarshalText([]byte(fields[5])))
+	appendErrorWithContext(&errs, "FMEAN", s.FMEAN.UnmarshalText([]byte(fields[6])))
+	appendErrorWithContext(&errs, "FMEAN_NCL", s.FMEAN_NCL.UnmarshalText([]byte(fields[7])))
+	appendErrorWithContext(&errs, "FMEAN_NCU", s.FMEAN_NCU.UnmarshalText([]byte(fields[8])))
+	appendErrorWithContext(&errs, "FMEAN_BCL", s.FMEAN_BCL.UnmarshalText([]byte(fields[9])))
+	appendErrorWithContext(&errs, "FMEAN_BCU", s.FMEAN_BCU.UnmarshalText([]byte(fields[10])))
+	appendErrorWithContext(&errs, "ACC", s.ACC.UnmarshalText([]byte(fields[11])))
+	appendErrorWithContext(&errs, "ACC_NCL", s.ACC_NCL.UnmarshalText([]byte(fields[12])))
+	appendErrorWithContext(&errs, "ACC_NCU", s.ACC_NCU.UnmarshalText([]byte(fields[13])))
+	appendErrorWithContext(&errs, "ACC_BCL", s.ACC_BCL.UnmarshalText([]byte(fields[14])))
+	appendErrorWithContext(&errs, "ACC_BCU", s.ACC_BCU.UnmarshalText([]byte(fields[15])))
+	appendErrorWithContext(&errs, "FBIAS", s.FBIAS.UnmarshalText([]byte(fields[16])))
+	appendErrorWithContext(&errs, "FBIAS_BCL", s.FBIAS_BCL.UnmarshalText([]byte(fields[17])))
+	appendErrorWithContext(&errs, "FBIAS_BCU", s.FBIAS_BCU.UnmarshalText([]byte(fields[18])))
+	appendErrorWithContext(&errs, "PODY", s.PODY.UnmarshalText([]byte(fields[19])))
+	appendErrorWithContext(&errs, "PODY_NCL", s.PODY_NCL.UnmarshalText([]byte(fields[20])))
+	appendErrorWithContext(&errs, "PODY_NCU", s.PODY_NCU.UnmarshalText([]byte(fields[21])))
+	appendErrorWithContext(&errs, "PODY_BCL", s.PODY_BCL.UnmarshalText([]byte(fields[22])))
+	appendErrorWithContext(&errs, "PODY_BCU", s.PODY_BCU.UnmarshalText([]byte(fields[23])))
+	appendErrorWithContext(&errs, "PODN", s.PODN.UnmarshalText([]byte(fields[24])))
+	appendErrorWithContext(&errs, "PODN_NCL", s.PODN_NCL.UnmarshalText([]byte(fields[25])))
+	appendErrorWithContext(&errs, "PODN_NCU", s.PODN_NCU.UnmarshalText([]byte(fields[26])))
+	appendErrorWithContext(&errs, "PODN_BCL", s.PODN_BCL.UnmarshalText([]byte(fields[27])))
+	appendErrorWithContext(&errs, "PODN_BCU", s.PODN_BCU.UnmarshalText([]byte(fields[28])))
+	appendErrorWithContext(&errs, "POFD", s.POFD.UnmarshalText([]byte(fields[29])))
+	appendErrorWithContext(&errs, "POFD_NCL", s.POFD_NCL.UnmarshalText([]byte(fields[30])))
+	appendErrorWithContext(&errs, "POFD_NCU", s.POFD_NCU.UnmarshalText([]byte(fields[31])))
+	appendErrorWithContext(&errs, "POFD_BCL", s.POFD_BCL.UnmarshalText([]byte(fields[32])))
+	appendErrorWithContext(&errs, "POFD_BCU", s.POFD_BCU.UnmarshalText([]byte(fields[33])))
+	appendErrorWithContext(&errs, "FAR", s.FAR.UnmarshalText([]byte(fields[34])))
+	appendErrorWithContext(&errs, "FAR_NCL", s.FAR_NCL.UnmarshalText([]byte(fields[35])))
+	appendErrorWithContext(&errs, "FAR_NCU", s.FAR_NCU.UnmarshalText([]byte(fields[36])))
+	appendErrorWithContext(&errs, "FAR_BCL", s.FAR_BCL.UnmarshalText([]byte(fields[37])))
+	appendErrorWithContext(&errs, "FAR_BCU", s.FAR_BCU.UnmarshalText([]byte(fields[38])))
+	appendErrorWithContext(&errs, "CSI", s.CSI.UnmarshalText([]byte(fields[39])))
+	appendErrorWithContext(&errs, "CSI_NCL", s.CSI_NCL.UnmarshalText([]byte(fields[40])))
+	appendErrorWithContext(&errs, "CSI_NCU", s.CSI_NCU.UnmarshalText([]byte(fields[41])))
+	appendErrorWithContext(&errs, "CSI_BCL", s.CSI_BCL.UnmarshalText([]byte(fields[42])))
+	appendErrorWithContext(&errs, "CSI_BCU", s.CSI_BCU.UnmarshalText([]byte(fields[43])))
+	appendErrorWithContext(&errs, "GSS", s.GSS.UnmarshalText([]byte(fields[44])))
+	appendErrorWithContext(&errs, "GSS_BCL", s.GSS_BCL.UnmarshalText([]byte(fields[45])))
+	appendErrorWithContext(&errs, "GSS_BCU", s.GSS_BCU.UnmarshalText([]byte(fields[46])))
+	appendErrorWithContext(&errs, "HK", s.HK.UnmarshalText([]byte(fields[47])))
+	appendErrorWithContext(&errs, "HK_NCL", s.HK_NCL.UnmarshalText([]byte(fields[48])))
+	appendErrorWithContext(&errs, "HK_NCU", s.HK_NCU.UnmarshalText([]byte(fields[49])))
+	appendErrorWithContext(&errs, "HK_BCL", s.HK_BCL.UnmarshalText([]byte(fields[50])))
+	appendErrorWithContext(&errs, "HK_BCU", s.HK_BCU.UnmarshalText([]byte(fields[51])))
+	appendErrorWithContext(&errs, "HSS", s.HSS.UnmarshalText([]byte(fields[52])))
+	appendErrorWithContext(&errs, "HSS_BCL", s.HSS_BCL.UnmarshalText([]byte(fields[53])))
+	appendErrorWithContext(&errs, "HSS_BCU", s.HSS_BCU.UnmarshalText([]byte(fields[54])))
+	appendErrorWithContext(&errs, "ODDS", s.ODDS.UnmarshalText([]byte(fields[55])))
+	appendErrorWithContext(&errs, "ODDS_NCL", s.ODDS_NCL.UnmarshalText([]byte(fields[56])))
+	appendErrorWithContext(&errs, "ODDS_NCU", s.ODDS_NCU.UnmarshalText([]byte(fields[57])))
+	appendErrorWithContext(&errs, "ODDS_BCL", s.ODDS_BCL.UnmarshalText([]byte(fields[58])))
+	appendErrorWithContext(&errs, "ODDS_BCU", s.ODDS_BCU.UnmarshalText([]byte(fields[59])))
+	appendErrorWithContext(&errs, "LODDS", s.LODDS.UnmarshalText([]byte(fields[60])))
+	appendErrorWithContext(&errs, "LODDS_NCL", s.LODDS_NCL.UnmarshalText([]byte(fields[61])))
+	appendErrorWithContext(&errs, "LODDS_NCU", s.LODDS_NCU.UnmarshalText([]byte(fields[62])))
+	appendErrorWithContext(&errs, "LODDS_BCL", s.LODDS_BCL.UnmarshalText([]byte(fields[63])))
+	appendErrorWithContext(&errs, "LODDS_BCU", s.LODDS_BCU.UnmarshalText([]byte(fields[64])))
+	appendErrorWithContext(&errs, "ORSS", s.ORSS.UnmarshalText([]byte(fields[65])))
+	appendErrorWithContext(&errs, "ORSS_NCL", s.ORSS_NCL.UnmarshalText([]byte(fields[66])))
+	appendErrorWithContext(&errs, "ORSS_NCU", s.ORSS_NCU.UnmarshalText([]byte(fields[67])))
+	appendErrorWithContext(&errs, "ORSS_BCL", s.ORSS_BCL.UnmarshalText([]byte(fields[68])))
+	appendErrorWithContext(&errs, "ORSS_BCU", s.ORSS_BCU.UnmarshalText([]byte(fields[69])))
+	appendErrorWithContext(&errs, "EDS", s.EDS.UnmarshalText([]byte(fields[70])))
+	appendErrorWithContext(&errs, "EDS_NCL", s.EDS_NCL.UnmarshalText([]byte(fields[71])))
+	appendErrorWithContext(&errs, "EDS_NCU", s.EDS_NCU.UnmarshalText([]byte(fields[72])))
+	appendErrorWithContext(&errs, "EDS_BCL", s.EDS_BCL.UnmarshalText([]byte(fields[73])))
+	appendErrorWithContext(&errs, "EDS_BCU", s.EDS_BCU.UnmarshalText([]byte(fields[74])))
+	appendErrorWithContext(&errs, "SEDS", s.SEDS.UnmarshalText([]byte(fields[75])))
+	appendErrorWithContext(&errs, "SEDS_NCL", s.SEDS_NCL.UnmarshalText([]byte(fields[76])))
+	appendErrorWithContext(&errs, "SEDS_NCU", s.SEDS_NCU.UnmarshalText([]byte(fields[77])))
+	appendErrorWithContext(&errs, "SEDS_BCL", s.SEDS_BCL.UnmarshalText([]byte(fields[78])))
+	appendErrorWithContext(&errs, "SEDS_BCU", s.SEDS_BCU.UnmarshalText([]byte(fields[79])))
+	appendErrorWithContext(&errs, "EDI", s.EDI.UnmarshalText([]byte(fields[80])))
+	appendErrorWithContext(&errs, "EDI_NCL", s.EDI_NCL.UnmarshalText([]byte(fields[81])))
+	appendErrorWithContext(&errs, "EDI_NCU", s.EDI_NCU.UnmarshalText([]byte(fields[82])))
+	appendErrorWithContext(&errs, "EDI_BCL", s.EDI_BCL.UnmarshalText([]byte(fields[83])))
+	appendErrorWithContext(&errs, "EDI_BCU", s.EDI_BCU.UnmarshalText([]byte(fields[84])))
+	appendErrorWithContext(&errs, "SEDI", s.SEDI.UnmarshalText([]byte(fields[85])))
+	appendErrorWithContext(&errs, "SEDI_NCL", s.SEDI_NCL.UnmarshalText([]byte(fields[86])))
+	appendErrorWithContext(&errs, "SEDI_NCU", s.SEDI_NCU.UnmarshalText([]byte(fields[87])))
+	appendErrorWithContext(&errs, "SEDI_BCL", s.SEDI_BCL.UnmarshalText([]byte(fields[88])))
+	appendErrorWithContext(&errs, "SEDI_BCU", s.SEDI_BCU.UnmarshalText([]byte(fields[89])))
+	appendErrorWithContext(&errs, "BAGSS", s.BAGSS.UnmarshalText([]byte(fields[90])))
+	appendErrorWithContext(&errs, "BAGSS_BCL", s.BAGSS_BCL.UnmarshalText([]byte(fields[91])))
+	appendErrorWithContext(&errs, "BAGSS_BCU", s.BAGSS_BCU.UnmarshalText([]byte(fields[92])))
+	return errors.Join(errs...)
 }
 
 // Sets STAT_DMAP_data struct's fields
-func (s *STAT_DMAP_data) fill(fields []string) {
-	s.TOTAL.UnmarshalText([]byte(fields[0]))
-	s.FY.UnmarshalText([]byte(fields[1]))
-	s.OY.UnmarshalText([]byte(fields[2]))
-	s.FBIAS.UnmarshalText([]byte(fields[3]))
-	s.BADDELEY.UnmarshalText([]byte(fields[4]))
-	s.HAUSDORFF.UnmarshalText([]byte(fields[5]))
-	s.MED_FO.UnmarshalText([]byte(fields[6]))
-	s.MED_OF.UnmarshalText([]byte(fields[7]))
-	s.MED_MIN.UnmarshalText([]byte(fields[8]))
-	s.MED_MAX.UnmarshalText([]byte(fields[9]))
-	s.MED_MEAN.UnmarshalText([]byte(fields[10]))
-	s.FOM_FO.UnmarshalText([]byte(fields[11]))
-	s.FOM_OF.UnmarshalText([]byte(fields[12]))
-	s.FOM_MIN.UnmarshalText([]byte(fields[13]))
-	s.FOM_MAX.UnmarshalText([]byte(fields[14]))
-	s.FOM_MEAN.UnmarshalText([]byte(fields[15]))
-	s.ZHU_FO.UnmarshalText([]byte(fields[16]))
-	s.ZHU_OF.UnmarshalText([]byte(fields[17]))
-	s.ZHU_MIN.UnmarshalText([]byte(fields[18]))
-	s.ZHU_MAX.UnmarshalText([]byte(fields[19]))
-	s.ZHU_MEAN.UnmarshalText([]byte(fields[20]))
+func (s *STAT_DMAP_data) fill(fields []string) error {
+	var errs []error
+	appendErrorWithContext(&errs, "TOTAL", s.TOTAL.UnmarshalText([]byte(fields[0])))
+	appendErrorWithContext(&errs, "FY", s.FY.UnmarshalText([]byte(fields[1])))
+	appendErrorWithContext(&errs, "OY", s.OY.UnmarshalText([]byte(fields[2])))
+	appendErrorWithContext(&errs, "FBIAS", s.FBIAS.UnmarshalText([]byte(fields[3])))
+	appendErrorWithContext(&errs, "BADDELEY", s.BADDELEY.UnmarshalText([]byte(fields[4])))
+	appendErrorWithContext(&errs, "HAUSDORFF", s.HAUSDORFF.UnmarshalText([]byte(fields[5])))
+	appendErrorWithContext(&errs, "MED_FO", s.MED_FO.UnmarshalText([]byte(fields[6])))
+	appendErrorWithContext(&errs, "MED_OF", s.MED_OF.UnmarshalText([]byte(fields[7])))
+	appendErrorWithContext(&errs, "MED_MIN", s.MED_MIN.UnmarshalText([]byte(fields[8])))
+	appendErrorWithContext(&errs, "MED_MAX", s.MED_MAX.UnmarshalText([]byte(fields[9])))
+	appendErrorWithContext(&errs, "MED_MEAN", s.MED_MEAN.UnmarshalText([]byte(fields[10])))
+	appendErrorWithContext(&errs, "FOM_FO", s.FOM_FO.UnmarshalText([]byte(fields[11])))
+	appendErrorWithContext(&errs, "FOM_OF", s.FOM_OF.UnmarshalText([]byte(fields[12])))
+	appendErrorWithContext(&errs, "FOM_MIN", s.FOM_MIN.UnmarshalText([]byte(fields[13])))
+	appendErrorWithContext(&errs, "FOM_MAX", s.FOM_MAX.UnmarshalText([]byte(fields[14])))
+	appendErrorWithContext(&errs, "FOM_MEAN", s.FOM_MEAN.UnmarshalText([]byte(fields[15])))
+	appendErrorWithContext(&errs, "ZHU_FO", s.ZHU_FO.UnmarshalText([]byte(fields[16])))
+	appendErrorWithContext(&errs, "ZHU_OF", s.ZHU_OF.UnmarshalText([]byte(fields[17])))
+	appendErrorWithContext(&errs, "ZHU_MIN", s.ZHU_MIN.UnmarshalText([]byte(fields[18])))
+	appendErrorWithContext(&errs, "ZHU_MAX", s.ZHU_MAX.UnmarshalText([]byte(fields[19])))
+	appendErrorWithContext(&errs, "ZHU_MEAN", s.ZHU_MEAN.UnmarshalText([]byte(fields[20])))
+	return errors.Join(errs...)
 }
 
 // Sets STAT_ECLV_data struct's fields
-func (s *STAT_ECLV_data) fill(fields []string) {
-	s.TOTAL.UnmarshalText([]byte(fields[0]))
-	s.BASER.UnmarshalText([]byte(fields[1]))
-	s.VALUE_BASER.UnmarshalText([]byte(fields[2]))
+func (s *STAT_ECLV_data) fill(fields []string) error {
+	var errs []error
+	appendErrorWithContext(&errs, "TOTAL", s.TOTAL.UnmarshalText([]byte(fields[0])))
+	appendErrorWithContext(&errs, "BASER", s.BASER.UnmarshalText([]byte(fields[1])))
+	appendErrorWithContext(&errs, "VALUE_BASER", s.VALUE_BASER.UnmarshalText([]byte(fields[2])))
 	// the first field of the repeating fields is the TOTAL, the second field is the 1st dimenSion of the 1st sequence (there might be only one sequence)
 	var value validtypes.ValidFloat
 	count, err := strconv.Atoi(fields[3])
@@ -3319,94 +3409,106 @@ func (s *STAT_ECLV_data) fill(fields []string) {
 			if index > len(fields) { // sometimes the data line is truncated - invalidate that field
 				value.Reset()
 			} else {
-				value.UnmarshalText([]byte(fields[index]))
+				appendErrorWithContext(&errs, "PTS", value.UnmarshalText([]byte(fields[index])))
 			}
 			s.PTS[key] = value
 		}
 	}
+	return errors.Join(errs...)
 }
 
 // Sets STAT_ECNT_data struct's fields
-func (s *STAT_ECNT_data) fill(fields []string) {
-	s.TOTAL.UnmarshalText([]byte(fields[0]))
-	s.N_ENS.UnmarshalText([]byte(fields[1]))
-	s.CRPS.UnmarshalText([]byte(fields[2]))
-	s.CRPSS.UnmarshalText([]byte(fields[3]))
-	s.IGN.UnmarshalText([]byte(fields[4]))
-	s.ME.UnmarshalText([]byte(fields[5]))
-	s.RMSE.UnmarshalText([]byte(fields[6]))
-	s.SPREAD.UnmarshalText([]byte(fields[7]))
-	s.ME_OERR.UnmarshalText([]byte(fields[8]))
-	s.RMSE_OERR.UnmarshalText([]byte(fields[9]))
-	s.SPREAD_OERR.UnmarshalText([]byte(fields[10]))
-	s.SPREAD_PLUS_OERR.UnmarshalText([]byte(fields[11]))
-	s.CRPSCL.UnmarshalText([]byte(fields[12]))
-	s.CRPS_EMP.UnmarshalText([]byte(fields[13]))
-	s.CRPSCL_EMP.UnmarshalText([]byte(fields[14]))
-	s.CRPSS_EMP.UnmarshalText([]byte(fields[15]))
+func (s *STAT_ECNT_data) fill(fields []string) error {
+	var errs []error
+	appendErrorWithContext(&errs, "TOTAL", s.TOTAL.UnmarshalText([]byte(fields[0])))
+	appendErrorWithContext(&errs, "N_ENS", s.N_ENS.UnmarshalText([]byte(fields[1])))
+	appendErrorWithContext(&errs, "CRPS", s.CRPS.UnmarshalText([]byte(fields[2])))
+	appendErrorWithContext(&errs, "CRPSS", s.CRPSS.UnmarshalText([]byte(fields[3])))
+	appendErrorWithContext(&errs, "IGN", s.IGN.UnmarshalText([]byte(fields[4])))
+	appendErrorWithContext(&errs, "ME", s.ME.UnmarshalText([]byte(fields[5])))
+	appendErrorWithContext(&errs, "RMSE", s.RMSE.UnmarshalText([]byte(fields[6])))
+	appendErrorWithContext(&errs, "SPREAD", s.SPREAD.UnmarshalText([]byte(fields[7])))
+	appendErrorWithContext(&errs, "ME_OERR", s.ME_OERR.UnmarshalText([]byte(fields[8])))
+	appendErrorWithContext(&errs, "RMSE_OERR", s.RMSE_OERR.UnmarshalText([]byte(fields[9])))
+	appendErrorWithContext(&errs, "SPREAD_OERR", s.SPREAD_OERR.UnmarshalText([]byte(fields[10])))
+	appendErrorWithContext(&errs, "SPREAD_PLUS_OERR", s.SPREAD_PLUS_OERR.UnmarshalText([]byte(fields[11])))
+	appendErrorWithContext(&errs, "CRPSCL", s.CRPSCL.UnmarshalText([]byte(fields[12])))
+	appendErrorWithContext(&errs, "CRPS_EMP", s.CRPS_EMP.UnmarshalText([]byte(fields[13])))
+	appendErrorWithContext(&errs, "CRPSCL_EMP", s.CRPSCL_EMP.UnmarshalText([]byte(fields[14])))
+	appendErrorWithContext(&errs, "CRPSS_EMP", s.CRPSS_EMP.UnmarshalText([]byte(fields[15])))
+	return errors.Join(errs...)
 }
 
 // Sets STAT_FHO_data struct's fields
-func (s *STAT_FHO_data) fill(fields []string) {
-	s.TOTAL.UnmarshalText([]byte(fields[0]))
-	s.F_RATE.UnmarshalText([]byte(fields[1]))
-	s.H_RATE.UnmarshalText([]byte(fields[2]))
-	s.O_RATE.UnmarshalText([]byte(fields[3]))
+func (s *STAT_FHO_data) fill(fields []string) error {
+	var errs []error
+	appendErrorWithContext(&errs, "TOTAL", s.TOTAL.UnmarshalText([]byte(fields[0])))
+	appendErrorWithContext(&errs, "F_RATE", s.F_RATE.UnmarshalText([]byte(fields[1])))
+	appendErrorWithContext(&errs, "H_RATE", s.H_RATE.UnmarshalText([]byte(fields[2])))
+	appendErrorWithContext(&errs, "O_RATE", s.O_RATE.UnmarshalText([]byte(fields[3])))
+	return errors.Join(errs...)
 }
 
 // Sets STAT_GENMPR_data struct's fields
-func (s *STAT_GENMPR_data) fill(fields []string) {
-	s.TOTAL.UnmarshalText([]byte(fields[0]))
-	s.INDEX.UnmarshalText([]byte(fields[1]))
-	s.STORM_ID.UnmarshalText([]byte(fields[2]))
-	s.AGEN_INIT.UnmarshalText([]byte(fields[3]))
-	s.AGEN_FHR.UnmarshalText([]byte(fields[4]))
-	s.AGEN_LAT.UnmarshalText([]byte(fields[5]))
-	s.AGEN_LON.UnmarshalText([]byte(fields[6]))
-	s.AGEN_DLAND.UnmarshalText([]byte(fields[7]))
-	s.BGEN_LAT.UnmarshalText([]byte(fields[8]))
-	s.BGEN_LON.UnmarshalText([]byte(fields[9]))
-	s.BGEN_DLAND.UnmarshalText([]byte(fields[10]))
-	s.GEN_DIST.UnmarshalText([]byte(fields[11]))
-	s.GEN_TDIFF.UnmarshalText([]byte(fields[12]))
-	s.INIT_TDIFF.UnmarshalText([]byte(fields[13]))
-	s.DEV_CAT.UnmarshalText([]byte(fields[14]))
-	s.OPS_CAT.UnmarshalText([]byte(fields[15]))
+func (s *STAT_GENMPR_data) fill(fields []string) error {
+	var errs []error
+	appendErrorWithContext(&errs, "TOTAL", s.TOTAL.UnmarshalText([]byte(fields[0])))
+	appendErrorWithContext(&errs, "INDEX", s.INDEX.UnmarshalText([]byte(fields[1])))
+	appendErrorWithContext(&errs, "STORM_ID", s.STORM_ID.UnmarshalText([]byte(fields[2])))
+	appendErrorWithContext(&errs, "AGEN_INIT", s.AGEN_INIT.UnmarshalText([]byte(fields[3])))
+	appendErrorWithContext(&errs, "AGEN_FHR", s.AGEN_FHR.UnmarshalText([]byte(fields[4])))
+	appendErrorWithContext(&errs, "AGEN_LAT", s.AGEN_LAT.UnmarshalText([]byte(fields[5])))
+	appendErrorWithContext(&errs, "AGEN_LON", s.AGEN_LON.UnmarshalText([]byte(fields[6])))
+	appendErrorWithContext(&errs, "AGEN_DLAND", s.AGEN_DLAND.UnmarshalText([]byte(fields[7])))
+	appendErrorWithContext(&errs, "BGEN_LAT", s.BGEN_LAT.UnmarshalText([]byte(fields[8])))
+	appendErrorWithContext(&errs, "BGEN_LON", s.BGEN_LON.UnmarshalText([]byte(fields[9])))
+	appendErrorWithContext(&errs, "BGEN_DLAND", s.BGEN_DLAND.UnmarshalText([]byte(fields[10])))
+	appendErrorWithContext(&errs, "GEN_DIST", s.GEN_DIST.UnmarshalText([]byte(fields[11])))
+	appendErrorWithContext(&errs, "GEN_TDIFF", s.GEN_TDIFF.UnmarshalText([]byte(fields[12])))
+	appendErrorWithContext(&errs, "INIT_TDIFF", s.INIT_TDIFF.UnmarshalText([]byte(fields[13])))
+	appendErrorWithContext(&errs, "DEV_CAT", s.DEV_CAT.UnmarshalText([]byte(fields[14])))
+	appendErrorWithContext(&errs, "OPS_CAT", s.OPS_CAT.UnmarshalText([]byte(fields[15])))
+	return errors.Join(errs...)
 }
 
 // Sets STAT_GRAD_data struct's fields
-func (s *STAT_GRAD_data) fill(fields []string) {
-	s.TOTAL.UnmarshalText([]byte(fields[0]))
-	s.FGBAR.UnmarshalText([]byte(fields[1]))
-	s.OGBAR.UnmarshalText([]byte(fields[2]))
-	s.MGBAR.UnmarshalText([]byte(fields[3]))
-	s.EGBAR.UnmarshalText([]byte(fields[4]))
-	s.S1.UnmarshalText([]byte(fields[5]))
-	s.S1_OG.UnmarshalText([]byte(fields[6]))
-	s.FGOG_RATIO.UnmarshalText([]byte(fields[7]))
-	s.DX.UnmarshalText([]byte(fields[8]))
-	s.DY.UnmarshalText([]byte(fields[9]))
+func (s *STAT_GRAD_data) fill(fields []string) error {
+	var errs []error
+	appendErrorWithContext(&errs, "TOTAL", s.TOTAL.UnmarshalText([]byte(fields[0])))
+	appendErrorWithContext(&errs, "FGBAR", s.FGBAR.UnmarshalText([]byte(fields[1])))
+	appendErrorWithContext(&errs, "OGBAR", s.OGBAR.UnmarshalText([]byte(fields[2])))
+	appendErrorWithContext(&errs, "MGBAR", s.MGBAR.UnmarshalText([]byte(fields[3])))
+	appendErrorWithContext(&errs, "EGBAR", s.EGBAR.UnmarshalText([]byte(fields[4])))
+	appendErrorWithContext(&errs, "S1", s.S1.UnmarshalText([]byte(fields[5])))
+	appendErrorWithContext(&errs, "S1_OG", s.S1_OG.UnmarshalText([]byte(fields[6])))
+	appendErrorWithContext(&errs, "FGOG_RATIO", s.FGOG_RATIO.UnmarshalText([]byte(fields[7])))
+	appendErrorWithContext(&errs, "DX", s.DX.UnmarshalText([]byte(fields[8])))
+	appendErrorWithContext(&errs, "DY", s.DY.UnmarshalText([]byte(fields[9])))
+	return errors.Join(errs...)
 }
 
 // Sets STAT_ISC_data struct's fields
-func (s *STAT_ISC_data) fill(fields []string) {
-	s.TOTAL.UnmarshalText([]byte(fields[0]))
-	s.TILE_DIM.UnmarshalText([]byte(fields[1]))
-	s.TILE_XLL.UnmarshalText([]byte(fields[2]))
-	s.TILE_YLL.UnmarshalText([]byte(fields[3]))
-	s.NSCALE.UnmarshalText([]byte(fields[4]))
-	s.ISCALE.UnmarshalText([]byte(fields[5]))
-	s.MSE.UnmarshalText([]byte(fields[6]))
-	s.ISC.UnmarshalText([]byte(fields[7]))
-	s.FENERGY2.UnmarshalText([]byte(fields[8]))
-	s.OENERGY2.UnmarshalText([]byte(fields[9]))
-	s.BASER.UnmarshalText([]byte(fields[10]))
-	s.FBIAS.UnmarshalText([]byte(fields[11]))
+func (s *STAT_ISC_data) fill(fields []string) error {
+	var errs []error
+	appendErrorWithContext(&errs, "TOTAL", s.TOTAL.UnmarshalText([]byte(fields[0])))
+	appendErrorWithContext(&errs, "TILE_DIM", s.TILE_DIM.UnmarshalText([]byte(fields[1])))
+	appendErrorWithContext(&errs, "TILE_XLL", s.TILE_XLL.UnmarshalText([]byte(fields[2])))
+	appendErrorWithContext(&errs, "TILE_YLL", s.TILE_YLL.UnmarshalText([]byte(fields[3])))
+	appendErrorWithContext(&errs, "NSCALE", s.NSCALE.UnmarshalText([]byte(fields[4])))
+	appendErrorWithContext(&errs, "ISCALE", s.ISCALE.UnmarshalText([]byte(fields[5])))
+	appendErrorWithContext(&errs, "MSE", s.MSE.UnmarshalText([]byte(fields[6])))
+	appendErrorWithContext(&errs, "ISC", s.ISC.UnmarshalText([]byte(fields[7])))
+	appendErrorWithContext(&errs, "FENERGY2", s.FENERGY2.UnmarshalText([]byte(fields[8])))
+	appendErrorWithContext(&errs, "OENERGY2", s.OENERGY2.UnmarshalText([]byte(fields[9])))
+	appendErrorWithContext(&errs, "BASER", s.BASER.UnmarshalText([]byte(fields[10])))
+	appendErrorWithContext(&errs, "FBIAS", s.FBIAS.UnmarshalText([]byte(fields[11])))
+	return errors.Join(errs...)
 }
 
 // Sets STAT_MCTC_data struct's fields
-func (s *STAT_MCTC_data) fill(fields []string) {
-	s.TOTAL.UnmarshalText([]byte(fields[0]))
+func (s *STAT_MCTC_data) fill(fields []string) error {
+	var errs []error
+	appendErrorWithContext(&errs, "TOTAL", s.TOTAL.UnmarshalText([]byte(fields[0])))
 	// these values seem to always be ints (or "NA")
 	var value validtypes.ValidInt
 	count, err := strconv.Atoi(fields[1])
@@ -3422,192 +3524,204 @@ func (s *STAT_MCTC_data) fill(fields []string) {
 			if index >= len(fields) {
 				value.Reset()
 			} else {
-				value.UnmarshalText([]byte(fields[index]))
+				appendErrorWithContext(&errs, "CAT", value.UnmarshalText([]byte(fields[index])))
 			}
 			s.CAT[key] = value
 		}
 	}
+	return errors.Join(errs...)
 }
 
 // Sets STAT_MCTS_data struct's fields
-func (s *STAT_MCTS_data) fill(fields []string) {
-	s.TOTAL.UnmarshalText([]byte(fields[0]))
-	s.N_CAT.UnmarshalText([]byte(fields[1]))
-	s.ACC.UnmarshalText([]byte(fields[2]))
-	s.ACC_NCL.UnmarshalText([]byte(fields[3]))
-	s.ACC_NCU.UnmarshalText([]byte(fields[4]))
-	s.ACC_BCL.UnmarshalText([]byte(fields[5]))
-	s.ACC_BCU.UnmarshalText([]byte(fields[6]))
-	s.HK.UnmarshalText([]byte(fields[7]))
-	s.HK_BCL.UnmarshalText([]byte(fields[8]))
-	s.HK_BCU.UnmarshalText([]byte(fields[9]))
-	s.HSS.UnmarshalText([]byte(fields[10]))
-	s.HSS_BCL.UnmarshalText([]byte(fields[11]))
-	s.HSS_BCU.UnmarshalText([]byte(fields[12]))
-	s.GER.UnmarshalText([]byte(fields[13]))
-	s.GER_BCL.UnmarshalText([]byte(fields[14]))
-	s.GER_BCU.UnmarshalText([]byte(fields[15]))
+func (s *STAT_MCTS_data) fill(fields []string) error {
+	var errs []error
+	appendErrorWithContext(&errs, "TOTAL", s.TOTAL.UnmarshalText([]byte(fields[0])))
+	appendErrorWithContext(&errs, "N_CAT", s.N_CAT.UnmarshalText([]byte(fields[1])))
+	appendErrorWithContext(&errs, "ACC", s.ACC.UnmarshalText([]byte(fields[2])))
+	appendErrorWithContext(&errs, "ACC_NCL", s.ACC_NCL.UnmarshalText([]byte(fields[3])))
+	appendErrorWithContext(&errs, "ACC_NCU", s.ACC_NCU.UnmarshalText([]byte(fields[4])))
+	appendErrorWithContext(&errs, "ACC_BCL", s.ACC_BCL.UnmarshalText([]byte(fields[5])))
+	appendErrorWithContext(&errs, "ACC_BCU", s.ACC_BCU.UnmarshalText([]byte(fields[6])))
+	appendErrorWithContext(&errs, "HK", s.HK.UnmarshalText([]byte(fields[7])))
+	appendErrorWithContext(&errs, "HK_BCL", s.HK_BCL.UnmarshalText([]byte(fields[8])))
+	appendErrorWithContext(&errs, "HK_BCU", s.HK_BCU.UnmarshalText([]byte(fields[9])))
+	appendErrorWithContext(&errs, "HSS", s.HSS.UnmarshalText([]byte(fields[10])))
+	appendErrorWithContext(&errs, "HSS_BCL", s.HSS_BCL.UnmarshalText([]byte(fields[11])))
+	appendErrorWithContext(&errs, "HSS_BCU", s.HSS_BCU.UnmarshalText([]byte(fields[12])))
+	appendErrorWithContext(&errs, "GER", s.GER.UnmarshalText([]byte(fields[13])))
+	appendErrorWithContext(&errs, "GER_BCL", s.GER_BCL.UnmarshalText([]byte(fields[14])))
+	appendErrorWithContext(&errs, "GER_BCU", s.GER_BCU.UnmarshalText([]byte(fields[15])))
+	return errors.Join(errs...)
 }
 
 // Sets STAT_MPR_data struct's fields
-func (s *STAT_MPR_data) fill(fields []string) {
-	s.TOTAL.UnmarshalText([]byte(fields[0]))
-	s.INDEX.UnmarshalText([]byte(fields[1]))
-	s.OBS_SID.UnmarshalText([]byte(fields[2]))
-	s.OBS_LAT.UnmarshalText([]byte(fields[3]))
-	s.OBS_LON.UnmarshalText([]byte(fields[4]))
-	s.OBS_LVL.UnmarshalText([]byte(fields[5]))
-	s.OBS_ELV.UnmarshalText([]byte(fields[6]))
-	s.FCST.UnmarshalText([]byte(fields[7]))
-	s.OBS.UnmarshalText([]byte(fields[8]))
-	s.OBS_QC.UnmarshalText([]byte(fields[9]))
-	s.CLIMO_MEAN.UnmarshalText([]byte(fields[10]))
-	s.CLIMO_STDEV.UnmarshalText([]byte(fields[11]))
-	s.CLIMO_CDF.UnmarshalText([]byte(fields[12]))
+func (s *STAT_MPR_data) fill(fields []string) error {
+	var errs []error
+	appendErrorWithContext(&errs, "TOTAL", s.TOTAL.UnmarshalText([]byte(fields[0])))
+	appendErrorWithContext(&errs, "INDEX", s.INDEX.UnmarshalText([]byte(fields[1])))
+	appendErrorWithContext(&errs, "OBS_SID", s.OBS_SID.UnmarshalText([]byte(fields[2])))
+	appendErrorWithContext(&errs, "OBS_LAT", s.OBS_LAT.UnmarshalText([]byte(fields[3])))
+	appendErrorWithContext(&errs, "OBS_LON", s.OBS_LON.UnmarshalText([]byte(fields[4])))
+	appendErrorWithContext(&errs, "OBS_LVL", s.OBS_LVL.UnmarshalText([]byte(fields[5])))
+	appendErrorWithContext(&errs, "OBS_ELV", s.OBS_ELV.UnmarshalText([]byte(fields[6])))
+	appendErrorWithContext(&errs, "FCST", s.FCST.UnmarshalText([]byte(fields[7])))
+	appendErrorWithContext(&errs, "OBS", s.OBS.UnmarshalText([]byte(fields[8])))
+	appendErrorWithContext(&errs, "OBS_QC", s.OBS_QC.UnmarshalText([]byte(fields[9])))
+	appendErrorWithContext(&errs, "CLIMO_MEAN", s.CLIMO_MEAN.UnmarshalText([]byte(fields[10])))
+	appendErrorWithContext(&errs, "CLIMO_STDEV", s.CLIMO_STDEV.UnmarshalText([]byte(fields[11])))
+	appendErrorWithContext(&errs, "CLIMO_CDF", s.CLIMO_CDF.UnmarshalText([]byte(fields[12])))
+	return errors.Join(errs...)
 }
 
 // Sets STAT_NBRCNT_data struct's fields
-func (s *STAT_NBRCNT_data) fill(fields []string) {
-	s.TOTAL.UnmarshalText([]byte(fields[0]))
-	s.FBS.UnmarshalText([]byte(fields[1]))
-	s.FBS_BCL.UnmarshalText([]byte(fields[2]))
-	s.FBS_BCU.UnmarshalText([]byte(fields[3]))
-	s.FSS.UnmarshalText([]byte(fields[4]))
-	s.FSS_BCL.UnmarshalText([]byte(fields[5]))
-	s.FSS_BCU.UnmarshalText([]byte(fields[6]))
-	s.AFSS.UnmarshalText([]byte(fields[7]))
-	s.AFSS_BCL.UnmarshalText([]byte(fields[8]))
-	s.AFSS_BCU.UnmarshalText([]byte(fields[9]))
-	s.UFSS.UnmarshalText([]byte(fields[10]))
-	s.UFSS_BCL.UnmarshalText([]byte(fields[11]))
-	s.UFSS_BCU.UnmarshalText([]byte(fields[12]))
-	s.F_RATE.UnmarshalText([]byte(fields[13]))
-	s.F_RATE_BCL.UnmarshalText([]byte(fields[14]))
-	s.F_RATE_BCU.UnmarshalText([]byte(fields[15]))
-	s.O_RATE.UnmarshalText([]byte(fields[16]))
-	s.O_RATE_BCL.UnmarshalText([]byte(fields[17]))
-	s.O_RATE_BCU.UnmarshalText([]byte(fields[18]))
+func (s *STAT_NBRCNT_data) fill(fields []string) error {
+	var errs []error
+	appendErrorWithContext(&errs, "TOTAL", s.TOTAL.UnmarshalText([]byte(fields[0])))
+	appendErrorWithContext(&errs, "FBS", s.FBS.UnmarshalText([]byte(fields[1])))
+	appendErrorWithContext(&errs, "FBS_BCL", s.FBS_BCL.UnmarshalText([]byte(fields[2])))
+	appendErrorWithContext(&errs, "FBS_BCU", s.FBS_BCU.UnmarshalText([]byte(fields[3])))
+	appendErrorWithContext(&errs, "FSS", s.FSS.UnmarshalText([]byte(fields[4])))
+	appendErrorWithContext(&errs, "FSS_BCL", s.FSS_BCL.UnmarshalText([]byte(fields[5])))
+	appendErrorWithContext(&errs, "FSS_BCU", s.FSS_BCU.UnmarshalText([]byte(fields[6])))
+	appendErrorWithContext(&errs, "AFSS", s.AFSS.UnmarshalText([]byte(fields[7])))
+	appendErrorWithContext(&errs, "AFSS_BCL", s.AFSS_BCL.UnmarshalText([]byte(fields[8])))
+	appendErrorWithContext(&errs, "AFSS_BCU", s.AFSS_BCU.UnmarshalText([]byte(fields[9])))
+	appendErrorWithContext(&errs, "UFSS", s.UFSS.UnmarshalText([]byte(fields[10])))
+	appendErrorWithContext(&errs, "UFSS_BCL", s.UFSS_BCL.UnmarshalText([]byte(fields[11])))
+	appendErrorWithContext(&errs, "UFSS_BCU", s.UFSS_BCU.UnmarshalText([]byte(fields[12])))
+	appendErrorWithContext(&errs, "F_RATE", s.F_RATE.UnmarshalText([]byte(fields[13])))
+	appendErrorWithContext(&errs, "F_RATE_BCL", s.F_RATE_BCL.UnmarshalText([]byte(fields[14])))
+	appendErrorWithContext(&errs, "F_RATE_BCU", s.F_RATE_BCU.UnmarshalText([]byte(fields[15])))
+	appendErrorWithContext(&errs, "O_RATE", s.O_RATE.UnmarshalText([]byte(fields[16])))
+	appendErrorWithContext(&errs, "O_RATE_BCL", s.O_RATE_BCL.UnmarshalText([]byte(fields[17])))
+	appendErrorWithContext(&errs, "O_RATE_BCU", s.O_RATE_BCU.UnmarshalText([]byte(fields[18])))
+	return errors.Join(errs...)
 }
 
 // Sets STAT_NBRCTC_data struct's fields
-func (s *STAT_NBRCTC_data) fill(fields []string) {
-	s.TOTAL.UnmarshalText([]byte(fields[0]))
-	s.FY_OY.UnmarshalText([]byte(fields[1]))
-	s.FY_ON.UnmarshalText([]byte(fields[2]))
-	s.FN_OY.UnmarshalText([]byte(fields[3]))
-	s.FN_ON.UnmarshalText([]byte(fields[4]))
+func (s *STAT_NBRCTC_data) fill(fields []string) error {
+	var errs []error
+	appendErrorWithContext(&errs, "TOTAL", s.TOTAL.UnmarshalText([]byte(fields[0])))
+	appendErrorWithContext(&errs, "FY_OY", s.FY_OY.UnmarshalText([]byte(fields[1])))
+	appendErrorWithContext(&errs, "FY_ON", s.FY_ON.UnmarshalText([]byte(fields[2])))
+	appendErrorWithContext(&errs, "FN_OY", s.FN_OY.UnmarshalText([]byte(fields[3])))
+	appendErrorWithContext(&errs, "FN_ON", s.FN_ON.UnmarshalText([]byte(fields[4])))
+	return errors.Join(errs...)
 }
 
 // Sets STAT_NBRCTS_data struct's fields
-func (s *STAT_NBRCTS_data) fill(fields []string) {
-	s.TOTAL.UnmarshalText([]byte(fields[0]))
-	s.BASER.UnmarshalText([]byte(fields[1]))
-	s.BASER_NCL.UnmarshalText([]byte(fields[2]))
-	s.BASER_NCU.UnmarshalText([]byte(fields[3]))
-	s.BASER_BCL.UnmarshalText([]byte(fields[4]))
-	s.BASER_BCU.UnmarshalText([]byte(fields[5]))
-	s.FMEAN.UnmarshalText([]byte(fields[6]))
-	s.FMEAN_NCL.UnmarshalText([]byte(fields[7]))
-	s.FMEAN_NCU.UnmarshalText([]byte(fields[8]))
-	s.FMEAN_BCL.UnmarshalText([]byte(fields[9]))
-	s.FMEAN_BCU.UnmarshalText([]byte(fields[10]))
-	s.ACC.UnmarshalText([]byte(fields[11]))
-	s.ACC_NCL.UnmarshalText([]byte(fields[12]))
-	s.ACC_NCU.UnmarshalText([]byte(fields[13]))
-	s.ACC_BCL.UnmarshalText([]byte(fields[14]))
-	s.ACC_BCU.UnmarshalText([]byte(fields[15]))
-	s.FBIAS.UnmarshalText([]byte(fields[16]))
-	s.FBIAS_BCL.UnmarshalText([]byte(fields[17]))
-	s.FBIAS_BCU.UnmarshalText([]byte(fields[18]))
-	s.PODY.UnmarshalText([]byte(fields[19]))
-	s.PODY_NCL.UnmarshalText([]byte(fields[20]))
-	s.PODY_NCU.UnmarshalText([]byte(fields[21]))
-	s.PODY_BCL.UnmarshalText([]byte(fields[22]))
-	s.PODY_BCU.UnmarshalText([]byte(fields[23]))
-	s.PODN.UnmarshalText([]byte(fields[24]))
-	s.PODN_NCL.UnmarshalText([]byte(fields[25]))
-	s.PODN_NCU.UnmarshalText([]byte(fields[26]))
-	s.PODN_BCL.UnmarshalText([]byte(fields[27]))
-	s.PODN_BCU.UnmarshalText([]byte(fields[28]))
-	s.POFD.UnmarshalText([]byte(fields[29]))
-	s.POFD_NCL.UnmarshalText([]byte(fields[30]))
-	s.POFD_NCU.UnmarshalText([]byte(fields[31]))
-	s.POFD_BCL.UnmarshalText([]byte(fields[32]))
-	s.POFD_BCU.UnmarshalText([]byte(fields[33]))
-	s.FAR.UnmarshalText([]byte(fields[34]))
-	s.FAR_NCL.UnmarshalText([]byte(fields[35]))
-	s.FAR_NCU.UnmarshalText([]byte(fields[36]))
-	s.FAR_BCL.UnmarshalText([]byte(fields[37]))
-	s.FAR_BCU.UnmarshalText([]byte(fields[38]))
-	s.CSI.UnmarshalText([]byte(fields[39]))
-	s.CSI_NCL.UnmarshalText([]byte(fields[40]))
-	s.CSI_NCU.UnmarshalText([]byte(fields[41]))
-	s.CSI_BCL.UnmarshalText([]byte(fields[42]))
-	s.CSI_BCU.UnmarshalText([]byte(fields[43]))
-	s.GSS.UnmarshalText([]byte(fields[44]))
-	s.GSS_BCL.UnmarshalText([]byte(fields[45]))
-	s.GSS_BCU.UnmarshalText([]byte(fields[46]))
-	s.HK.UnmarshalText([]byte(fields[47]))
-	s.HK_NCL.UnmarshalText([]byte(fields[48]))
-	s.HK_NCU.UnmarshalText([]byte(fields[49]))
-	s.HK_BCL.UnmarshalText([]byte(fields[50]))
-	s.HK_BCU.UnmarshalText([]byte(fields[51]))
-	s.HSS.UnmarshalText([]byte(fields[52]))
-	s.HSS_BCL.UnmarshalText([]byte(fields[53]))
-	s.HSS_BCU.UnmarshalText([]byte(fields[54]))
-	s.ODDS.UnmarshalText([]byte(fields[55]))
-	s.ODDS_NCL.UnmarshalText([]byte(fields[56]))
-	s.ODDS_NCU.UnmarshalText([]byte(fields[57]))
-	s.ODDS_BCL.UnmarshalText([]byte(fields[58]))
-	s.ODDS_BCU.UnmarshalText([]byte(fields[59]))
-	s.LODDS.UnmarshalText([]byte(fields[60]))
-	s.LODDS_NCL.UnmarshalText([]byte(fields[61]))
-	s.LODDS_NCU.UnmarshalText([]byte(fields[62]))
-	s.LODDS_BCL.UnmarshalText([]byte(fields[63]))
-	s.LODDS_BCU.UnmarshalText([]byte(fields[64]))
-	s.ORSS.UnmarshalText([]byte(fields[65]))
-	s.ORSS_NCL.UnmarshalText([]byte(fields[66]))
-	s.ORSS_NCU.UnmarshalText([]byte(fields[67]))
-	s.ORSS_BCL.UnmarshalText([]byte(fields[68]))
-	s.ORSS_BCU.UnmarshalText([]byte(fields[69]))
-	s.EDS.UnmarshalText([]byte(fields[70]))
-	s.EDS_NCL.UnmarshalText([]byte(fields[71]))
-	s.EDS_NCU.UnmarshalText([]byte(fields[72]))
-	s.EDS_BCL.UnmarshalText([]byte(fields[73]))
-	s.EDS_BCU.UnmarshalText([]byte(fields[74]))
-	s.SEDS.UnmarshalText([]byte(fields[75]))
-	s.SEDS_NCL.UnmarshalText([]byte(fields[76]))
-	s.SEDS_NCU.UnmarshalText([]byte(fields[77]))
-	s.SEDS_BCL.UnmarshalText([]byte(fields[78]))
-	s.SEDS_BCU.UnmarshalText([]byte(fields[79]))
-	s.EDI.UnmarshalText([]byte(fields[80]))
-	s.EDI_NCL.UnmarshalText([]byte(fields[81]))
-	s.EDI_NCU.UnmarshalText([]byte(fields[82]))
-	s.EDI_BCL.UnmarshalText([]byte(fields[83]))
-	s.EDI_BCU.UnmarshalText([]byte(fields[84]))
-	s.SEDI.UnmarshalText([]byte(fields[85]))
-	s.SEDI_NCL.UnmarshalText([]byte(fields[86]))
-	s.SEDI_NCU.UnmarshalText([]byte(fields[87]))
-	s.SEDI_BCL.UnmarshalText([]byte(fields[88]))
-	s.SEDI_BCU.UnmarshalText([]byte(fields[89]))
-	s.BAGSS.UnmarshalText([]byte(fields[90]))
-	s.BAGSS_BCL.UnmarshalText([]byte(fields[91]))
-	s.BAGSS_BCU.UnmarshalText([]byte(fields[92]))
+func (s *STAT_NBRCTS_data) fill(fields []string) error {
+	var errs []error
+	appendErrorWithContext(&errs, "TOTAL", s.TOTAL.UnmarshalText([]byte(fields[0])))
+	appendErrorWithContext(&errs, "BASER", s.BASER.UnmarshalText([]byte(fields[1])))
+	appendErrorWithContext(&errs, "BASER_NCL", s.BASER_NCL.UnmarshalText([]byte(fields[2])))
+	appendErrorWithContext(&errs, "BASER_NCU", s.BASER_NCU.UnmarshalText([]byte(fields[3])))
+	appendErrorWithContext(&errs, "BASER_BCL", s.BASER_BCL.UnmarshalText([]byte(fields[4])))
+	appendErrorWithContext(&errs, "BASER_BCU", s.BASER_BCU.UnmarshalText([]byte(fields[5])))
+	appendErrorWithContext(&errs, "FMEAN", s.FMEAN.UnmarshalText([]byte(fields[6])))
+	appendErrorWithContext(&errs, "FMEAN_NCL", s.FMEAN_NCL.UnmarshalText([]byte(fields[7])))
+	appendErrorWithContext(&errs, "FMEAN_NCU", s.FMEAN_NCU.UnmarshalText([]byte(fields[8])))
+	appendErrorWithContext(&errs, "FMEAN_BCL", s.FMEAN_BCL.UnmarshalText([]byte(fields[9])))
+	appendErrorWithContext(&errs, "FMEAN_BCU", s.FMEAN_BCU.UnmarshalText([]byte(fields[10])))
+	appendErrorWithContext(&errs, "ACC", s.ACC.UnmarshalText([]byte(fields[11])))
+	appendErrorWithContext(&errs, "ACC_NCL", s.ACC_NCL.UnmarshalText([]byte(fields[12])))
+	appendErrorWithContext(&errs, "ACC_NCU", s.ACC_NCU.UnmarshalText([]byte(fields[13])))
+	appendErrorWithContext(&errs, "ACC_BCL", s.ACC_BCL.UnmarshalText([]byte(fields[14])))
+	appendErrorWithContext(&errs, "ACC_BCU", s.ACC_BCU.UnmarshalText([]byte(fields[15])))
+	appendErrorWithContext(&errs, "FBIAS", s.FBIAS.UnmarshalText([]byte(fields[16])))
+	appendErrorWithContext(&errs, "FBIAS_BCL", s.FBIAS_BCL.UnmarshalText([]byte(fields[17])))
+	appendErrorWithContext(&errs, "FBIAS_BCU", s.FBIAS_BCU.UnmarshalText([]byte(fields[18])))
+	appendErrorWithContext(&errs, "PODY", s.PODY.UnmarshalText([]byte(fields[19])))
+	appendErrorWithContext(&errs, "PODY_NCL", s.PODY_NCL.UnmarshalText([]byte(fields[20])))
+	appendErrorWithContext(&errs, "PODY_NCU", s.PODY_NCU.UnmarshalText([]byte(fields[21])))
+	appendErrorWithContext(&errs, "PODY_BCL", s.PODY_BCL.UnmarshalText([]byte(fields[22])))
+	appendErrorWithContext(&errs, "PODY_BCU", s.PODY_BCU.UnmarshalText([]byte(fields[23])))
+	appendErrorWithContext(&errs, "PODN", s.PODN.UnmarshalText([]byte(fields[24])))
+	appendErrorWithContext(&errs, "PODN_NCL", s.PODN_NCL.UnmarshalText([]byte(fields[25])))
+	appendErrorWithContext(&errs, "PODN_NCU", s.PODN_NCU.UnmarshalText([]byte(fields[26])))
+	appendErrorWithContext(&errs, "PODN_BCL", s.PODN_BCL.UnmarshalText([]byte(fields[27])))
+	appendErrorWithContext(&errs, "PODN_BCU", s.PODN_BCU.UnmarshalText([]byte(fields[28])))
+	appendErrorWithContext(&errs, "POFD", s.POFD.UnmarshalText([]byte(fields[29])))
+	appendErrorWithContext(&errs, "POFD_NCL", s.POFD_NCL.UnmarshalText([]byte(fields[30])))
+	appendErrorWithContext(&errs, "POFD_NCU", s.POFD_NCU.UnmarshalText([]byte(fields[31])))
+	appendErrorWithContext(&errs, "POFD_BCL", s.POFD_BCL.UnmarshalText([]byte(fields[32])))
+	appendErrorWithContext(&errs, "POFD_BCU", s.POFD_BCU.UnmarshalText([]byte(fields[33])))
+	appendErrorWithContext(&errs, "FAR", s.FAR.UnmarshalText([]byte(fields[34])))
+	appendErrorWithContext(&errs, "FAR_NCL", s.FAR_NCL.UnmarshalText([]byte(fields[35])))
+	appendErrorWithContext(&errs, "FAR_NCU", s.FAR_NCU.UnmarshalText([]byte(fields[36])))
+	appendErrorWithContext(&errs, "FAR_BCL", s.FAR_BCL.UnmarshalText([]byte(fields[37])))
+	appendErrorWithContext(&errs, "FAR_BCU", s.FAR_BCU.UnmarshalText([]byte(fields[38])))
+	appendErrorWithContext(&errs, "CSI", s.CSI.UnmarshalText([]byte(fields[39])))
+	appendErrorWithContext(&errs, "CSI_NCL", s.CSI_NCL.UnmarshalText([]byte(fields[40])))
+	appendErrorWithContext(&errs, "CSI_NCU", s.CSI_NCU.UnmarshalText([]byte(fields[41])))
+	appendErrorWithContext(&errs, "CSI_BCL", s.CSI_BCL.UnmarshalText([]byte(fields[42])))
+	appendErrorWithContext(&errs, "CSI_BCU", s.CSI_BCU.UnmarshalText([]byte(fields[43])))
+	appendErrorWithContext(&errs, "GSS", s.GSS.UnmarshalText([]byte(fields[44])))
+	appendErrorWithContext(&errs, "GSS_BCL", s.GSS_BCL.UnmarshalText([]byte(fields[45])))
+	appendErrorWithContext(&errs, "GSS_BCU", s.GSS_BCU.UnmarshalText([]byte(fields[46])))
+	appendErrorWithContext(&errs, "HK", s.HK.UnmarshalText([]byte(fields[47])))
+	appendErrorWithContext(&errs, "HK_NCL", s.HK_NCL.UnmarshalText([]byte(fields[48])))
+	appendErrorWithContext(&errs, "HK_NCU", s.HK_NCU.UnmarshalText([]byte(fields[49])))
+	appendErrorWithContext(&errs, "HK_BCL", s.HK_BCL.UnmarshalText([]byte(fields[50])))
+	appendErrorWithContext(&errs, "HK_BCU", s.HK_BCU.UnmarshalText([]byte(fields[51])))
+	appendErrorWithContext(&errs, "HSS", s.HSS.UnmarshalText([]byte(fields[52])))
+	appendErrorWithContext(&errs, "HSS_BCL", s.HSS_BCL.UnmarshalText([]byte(fields[53])))
+	appendErrorWithContext(&errs, "HSS_BCU", s.HSS_BCU.UnmarshalText([]byte(fields[54])))
+	appendErrorWithContext(&errs, "ODDS", s.ODDS.UnmarshalText([]byte(fields[55])))
+	appendErrorWithContext(&errs, "ODDS_NCL", s.ODDS_NCL.UnmarshalText([]byte(fields[56])))
+	appendErrorWithContext(&errs, "ODDS_NCU", s.ODDS_NCU.UnmarshalText([]byte(fields[57])))
+	appendErrorWithContext(&errs, "ODDS_BCL", s.ODDS_BCL.UnmarshalText([]byte(fields[58])))
+	appendErrorWithContext(&errs, "ODDS_BCU", s.ODDS_BCU.UnmarshalText([]byte(fields[59])))
+	appendErrorWithContext(&errs, "LODDS", s.LODDS.UnmarshalText([]byte(fields[60])))
+	appendErrorWithContext(&errs, "LODDS_NCL", s.LODDS_NCL.UnmarshalText([]byte(fields[61])))
+	appendErrorWithContext(&errs, "LODDS_NCU", s.LODDS_NCU.UnmarshalText([]byte(fields[62])))
+	appendErrorWithContext(&errs, "LODDS_BCL", s.LODDS_BCL.UnmarshalText([]byte(fields[63])))
+	appendErrorWithContext(&errs, "LODDS_BCU", s.LODDS_BCU.UnmarshalText([]byte(fields[64])))
+	appendErrorWithContext(&errs, "ORSS", s.ORSS.UnmarshalText([]byte(fields[65])))
+	appendErrorWithContext(&errs, "ORSS_NCL", s.ORSS_NCL.UnmarshalText([]byte(fields[66])))
+	appendErrorWithContext(&errs, "ORSS_NCU", s.ORSS_NCU.UnmarshalText([]byte(fields[67])))
+	appendErrorWithContext(&errs, "ORSS_BCL", s.ORSS_BCL.UnmarshalText([]byte(fields[68])))
+	appendErrorWithContext(&errs, "ORSS_BCU", s.ORSS_BCU.UnmarshalText([]byte(fields[69])))
+	appendErrorWithContext(&errs, "EDS", s.EDS.UnmarshalText([]byte(fields[70])))
+	appendErrorWithContext(&errs, "EDS_NCL", s.EDS_NCL.UnmarshalText([]byte(fields[71])))
+	appendErrorWithContext(&errs, "EDS_NCU", s.EDS_NCU.UnmarshalText([]byte(fields[72])))
+	appendErrorWithContext(&errs, "EDS_BCL", s.EDS_BCL.UnmarshalText([]byte(fields[73])))
+	appendErrorWithContext(&errs, "EDS_BCU", s.EDS_BCU.UnmarshalText([]byte(fields[74])))
+	appendErrorWithContext(&errs, "SEDS", s.SEDS.UnmarshalText([]byte(fields[75])))
+	appendErrorWithContext(&errs, "SEDS_NCL", s.SEDS_NCL.UnmarshalText([]byte(fields[76])))
+	appendErrorWithContext(&errs, "SEDS_NCU", s.SEDS_NCU.UnmarshalText([]byte(fields[77])))
+	appendErrorWithContext(&errs, "SEDS_BCL", s.SEDS_BCL.UnmarshalText([]byte(fields[78])))
+	appendErrorWithContext(&errs, "SEDS_BCU", s.SEDS_BCU.UnmarshalText([]byte(fields[79])))
+	appendErrorWithContext(&errs, "EDI", s.EDI.UnmarshalText([]byte(fields[80])))
+	appendErrorWithContext(&errs, "EDI_NCL", s.EDI_NCL.UnmarshalText([]byte(fields[81])))
+	appendErrorWithContext(&errs, "EDI_NCU", s.EDI_NCU.UnmarshalText([]byte(fields[82])))
+	appendErrorWithContext(&errs, "EDI_BCL", s.EDI_BCL.UnmarshalText([]byte(fields[83])))
+	appendErrorWithContext(&errs, "EDI_BCU", s.EDI_BCU.UnmarshalText([]byte(fields[84])))
+	appendErrorWithContext(&errs, "SEDI", s.SEDI.UnmarshalText([]byte(fields[85])))
+	appendErrorWithContext(&errs, "SEDI_NCL", s.SEDI_NCL.UnmarshalText([]byte(fields[86])))
+	appendErrorWithContext(&errs, "SEDI_NCU", s.SEDI_NCU.UnmarshalText([]byte(fields[87])))
+	appendErrorWithContext(&errs, "SEDI_BCL", s.SEDI_BCL.UnmarshalText([]byte(fields[88])))
+	appendErrorWithContext(&errs, "SEDI_BCU", s.SEDI_BCU.UnmarshalText([]byte(fields[89])))
+	appendErrorWithContext(&errs, "BAGSS", s.BAGSS.UnmarshalText([]byte(fields[90])))
+	appendErrorWithContext(&errs, "BAGSS_BCL", s.BAGSS_BCL.UnmarshalText([]byte(fields[91])))
+	appendErrorWithContext(&errs, "BAGSS_BCU", s.BAGSS_BCU.UnmarshalText([]byte(fields[92])))
+	return errors.Join(errs...)
 }
 
 // Sets STAT_ORANK_data struct's fields
-func (s *STAT_ORANK_data) fill(fields []string) {
-	s.TOTAL.UnmarshalText([]byte(fields[0]))
-	s.INDEX.UnmarshalText([]byte(fields[1]))
-	s.OBS_SID.UnmarshalText([]byte(fields[2]))
-	s.OBS_LAT.UnmarshalText([]byte(fields[3]))
-	s.OBS_LON.UnmarshalText([]byte(fields[4]))
-	s.OBS_LVL.UnmarshalText([]byte(fields[5]))
-	s.OBS_ELV.UnmarshalText([]byte(fields[6]))
-	s.OBS.UnmarshalText([]byte(fields[7]))
-	s.PIT.UnmarshalText([]byte(fields[8]))
-	s.RANK.UnmarshalText([]byte(fields[9]))
-	s.N_ENS_VLD.UnmarshalText([]byte(fields[10]))
+func (s *STAT_ORANK_data) fill(fields []string) error {
+	var errs []error
+	appendErrorWithContext(&errs, "TOTAL", s.TOTAL.UnmarshalText([]byte(fields[0])))
+	appendErrorWithContext(&errs, "INDEX", s.INDEX.UnmarshalText([]byte(fields[1])))
+	appendErrorWithContext(&errs, "OBS_SID", s.OBS_SID.UnmarshalText([]byte(fields[2])))
+	appendErrorWithContext(&errs, "OBS_LAT", s.OBS_LAT.UnmarshalText([]byte(fields[3])))
+	appendErrorWithContext(&errs, "OBS_LON", s.OBS_LON.UnmarshalText([]byte(fields[4])))
+	appendErrorWithContext(&errs, "OBS_LVL", s.OBS_LVL.UnmarshalText([]byte(fields[5])))
+	appendErrorWithContext(&errs, "OBS_ELV", s.OBS_ELV.UnmarshalText([]byte(fields[6])))
+	appendErrorWithContext(&errs, "OBS", s.OBS.UnmarshalText([]byte(fields[7])))
+	appendErrorWithContext(&errs, "PIT", s.PIT.UnmarshalText([]byte(fields[8])))
+	appendErrorWithContext(&errs, "RANK", s.RANK.UnmarshalText([]byte(fields[9])))
+	appendErrorWithContext(&errs, "N_ENS_VLD", s.N_ENS_VLD.UnmarshalText([]byte(fields[10])))
 	// the first field of the repeating fields is the TOTAL, the second field is the 1st dimenSion of the 1st sequence (there might be only one sequence)
 	var value validtypes.ValidInt
 	count, err := strconv.Atoi(fields[11])
@@ -3622,24 +3736,26 @@ func (s *STAT_ORANK_data) fill(fields []string) {
 			if index > len(fields) { // sometimes the data line is truncated - invalidate that field
 				value.Reset()
 			} else {
-				value.UnmarshalText([]byte(fields[index]))
+				appendErrorWithContext(&errs, "ENS", value.UnmarshalText([]byte(fields[index])))
 			}
 			s.ENS[key] = value
 		}
 	}
-	s.OBS_QC.UnmarshalText([]byte(fields[13]))
-	s.ENS_MEAN.UnmarshalText([]byte(fields[14]))
-	s.CLIMO_MEAN.UnmarshalText([]byte(fields[15]))
-	s.SPREAD.UnmarshalText([]byte(fields[16]))
-	s.ENS_MEAN_OERR.UnmarshalText([]byte(fields[17]))
-	s.SPREAD_OERR.UnmarshalText([]byte(fields[18]))
-	s.SPREAD_PLUS_OERR.UnmarshalText([]byte(fields[19]))
-	s.CLIMO_STDEV.UnmarshalText([]byte(fields[20]))
+	appendErrorWithContext(&errs, "OBS_QC", s.OBS_QC.UnmarshalText([]byte(fields[13])))
+	appendErrorWithContext(&errs, "ENS_MEAN", s.ENS_MEAN.UnmarshalText([]byte(fields[14])))
+	appendErrorWithContext(&errs, "CLIMO_MEAN", s.CLIMO_MEAN.UnmarshalText([]byte(fields[15])))
+	appendErrorWithContext(&errs, "SPREAD", s.SPREAD.UnmarshalText([]byte(fields[16])))
+	appendErrorWithContext(&errs, "ENS_MEAN_OERR", s.ENS_MEAN_OERR.UnmarshalText([]byte(fields[17])))
+	appendErrorWithContext(&errs, "SPREAD_OERR", s.SPREAD_OERR.UnmarshalText([]byte(fields[18])))
+	appendErrorWithContext(&errs, "SPREAD_PLUS_OERR", s.SPREAD_PLUS_OERR.UnmarshalText([]byte(fields[19])))
+	appendErrorWithContext(&errs, "CLIMO_STDEV", s.CLIMO_STDEV.UnmarshalText([]byte(fields[20])))
+	return errors.Join(errs...)
 }
 
 // Sets STAT_PCT_data struct's fields
-func (s *STAT_PCT_data) fill(fields []string) {
-	s.TOTAL.UnmarshalText([]byte(fields[0]))
+func (s *STAT_PCT_data) fill(fields []string) error {
+	var errs []error
+	appendErrorWithContext(&errs, "TOTAL", s.TOTAL.UnmarshalText([]byte(fields[0])))
 	// the first field of the repeating fields is the TOTAL, the second field is the 1st dimenSion of the 1st sequence (there might be only one sequence)
 	var value validtypes.ValidFloat
 	count, err := strconv.Atoi(fields[1])
@@ -3654,17 +3770,19 @@ func (s *STAT_PCT_data) fill(fields []string) {
 			if index > len(fields) { // sometimes the data line is truncated - invalidate that field
 				value.Reset()
 			} else {
-				value.UnmarshalText([]byte(fields[index]))
+				appendErrorWithContext(&errs, "THRESH", value.UnmarshalText([]byte(fields[index])))
 			}
 			s.THRESH[key] = value
 		}
 	}
+	return errors.Join(errs...)
 }
 
 // Sets STAT_PHIST_data struct's fields
-func (s *STAT_PHIST_data) fill(fields []string) {
-	s.TOTAL.UnmarshalText([]byte(fields[0]))
-	s.BIN_SIZE.UnmarshalText([]byte(fields[1]))
+func (s *STAT_PHIST_data) fill(fields []string) error {
+	var errs []error
+	appendErrorWithContext(&errs, "TOTAL", s.TOTAL.UnmarshalText([]byte(fields[0])))
+	appendErrorWithContext(&errs, "BIN_SIZE", s.BIN_SIZE.UnmarshalText([]byte(fields[1])))
 	// the first field of the repeating fields is the TOTAL, the second field is the 1st dimenSion of the 1st sequence (there might be only one sequence)
 	var value validtypes.ValidInt
 	count, err := strconv.Atoi(fields[2])
@@ -3679,16 +3797,18 @@ func (s *STAT_PHIST_data) fill(fields []string) {
 			if index > len(fields) { // sometimes the data line is truncated - invalidate that field
 				value.Reset()
 			} else {
-				value.UnmarshalText([]byte(fields[index]))
+				appendErrorWithContext(&errs, "BIN", value.UnmarshalText([]byte(fields[index])))
 			}
 			s.BIN[key] = value
 		}
 	}
+	return errors.Join(errs...)
 }
 
 // Sets STAT_PJC_data struct's fields
-func (s *STAT_PJC_data) fill(fields []string) {
-	s.TOTAL.UnmarshalText([]byte(fields[0]))
+func (s *STAT_PJC_data) fill(fields []string) error {
+	var errs []error
+	appendErrorWithContext(&errs, "TOTAL", s.TOTAL.UnmarshalText([]byte(fields[0])))
 	// the first field of the repeating fields is the TOTAL, the second field is the 1st dimenSion of the 1st sequence (there might be only one sequence)
 	var value validtypes.ValidFloat
 	count, err := strconv.Atoi(fields[1])
@@ -3703,16 +3823,18 @@ func (s *STAT_PJC_data) fill(fields []string) {
 			if index > len(fields) { // sometimes the data line is truncated - invalidate that field
 				value.Reset()
 			} else {
-				value.UnmarshalText([]byte(fields[index]))
+				appendErrorWithContext(&errs, "THRESH", value.UnmarshalText([]byte(fields[index])))
 			}
 			s.THRESH[key] = value
 		}
 	}
+	return errors.Join(errs...)
 }
 
 // Sets STAT_PRC_data struct's fields
-func (s *STAT_PRC_data) fill(fields []string) {
-	s.TOTAL.UnmarshalText([]byte(fields[0]))
+func (s *STAT_PRC_data) fill(fields []string) error {
+	var errs []error
+	appendErrorWithContext(&errs, "TOTAL", s.TOTAL.UnmarshalText([]byte(fields[0])))
 	// the first field of the repeating fields is the TOTAL, the second field is the 1st dimenSion of the 1st sequence (there might be only one sequence)
 	var value validtypes.ValidFloat
 	count, err := strconv.Atoi(fields[1])
@@ -3727,16 +3849,18 @@ func (s *STAT_PRC_data) fill(fields []string) {
 			if index > len(fields) { // sometimes the data line is truncated - invalidate that field
 				value.Reset()
 			} else {
-				value.UnmarshalText([]byte(fields[index]))
+				appendErrorWithContext(&errs, "THRESH", value.UnmarshalText([]byte(fields[index])))
 			}
 			s.THRESH[key] = value
 		}
 	}
+	return errors.Join(errs...)
 }
 
 // Sets STAT_PSTD_data struct's fields
-func (s *STAT_PSTD_data) fill(fields []string) {
-	s.TOTAL.UnmarshalText([]byte(fields[0]))
+func (s *STAT_PSTD_data) fill(fields []string) error {
+	var errs []error
+	appendErrorWithContext(&errs, "TOTAL", s.TOTAL.UnmarshalText([]byte(fields[0])))
 	// the first field of the repeating fields is the TOTAL, the second field is the 1st dimenSion of the 1st sequence (there might be only one sequence)
 	var value validtypes.ValidFloat
 	count, err := strconv.Atoi(fields[1])
@@ -3751,31 +3875,33 @@ func (s *STAT_PSTD_data) fill(fields []string) {
 			if index > len(fields) { // sometimes the data line is truncated - invalidate that field
 				value.Reset()
 			} else {
-				value.UnmarshalText([]byte(fields[index]))
+				appendErrorWithContext(&errs, "THRESH", value.UnmarshalText([]byte(fields[index])))
 			}
 			s.THRESH[key] = value
 		}
 	}
-	s.BASER_NCL.UnmarshalText([]byte(fields[3]))
-	s.BASER_NCU.UnmarshalText([]byte(fields[4]))
-	s.RELIABILITY.UnmarshalText([]byte(fields[5]))
-	s.RESOLUTION.UnmarshalText([]byte(fields[6]))
-	s.UNCERTAINTY.UnmarshalText([]byte(fields[7]))
-	s.ROC_AUC.UnmarshalText([]byte(fields[8]))
-	s.BRIER.UnmarshalText([]byte(fields[9]))
-	s.BRIER_NCL.UnmarshalText([]byte(fields[10]))
-	s.BRIER_NCU.UnmarshalText([]byte(fields[11]))
-	s.BRIERCL.UnmarshalText([]byte(fields[12]))
-	s.BRIERCL_NCL.UnmarshalText([]byte(fields[13]))
-	s.BRIERCL_NCU.UnmarshalText([]byte(fields[14]))
-	s.BSS.UnmarshalText([]byte(fields[15]))
-	s.BSS_SMPL.UnmarshalText([]byte(fields[16]))
-	s.THRESH_I.UnmarshalText([]byte(fields[17]))
+	appendErrorWithContext(&errs, "BASER_NCL", s.BASER_NCL.UnmarshalText([]byte(fields[3])))
+	appendErrorWithContext(&errs, "BASER_NCU", s.BASER_NCU.UnmarshalText([]byte(fields[4])))
+	appendErrorWithContext(&errs, "RELIABILITY", s.RELIABILITY.UnmarshalText([]byte(fields[5])))
+	appendErrorWithContext(&errs, "RESOLUTION", s.RESOLUTION.UnmarshalText([]byte(fields[6])))
+	appendErrorWithContext(&errs, "UNCERTAINTY", s.UNCERTAINTY.UnmarshalText([]byte(fields[7])))
+	appendErrorWithContext(&errs, "ROC_AUC", s.ROC_AUC.UnmarshalText([]byte(fields[8])))
+	appendErrorWithContext(&errs, "BRIER", s.BRIER.UnmarshalText([]byte(fields[9])))
+	appendErrorWithContext(&errs, "BRIER_NCL", s.BRIER_NCL.UnmarshalText([]byte(fields[10])))
+	appendErrorWithContext(&errs, "BRIER_NCU", s.BRIER_NCU.UnmarshalText([]byte(fields[11])))
+	appendErrorWithContext(&errs, "BRIERCL", s.BRIERCL.UnmarshalText([]byte(fields[12])))
+	appendErrorWithContext(&errs, "BRIERCL_NCL", s.BRIERCL_NCL.UnmarshalText([]byte(fields[13])))
+	appendErrorWithContext(&errs, "BRIERCL_NCU", s.BRIERCL_NCU.UnmarshalText([]byte(fields[14])))
+	appendErrorWithContext(&errs, "BSS", s.BSS.UnmarshalText([]byte(fields[15])))
+	appendErrorWithContext(&errs, "BSS_SMPL", s.BSS_SMPL.UnmarshalText([]byte(fields[16])))
+	appendErrorWithContext(&errs, "THRESH_I", s.THRESH_I.UnmarshalText([]byte(fields[17])))
+	return errors.Join(errs...)
 }
 
 // Sets STAT_RELP_data struct's fields
-func (s *STAT_RELP_data) fill(fields []string) {
-	s.TOTAL.UnmarshalText([]byte(fields[0]))
+func (s *STAT_RELP_data) fill(fields []string) error {
+	var errs []error
+	appendErrorWithContext(&errs, "TOTAL", s.TOTAL.UnmarshalText([]byte(fields[0])))
 	// the first field of the repeating fields is the TOTAL, the second field is the 1st dimenSion of the 1st sequence (there might be only one sequence)
 	var value validtypes.ValidFloat
 	count, err := strconv.Atoi(fields[1])
@@ -3790,16 +3916,18 @@ func (s *STAT_RELP_data) fill(fields []string) {
 			if index > len(fields) { // sometimes the data line is truncated - invalidate that field
 				value.Reset()
 			} else {
-				value.UnmarshalText([]byte(fields[index]))
+				appendErrorWithContext(&errs, "ENS", value.UnmarshalText([]byte(fields[index])))
 			}
 			s.ENS[key] = value
 		}
 	}
+	return errors.Join(errs...)
 }
 
 // Sets STAT_RHIST_data struct's fields
-func (s *STAT_RHIST_data) fill(fields []string) {
-	s.TOTAL.UnmarshalText([]byte(fields[0]))
+func (s *STAT_RHIST_data) fill(fields []string) error {
+	var errs []error
+	appendErrorWithContext(&errs, "TOTAL", s.TOTAL.UnmarshalText([]byte(fields[0])))
 	// the first field of the repeating fields is the TOTAL, the second field is the 1st dimenSion of the 1st sequence (there might be only one sequence)
 	var value validtypes.ValidInt
 	count, err := strconv.Atoi(fields[1])
@@ -3814,194 +3942,210 @@ func (s *STAT_RHIST_data) fill(fields []string) {
 			if index > len(fields) { // sometimes the data line is truncated - invalidate that field
 				value.Reset()
 			} else {
-				value.UnmarshalText([]byte(fields[index]))
+				appendErrorWithContext(&errs, "RANK", value.UnmarshalText([]byte(fields[index])))
 			}
 			s.RANK[key] = value
 		}
 	}
+	return errors.Join(errs...)
 }
 
 // Sets STAT_RPS_data struct's fields
-func (s *STAT_RPS_data) fill(fields []string) {
-	s.TOTAL.UnmarshalText([]byte(fields[0]))
-	s.N_PROB.UnmarshalText([]byte(fields[1]))
-	s.RPS_REL.UnmarshalText([]byte(fields[2]))
-	s.RPS_RES.UnmarshalText([]byte(fields[3]))
-	s.RPS_UNC.UnmarshalText([]byte(fields[4]))
-	s.RPS.UnmarshalText([]byte(fields[5]))
-	s.RPSS.UnmarshalText([]byte(fields[6]))
-	s.RPSS_SMPL.UnmarshalText([]byte(fields[7]))
-	s.RPS_COMP.UnmarshalText([]byte(fields[8]))
+func (s *STAT_RPS_data) fill(fields []string) error {
+	var errs []error
+	appendErrorWithContext(&errs, "TOTAL", s.TOTAL.UnmarshalText([]byte(fields[0])))
+	appendErrorWithContext(&errs, "N_PROB", s.N_PROB.UnmarshalText([]byte(fields[1])))
+	appendErrorWithContext(&errs, "RPS_REL", s.RPS_REL.UnmarshalText([]byte(fields[2])))
+	appendErrorWithContext(&errs, "RPS_RES", s.RPS_RES.UnmarshalText([]byte(fields[3])))
+	appendErrorWithContext(&errs, "RPS_UNC", s.RPS_UNC.UnmarshalText([]byte(fields[4])))
+	appendErrorWithContext(&errs, "RPS", s.RPS.UnmarshalText([]byte(fields[5])))
+	appendErrorWithContext(&errs, "RPSS", s.RPSS.UnmarshalText([]byte(fields[6])))
+	appendErrorWithContext(&errs, "RPSS_SMPL", s.RPSS_SMPL.UnmarshalText([]byte(fields[7])))
+	appendErrorWithContext(&errs, "RPS_COMP", s.RPS_COMP.UnmarshalText([]byte(fields[8])))
+	return errors.Join(errs...)
 }
 
 // Sets STAT_SAL1L2_data struct's fields
-func (s *STAT_SAL1L2_data) fill(fields []string) {
-	s.TOTAL.UnmarshalText([]byte(fields[0]))
-	s.FABAR.UnmarshalText([]byte(fields[1]))
-	s.OABAR.UnmarshalText([]byte(fields[2]))
-	s.FOABAR.UnmarshalText([]byte(fields[3]))
-	s.FFABAR.UnmarshalText([]byte(fields[4]))
-	s.OOABAR.UnmarshalText([]byte(fields[5]))
-	s.MAE.UnmarshalText([]byte(fields[6]))
+func (s *STAT_SAL1L2_data) fill(fields []string) error {
+	var errs []error
+	appendErrorWithContext(&errs, "TOTAL", s.TOTAL.UnmarshalText([]byte(fields[0])))
+	appendErrorWithContext(&errs, "FABAR", s.FABAR.UnmarshalText([]byte(fields[1])))
+	appendErrorWithContext(&errs, "OABAR", s.OABAR.UnmarshalText([]byte(fields[2])))
+	appendErrorWithContext(&errs, "FOABAR", s.FOABAR.UnmarshalText([]byte(fields[3])))
+	appendErrorWithContext(&errs, "FFABAR", s.FFABAR.UnmarshalText([]byte(fields[4])))
+	appendErrorWithContext(&errs, "OOABAR", s.OOABAR.UnmarshalText([]byte(fields[5])))
+	appendErrorWithContext(&errs, "MAE", s.MAE.UnmarshalText([]byte(fields[6])))
+	return errors.Join(errs...)
 }
 
 // Sets STAT_SL1L2_data struct's fields
-func (s *STAT_SL1L2_data) fill(fields []string) {
-	s.TOTAL.UnmarshalText([]byte(fields[0]))
-	s.FBAR.UnmarshalText([]byte(fields[1]))
-	s.OBAR.UnmarshalText([]byte(fields[2]))
-	s.FOBAR.UnmarshalText([]byte(fields[3]))
-	s.FFBAR.UnmarshalText([]byte(fields[4]))
-	s.OOBAR.UnmarshalText([]byte(fields[5]))
-	s.MAE.UnmarshalText([]byte(fields[6]))
+func (s *STAT_SL1L2_data) fill(fields []string) error {
+	var errs []error
+	appendErrorWithContext(&errs, "TOTAL", s.TOTAL.UnmarshalText([]byte(fields[0])))
+	appendErrorWithContext(&errs, "FBAR", s.FBAR.UnmarshalText([]byte(fields[1])))
+	appendErrorWithContext(&errs, "OBAR", s.OBAR.UnmarshalText([]byte(fields[2])))
+	appendErrorWithContext(&errs, "FOBAR", s.FOBAR.UnmarshalText([]byte(fields[3])))
+	appendErrorWithContext(&errs, "FFBAR", s.FFBAR.UnmarshalText([]byte(fields[4])))
+	appendErrorWithContext(&errs, "OOBAR", s.OOBAR.UnmarshalText([]byte(fields[5])))
+	appendErrorWithContext(&errs, "MAE", s.MAE.UnmarshalText([]byte(fields[6])))
+	return errors.Join(errs...)
 }
 
 // Sets STAT_SSVAR_data struct's fields
-func (s *STAT_SSVAR_data) fill(fields []string) {
-	s.TOTAL.UnmarshalText([]byte(fields[0]))
-	s.N_BIN.UnmarshalText([]byte(fields[1]))
-	s.BIN_I.UnmarshalText([]byte(fields[2]))
-	s.BIN_N.UnmarshalText([]byte(fields[3]))
-	s.VAR_MIN.UnmarshalText([]byte(fields[4]))
-	s.VAR_MAX.UnmarshalText([]byte(fields[5]))
-	s.VAR_MEAN.UnmarshalText([]byte(fields[6]))
-	s.FBAR.UnmarshalText([]byte(fields[7]))
-	s.OBAR.UnmarshalText([]byte(fields[8]))
-	s.FOBAR.UnmarshalText([]byte(fields[9]))
-	s.FFBAR.UnmarshalText([]byte(fields[10]))
-	s.OOBAR.UnmarshalText([]byte(fields[11]))
-	s.FBAR_NCL.UnmarshalText([]byte(fields[12]))
-	s.FBAR_NCU.UnmarshalText([]byte(fields[13]))
-	s.FSTDEV.UnmarshalText([]byte(fields[14]))
-	s.FSTDEV_NCL.UnmarshalText([]byte(fields[15]))
-	s.FSTDEV_NCU.UnmarshalText([]byte(fields[16]))
-	s.OBAR_NCL.UnmarshalText([]byte(fields[17]))
-	s.OBAR_NCU.UnmarshalText([]byte(fields[18]))
-	s.OSTDEV.UnmarshalText([]byte(fields[19]))
-	s.OSTDEV_NCL.UnmarshalText([]byte(fields[20]))
-	s.OSTDEV_NCU.UnmarshalText([]byte(fields[21]))
-	s.PR_CORR.UnmarshalText([]byte(fields[22]))
-	s.PR_CORR_NCL.UnmarshalText([]byte(fields[23]))
-	s.PR_CORR_NCU.UnmarshalText([]byte(fields[24]))
-	s.ME.UnmarshalText([]byte(fields[25]))
-	s.ME_NCL.UnmarshalText([]byte(fields[26]))
-	s.ME_NCU.UnmarshalText([]byte(fields[27]))
-	s.ESTDEV.UnmarshalText([]byte(fields[28]))
-	s.ESTDEV_NCL.UnmarshalText([]byte(fields[29]))
-	s.ESTDEV_NCU.UnmarshalText([]byte(fields[30]))
-	s.MBIAS.UnmarshalText([]byte(fields[31]))
-	s.MSE.UnmarshalText([]byte(fields[32]))
-	s.BCMSE.UnmarshalText([]byte(fields[33]))
-	s.RMSE.UnmarshalText([]byte(fields[34]))
+func (s *STAT_SSVAR_data) fill(fields []string) error {
+	var errs []error
+	appendErrorWithContext(&errs, "TOTAL", s.TOTAL.UnmarshalText([]byte(fields[0])))
+	appendErrorWithContext(&errs, "N_BIN", s.N_BIN.UnmarshalText([]byte(fields[1])))
+	appendErrorWithContext(&errs, "BIN_I", s.BIN_I.UnmarshalText([]byte(fields[2])))
+	appendErrorWithContext(&errs, "BIN_N", s.BIN_N.UnmarshalText([]byte(fields[3])))
+	appendErrorWithContext(&errs, "VAR_MIN", s.VAR_MIN.UnmarshalText([]byte(fields[4])))
+	appendErrorWithContext(&errs, "VAR_MAX", s.VAR_MAX.UnmarshalText([]byte(fields[5])))
+	appendErrorWithContext(&errs, "VAR_MEAN", s.VAR_MEAN.UnmarshalText([]byte(fields[6])))
+	appendErrorWithContext(&errs, "FBAR", s.FBAR.UnmarshalText([]byte(fields[7])))
+	appendErrorWithContext(&errs, "OBAR", s.OBAR.UnmarshalText([]byte(fields[8])))
+	appendErrorWithContext(&errs, "FOBAR", s.FOBAR.UnmarshalText([]byte(fields[9])))
+	appendErrorWithContext(&errs, "FFBAR", s.FFBAR.UnmarshalText([]byte(fields[10])))
+	appendErrorWithContext(&errs, "OOBAR", s.OOBAR.UnmarshalText([]byte(fields[11])))
+	appendErrorWithContext(&errs, "FBAR_NCL", s.FBAR_NCL.UnmarshalText([]byte(fields[12])))
+	appendErrorWithContext(&errs, "FBAR_NCU", s.FBAR_NCU.UnmarshalText([]byte(fields[13])))
+	appendErrorWithContext(&errs, "FSTDEV", s.FSTDEV.UnmarshalText([]byte(fields[14])))
+	appendErrorWithContext(&errs, "FSTDEV_NCL", s.FSTDEV_NCL.UnmarshalText([]byte(fields[15])))
+	appendErrorWithContext(&errs, "FSTDEV_NCU", s.FSTDEV_NCU.UnmarshalText([]byte(fields[16])))
+	appendErrorWithContext(&errs, "OBAR_NCL", s.OBAR_NCL.UnmarshalText([]byte(fields[17])))
+	appendErrorWithContext(&errs, "OBAR_NCU", s.OBAR_NCU.UnmarshalText([]byte(fields[18])))
+	appendErrorWithContext(&errs, "OSTDEV", s.OSTDEV.UnmarshalText([]byte(fields[19])))
+	appendErrorWithContext(&errs, "OSTDEV_NCL", s.OSTDEV_NCL.UnmarshalText([]byte(fields[20])))
+	appendErrorWithContext(&errs, "OSTDEV_NCU", s.OSTDEV_NCU.UnmarshalText([]byte(fields[21])))
+	appendErrorWithContext(&errs, "PR_CORR", s.PR_CORR.UnmarshalText([]byte(fields[22])))
+	appendErrorWithContext(&errs, "PR_CORR_NCL", s.PR_CORR_NCL.UnmarshalText([]byte(fields[23])))
+	appendErrorWithContext(&errs, "PR_CORR_NCU", s.PR_CORR_NCU.UnmarshalText([]byte(fields[24])))
+	appendErrorWithContext(&errs, "ME", s.ME.UnmarshalText([]byte(fields[25])))
+	appendErrorWithContext(&errs, "ME_NCL", s.ME_NCL.UnmarshalText([]byte(fields[26])))
+	appendErrorWithContext(&errs, "ME_NCU", s.ME_NCU.UnmarshalText([]byte(fields[27])))
+	appendErrorWithContext(&errs, "ESTDEV", s.ESTDEV.UnmarshalText([]byte(fields[28])))
+	appendErrorWithContext(&errs, "ESTDEV_NCL", s.ESTDEV_NCL.UnmarshalText([]byte(fields[29])))
+	appendErrorWithContext(&errs, "ESTDEV_NCU", s.ESTDEV_NCU.UnmarshalText([]byte(fields[30])))
+	appendErrorWithContext(&errs, "MBIAS", s.MBIAS.UnmarshalText([]byte(fields[31])))
+	appendErrorWithContext(&errs, "MSE", s.MSE.UnmarshalText([]byte(fields[32])))
+	appendErrorWithContext(&errs, "BCMSE", s.BCMSE.UnmarshalText([]byte(fields[33])))
+	appendErrorWithContext(&errs, "RMSE", s.RMSE.UnmarshalText([]byte(fields[34])))
+	return errors.Join(errs...)
 }
 
 // Sets STAT_VAL1L2_data struct's fields
-func (s *STAT_VAL1L2_data) fill(fields []string) {
-	s.TOTAL.UnmarshalText([]byte(fields[0]))
-	s.UFABAR.UnmarshalText([]byte(fields[1]))
-	s.VFABAR.UnmarshalText([]byte(fields[2]))
-	s.UOABAR.UnmarshalText([]byte(fields[3]))
-	s.VOABAR.UnmarshalText([]byte(fields[4]))
-	s.UVFOABAR.UnmarshalText([]byte(fields[5]))
-	s.UVFFABAR.UnmarshalText([]byte(fields[6]))
-	s.UVOOABAR.UnmarshalText([]byte(fields[7]))
+func (s *STAT_VAL1L2_data) fill(fields []string) error {
+	var errs []error
+	appendErrorWithContext(&errs, "TOTAL", s.TOTAL.UnmarshalText([]byte(fields[0])))
+	appendErrorWithContext(&errs, "UFABAR", s.UFABAR.UnmarshalText([]byte(fields[1])))
+	appendErrorWithContext(&errs, "VFABAR", s.VFABAR.UnmarshalText([]byte(fields[2])))
+	appendErrorWithContext(&errs, "UOABAR", s.UOABAR.UnmarshalText([]byte(fields[3])))
+	appendErrorWithContext(&errs, "VOABAR", s.VOABAR.UnmarshalText([]byte(fields[4])))
+	appendErrorWithContext(&errs, "UVFOABAR", s.UVFOABAR.UnmarshalText([]byte(fields[5])))
+	appendErrorWithContext(&errs, "UVFFABAR", s.UVFFABAR.UnmarshalText([]byte(fields[6])))
+	appendErrorWithContext(&errs, "UVOOABAR", s.UVOOABAR.UnmarshalText([]byte(fields[7])))
+	return errors.Join(errs...)
 }
 
 // Sets STAT_VCNT_data struct's fields
-func (s *STAT_VCNT_data) fill(fields []string) {
-	s.TOTAL.UnmarshalText([]byte(fields[0]))
-	s.FBAR.UnmarshalText([]byte(fields[1]))
-	s.FBAR_BCL.UnmarshalText([]byte(fields[2]))
-	s.FBAR_BCU.UnmarshalText([]byte(fields[3]))
-	s.OBAR.UnmarshalText([]byte(fields[4]))
-	s.OBAR_BCL.UnmarshalText([]byte(fields[5]))
-	s.OBAR_BCU.UnmarshalText([]byte(fields[6]))
-	s.FS_RMS.UnmarshalText([]byte(fields[7]))
-	s.FS_RMS_BCL.UnmarshalText([]byte(fields[8]))
-	s.FS_RMS_BCU.UnmarshalText([]byte(fields[9]))
-	s.OS_RMS.UnmarshalText([]byte(fields[10]))
-	s.OS_RMS_BCL.UnmarshalText([]byte(fields[11]))
-	s.OS_RMS_BCU.UnmarshalText([]byte(fields[12]))
-	s.MSVE.UnmarshalText([]byte(fields[13]))
-	s.MSVE_BCL.UnmarshalText([]byte(fields[14]))
-	s.MSVE_BCU.UnmarshalText([]byte(fields[15]))
-	s.RMSVE.UnmarshalText([]byte(fields[16]))
-	s.RMSVE_BCL.UnmarshalText([]byte(fields[17]))
-	s.RMSVE_BCU.UnmarshalText([]byte(fields[18]))
-	s.FSTDEV.UnmarshalText([]byte(fields[19]))
-	s.FSTDEV_BCL.UnmarshalText([]byte(fields[20]))
-	s.FSTDEV_BCU.UnmarshalText([]byte(fields[21]))
-	s.OSTDEV.UnmarshalText([]byte(fields[22]))
-	s.OSTDEV_BCL.UnmarshalText([]byte(fields[23]))
-	s.OSTDEV_BCU.UnmarshalText([]byte(fields[24]))
-	s.FDIR.UnmarshalText([]byte(fields[25]))
-	s.FDIR_BCL.UnmarshalText([]byte(fields[26]))
-	s.FDIR_BCU.UnmarshalText([]byte(fields[27]))
-	s.ODIR.UnmarshalText([]byte(fields[28]))
-	s.ODIR_BCL.UnmarshalText([]byte(fields[29]))
-	s.ODIR_BCU.UnmarshalText([]byte(fields[30]))
-	s.FBAR_SPEED.UnmarshalText([]byte(fields[31]))
-	s.FBAR_SPEED_BCL.UnmarshalText([]byte(fields[32]))
-	s.FBAR_SPEED_BCU.UnmarshalText([]byte(fields[33]))
-	s.OBAR_SPEED.UnmarshalText([]byte(fields[34]))
-	s.OBAR_SPEED_BCL.UnmarshalText([]byte(fields[35]))
-	s.OBAR_SPEED_BCU.UnmarshalText([]byte(fields[36]))
-	s.VDIFF_SPEED.UnmarshalText([]byte(fields[37]))
-	s.VDIFF_SPEED_BCL.UnmarshalText([]byte(fields[38]))
-	s.VDIFF_SPEED_BCU.UnmarshalText([]byte(fields[39]))
-	s.VDIFF_DIR.UnmarshalText([]byte(fields[40]))
-	s.VDIFF_DIR_BCL.UnmarshalText([]byte(fields[41]))
-	s.VDIFF_DIR_BCU.UnmarshalText([]byte(fields[42]))
-	s.SPEED_ERR.UnmarshalText([]byte(fields[43]))
-	s.SPEED_ERR_BCL.UnmarshalText([]byte(fields[44]))
-	s.SPEED_ERR_BCU.UnmarshalText([]byte(fields[45]))
-	s.SPEED_ABSERR.UnmarshalText([]byte(fields[46]))
-	s.SPEED_ABSERR_BCL.UnmarshalText([]byte(fields[47]))
-	s.SPEED_ABSERR_BCU.UnmarshalText([]byte(fields[48]))
-	s.DIR_ERR.UnmarshalText([]byte(fields[49]))
-	s.DIR_ERR_BCL.UnmarshalText([]byte(fields[50]))
-	s.DIR_ERR_BCU.UnmarshalText([]byte(fields[51]))
-	s.DIR_ABSERR.UnmarshalText([]byte(fields[52]))
-	s.DIR_ABSERR_BCL.UnmarshalText([]byte(fields[53]))
-	s.DIR_ABSERR_BCU.UnmarshalText([]byte(fields[54]))
+func (s *STAT_VCNT_data) fill(fields []string) error {
+	var errs []error
+	appendErrorWithContext(&errs, "TOTAL", s.TOTAL.UnmarshalText([]byte(fields[0])))
+	appendErrorWithContext(&errs, "FBAR", s.FBAR.UnmarshalText([]byte(fields[1])))
+	appendErrorWithContext(&errs, "FBAR_BCL", s.FBAR_BCL.UnmarshalText([]byte(fields[2])))
+	appendErrorWithContext(&errs, "FBAR_BCU", s.FBAR_BCU.UnmarshalText([]byte(fields[3])))
+	appendErrorWithContext(&errs, "OBAR", s.OBAR.UnmarshalText([]byte(fields[4])))
+	appendErrorWithContext(&errs, "OBAR_BCL", s.OBAR_BCL.UnmarshalText([]byte(fields[5])))
+	appendErrorWithContext(&errs, "OBAR_BCU", s.OBAR_BCU.UnmarshalText([]byte(fields[6])))
+	appendErrorWithContext(&errs, "FS_RMS", s.FS_RMS.UnmarshalText([]byte(fields[7])))
+	appendErrorWithContext(&errs, "FS_RMS_BCL", s.FS_RMS_BCL.UnmarshalText([]byte(fields[8])))
+	appendErrorWithContext(&errs, "FS_RMS_BCU", s.FS_RMS_BCU.UnmarshalText([]byte(fields[9])))
+	appendErrorWithContext(&errs, "OS_RMS", s.OS_RMS.UnmarshalText([]byte(fields[10])))
+	appendErrorWithContext(&errs, "OS_RMS_BCL", s.OS_RMS_BCL.UnmarshalText([]byte(fields[11])))
+	appendErrorWithContext(&errs, "OS_RMS_BCU", s.OS_RMS_BCU.UnmarshalText([]byte(fields[12])))
+	appendErrorWithContext(&errs, "MSVE", s.MSVE.UnmarshalText([]byte(fields[13])))
+	appendErrorWithContext(&errs, "MSVE_BCL", s.MSVE_BCL.UnmarshalText([]byte(fields[14])))
+	appendErrorWithContext(&errs, "MSVE_BCU", s.MSVE_BCU.UnmarshalText([]byte(fields[15])))
+	appendErrorWithContext(&errs, "RMSVE", s.RMSVE.UnmarshalText([]byte(fields[16])))
+	appendErrorWithContext(&errs, "RMSVE_BCL", s.RMSVE_BCL.UnmarshalText([]byte(fields[17])))
+	appendErrorWithContext(&errs, "RMSVE_BCU", s.RMSVE_BCU.UnmarshalText([]byte(fields[18])))
+	appendErrorWithContext(&errs, "FSTDEV", s.FSTDEV.UnmarshalText([]byte(fields[19])))
+	appendErrorWithContext(&errs, "FSTDEV_BCL", s.FSTDEV_BCL.UnmarshalText([]byte(fields[20])))
+	appendErrorWithContext(&errs, "FSTDEV_BCU", s.FSTDEV_BCU.UnmarshalText([]byte(fields[21])))
+	appendErrorWithContext(&errs, "OSTDEV", s.OSTDEV.UnmarshalText([]byte(fields[22])))
+	appendErrorWithContext(&errs, "OSTDEV_BCL", s.OSTDEV_BCL.UnmarshalText([]byte(fields[23])))
+	appendErrorWithContext(&errs, "OSTDEV_BCU", s.OSTDEV_BCU.UnmarshalText([]byte(fields[24])))
+	appendErrorWithContext(&errs, "FDIR", s.FDIR.UnmarshalText([]byte(fields[25])))
+	appendErrorWithContext(&errs, "FDIR_BCL", s.FDIR_BCL.UnmarshalText([]byte(fields[26])))
+	appendErrorWithContext(&errs, "FDIR_BCU", s.FDIR_BCU.UnmarshalText([]byte(fields[27])))
+	appendErrorWithContext(&errs, "ODIR", s.ODIR.UnmarshalText([]byte(fields[28])))
+	appendErrorWithContext(&errs, "ODIR_BCL", s.ODIR_BCL.UnmarshalText([]byte(fields[29])))
+	appendErrorWithContext(&errs, "ODIR_BCU", s.ODIR_BCU.UnmarshalText([]byte(fields[30])))
+	appendErrorWithContext(&errs, "FBAR_SPEED", s.FBAR_SPEED.UnmarshalText([]byte(fields[31])))
+	appendErrorWithContext(&errs, "FBAR_SPEED_BCL", s.FBAR_SPEED_BCL.UnmarshalText([]byte(fields[32])))
+	appendErrorWithContext(&errs, "FBAR_SPEED_BCU", s.FBAR_SPEED_BCU.UnmarshalText([]byte(fields[33])))
+	appendErrorWithContext(&errs, "OBAR_SPEED", s.OBAR_SPEED.UnmarshalText([]byte(fields[34])))
+	appendErrorWithContext(&errs, "OBAR_SPEED_BCL", s.OBAR_SPEED_BCL.UnmarshalText([]byte(fields[35])))
+	appendErrorWithContext(&errs, "OBAR_SPEED_BCU", s.OBAR_SPEED_BCU.UnmarshalText([]byte(fields[36])))
+	appendErrorWithContext(&errs, "VDIFF_SPEED", s.VDIFF_SPEED.UnmarshalText([]byte(fields[37])))
+	appendErrorWithContext(&errs, "VDIFF_SPEED_BCL", s.VDIFF_SPEED_BCL.UnmarshalText([]byte(fields[38])))
+	appendErrorWithContext(&errs, "VDIFF_SPEED_BCU", s.VDIFF_SPEED_BCU.UnmarshalText([]byte(fields[39])))
+	appendErrorWithContext(&errs, "VDIFF_DIR", s.VDIFF_DIR.UnmarshalText([]byte(fields[40])))
+	appendErrorWithContext(&errs, "VDIFF_DIR_BCL", s.VDIFF_DIR_BCL.UnmarshalText([]byte(fields[41])))
+	appendErrorWithContext(&errs, "VDIFF_DIR_BCU", s.VDIFF_DIR_BCU.UnmarshalText([]byte(fields[42])))
+	appendErrorWithContext(&errs, "SPEED_ERR", s.SPEED_ERR.UnmarshalText([]byte(fields[43])))
+	appendErrorWithContext(&errs, "SPEED_ERR_BCL", s.SPEED_ERR_BCL.UnmarshalText([]byte(fields[44])))
+	appendErrorWithContext(&errs, "SPEED_ERR_BCU", s.SPEED_ERR_BCU.UnmarshalText([]byte(fields[45])))
+	appendErrorWithContext(&errs, "SPEED_ABSERR", s.SPEED_ABSERR.UnmarshalText([]byte(fields[46])))
+	appendErrorWithContext(&errs, "SPEED_ABSERR_BCL", s.SPEED_ABSERR_BCL.UnmarshalText([]byte(fields[47])))
+	appendErrorWithContext(&errs, "SPEED_ABSERR_BCU", s.SPEED_ABSERR_BCU.UnmarshalText([]byte(fields[48])))
+	appendErrorWithContext(&errs, "DIR_ERR", s.DIR_ERR.UnmarshalText([]byte(fields[49])))
+	appendErrorWithContext(&errs, "DIR_ERR_BCL", s.DIR_ERR_BCL.UnmarshalText([]byte(fields[50])))
+	appendErrorWithContext(&errs, "DIR_ERR_BCU", s.DIR_ERR_BCU.UnmarshalText([]byte(fields[51])))
+	appendErrorWithContext(&errs, "DIR_ABSERR", s.DIR_ABSERR.UnmarshalText([]byte(fields[52])))
+	appendErrorWithContext(&errs, "DIR_ABSERR_BCL", s.DIR_ABSERR_BCL.UnmarshalText([]byte(fields[53])))
+	appendErrorWithContext(&errs, "DIR_ABSERR_BCU", s.DIR_ABSERR_BCU.UnmarshalText([]byte(fields[54])))
+	return errors.Join(errs...)
 }
 
 // Sets STAT_VL1L2_data struct's fields
-func (s *STAT_VL1L2_data) fill(fields []string) {
-	s.TOTAL.UnmarshalText([]byte(fields[0]))
-	s.UFBAR.UnmarshalText([]byte(fields[1]))
-	s.VFBAR.UnmarshalText([]byte(fields[2]))
-	s.UOBAR.UnmarshalText([]byte(fields[3]))
-	s.VOBAR.UnmarshalText([]byte(fields[4]))
-	s.UVFOBAR.UnmarshalText([]byte(fields[5]))
-	s.UVFFBAR.UnmarshalText([]byte(fields[6]))
-	s.UVOOBAR.UnmarshalText([]byte(fields[7]))
-	s.F_SPEED_BAR.UnmarshalText([]byte(fields[8]))
-	s.O_SPEED_BAR.UnmarshalText([]byte(fields[9]))
+func (s *STAT_VL1L2_data) fill(fields []string) error {
+	var errs []error
+	appendErrorWithContext(&errs, "TOTAL", s.TOTAL.UnmarshalText([]byte(fields[0])))
+	appendErrorWithContext(&errs, "UFBAR", s.UFBAR.UnmarshalText([]byte(fields[1])))
+	appendErrorWithContext(&errs, "VFBAR", s.VFBAR.UnmarshalText([]byte(fields[2])))
+	appendErrorWithContext(&errs, "UOBAR", s.UOBAR.UnmarshalText([]byte(fields[3])))
+	appendErrorWithContext(&errs, "VOBAR", s.VOBAR.UnmarshalText([]byte(fields[4])))
+	appendErrorWithContext(&errs, "UVFOBAR", s.UVFOBAR.UnmarshalText([]byte(fields[5])))
+	appendErrorWithContext(&errs, "UVFFBAR", s.UVFFBAR.UnmarshalText([]byte(fields[6])))
+	appendErrorWithContext(&errs, "UVOOBAR", s.UVOOBAR.UnmarshalText([]byte(fields[7])))
+	appendErrorWithContext(&errs, "F_SPEED_BAR", s.F_SPEED_BAR.UnmarshalText([]byte(fields[8])))
+	appendErrorWithContext(&errs, "O_SPEED_BAR", s.O_SPEED_BAR.UnmarshalText([]byte(fields[9])))
+	return errors.Join(errs...)
 }
 
 // Sets TCST_PROBRIRW_data struct's fields
-func (s *TCST_PROBRIRW_data) fill(fields []string) {
-	s.ALAT.UnmarshalText([]byte(fields[0]))
-	s.ALON.UnmarshalText([]byte(fields[1]))
-	s.BLAT.UnmarshalText([]byte(fields[2]))
-	s.BLON.UnmarshalText([]byte(fields[3]))
-	s.INITIALS.UnmarshalText([]byte(fields[4]))
-	s.TK_ERR.UnmarshalText([]byte(fields[5]))
-	s.X_ERR.UnmarshalText([]byte(fields[6]))
-	s.Y_ERR.UnmarshalText([]byte(fields[7]))
-	s.ADLAND.UnmarshalText([]byte(fields[8]))
-	s.BDLAND.UnmarshalText([]byte(fields[9]))
-	s.RIRW_BEG.UnmarshalText([]byte(fields[10]))
-	s.RIRW_END.UnmarshalText([]byte(fields[11]))
-	s.RIRW_WINDOW.UnmarshalText([]byte(fields[12]))
-	s.AWIND_END.UnmarshalText([]byte(fields[13]))
-	s.BWIND_BEG.UnmarshalText([]byte(fields[14]))
-	s.BWIND_END.UnmarshalText([]byte(fields[15]))
-	s.BDELTA.UnmarshalText([]byte(fields[16]))
-	s.BDELTA_MAX.UnmarshalText([]byte(fields[17]))
-	s.BLEVEL_BEG.UnmarshalText([]byte(fields[18]))
-	s.BLEVEL_END.UnmarshalText([]byte(fields[19]))
+func (s *TCST_PROBRIRW_data) fill(fields []string) error {
+	var errs []error
+	appendErrorWithContext(&errs, "ALAT", s.ALAT.UnmarshalText([]byte(fields[0])))
+	appendErrorWithContext(&errs, "ALON", s.ALON.UnmarshalText([]byte(fields[1])))
+	appendErrorWithContext(&errs, "BLAT", s.BLAT.UnmarshalText([]byte(fields[2])))
+	appendErrorWithContext(&errs, "BLON", s.BLON.UnmarshalText([]byte(fields[3])))
+	appendErrorWithContext(&errs, "INITIALS", s.INITIALS.UnmarshalText([]byte(fields[4])))
+	appendErrorWithContext(&errs, "TK_ERR", s.TK_ERR.UnmarshalText([]byte(fields[5])))
+	appendErrorWithContext(&errs, "X_ERR", s.X_ERR.UnmarshalText([]byte(fields[6])))
+	appendErrorWithContext(&errs, "Y_ERR", s.Y_ERR.UnmarshalText([]byte(fields[7])))
+	appendErrorWithContext(&errs, "ADLAND", s.ADLAND.UnmarshalText([]byte(fields[8])))
+	appendErrorWithContext(&errs, "BDLAND", s.BDLAND.UnmarshalText([]byte(fields[9])))
+	appendErrorWithContext(&errs, "RIRW_BEG", s.RIRW_BEG.UnmarshalText([]byte(fields[10])))
+	appendErrorWithContext(&errs, "RIRW_END", s.RIRW_END.UnmarshalText([]byte(fields[11])))
+	appendErrorWithContext(&errs, "RIRW_WINDOW", s.RIRW_WINDOW.UnmarshalText([]byte(fields[12])))
+	appendErrorWithContext(&errs, "AWIND_END", s.AWIND_END.UnmarshalText([]byte(fields[13])))
+	appendErrorWithContext(&errs, "BWIND_BEG", s.BWIND_BEG.UnmarshalText([]byte(fields[14])))
+	appendErrorWithContext(&errs, "BWIND_END", s.BWIND_END.UnmarshalText([]byte(fields[15])))
+	appendErrorWithContext(&errs, "BDELTA", s.BDELTA.UnmarshalText([]byte(fields[16])))
+	appendErrorWithContext(&errs, "BDELTA_MAX", s.BDELTA_MAX.UnmarshalText([]byte(fields[17])))
+	appendErrorWithContext(&errs, "BLEVEL_BEG", s.BLEVEL_BEG.UnmarshalText([]byte(fields[18])))
+	appendErrorWithContext(&errs, "BLEVEL_END", s.BLEVEL_END.UnmarshalText([]byte(fields[19])))
 	// the first field of the repeating fields is the TOTAL, the second field is the 1st dimenSion of the 1st sequence (there might be only one sequence)
 	var value validtypes.ValidInt
 	count, err := strconv.Atoi(fields[20])
@@ -4016,94 +4160,99 @@ func (s *TCST_PROBRIRW_data) fill(fields []string) {
 			if index > len(fields) { // sometimes the data line is truncated - invalidate that field
 				value.Reset()
 			} else {
-				value.UnmarshalText([]byte(fields[index]))
+				appendErrorWithContext(&errs, "THRESH", value.UnmarshalText([]byte(fields[index])))
 			}
 			s.THRESH[key] = value
 		}
 	}
-	s.INIT.UnmarshalText([]byte(fields[23]))
+	appendErrorWithContext(&errs, "INIT", s.INIT.UnmarshalText([]byte(fields[23])))
+	return errors.Join(errs...)
 }
 
 // Sets TCST_TCMPR_data struct's fields
-func (s *TCST_TCMPR_data) fill(fields []string) {
-	s.TOTAL.UnmarshalText([]byte(fields[0]))
-	s.INDEX.UnmarshalText([]byte(fields[1]))
-	s.LEVEL.UnmarshalText([]byte(fields[2]))
-	s.WATCH_WARN.UnmarshalText([]byte(fields[3]))
-	s.INITIALS.UnmarshalText([]byte(fields[4]))
-	s.ALAT.UnmarshalText([]byte(fields[5]))
-	s.ALON.UnmarshalText([]byte(fields[6]))
-	s.BLAT.UnmarshalText([]byte(fields[7]))
-	s.BLON.UnmarshalText([]byte(fields[8]))
-	s.TK_ERR.UnmarshalText([]byte(fields[9]))
-	s.X_ERR.UnmarshalText([]byte(fields[10]))
-	s.Y_ERR.UnmarshalText([]byte(fields[11]))
-	s.ALTK_ERR.UnmarshalText([]byte(fields[12]))
-	s.CRTK_ERR.UnmarshalText([]byte(fields[13]))
-	s.ADLAND.UnmarshalText([]byte(fields[14]))
-	s.BDLAND.UnmarshalText([]byte(fields[15]))
-	s.AMSLP.UnmarshalText([]byte(fields[16]))
-	s.BMSLP.UnmarshalText([]byte(fields[17]))
-	s.AMAX_WIND.UnmarshalText([]byte(fields[18]))
-	s.BMAX_WIND.UnmarshalText([]byte(fields[19]))
-	s.AAL_WIND_34.UnmarshalText([]byte(fields[20]))
-	s.BAL_WIND_34.UnmarshalText([]byte(fields[21]))
-	s.ANE_WIND_34.UnmarshalText([]byte(fields[22]))
-	s.BNE_WIND_34.UnmarshalText([]byte(fields[23]))
-	s.ASE_WIND_34.UnmarshalText([]byte(fields[24]))
-	s.BSE_WIND_34.UnmarshalText([]byte(fields[25]))
-	s.ASW_WIND_34.UnmarshalText([]byte(fields[26]))
-	s.BSW_WIND_34.UnmarshalText([]byte(fields[27]))
-	s.ANW_WIND_34.UnmarshalText([]byte(fields[28]))
-	s.BNW_WIND_34.UnmarshalText([]byte(fields[29]))
-	s.AAL_WIND_50.UnmarshalText([]byte(fields[30]))
-	s.BAL_WIND_50.UnmarshalText([]byte(fields[31]))
-	s.ANE_WIND_50.UnmarshalText([]byte(fields[32]))
-	s.BNE_WIND_50.UnmarshalText([]byte(fields[33]))
-	s.ASE_WIND_50.UnmarshalText([]byte(fields[34]))
-	s.BSE_WIND_50.UnmarshalText([]byte(fields[35]))
-	s.ASW_WIND_50.UnmarshalText([]byte(fields[36]))
-	s.BSW_WIND_50.UnmarshalText([]byte(fields[37]))
-	s.ANW_WIND_50.UnmarshalText([]byte(fields[38]))
-	s.BNW_WIND_50.UnmarshalText([]byte(fields[39]))
-	s.AAL_WIND_64.UnmarshalText([]byte(fields[40]))
-	s.BAL_WIND_64.UnmarshalText([]byte(fields[41]))
-	s.ANE_WIND_64.UnmarshalText([]byte(fields[42]))
-	s.BNE_WIND_64.UnmarshalText([]byte(fields[43]))
-	s.ASE_WIND_64.UnmarshalText([]byte(fields[44]))
-	s.BSE_WIND_64.UnmarshalText([]byte(fields[45]))
-	s.ASW_WIND_64.UnmarshalText([]byte(fields[46]))
-	s.BSW_WIND_64.UnmarshalText([]byte(fields[47]))
-	s.ANW_WIND_64.UnmarshalText([]byte(fields[48]))
-	s.BNW_WIND_64.UnmarshalText([]byte(fields[49]))
-	s.ARADP.UnmarshalText([]byte(fields[50]))
-	s.BRADP.UnmarshalText([]byte(fields[51]))
-	s.ARRP.UnmarshalText([]byte(fields[52]))
-	s.BRRP.UnmarshalText([]byte(fields[53]))
-	s.AMRD.UnmarshalText([]byte(fields[54]))
-	s.BMRD.UnmarshalText([]byte(fields[55]))
-	s.AGUSTS.UnmarshalText([]byte(fields[56]))
-	s.BGUSTS.UnmarshalText([]byte(fields[57]))
-	s.AEYE.UnmarshalText([]byte(fields[58]))
-	s.BEYE.UnmarshalText([]byte(fields[59]))
-	s.ADIR.UnmarshalText([]byte(fields[60]))
-	s.BDIR.UnmarshalText([]byte(fields[61]))
-	s.ASPEED.UnmarshalText([]byte(fields[62]))
-	s.BSPEED.UnmarshalText([]byte(fields[63]))
-	s.ADEPTH.UnmarshalText([]byte(fields[64]))
-	s.BDEPTH.UnmarshalText([]byte(fields[65]))
-	s.INIT.UnmarshalText([]byte(fields[66]))
+func (s *TCST_TCMPR_data) fill(fields []string) error {
+	var errs []error
+	appendErrorWithContext(&errs, "TOTAL", s.TOTAL.UnmarshalText([]byte(fields[0])))
+	appendErrorWithContext(&errs, "INDEX", s.INDEX.UnmarshalText([]byte(fields[1])))
+	appendErrorWithContext(&errs, "LEVEL", s.LEVEL.UnmarshalText([]byte(fields[2])))
+	appendErrorWithContext(&errs, "WATCH_WARN", s.WATCH_WARN.UnmarshalText([]byte(fields[3])))
+	appendErrorWithContext(&errs, "INITIALS", s.INITIALS.UnmarshalText([]byte(fields[4])))
+	appendErrorWithContext(&errs, "ALAT", s.ALAT.UnmarshalText([]byte(fields[5])))
+	appendErrorWithContext(&errs, "ALON", s.ALON.UnmarshalText([]byte(fields[6])))
+	appendErrorWithContext(&errs, "BLAT", s.BLAT.UnmarshalText([]byte(fields[7])))
+	appendErrorWithContext(&errs, "BLON", s.BLON.UnmarshalText([]byte(fields[8])))
+	appendErrorWithContext(&errs, "TK_ERR", s.TK_ERR.UnmarshalText([]byte(fields[9])))
+	appendErrorWithContext(&errs, "X_ERR", s.X_ERR.UnmarshalText([]byte(fields[10])))
+	appendErrorWithContext(&errs, "Y_ERR", s.Y_ERR.UnmarshalText([]byte(fields[11])))
+	appendErrorWithContext(&errs, "ALTK_ERR", s.ALTK_ERR.UnmarshalText([]byte(fields[12])))
+	appendErrorWithContext(&errs, "CRTK_ERR", s.CRTK_ERR.UnmarshalText([]byte(fields[13])))
+	appendErrorWithContext(&errs, "ADLAND", s.ADLAND.UnmarshalText([]byte(fields[14])))
+	appendErrorWithContext(&errs, "BDLAND", s.BDLAND.UnmarshalText([]byte(fields[15])))
+	appendErrorWithContext(&errs, "AMSLP", s.AMSLP.UnmarshalText([]byte(fields[16])))
+	appendErrorWithContext(&errs, "BMSLP", s.BMSLP.UnmarshalText([]byte(fields[17])))
+	appendErrorWithContext(&errs, "AMAX_WIND", s.AMAX_WIND.UnmarshalText([]byte(fields[18])))
+	appendErrorWithContext(&errs, "BMAX_WIND", s.BMAX_WIND.UnmarshalText([]byte(fields[19])))
+	appendErrorWithContext(&errs, "AAL_WIND_34", s.AAL_WIND_34.UnmarshalText([]byte(fields[20])))
+	appendErrorWithContext(&errs, "BAL_WIND_34", s.BAL_WIND_34.UnmarshalText([]byte(fields[21])))
+	appendErrorWithContext(&errs, "ANE_WIND_34", s.ANE_WIND_34.UnmarshalText([]byte(fields[22])))
+	appendErrorWithContext(&errs, "BNE_WIND_34", s.BNE_WIND_34.UnmarshalText([]byte(fields[23])))
+	appendErrorWithContext(&errs, "ASE_WIND_34", s.ASE_WIND_34.UnmarshalText([]byte(fields[24])))
+	appendErrorWithContext(&errs, "BSE_WIND_34", s.BSE_WIND_34.UnmarshalText([]byte(fields[25])))
+	appendErrorWithContext(&errs, "ASW_WIND_34", s.ASW_WIND_34.UnmarshalText([]byte(fields[26])))
+	appendErrorWithContext(&errs, "BSW_WIND_34", s.BSW_WIND_34.UnmarshalText([]byte(fields[27])))
+	appendErrorWithContext(&errs, "ANW_WIND_34", s.ANW_WIND_34.UnmarshalText([]byte(fields[28])))
+	appendErrorWithContext(&errs, "BNW_WIND_34", s.BNW_WIND_34.UnmarshalText([]byte(fields[29])))
+	appendErrorWithContext(&errs, "AAL_WIND_50", s.AAL_WIND_50.UnmarshalText([]byte(fields[30])))
+	appendErrorWithContext(&errs, "BAL_WIND_50", s.BAL_WIND_50.UnmarshalText([]byte(fields[31])))
+	appendErrorWithContext(&errs, "ANE_WIND_50", s.ANE_WIND_50.UnmarshalText([]byte(fields[32])))
+	appendErrorWithContext(&errs, "BNE_WIND_50", s.BNE_WIND_50.UnmarshalText([]byte(fields[33])))
+	appendErrorWithContext(&errs, "ASE_WIND_50", s.ASE_WIND_50.UnmarshalText([]byte(fields[34])))
+	appendErrorWithContext(&errs, "BSE_WIND_50", s.BSE_WIND_50.UnmarshalText([]byte(fields[35])))
+	appendErrorWithContext(&errs, "ASW_WIND_50", s.ASW_WIND_50.UnmarshalText([]byte(fields[36])))
+	appendErrorWithContext(&errs, "BSW_WIND_50", s.BSW_WIND_50.UnmarshalText([]byte(fields[37])))
+	appendErrorWithContext(&errs, "ANW_WIND_50", s.ANW_WIND_50.UnmarshalText([]byte(fields[38])))
+	appendErrorWithContext(&errs, "BNW_WIND_50", s.BNW_WIND_50.UnmarshalText([]byte(fields[39])))
+	appendErrorWithContext(&errs, "AAL_WIND_64", s.AAL_WIND_64.UnmarshalText([]byte(fields[40])))
+	appendErrorWithContext(&errs, "BAL_WIND_64", s.BAL_WIND_64.UnmarshalText([]byte(fields[41])))
+	appendErrorWithContext(&errs, "ANE_WIND_64", s.ANE_WIND_64.UnmarshalText([]byte(fields[42])))
+	appendErrorWithContext(&errs, "BNE_WIND_64", s.BNE_WIND_64.UnmarshalText([]byte(fields[43])))
+	appendErrorWithContext(&errs, "ASE_WIND_64", s.ASE_WIND_64.UnmarshalText([]byte(fields[44])))
+	appendErrorWithContext(&errs, "BSE_WIND_64", s.BSE_WIND_64.UnmarshalText([]byte(fields[45])))
+	appendErrorWithContext(&errs, "ASW_WIND_64", s.ASW_WIND_64.UnmarshalText([]byte(fields[46])))
+	appendErrorWithContext(&errs, "BSW_WIND_64", s.BSW_WIND_64.UnmarshalText([]byte(fields[47])))
+	appendErrorWithContext(&errs, "ANW_WIND_64", s.ANW_WIND_64.UnmarshalText([]byte(fields[48])))
+	appendErrorWithContext(&errs, "BNW_WIND_64", s.BNW_WIND_64.UnmarshalText([]byte(fields[49])))
+	appendErrorWithContext(&errs, "ARADP", s.ARADP.UnmarshalText([]byte(fields[50])))
+	appendErrorWithContext(&errs, "BRADP", s.BRADP.UnmarshalText([]byte(fields[51])))
+	appendErrorWithContext(&errs, "ARRP", s.ARRP.UnmarshalText([]byte(fields[52])))
+	appendErrorWithContext(&errs, "BRRP", s.BRRP.UnmarshalText([]byte(fields[53])))
+	appendErrorWithContext(&errs, "AMRD", s.AMRD.UnmarshalText([]byte(fields[54])))
+	appendErrorWithContext(&errs, "BMRD", s.BMRD.UnmarshalText([]byte(fields[55])))
+	appendErrorWithContext(&errs, "AGUSTS", s.AGUSTS.UnmarshalText([]byte(fields[56])))
+	appendErrorWithContext(&errs, "BGUSTS", s.BGUSTS.UnmarshalText([]byte(fields[57])))
+	appendErrorWithContext(&errs, "AEYE", s.AEYE.UnmarshalText([]byte(fields[58])))
+	appendErrorWithContext(&errs, "BEYE", s.BEYE.UnmarshalText([]byte(fields[59])))
+	appendErrorWithContext(&errs, "ADIR", s.ADIR.UnmarshalText([]byte(fields[60])))
+	appendErrorWithContext(&errs, "BDIR", s.BDIR.UnmarshalText([]byte(fields[61])))
+	appendErrorWithContext(&errs, "ASPEED", s.ASPEED.UnmarshalText([]byte(fields[62])))
+	appendErrorWithContext(&errs, "BSPEED", s.BSPEED.UnmarshalText([]byte(fields[63])))
+	appendErrorWithContext(&errs, "ADEPTH", s.ADEPTH.UnmarshalText([]byte(fields[64])))
+	appendErrorWithContext(&errs, "BDEPTH", s.BDEPTH.UnmarshalText([]byte(fields[65])))
+	appendErrorWithContext(&errs, "INIT", s.INIT.UnmarshalText([]byte(fields[66])))
+	return errors.Join(errs...)
 }
 
 // Creates a new doc, header functions and all.
 func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []string, dataData []string, dataKey string) (map[string]interface{}, error) {
 	var statDoc any
+	var errs []error
+
 	switch fileLineType {
 	case "MODE_CTS":
 		elem_header := MODE_CTS_header{}
-		elem_header.fill(headerData)
+		appendErrorWithContext(&errs, "MODE_CTS_header", elem_header.fill(headerData))
 		elem_data := MODE_CTS_data{}
-		elem_data.fill(dataData)
+		appendErrorWithContext(&errs, "MODE_CTS_data", elem_data.fill(dataData))
 
 		tmp := MODE_CTS{
 			VxMetadata:      metaData,
@@ -4114,9 +4263,9 @@ func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []str
 		statDoc = tmp
 	case "MODE_OBJ":
 		elem_header := MODE_OBJ_header{}
-		elem_header.fill(headerData)
+		appendErrorWithContext(&errs, "MODE_OBJ_header", elem_header.fill(headerData))
 		elem_data := MODE_OBJ_data{}
-		elem_data.fill(dataData)
+		appendErrorWithContext(&errs, "MODE_OBJ_data", elem_data.fill(dataData))
 
 		tmp := MODE_OBJ{
 			VxMetadata:      metaData,
@@ -4127,9 +4276,9 @@ func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []str
 		statDoc = tmp
 	case "STAT_CNT":
 		elem_header := STAT_CNT_header{}
-		elem_header.fill(headerData)
+		appendErrorWithContext(&errs, "STAT_CNT_header", elem_header.fill(headerData))
 		elem_data := STAT_CNT_data{}
-		elem_data.fill(dataData)
+		appendErrorWithContext(&errs, "STAT_CNT_data", elem_data.fill(dataData))
 
 		tmp := STAT_CNT{
 			VxMetadata:      metaData,
@@ -4140,9 +4289,9 @@ func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []str
 		statDoc = tmp
 	case "STAT_CTC":
 		elem_header := STAT_CTC_header{}
-		elem_header.fill(headerData)
+		appendErrorWithContext(&errs, "STAT_CTC_header", elem_header.fill(headerData))
 		elem_data := STAT_CTC_data{}
-		elem_data.fill(dataData)
+		appendErrorWithContext(&errs, "STAT_CTC_data", elem_data.fill(dataData))
 
 		tmp := STAT_CTC{
 			VxMetadata:      metaData,
@@ -4153,9 +4302,9 @@ func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []str
 		statDoc = tmp
 	case "STAT_CTS":
 		elem_header := STAT_CTS_header{}
-		elem_header.fill(headerData)
+		appendErrorWithContext(&errs, "STAT_CTS_header", elem_header.fill(headerData))
 		elem_data := STAT_CTS_data{}
-		elem_data.fill(dataData)
+		appendErrorWithContext(&errs, "STAT_CTS_data", elem_data.fill(dataData))
 
 		tmp := STAT_CTS{
 			VxMetadata:      metaData,
@@ -4166,9 +4315,9 @@ func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []str
 		statDoc = tmp
 	case "STAT_DMAP":
 		elem_header := STAT_DMAP_header{}
-		elem_header.fill(headerData)
+		appendErrorWithContext(&errs, "STAT_DMAP_header", elem_header.fill(headerData))
 		elem_data := STAT_DMAP_data{}
-		elem_data.fill(dataData)
+		appendErrorWithContext(&errs, "STAT_DMAP_data", elem_data.fill(dataData))
 
 		tmp := STAT_DMAP{
 			VxMetadata:       metaData,
@@ -4179,9 +4328,9 @@ func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []str
 		statDoc = tmp
 	case "STAT_ECLV":
 		elem_header := STAT_ECLV_header{}
-		elem_header.fill(headerData)
+		appendErrorWithContext(&errs, "STAT_ECLV_header", elem_header.fill(headerData))
 		elem_data := STAT_ECLV_data{}
-		elem_data.fill(dataData)
+		appendErrorWithContext(&errs, "STAT_ECLV_data", elem_data.fill(dataData))
 
 		tmp := STAT_ECLV{
 			VxMetadata:       metaData,
@@ -4192,9 +4341,9 @@ func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []str
 		statDoc = tmp
 	case "STAT_ECNT":
 		elem_header := STAT_ECNT_header{}
-		elem_header.fill(headerData)
+		appendErrorWithContext(&errs, "STAT_ECNT_header", elem_header.fill(headerData))
 		elem_data := STAT_ECNT_data{}
-		elem_data.fill(dataData)
+		appendErrorWithContext(&errs, "STAT_ECNT_data", elem_data.fill(dataData))
 
 		tmp := STAT_ECNT{
 			VxMetadata:       metaData,
@@ -4205,9 +4354,9 @@ func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []str
 		statDoc = tmp
 	case "STAT_FHO":
 		elem_header := STAT_FHO_header{}
-		elem_header.fill(headerData)
+		appendErrorWithContext(&errs, "STAT_FHO_header", elem_header.fill(headerData))
 		elem_data := STAT_FHO_data{}
-		elem_data.fill(dataData)
+		appendErrorWithContext(&errs, "STAT_FHO_data", elem_data.fill(dataData))
 
 		tmp := STAT_FHO{
 			VxMetadata:      metaData,
@@ -4218,9 +4367,9 @@ func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []str
 		statDoc = tmp
 	case "STAT_GENMPR":
 		elem_header := STAT_GENMPR_header{}
-		elem_header.fill(headerData)
+		appendErrorWithContext(&errs, "STAT_GENMPR_header", elem_header.fill(headerData))
 		elem_data := STAT_GENMPR_data{}
-		elem_data.fill(dataData)
+		appendErrorWithContext(&errs, "STAT_GENMPR_data", elem_data.fill(dataData))
 
 		tmp := STAT_GENMPR{
 			VxMetadata:         metaData,
@@ -4231,9 +4380,9 @@ func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []str
 		statDoc = tmp
 	case "STAT_GRAD":
 		elem_header := STAT_GRAD_header{}
-		elem_header.fill(headerData)
+		appendErrorWithContext(&errs, "STAT_GRAD_header", elem_header.fill(headerData))
 		elem_data := STAT_GRAD_data{}
-		elem_data.fill(dataData)
+		appendErrorWithContext(&errs, "STAT_GRAD_data", elem_data.fill(dataData))
 
 		tmp := STAT_GRAD{
 			VxMetadata:       metaData,
@@ -4244,9 +4393,9 @@ func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []str
 		statDoc = tmp
 	case "STAT_ISC":
 		elem_header := STAT_ISC_header{}
-		elem_header.fill(headerData)
+		appendErrorWithContext(&errs, "STAT_ISC_header", elem_header.fill(headerData))
 		elem_data := STAT_ISC_data{}
-		elem_data.fill(dataData)
+		appendErrorWithContext(&errs, "STAT_ISC_data", elem_data.fill(dataData))
 
 		tmp := STAT_ISC{
 			VxMetadata:      metaData,
@@ -4257,9 +4406,9 @@ func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []str
 		statDoc = tmp
 	case "STAT_MCTC":
 		elem_header := STAT_MCTC_header{}
-		elem_header.fill(headerData)
+		appendErrorWithContext(&errs, "STAT_MCTC_header", elem_header.fill(headerData))
 		elem_data := STAT_MCTC_data{}
-		elem_data.fill(dataData)
+		appendErrorWithContext(&errs, "STAT_MCTC_data", elem_data.fill(dataData))
 
 		tmp := STAT_MCTC{
 			VxMetadata:       metaData,
@@ -4270,9 +4419,9 @@ func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []str
 		statDoc = tmp
 	case "STAT_MCTS":
 		elem_header := STAT_MCTS_header{}
-		elem_header.fill(headerData)
+		appendErrorWithContext(&errs, "STAT_MCTS_header", elem_header.fill(headerData))
 		elem_data := STAT_MCTS_data{}
-		elem_data.fill(dataData)
+		appendErrorWithContext(&errs, "STAT_MCTS_data", elem_data.fill(dataData))
 
 		tmp := STAT_MCTS{
 			VxMetadata:       metaData,
@@ -4283,9 +4432,9 @@ func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []str
 		statDoc = tmp
 	case "STAT_MPR":
 		elem_header := STAT_MPR_header{}
-		elem_header.fill(headerData)
+		appendErrorWithContext(&errs, "STAT_MPR_header", elem_header.fill(headerData))
 		elem_data := STAT_MPR_data{}
-		elem_data.fill(dataData)
+		appendErrorWithContext(&errs, "STAT_MPR_data", elem_data.fill(dataData))
 
 		tmp := STAT_MPR{
 			VxMetadata:      metaData,
@@ -4296,9 +4445,9 @@ func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []str
 		statDoc = tmp
 	case "STAT_NBRCNT":
 		elem_header := STAT_NBRCNT_header{}
-		elem_header.fill(headerData)
+		appendErrorWithContext(&errs, "STAT_NBRCNT_header", elem_header.fill(headerData))
 		elem_data := STAT_NBRCNT_data{}
-		elem_data.fill(dataData)
+		appendErrorWithContext(&errs, "STAT_NBRCNT_data", elem_data.fill(dataData))
 
 		tmp := STAT_NBRCNT{
 			VxMetadata:         metaData,
@@ -4309,9 +4458,9 @@ func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []str
 		statDoc = tmp
 	case "STAT_NBRCTC":
 		elem_header := STAT_NBRCTC_header{}
-		elem_header.fill(headerData)
+		appendErrorWithContext(&errs, "STAT_NBRCTC_header", elem_header.fill(headerData))
 		elem_data := STAT_NBRCTC_data{}
-		elem_data.fill(dataData)
+		appendErrorWithContext(&errs, "STAT_NBRCTC_data", elem_data.fill(dataData))
 
 		tmp := STAT_NBRCTC{
 			VxMetadata:         metaData,
@@ -4322,9 +4471,9 @@ func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []str
 		statDoc = tmp
 	case "STAT_NBRCTS":
 		elem_header := STAT_NBRCTS_header{}
-		elem_header.fill(headerData)
+		appendErrorWithContext(&errs, "STAT_NBRCTS_header", elem_header.fill(headerData))
 		elem_data := STAT_NBRCTS_data{}
-		elem_data.fill(dataData)
+		appendErrorWithContext(&errs, "STAT_NBRCTS_data", elem_data.fill(dataData))
 
 		tmp := STAT_NBRCTS{
 			VxMetadata:         metaData,
@@ -4335,9 +4484,9 @@ func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []str
 		statDoc = tmp
 	case "STAT_ORANK":
 		elem_header := STAT_ORANK_header{}
-		elem_header.fill(headerData)
+		appendErrorWithContext(&errs, "STAT_ORANK_header", elem_header.fill(headerData))
 		elem_data := STAT_ORANK_data{}
-		elem_data.fill(dataData)
+		appendErrorWithContext(&errs, "STAT_ORANK_data", elem_data.fill(dataData))
 
 		tmp := STAT_ORANK{
 			VxMetadata:        metaData,
@@ -4348,9 +4497,9 @@ func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []str
 		statDoc = tmp
 	case "STAT_PCT":
 		elem_header := STAT_PCT_header{}
-		elem_header.fill(headerData)
+		appendErrorWithContext(&errs, "STAT_PCT_header", elem_header.fill(headerData))
 		elem_data := STAT_PCT_data{}
-		elem_data.fill(dataData)
+		appendErrorWithContext(&errs, "STAT_PCT_data", elem_data.fill(dataData))
 
 		tmp := STAT_PCT{
 			VxMetadata:      metaData,
@@ -4361,9 +4510,9 @@ func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []str
 		statDoc = tmp
 	case "STAT_PHIST":
 		elem_header := STAT_PHIST_header{}
-		elem_header.fill(headerData)
+		appendErrorWithContext(&errs, "STAT_PHIST_header", elem_header.fill(headerData))
 		elem_data := STAT_PHIST_data{}
-		elem_data.fill(dataData)
+		appendErrorWithContext(&errs, "STAT_PHIST_data", elem_data.fill(dataData))
 
 		tmp := STAT_PHIST{
 			VxMetadata:        metaData,
@@ -4374,9 +4523,9 @@ func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []str
 		statDoc = tmp
 	case "STAT_PJC":
 		elem_header := STAT_PJC_header{}
-		elem_header.fill(headerData)
+		appendErrorWithContext(&errs, "STAT_PJC_header", elem_header.fill(headerData))
 		elem_data := STAT_PJC_data{}
-		elem_data.fill(dataData)
+		appendErrorWithContext(&errs, "STAT_PJC_data", elem_data.fill(dataData))
 
 		tmp := STAT_PJC{
 			VxMetadata:      metaData,
@@ -4387,9 +4536,9 @@ func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []str
 		statDoc = tmp
 	case "STAT_PRC":
 		elem_header := STAT_PRC_header{}
-		elem_header.fill(headerData)
+		appendErrorWithContext(&errs, "STAT_PRC_header", elem_header.fill(headerData))
 		elem_data := STAT_PRC_data{}
-		elem_data.fill(dataData)
+		appendErrorWithContext(&errs, "STAT_PRC_data", elem_data.fill(dataData))
 
 		tmp := STAT_PRC{
 			VxMetadata:      metaData,
@@ -4400,9 +4549,9 @@ func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []str
 		statDoc = tmp
 	case "STAT_PSTD":
 		elem_header := STAT_PSTD_header{}
-		elem_header.fill(headerData)
+		appendErrorWithContext(&errs, "STAT_PSTD_header", elem_header.fill(headerData))
 		elem_data := STAT_PSTD_data{}
-		elem_data.fill(dataData)
+		appendErrorWithContext(&errs, "STAT_PSTD_data", elem_data.fill(dataData))
 
 		tmp := STAT_PSTD{
 			VxMetadata:       metaData,
@@ -4413,9 +4562,9 @@ func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []str
 		statDoc = tmp
 	case "STAT_RELP":
 		elem_header := STAT_RELP_header{}
-		elem_header.fill(headerData)
+		appendErrorWithContext(&errs, "STAT_RELP_header", elem_header.fill(headerData))
 		elem_data := STAT_RELP_data{}
-		elem_data.fill(dataData)
+		appendErrorWithContext(&errs, "STAT_RELP_data", elem_data.fill(dataData))
 
 		tmp := STAT_RELP{
 			VxMetadata:       metaData,
@@ -4426,9 +4575,9 @@ func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []str
 		statDoc = tmp
 	case "STAT_RHIST":
 		elem_header := STAT_RHIST_header{}
-		elem_header.fill(headerData)
+		appendErrorWithContext(&errs, "STAT_RHIST_header", elem_header.fill(headerData))
 		elem_data := STAT_RHIST_data{}
-		elem_data.fill(dataData)
+		appendErrorWithContext(&errs, "STAT_RHIST_data", elem_data.fill(dataData))
 
 		tmp := STAT_RHIST{
 			VxMetadata:        metaData,
@@ -4439,9 +4588,9 @@ func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []str
 		statDoc = tmp
 	case "STAT_RPS":
 		elem_header := STAT_RPS_header{}
-		elem_header.fill(headerData)
+		appendErrorWithContext(&errs, "STAT_RPS_header", elem_header.fill(headerData))
 		elem_data := STAT_RPS_data{}
-		elem_data.fill(dataData)
+		appendErrorWithContext(&errs, "STAT_RPS_data", elem_data.fill(dataData))
 
 		tmp := STAT_RPS{
 			VxMetadata:      metaData,
@@ -4452,9 +4601,9 @@ func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []str
 		statDoc = tmp
 	case "STAT_SAL1L2":
 		elem_header := STAT_SAL1L2_header{}
-		elem_header.fill(headerData)
+		appendErrorWithContext(&errs, "STAT_SAL1L2_header", elem_header.fill(headerData))
 		elem_data := STAT_SAL1L2_data{}
-		elem_data.fill(dataData)
+		appendErrorWithContext(&errs, "STAT_SAL1L2_data", elem_data.fill(dataData))
 
 		tmp := STAT_SAL1L2{
 			VxMetadata:         metaData,
@@ -4465,9 +4614,9 @@ func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []str
 		statDoc = tmp
 	case "STAT_SL1L2":
 		elem_header := STAT_SL1L2_header{}
-		elem_header.fill(headerData)
+		appendErrorWithContext(&errs, "STAT_SL1L2_header", elem_header.fill(headerData))
 		elem_data := STAT_SL1L2_data{}
-		elem_data.fill(dataData)
+		appendErrorWithContext(&errs, "STAT_SL1L2_data", elem_data.fill(dataData))
 
 		tmp := STAT_SL1L2{
 			VxMetadata:        metaData,
@@ -4478,9 +4627,9 @@ func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []str
 		statDoc = tmp
 	case "STAT_SSVAR":
 		elem_header := STAT_SSVAR_header{}
-		elem_header.fill(headerData)
+		appendErrorWithContext(&errs, "STAT_SSVAR_header", elem_header.fill(headerData))
 		elem_data := STAT_SSVAR_data{}
-		elem_data.fill(dataData)
+		appendErrorWithContext(&errs, "STAT_SSVAR_data", elem_data.fill(dataData))
 
 		tmp := STAT_SSVAR{
 			VxMetadata:        metaData,
@@ -4491,9 +4640,9 @@ func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []str
 		statDoc = tmp
 	case "STAT_VAL1L2":
 		elem_header := STAT_VAL1L2_header{}
-		elem_header.fill(headerData)
+		appendErrorWithContext(&errs, "STAT_VAL1L2_header", elem_header.fill(headerData))
 		elem_data := STAT_VAL1L2_data{}
-		elem_data.fill(dataData)
+		appendErrorWithContext(&errs, "STAT_VAL1L2_data", elem_data.fill(dataData))
 
 		tmp := STAT_VAL1L2{
 			VxMetadata:         metaData,
@@ -4504,9 +4653,9 @@ func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []str
 		statDoc = tmp
 	case "STAT_VCNT":
 		elem_header := STAT_VCNT_header{}
-		elem_header.fill(headerData)
+		appendErrorWithContext(&errs, "STAT_VCNT_header", elem_header.fill(headerData))
 		elem_data := STAT_VCNT_data{}
-		elem_data.fill(dataData)
+		appendErrorWithContext(&errs, "STAT_VCNT_data", elem_data.fill(dataData))
 
 		tmp := STAT_VCNT{
 			VxMetadata:       metaData,
@@ -4517,9 +4666,9 @@ func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []str
 		statDoc = tmp
 	case "STAT_VL1L2":
 		elem_header := STAT_VL1L2_header{}
-		elem_header.fill(headerData)
+		appendErrorWithContext(&errs, "STAT_VL1L2_header", elem_header.fill(headerData))
 		elem_data := STAT_VL1L2_data{}
-		elem_data.fill(dataData)
+		appendErrorWithContext(&errs, "STAT_VL1L2_data", elem_data.fill(dataData))
 
 		tmp := STAT_VL1L2{
 			VxMetadata:        metaData,
@@ -4530,9 +4679,9 @@ func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []str
 		statDoc = tmp
 	case "TCST_PROBRIRW":
 		elem_header := TCST_PROBRIRW_header{}
-		elem_header.fill(headerData)
+		appendErrorWithContext(&errs, "TCST_PROBRIRW_header", elem_header.fill(headerData))
 		elem_data := TCST_PROBRIRW_data{}
-		elem_data.fill(dataData)
+		appendErrorWithContext(&errs, "TCST_PROBRIRW_data", elem_data.fill(dataData))
 
 		tmp := TCST_PROBRIRW{
 			VxMetadata:           metaData,
@@ -4543,9 +4692,9 @@ func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []str
 		statDoc = tmp
 	case "TCST_TCMPR":
 		elem_header := TCST_TCMPR_header{}
-		elem_header.fill(headerData)
+		appendErrorWithContext(&errs, "TCST_TCMPR_header", elem_header.fill(headerData))
 		elem_data := TCST_TCMPR_data{}
-		elem_data.fill(dataData)
+		appendErrorWithContext(&errs, "TCST_TCMPR_data", elem_data.fill(dataData))
 
 		tmp := TCST_TCMPR{
 			VxMetadata:        metaData,
@@ -4560,232 +4709,231 @@ func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []str
 	// Convert our types to a map[string]any by marshaling & unmarshaling through JSON
 	// TODO - would it be advantageous to keep the type longer, e.g. for AddDataElement?
 	jsonBytes, err := json.Marshal(statDoc)
-	if err != nil {
-		return nil, fmt.Errorf("error marshalling statDoc to struct: %w", err)
-	}
+	appendErrorWithContext(&errs, "MarshalJSON", err)
 	var doc map[string]any
-	if err := json.Unmarshal(jsonBytes, &doc); err != nil {
-		return nil, fmt.Errorf("error unmarshalling statDoc to map: %w", err)
-	}
-	return doc, nil
+	err = json.Unmarshal(jsonBytes, &doc)
+	appendErrorWithContext(&errs, "UnmarshalJSON", err)
+	return doc, errors.Join(errs...)
 }
 
 // Header info has already been set by GetDocForId. Solely adds a new "data" element to the map.
 // doc is expected to be a map representing the "base" struct (E.g. "STAT_CNT") with header, metadata, & data info
 func AddDataElement(dataKey string, fileLineType string, dataData []string, doc *map[string]interface{}) (map[string]interface{}, error) {
+	var errs []error
+
 	switch fileLineType {
 	case "MODE_CTS":
 		elem_data := MODE_CTS_data{}
-		elem_data.fill(dataData)
+		appendErrorWithContext(&errs, "MODE_CTS_data", elem_data.fill(dataData))
 		if val, ok := (*doc)["data"].(map[string]MODE_CTS_data); ok {
 			val[dataKey] = elem_data
 		}
 	case "MODE_OBJ":
 		elem_data := MODE_OBJ_data{}
-		elem_data.fill(dataData)
+		appendErrorWithContext(&errs, "MODE_OBJ_data", elem_data.fill(dataData))
 		if val, ok := (*doc)["data"].(map[string]MODE_OBJ_data); ok {
 			val[dataKey] = elem_data
 		}
 	case "STAT_CNT":
 		elem_data := STAT_CNT_data{}
-		elem_data.fill(dataData)
+		appendErrorWithContext(&errs, "STAT_CNT_data", elem_data.fill(dataData))
 		if val, ok := (*doc)["data"].(map[string]STAT_CNT_data); ok {
 			val[dataKey] = elem_data
 		}
 	case "STAT_CTC":
 		elem_data := STAT_CTC_data{}
-		elem_data.fill(dataData)
+		appendErrorWithContext(&errs, "STAT_CTC_data", elem_data.fill(dataData))
 		if val, ok := (*doc)["data"].(map[string]STAT_CTC_data); ok {
 			val[dataKey] = elem_data
 		}
 	case "STAT_CTS":
 		elem_data := STAT_CTS_data{}
-		elem_data.fill(dataData)
+		appendErrorWithContext(&errs, "STAT_CTS_data", elem_data.fill(dataData))
 		if val, ok := (*doc)["data"].(map[string]STAT_CTS_data); ok {
 			val[dataKey] = elem_data
 		}
 	case "STAT_DMAP":
 		elem_data := STAT_DMAP_data{}
-		elem_data.fill(dataData)
+		appendErrorWithContext(&errs, "STAT_DMAP_data", elem_data.fill(dataData))
 		if val, ok := (*doc)["data"].(map[string]STAT_DMAP_data); ok {
 			val[dataKey] = elem_data
 		}
 	case "STAT_ECLV":
 		elem_data := STAT_ECLV_data{}
-		elem_data.fill(dataData)
+		appendErrorWithContext(&errs, "STAT_ECLV_data", elem_data.fill(dataData))
 		if val, ok := (*doc)["data"].(map[string]STAT_ECLV_data); ok {
 			val[dataKey] = elem_data
 		}
 	case "STAT_ECNT":
 		elem_data := STAT_ECNT_data{}
-		elem_data.fill(dataData)
+		appendErrorWithContext(&errs, "STAT_ECNT_data", elem_data.fill(dataData))
 		if val, ok := (*doc)["data"].(map[string]STAT_ECNT_data); ok {
 			val[dataKey] = elem_data
 		}
 	case "STAT_FHO":
 		elem_data := STAT_FHO_data{}
-		elem_data.fill(dataData)
+		appendErrorWithContext(&errs, "STAT_FHO_data", elem_data.fill(dataData))
 		if val, ok := (*doc)["data"].(map[string]STAT_FHO_data); ok {
 			val[dataKey] = elem_data
 		}
 	case "STAT_GENMPR":
 		elem_data := STAT_GENMPR_data{}
-		elem_data.fill(dataData)
+		appendErrorWithContext(&errs, "STAT_GENMPR_data", elem_data.fill(dataData))
 		if val, ok := (*doc)["data"].(map[string]STAT_GENMPR_data); ok {
 			val[dataKey] = elem_data
 		}
 	case "STAT_GRAD":
 		elem_data := STAT_GRAD_data{}
-		elem_data.fill(dataData)
+		appendErrorWithContext(&errs, "STAT_GRAD_data", elem_data.fill(dataData))
 		if val, ok := (*doc)["data"].(map[string]STAT_GRAD_data); ok {
 			val[dataKey] = elem_data
 		}
 	case "STAT_ISC":
 		elem_data := STAT_ISC_data{}
-		elem_data.fill(dataData)
+		appendErrorWithContext(&errs, "STAT_ISC_data", elem_data.fill(dataData))
 		if val, ok := (*doc)["data"].(map[string]STAT_ISC_data); ok {
 			val[dataKey] = elem_data
 		}
 	case "STAT_MCTC":
 		elem_data := STAT_MCTC_data{}
-		elem_data.fill(dataData)
+		appendErrorWithContext(&errs, "STAT_MCTC_data", elem_data.fill(dataData))
 		if val, ok := (*doc)["data"].(map[string]STAT_MCTC_data); ok {
 			val[dataKey] = elem_data
 		}
 	case "STAT_MCTS":
 		elem_data := STAT_MCTS_data{}
-		elem_data.fill(dataData)
+		appendErrorWithContext(&errs, "STAT_MCTS_data", elem_data.fill(dataData))
 		if val, ok := (*doc)["data"].(map[string]STAT_MCTS_data); ok {
 			val[dataKey] = elem_data
 		}
 	case "STAT_MPR":
 		elem_data := STAT_MPR_data{}
-		elem_data.fill(dataData)
+		appendErrorWithContext(&errs, "STAT_MPR_data", elem_data.fill(dataData))
 		if val, ok := (*doc)["data"].(map[string]STAT_MPR_data); ok {
 			val[dataKey] = elem_data
 		}
 	case "STAT_NBRCNT":
 		elem_data := STAT_NBRCNT_data{}
-		elem_data.fill(dataData)
+		appendErrorWithContext(&errs, "STAT_NBRCNT_data", elem_data.fill(dataData))
 		if val, ok := (*doc)["data"].(map[string]STAT_NBRCNT_data); ok {
 			val[dataKey] = elem_data
 		}
 	case "STAT_NBRCTC":
 		elem_data := STAT_NBRCTC_data{}
-		elem_data.fill(dataData)
+		appendErrorWithContext(&errs, "STAT_NBRCTC_data", elem_data.fill(dataData))
 		if val, ok := (*doc)["data"].(map[string]STAT_NBRCTC_data); ok {
 			val[dataKey] = elem_data
 		}
 	case "STAT_NBRCTS":
 		elem_data := STAT_NBRCTS_data{}
-		elem_data.fill(dataData)
+		appendErrorWithContext(&errs, "STAT_NBRCTS_data", elem_data.fill(dataData))
 		if val, ok := (*doc)["data"].(map[string]STAT_NBRCTS_data); ok {
 			val[dataKey] = elem_data
 		}
 	case "STAT_ORANK":
 		elem_data := STAT_ORANK_data{}
-		elem_data.fill(dataData)
+		appendErrorWithContext(&errs, "STAT_ORANK_data", elem_data.fill(dataData))
 		if val, ok := (*doc)["data"].(map[string]STAT_ORANK_data); ok {
 			val[dataKey] = elem_data
 		}
 	case "STAT_PCT":
 		elem_data := STAT_PCT_data{}
-		elem_data.fill(dataData)
+		appendErrorWithContext(&errs, "STAT_PCT_data", elem_data.fill(dataData))
 		if val, ok := (*doc)["data"].(map[string]STAT_PCT_data); ok {
 			val[dataKey] = elem_data
 		}
 	case "STAT_PHIST":
 		elem_data := STAT_PHIST_data{}
-		elem_data.fill(dataData)
+		appendErrorWithContext(&errs, "STAT_PHIST_data", elem_data.fill(dataData))
 		if val, ok := (*doc)["data"].(map[string]STAT_PHIST_data); ok {
 			val[dataKey] = elem_data
 		}
 	case "STAT_PJC":
 		elem_data := STAT_PJC_data{}
-		elem_data.fill(dataData)
+		appendErrorWithContext(&errs, "STAT_PJC_data", elem_data.fill(dataData))
 		if val, ok := (*doc)["data"].(map[string]STAT_PJC_data); ok {
 			val[dataKey] = elem_data
 		}
 	case "STAT_PRC":
 		elem_data := STAT_PRC_data{}
-		elem_data.fill(dataData)
+		appendErrorWithContext(&errs, "STAT_PRC_data", elem_data.fill(dataData))
 		if val, ok := (*doc)["data"].(map[string]STAT_PRC_data); ok {
 			val[dataKey] = elem_data
 		}
 	case "STAT_PSTD":
 		elem_data := STAT_PSTD_data{}
-		elem_data.fill(dataData)
+		appendErrorWithContext(&errs, "STAT_PSTD_data", elem_data.fill(dataData))
 		if val, ok := (*doc)["data"].(map[string]STAT_PSTD_data); ok {
 			val[dataKey] = elem_data
 		}
 	case "STAT_RELP":
 		elem_data := STAT_RELP_data{}
-		elem_data.fill(dataData)
+		appendErrorWithContext(&errs, "STAT_RELP_data", elem_data.fill(dataData))
 		if val, ok := (*doc)["data"].(map[string]STAT_RELP_data); ok {
 			val[dataKey] = elem_data
 		}
 	case "STAT_RHIST":
 		elem_data := STAT_RHIST_data{}
-		elem_data.fill(dataData)
+		appendErrorWithContext(&errs, "STAT_RHIST_data", elem_data.fill(dataData))
 		if val, ok := (*doc)["data"].(map[string]STAT_RHIST_data); ok {
 			val[dataKey] = elem_data
 		}
 	case "STAT_RPS":
 		elem_data := STAT_RPS_data{}
-		elem_data.fill(dataData)
+		appendErrorWithContext(&errs, "STAT_RPS_data", elem_data.fill(dataData))
 		if val, ok := (*doc)["data"].(map[string]STAT_RPS_data); ok {
 			val[dataKey] = elem_data
 		}
 	case "STAT_SAL1L2":
 		elem_data := STAT_SAL1L2_data{}
-		elem_data.fill(dataData)
+		appendErrorWithContext(&errs, "STAT_SAL1L2_data", elem_data.fill(dataData))
 		if val, ok := (*doc)["data"].(map[string]STAT_SAL1L2_data); ok {
 			val[dataKey] = elem_data
 		}
 	case "STAT_SL1L2":
 		elem_data := STAT_SL1L2_data{}
-		elem_data.fill(dataData)
+		appendErrorWithContext(&errs, "STAT_SL1L2_data", elem_data.fill(dataData))
 		if val, ok := (*doc)["data"].(map[string]STAT_SL1L2_data); ok {
 			val[dataKey] = elem_data
 		}
 	case "STAT_SSVAR":
 		elem_data := STAT_SSVAR_data{}
-		elem_data.fill(dataData)
+		appendErrorWithContext(&errs, "STAT_SSVAR_data", elem_data.fill(dataData))
 		if val, ok := (*doc)["data"].(map[string]STAT_SSVAR_data); ok {
 			val[dataKey] = elem_data
 		}
 	case "STAT_VAL1L2":
 		elem_data := STAT_VAL1L2_data{}
-		elem_data.fill(dataData)
+		appendErrorWithContext(&errs, "STAT_VAL1L2_data", elem_data.fill(dataData))
 		if val, ok := (*doc)["data"].(map[string]STAT_VAL1L2_data); ok {
 			val[dataKey] = elem_data
 		}
 	case "STAT_VCNT":
 		elem_data := STAT_VCNT_data{}
-		elem_data.fill(dataData)
+		appendErrorWithContext(&errs, "STAT_VCNT_data", elem_data.fill(dataData))
 		if val, ok := (*doc)["data"].(map[string]STAT_VCNT_data); ok {
 			val[dataKey] = elem_data
 		}
 	case "STAT_VL1L2":
 		elem_data := STAT_VL1L2_data{}
-		elem_data.fill(dataData)
+		appendErrorWithContext(&errs, "STAT_VL1L2_data", elem_data.fill(dataData))
 		if val, ok := (*doc)["data"].(map[string]STAT_VL1L2_data); ok {
 			val[dataKey] = elem_data
 		}
 	case "TCST_PROBRIRW":
 		elem_data := TCST_PROBRIRW_data{}
-		elem_data.fill(dataData)
+		appendErrorWithContext(&errs, "TCST_PROBRIRW_data", elem_data.fill(dataData))
 		if val, ok := (*doc)["data"].(map[string]TCST_PROBRIRW_data); ok {
 			val[dataKey] = elem_data
 		}
 	case "TCST_TCMPR":
 		elem_data := TCST_TCMPR_data{}
-		elem_data.fill(dataData)
+		appendErrorWithContext(&errs, "TCST_TCMPR_data", elem_data.fill(dataData))
 		if val, ok := (*doc)["data"].(map[string]TCST_TCMPR_data); ok {
 			val[dataKey] = elem_data
 		}
 	default:
 		return nil, errors.New("AddDataElement: Unknown file_line type:" + fileLineType)
 	}
-	return *doc, nil
+	return *doc, errors.Join(errs...)
 }
