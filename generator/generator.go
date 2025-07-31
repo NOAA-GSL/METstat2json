@@ -151,16 +151,31 @@ func main() {
 
 	// 3. Generate code using templates
 
-	// print the package declaration & import statements
+	// Generate the package declaration & import statements
+	printPackageAndImports(parserVersion)
+
+	// Generate the various code sections
+	printDocumentStructs(allDocumentStructs)
+	printHeaderStructs(allHeaderStructs)
+	printHeaderFillFunctions(allHeaderFillFunctions)
+	printDataStructs(allDataStructs)
+	printDataFillFunctions(allDataFillFunctions)
+	printGetDocForIDFunction(allDocumentStructs)
+	printAddDataElementFunction(allDocumentStructs)
+}
+
+// --- Code generation helper functions ---
+
+func printPackageAndImports(parserVersion string) {
 	fmt.Printf(`package %s
 import (
-	"encoding/json"
-	"errors"
-	"fmt"
-	"strconv"
+    "encoding/json"
+    "errors"
+    "fmt"
+    "strconv"
 
-	"github.com/dtcenter/METstat2json/pkg/util"
-	"github.com/dtcenter/METstat2json/pkg/validtypes"
+    "github.com/dtcenter/METstat2json/pkg/util"
+    "github.com/dtcenter/METstat2json/pkg/validtypes"
 )
 /*
 THIS CODE IS AUTOMATICALLY GENERATED - DO NOT EDIT THIS CODE
@@ -169,63 +184,54 @@ cd  <repo_root>
 go run generator -version=v12.0 > pkg/linetypes/v12_0/linetypes.go
 */
 `, parserVersion)
+}
 
-	// print the combined structs in order
-	fmt.Print(`
-// Document struct definitions
-`)
-	sKeys := getSortedKeys(allDocumentStructs)
-	for _, key := range sKeys {
+func printDocumentStructs(allDocumentStructs map[string]documentStructData) {
+	fmt.Print("\n// Document struct definitions\n")
+	for _, key := range getSortedKeys(allDocumentStructs) {
 		fmt.Println(createDocumentStruct(allDocumentStructs[key]))
 	}
-	// print the header structs in order
-	fmt.Print(`
-// Header struct definitions
-`)
-	hsKeys := getSortedKeys(allHeaderStructs)
-	for _, key := range hsKeys {
+}
+
+func printHeaderStructs(allHeaderStructs map[string]headerStructData) {
+	fmt.Print("\n// Header struct definitions\n")
+	for _, key := range getSortedKeys(allHeaderStructs) {
 		fmt.Println(createHeaderStruct(allHeaderStructs[key]))
 	}
-	// print the fillHeader functions in order
-	fmt.Print(`
-// fillHeader functions
-`)
-	fhKeys := getSortedKeys(allHeaderFillFunctions)
-	for _, key := range fhKeys {
+}
+
+func printHeaderFillFunctions(allHeaderFillFunctions map[string]headerFillMethodData) {
+	fmt.Print("\n// fillHeader functions\n")
+	for _, key := range getSortedKeys(allHeaderFillFunctions) {
 		fmt.Println(createHeaderFillMethod(allHeaderFillFunctions[key]))
 	}
+}
 
-	// print the data structs in order
-	fmt.Print(`
-// line data struct definitions
-`)
-	dsKeys := getSortedKeys(allDataStructs)
-	for _, key := range dsKeys {
+func printDataStructs(allDataStructs map[string]dataStructData) {
+	fmt.Print("\n// line data struct definitions\n")
+	for _, key := range getSortedKeys(allDataStructs) {
 		fmt.Println(createDataStruct(allDataStructs[key]))
 	}
+}
 
-	// print the fillStructure functions in order
-	fmt.Print(`
-// fillStructure functions
-`)
-	fdfKeys := getSortedKeys(allDataFillFunctions)
-	for _, key := range fdfKeys {
-		// print the function
+func printDataFillFunctions(allDataFillFunctions map[string]dataFillMethodData) {
+	fmt.Print("\n// fillStructure functions\n")
+	for _, key := range getSortedKeys(allDataFillFunctions) {
 		fmt.Println(createDataFillMethod(allDataFillFunctions[key]))
 	}
+}
 
-	// print the getDocForId functions
-	cfdfIDKeys := getSortedKeys(allDocumentStructs)
+func printGetDocForIDFunction(allDocumentStructs map[string]documentStructData) {
 	var data getDocForIDData
-	for _, key := range cfdfIDKeys {
+	for _, key := range getSortedKeys(allDocumentStructs) {
 		data.Documents = append(data.Documents, allDocumentStructs[key])
 	}
 	fmt.Println(createGetDocForIDFunction(data))
+}
 
-	// print the addDataElement functions
-	adefKeys := getSortedKeys(allDocumentStructs)
+func printAddDataElementFunction(allDocumentStructs map[string]documentStructData) {
 	var adefData addDataElementData
-	for _, key := range adefKeys {
+	for _, key := range getSortedKeys(allDocumentStructs) {
 		adefData.Documents = append(adefData.Documents, allDocumentStructs[key])
 	}
 	fmt.Println(createAddDataElementFunction(adefData))
