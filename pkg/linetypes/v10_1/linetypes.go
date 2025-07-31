@@ -1259,6 +1259,7 @@ type TCST_TCMPR_header struct {
 
 // fillHeader functions
 
+// Sets MODE_CTS_header struct's fields
 func (s *MODE_CTS_header) fill(fields []string) {
 	s.VERSION.UnmarshalText([]byte(fields[0]))
 	s.MODEL.UnmarshalText([]byte(fields[1]))
@@ -1284,6 +1285,7 @@ func (s *MODE_CTS_header) fill(fields []string) {
 	s.LINE_TYPE.UnmarshalText([]byte("MODE_CTS")) // hardcode the LINE_TYPE
 }
 
+// Sets MODE_OBJ_header struct's fields
 func (s *MODE_OBJ_header) fill(fields []string) {
 	s.VERSION.UnmarshalText([]byte(fields[0]))
 	s.MODEL.UnmarshalText([]byte(fields[1]))
@@ -1309,6 +1311,7 @@ func (s *MODE_OBJ_header) fill(fields []string) {
 	s.LINE_TYPE.UnmarshalText([]byte("MODE_OBJ")) // hardcode the LINE_TYPE
 }
 
+// Sets STAT_CNT_header struct's fields
 func (s *STAT_CNT_header) fill(fields []string) {
 	s.VERSION.UnmarshalText([]byte(fields[0]))
 	s.MODEL.UnmarshalText([]byte(fields[1]))
@@ -1335,6 +1338,7 @@ func (s *STAT_CNT_header) fill(fields []string) {
 	s.LINE_TYPE.UnmarshalText([]byte(fields[23]))
 }
 
+// Sets STAT_CTC_header struct's fields
 func (s *STAT_CTC_header) fill(fields []string) {
 	s.VERSION.UnmarshalText([]byte(fields[0]))
 	s.MODEL.UnmarshalText([]byte(fields[1]))
@@ -1361,6 +1365,7 @@ func (s *STAT_CTC_header) fill(fields []string) {
 	s.LINE_TYPE.UnmarshalText([]byte(fields[23]))
 }
 
+// Sets STAT_CTS_header struct's fields
 func (s *STAT_CTS_header) fill(fields []string) {
 	s.VERSION.UnmarshalText([]byte(fields[0]))
 	s.MODEL.UnmarshalText([]byte(fields[1]))
@@ -1387,6 +1392,7 @@ func (s *STAT_CTS_header) fill(fields []string) {
 	s.LINE_TYPE.UnmarshalText([]byte(fields[23]))
 }
 
+// Sets STAT_DMAP_header struct's fields
 func (s *STAT_DMAP_header) fill(fields []string) {
 	s.VERSION.UnmarshalText([]byte(fields[0]))
 	s.MODEL.UnmarshalText([]byte(fields[1]))
@@ -1413,6 +1419,7 @@ func (s *STAT_DMAP_header) fill(fields []string) {
 	s.LINE_TYPE.UnmarshalText([]byte(fields[23]))
 }
 
+// Sets STAT_ECLV_header struct's fields
 func (s *STAT_ECLV_header) fill(fields []string) {
 	s.VERSION.UnmarshalText([]byte(fields[0]))
 	s.MODEL.UnmarshalText([]byte(fields[1]))
@@ -1439,6 +1446,7 @@ func (s *STAT_ECLV_header) fill(fields []string) {
 	s.LINE_TYPE.UnmarshalText([]byte(fields[23]))
 }
 
+// Sets STAT_ECNT_header struct's fields
 func (s *STAT_ECNT_header) fill(fields []string) {
 	s.VERSION.UnmarshalText([]byte(fields[0]))
 	s.MODEL.UnmarshalText([]byte(fields[1]))
@@ -1465,6 +1473,7 @@ func (s *STAT_ECNT_header) fill(fields []string) {
 	s.LINE_TYPE.UnmarshalText([]byte(fields[23]))
 }
 
+// Sets STAT_FHO_header struct's fields
 func (s *STAT_FHO_header) fill(fields []string) {
 	s.VERSION.UnmarshalText([]byte(fields[0]))
 	s.MODEL.UnmarshalText([]byte(fields[1]))
@@ -1491,6 +1500,7 @@ func (s *STAT_FHO_header) fill(fields []string) {
 	s.LINE_TYPE.UnmarshalText([]byte(fields[23]))
 }
 
+// Sets STAT_GENMPR_header struct's fields
 func (s *STAT_GENMPR_header) fill(fields []string) {
 	s.VERSION.UnmarshalText([]byte(fields[0]))
 	s.MODEL.UnmarshalText([]byte(fields[1]))
@@ -1517,6 +1527,7 @@ func (s *STAT_GENMPR_header) fill(fields []string) {
 	s.LINE_TYPE.UnmarshalText([]byte(fields[23]))
 }
 
+// Sets STAT_GRAD_header struct's fields
 func (s *STAT_GRAD_header) fill(fields []string) {
 	s.VERSION.UnmarshalText([]byte(fields[0]))
 	s.MODEL.UnmarshalText([]byte(fields[1]))
@@ -1543,6 +1554,7 @@ func (s *STAT_GRAD_header) fill(fields []string) {
 	s.LINE_TYPE.UnmarshalText([]byte(fields[23]))
 }
 
+// Sets STAT_ISC_header struct's fields
 func (s *STAT_ISC_header) fill(fields []string) {
 	s.VERSION.UnmarshalText([]byte(fields[0]))
 	s.MODEL.UnmarshalText([]byte(fields[1]))
@@ -1569,6 +1581,7 @@ func (s *STAT_ISC_header) fill(fields []string) {
 	s.LINE_TYPE.UnmarshalText([]byte(fields[23]))
 }
 
+// Sets STAT_MCTC_header struct's fields
 func (s *STAT_MCTC_header) fill(fields []string) {
 	s.VERSION.UnmarshalText([]byte(fields[0]))
 	s.MODEL.UnmarshalText([]byte(fields[1]))
@@ -1595,6 +1608,7 @@ func (s *STAT_MCTC_header) fill(fields []string) {
 	s.LINE_TYPE.UnmarshalText([]byte(fields[23]))
 }
 
+// Sets STAT_MCTS_header struct's fields
 func (s *STAT_MCTS_header) fill(fields []string) {
 	s.VERSION.UnmarshalText([]byte(fields[0]))
 	s.MODEL.UnmarshalText([]byte(fields[1]))
@@ -1621,6 +1635,7 @@ func (s *STAT_MCTS_header) fill(fields []string) {
 	s.LINE_TYPE.UnmarshalText([]byte(fields[23]))
 }
 
+// Sets STAT_MPR_header struct's fields
 func (s *STAT_MPR_header) fill(fields []string) {
 	s.VERSION.UnmarshalText([]byte(fields[0]))
 	s.MODEL.UnmarshalText([]byte(fields[1]))
@@ -1647,6 +1662,7 @@ func (s *STAT_MPR_header) fill(fields []string) {
 	s.LINE_TYPE.UnmarshalText([]byte(fields[23]))
 }
 
+// Sets STAT_NBRCNT_header struct's fields
 func (s *STAT_NBRCNT_header) fill(fields []string) {
 	s.VERSION.UnmarshalText([]byte(fields[0]))
 	s.MODEL.UnmarshalText([]byte(fields[1]))
@@ -1673,6 +1689,7 @@ func (s *STAT_NBRCNT_header) fill(fields []string) {
 	s.LINE_TYPE.UnmarshalText([]byte(fields[23]))
 }
 
+// Sets STAT_NBRCTC_header struct's fields
 func (s *STAT_NBRCTC_header) fill(fields []string) {
 	s.VERSION.UnmarshalText([]byte(fields[0]))
 	s.MODEL.UnmarshalText([]byte(fields[1]))
@@ -1699,6 +1716,7 @@ func (s *STAT_NBRCTC_header) fill(fields []string) {
 	s.LINE_TYPE.UnmarshalText([]byte(fields[23]))
 }
 
+// Sets STAT_NBRCTS_header struct's fields
 func (s *STAT_NBRCTS_header) fill(fields []string) {
 	s.VERSION.UnmarshalText([]byte(fields[0]))
 	s.MODEL.UnmarshalText([]byte(fields[1]))
@@ -1725,6 +1743,7 @@ func (s *STAT_NBRCTS_header) fill(fields []string) {
 	s.LINE_TYPE.UnmarshalText([]byte(fields[23]))
 }
 
+// Sets STAT_ORANK_header struct's fields
 func (s *STAT_ORANK_header) fill(fields []string) {
 	s.VERSION.UnmarshalText([]byte(fields[0]))
 	s.MODEL.UnmarshalText([]byte(fields[1]))
@@ -1751,6 +1770,7 @@ func (s *STAT_ORANK_header) fill(fields []string) {
 	s.LINE_TYPE.UnmarshalText([]byte(fields[23]))
 }
 
+// Sets STAT_PCT_header struct's fields
 func (s *STAT_PCT_header) fill(fields []string) {
 	s.VERSION.UnmarshalText([]byte(fields[0]))
 	s.MODEL.UnmarshalText([]byte(fields[1]))
@@ -1777,6 +1797,7 @@ func (s *STAT_PCT_header) fill(fields []string) {
 	s.LINE_TYPE.UnmarshalText([]byte(fields[23]))
 }
 
+// Sets STAT_PHIST_header struct's fields
 func (s *STAT_PHIST_header) fill(fields []string) {
 	s.VERSION.UnmarshalText([]byte(fields[0]))
 	s.MODEL.UnmarshalText([]byte(fields[1]))
@@ -1803,6 +1824,7 @@ func (s *STAT_PHIST_header) fill(fields []string) {
 	s.LINE_TYPE.UnmarshalText([]byte(fields[23]))
 }
 
+// Sets STAT_PJC_header struct's fields
 func (s *STAT_PJC_header) fill(fields []string) {
 	s.VERSION.UnmarshalText([]byte(fields[0]))
 	s.MODEL.UnmarshalText([]byte(fields[1]))
@@ -1829,6 +1851,7 @@ func (s *STAT_PJC_header) fill(fields []string) {
 	s.LINE_TYPE.UnmarshalText([]byte(fields[23]))
 }
 
+// Sets STAT_PRC_header struct's fields
 func (s *STAT_PRC_header) fill(fields []string) {
 	s.VERSION.UnmarshalText([]byte(fields[0]))
 	s.MODEL.UnmarshalText([]byte(fields[1]))
@@ -1855,6 +1878,7 @@ func (s *STAT_PRC_header) fill(fields []string) {
 	s.LINE_TYPE.UnmarshalText([]byte(fields[23]))
 }
 
+// Sets STAT_PSTD_header struct's fields
 func (s *STAT_PSTD_header) fill(fields []string) {
 	s.VERSION.UnmarshalText([]byte(fields[0]))
 	s.MODEL.UnmarshalText([]byte(fields[1]))
@@ -1881,6 +1905,7 @@ func (s *STAT_PSTD_header) fill(fields []string) {
 	s.LINE_TYPE.UnmarshalText([]byte(fields[23]))
 }
 
+// Sets STAT_RELP_header struct's fields
 func (s *STAT_RELP_header) fill(fields []string) {
 	s.VERSION.UnmarshalText([]byte(fields[0]))
 	s.MODEL.UnmarshalText([]byte(fields[1]))
@@ -1907,6 +1932,7 @@ func (s *STAT_RELP_header) fill(fields []string) {
 	s.LINE_TYPE.UnmarshalText([]byte(fields[23]))
 }
 
+// Sets STAT_RHIST_header struct's fields
 func (s *STAT_RHIST_header) fill(fields []string) {
 	s.VERSION.UnmarshalText([]byte(fields[0]))
 	s.MODEL.UnmarshalText([]byte(fields[1]))
@@ -1933,6 +1959,7 @@ func (s *STAT_RHIST_header) fill(fields []string) {
 	s.LINE_TYPE.UnmarshalText([]byte(fields[23]))
 }
 
+// Sets STAT_RPS_header struct's fields
 func (s *STAT_RPS_header) fill(fields []string) {
 	s.VERSION.UnmarshalText([]byte(fields[0]))
 	s.MODEL.UnmarshalText([]byte(fields[1]))
@@ -1959,6 +1986,7 @@ func (s *STAT_RPS_header) fill(fields []string) {
 	s.LINE_TYPE.UnmarshalText([]byte(fields[23]))
 }
 
+// Sets STAT_SAL1L2_header struct's fields
 func (s *STAT_SAL1L2_header) fill(fields []string) {
 	s.VERSION.UnmarshalText([]byte(fields[0]))
 	s.MODEL.UnmarshalText([]byte(fields[1]))
@@ -1985,6 +2013,7 @@ func (s *STAT_SAL1L2_header) fill(fields []string) {
 	s.LINE_TYPE.UnmarshalText([]byte(fields[23]))
 }
 
+// Sets STAT_SL1L2_header struct's fields
 func (s *STAT_SL1L2_header) fill(fields []string) {
 	s.VERSION.UnmarshalText([]byte(fields[0]))
 	s.MODEL.UnmarshalText([]byte(fields[1]))
@@ -2011,6 +2040,7 @@ func (s *STAT_SL1L2_header) fill(fields []string) {
 	s.LINE_TYPE.UnmarshalText([]byte(fields[23]))
 }
 
+// Sets STAT_SSIDX_header struct's fields
 func (s *STAT_SSIDX_header) fill(fields []string) {
 	s.VERSION.UnmarshalText([]byte(fields[0]))
 	s.MODEL.UnmarshalText([]byte(fields[1]))
@@ -2037,6 +2067,7 @@ func (s *STAT_SSIDX_header) fill(fields []string) {
 	s.LINE_TYPE.UnmarshalText([]byte(fields[23]))
 }
 
+// Sets STAT_SSVAR_header struct's fields
 func (s *STAT_SSVAR_header) fill(fields []string) {
 	s.VERSION.UnmarshalText([]byte(fields[0]))
 	s.MODEL.UnmarshalText([]byte(fields[1]))
@@ -2063,6 +2094,7 @@ func (s *STAT_SSVAR_header) fill(fields []string) {
 	s.LINE_TYPE.UnmarshalText([]byte(fields[23]))
 }
 
+// Sets STAT_VAL1L2_header struct's fields
 func (s *STAT_VAL1L2_header) fill(fields []string) {
 	s.VERSION.UnmarshalText([]byte(fields[0]))
 	s.MODEL.UnmarshalText([]byte(fields[1]))
@@ -2089,6 +2121,7 @@ func (s *STAT_VAL1L2_header) fill(fields []string) {
 	s.LINE_TYPE.UnmarshalText([]byte(fields[23]))
 }
 
+// Sets STAT_VCNT_header struct's fields
 func (s *STAT_VCNT_header) fill(fields []string) {
 	s.VERSION.UnmarshalText([]byte(fields[0]))
 	s.MODEL.UnmarshalText([]byte(fields[1]))
@@ -2115,6 +2148,7 @@ func (s *STAT_VCNT_header) fill(fields []string) {
 	s.LINE_TYPE.UnmarshalText([]byte(fields[23]))
 }
 
+// Sets STAT_VL1L2_header struct's fields
 func (s *STAT_VL1L2_header) fill(fields []string) {
 	s.VERSION.UnmarshalText([]byte(fields[0]))
 	s.MODEL.UnmarshalText([]byte(fields[1]))
@@ -2141,6 +2175,7 @@ func (s *STAT_VL1L2_header) fill(fields []string) {
 	s.LINE_TYPE.UnmarshalText([]byte(fields[23]))
 }
 
+// Sets TCST_PROBRIRW_header struct's fields
 func (s *TCST_PROBRIRW_header) fill(fields []string) {
 	s.VERSION.UnmarshalText([]byte(fields[0]))
 	s.AMODEL.UnmarshalText([]byte(fields[1]))
@@ -2156,6 +2191,7 @@ func (s *TCST_PROBRIRW_header) fill(fields []string) {
 	s.LINE_TYPE.UnmarshalText([]byte(fields[13]))
 }
 
+// Sets TCST_TCMPR_header struct's fields
 func (s *TCST_TCMPR_header) fill(fields []string) {
 	s.VERSION.UnmarshalText([]byte(fields[0]))
 	s.AMODEL.UnmarshalText([]byte(fields[1]))
@@ -3053,6 +3089,7 @@ type TCST_TCMPR_data struct {
 
 // fillStructure functions
 
+// Sets MODE_CTS_data struct's fields
 func (s *MODE_CTS_data) fill(fields []string) {
 	s.FIELD.UnmarshalText([]byte(fields[0]))
 	s.TOTAL.UnmarshalText([]byte(fields[1]))
@@ -3075,6 +3112,7 @@ func (s *MODE_CTS_data) fill(fields []string) {
 	s.ODDS.UnmarshalText([]byte(fields[18]))
 }
 
+// Sets MODE_OBJ_data struct's fields
 func (s *MODE_OBJ_data) fill(fields []string) {
 	s.OBJECT_ID.UnmarshalText([]byte(fields[0]))
 	s.OBJECT_CAT.UnmarshalText([]byte(fields[1]))
@@ -3114,6 +3152,7 @@ func (s *MODE_OBJ_data) fill(fields []string) {
 	s.INTEREST.UnmarshalText([]byte(fields[35]))
 }
 
+// Sets STAT_CNT_data struct's fields
 func (s *STAT_CNT_data) fill(fields []string) {
 	s.TOTAL.UnmarshalText([]byte(fields[0]))
 	s.FBAR.UnmarshalText([]byte(fields[1]))
@@ -3217,6 +3256,7 @@ func (s *STAT_CNT_data) fill(fields []string) {
 	s.SI_BCU.UnmarshalText([]byte(fields[99]))
 }
 
+// Sets STAT_CTC_data struct's fields
 func (s *STAT_CTC_data) fill(fields []string) {
 	s.TOTAL.UnmarshalText([]byte(fields[0]))
 	s.FY_OY.UnmarshalText([]byte(fields[1]))
@@ -3225,6 +3265,7 @@ func (s *STAT_CTC_data) fill(fields []string) {
 	s.FN_ON.UnmarshalText([]byte(fields[4]))
 }
 
+// Sets STAT_CTS_data struct's fields
 func (s *STAT_CTS_data) fill(fields []string) {
 	s.TOTAL.UnmarshalText([]byte(fields[0]))
 	s.BASER.UnmarshalText([]byte(fields[1]))
@@ -3321,6 +3362,7 @@ func (s *STAT_CTS_data) fill(fields []string) {
 	s.BAGSS_BCU.UnmarshalText([]byte(fields[92]))
 }
 
+// Sets STAT_DMAP_data struct's fields
 func (s *STAT_DMAP_data) fill(fields []string) {
 	s.TOTAL.UnmarshalText([]byte(fields[0]))
 	s.FY.UnmarshalText([]byte(fields[1]))
@@ -3348,6 +3390,7 @@ func (s *STAT_DMAP_data) fill(fields []string) {
 	s.BETA_VALUE.UnmarshalText([]byte(fields[23]))
 }
 
+// Sets STAT_ECLV_data struct's fields
 func (s *STAT_ECLV_data) fill(fields []string) {
 	s.TOTAL.UnmarshalText([]byte(fields[0]))
 	s.BASER.UnmarshalText([]byte(fields[1]))
@@ -3373,6 +3416,7 @@ func (s *STAT_ECLV_data) fill(fields []string) {
 	}
 }
 
+// Sets STAT_ECNT_data struct's fields
 func (s *STAT_ECNT_data) fill(fields []string) {
 	s.TOTAL.UnmarshalText([]byte(fields[0]))
 	s.N_ENS.UnmarshalText([]byte(fields[1]))
@@ -3392,6 +3436,7 @@ func (s *STAT_ECNT_data) fill(fields []string) {
 	s.CRPSS_EMP.UnmarshalText([]byte(fields[15]))
 }
 
+// Sets STAT_FHO_data struct's fields
 func (s *STAT_FHO_data) fill(fields []string) {
 	s.TOTAL.UnmarshalText([]byte(fields[0]))
 	s.F_RATE.UnmarshalText([]byte(fields[1]))
@@ -3399,6 +3444,7 @@ func (s *STAT_FHO_data) fill(fields []string) {
 	s.O_RATE.UnmarshalText([]byte(fields[3]))
 }
 
+// Sets STAT_GENMPR_data struct's fields
 func (s *STAT_GENMPR_data) fill(fields []string) {
 	s.TOTAL.UnmarshalText([]byte(fields[0]))
 	s.INDEX.UnmarshalText([]byte(fields[1]))
@@ -3420,6 +3466,7 @@ func (s *STAT_GENMPR_data) fill(fields []string) {
 	s.OPS_CAT.UnmarshalText([]byte(fields[17]))
 }
 
+// Sets STAT_GRAD_data struct's fields
 func (s *STAT_GRAD_data) fill(fields []string) {
 	s.TOTAL.UnmarshalText([]byte(fields[0]))
 	s.FGBAR.UnmarshalText([]byte(fields[1]))
@@ -3433,6 +3480,7 @@ func (s *STAT_GRAD_data) fill(fields []string) {
 	s.DY.UnmarshalText([]byte(fields[9]))
 }
 
+// Sets STAT_ISC_data struct's fields
 func (s *STAT_ISC_data) fill(fields []string) {
 	s.TOTAL.UnmarshalText([]byte(fields[0]))
 	s.TILE_DIM.UnmarshalText([]byte(fields[1]))
@@ -3448,6 +3496,7 @@ func (s *STAT_ISC_data) fill(fields []string) {
 	s.FBIAS.UnmarshalText([]byte(fields[11]))
 }
 
+// Sets STAT_MCTC_data struct's fields
 func (s *STAT_MCTC_data) fill(fields []string) {
 	s.TOTAL.UnmarshalText([]byte(fields[0]))
 	// these values seem to always be ints (or "NA")
@@ -3473,6 +3522,7 @@ func (s *STAT_MCTC_data) fill(fields []string) {
 	s.EC_VALUE.UnmarshalText([]byte(fields[3]))
 }
 
+// Sets STAT_MCTS_data struct's fields
 func (s *STAT_MCTS_data) fill(fields []string) {
 	s.TOTAL.UnmarshalText([]byte(fields[0]))
 	s.N_CAT.UnmarshalText([]byte(fields[1]))
@@ -3496,6 +3546,7 @@ func (s *STAT_MCTS_data) fill(fields []string) {
 	s.EC_VALUE.UnmarshalText([]byte(fields[19]))
 }
 
+// Sets STAT_MPR_data struct's fields
 func (s *STAT_MPR_data) fill(fields []string) {
 	s.TOTAL.UnmarshalText([]byte(fields[0]))
 	s.INDEX.UnmarshalText([]byte(fields[1]))
@@ -3512,6 +3563,7 @@ func (s *STAT_MPR_data) fill(fields []string) {
 	s.CLIMO_CDF.UnmarshalText([]byte(fields[12]))
 }
 
+// Sets STAT_NBRCNT_data struct's fields
 func (s *STAT_NBRCNT_data) fill(fields []string) {
 	s.TOTAL.UnmarshalText([]byte(fields[0]))
 	s.FBS.UnmarshalText([]byte(fields[1]))
@@ -3534,6 +3586,7 @@ func (s *STAT_NBRCNT_data) fill(fields []string) {
 	s.O_RATE_BCU.UnmarshalText([]byte(fields[18]))
 }
 
+// Sets STAT_NBRCTC_data struct's fields
 func (s *STAT_NBRCTC_data) fill(fields []string) {
 	s.TOTAL.UnmarshalText([]byte(fields[0]))
 	s.FY_OY.UnmarshalText([]byte(fields[1]))
@@ -3542,6 +3595,7 @@ func (s *STAT_NBRCTC_data) fill(fields []string) {
 	s.FN_ON.UnmarshalText([]byte(fields[4]))
 }
 
+// Sets STAT_NBRCTS_data struct's fields
 func (s *STAT_NBRCTS_data) fill(fields []string) {
 	s.TOTAL.UnmarshalText([]byte(fields[0]))
 	s.BASER.UnmarshalText([]byte(fields[1]))
@@ -3638,6 +3692,7 @@ func (s *STAT_NBRCTS_data) fill(fields []string) {
 	s.BAGSS_BCU.UnmarshalText([]byte(fields[92]))
 }
 
+// Sets STAT_ORANK_data struct's fields
 func (s *STAT_ORANK_data) fill(fields []string) {
 	s.TOTAL.UnmarshalText([]byte(fields[0]))
 	s.INDEX.UnmarshalText([]byte(fields[1]))
@@ -3679,6 +3734,7 @@ func (s *STAT_ORANK_data) fill(fields []string) {
 	s.CLIMO_STDEV.UnmarshalText([]byte(fields[20]))
 }
 
+// Sets STAT_PCT_data struct's fields
 func (s *STAT_PCT_data) fill(fields []string) {
 	s.TOTAL.UnmarshalText([]byte(fields[0]))
 	// the first field of the repeating fields is the TOTAL, the second field is the 1st dimenSion of the 1st sequence (there might be only one sequence)
@@ -3702,6 +3758,7 @@ func (s *STAT_PCT_data) fill(fields []string) {
 	}
 }
 
+// Sets STAT_PHIST_data struct's fields
 func (s *STAT_PHIST_data) fill(fields []string) {
 	s.TOTAL.UnmarshalText([]byte(fields[0]))
 	s.BIN_SIZE.UnmarshalText([]byte(fields[1]))
@@ -3726,6 +3783,7 @@ func (s *STAT_PHIST_data) fill(fields []string) {
 	}
 }
 
+// Sets STAT_PJC_data struct's fields
 func (s *STAT_PJC_data) fill(fields []string) {
 	s.TOTAL.UnmarshalText([]byte(fields[0]))
 	// the first field of the repeating fields is the TOTAL, the second field is the 1st dimenSion of the 1st sequence (there might be only one sequence)
@@ -3749,6 +3807,7 @@ func (s *STAT_PJC_data) fill(fields []string) {
 	}
 }
 
+// Sets STAT_PRC_data struct's fields
 func (s *STAT_PRC_data) fill(fields []string) {
 	s.TOTAL.UnmarshalText([]byte(fields[0]))
 	// the first field of the repeating fields is the TOTAL, the second field is the 1st dimenSion of the 1st sequence (there might be only one sequence)
@@ -3772,6 +3831,7 @@ func (s *STAT_PRC_data) fill(fields []string) {
 	}
 }
 
+// Sets STAT_PSTD_data struct's fields
 func (s *STAT_PSTD_data) fill(fields []string) {
 	s.TOTAL.UnmarshalText([]byte(fields[0]))
 	// the first field of the repeating fields is the TOTAL, the second field is the 1st dimenSion of the 1st sequence (there might be only one sequence)
@@ -3810,6 +3870,7 @@ func (s *STAT_PSTD_data) fill(fields []string) {
 	s.THRESH_I.UnmarshalText([]byte(fields[17]))
 }
 
+// Sets STAT_RELP_data struct's fields
 func (s *STAT_RELP_data) fill(fields []string) {
 	s.TOTAL.UnmarshalText([]byte(fields[0]))
 	// the first field of the repeating fields is the TOTAL, the second field is the 1st dimenSion of the 1st sequence (there might be only one sequence)
@@ -3833,6 +3894,7 @@ func (s *STAT_RELP_data) fill(fields []string) {
 	}
 }
 
+// Sets STAT_RHIST_data struct's fields
 func (s *STAT_RHIST_data) fill(fields []string) {
 	s.TOTAL.UnmarshalText([]byte(fields[0]))
 	// the first field of the repeating fields is the TOTAL, the second field is the 1st dimenSion of the 1st sequence (there might be only one sequence)
@@ -3856,6 +3918,7 @@ func (s *STAT_RHIST_data) fill(fields []string) {
 	}
 }
 
+// Sets STAT_RPS_data struct's fields
 func (s *STAT_RPS_data) fill(fields []string) {
 	s.TOTAL.UnmarshalText([]byte(fields[0]))
 	s.N_PROB.UnmarshalText([]byte(fields[1]))
@@ -3868,6 +3931,7 @@ func (s *STAT_RPS_data) fill(fields []string) {
 	s.RPS_COMP.UnmarshalText([]byte(fields[8]))
 }
 
+// Sets STAT_SAL1L2_data struct's fields
 func (s *STAT_SAL1L2_data) fill(fields []string) {
 	s.TOTAL.UnmarshalText([]byte(fields[0]))
 	s.FABAR.UnmarshalText([]byte(fields[1]))
@@ -3878,6 +3942,7 @@ func (s *STAT_SAL1L2_data) fill(fields []string) {
 	s.MAE.UnmarshalText([]byte(fields[6]))
 }
 
+// Sets STAT_SL1L2_data struct's fields
 func (s *STAT_SL1L2_data) fill(fields []string) {
 	s.TOTAL.UnmarshalText([]byte(fields[0]))
 	s.FBAR.UnmarshalText([]byte(fields[1]))
@@ -3888,6 +3953,7 @@ func (s *STAT_SL1L2_data) fill(fields []string) {
 	s.MAE.UnmarshalText([]byte(fields[6]))
 }
 
+// Sets STAT_SSIDX_data struct's fields
 func (s *STAT_SSIDX_data) fill(fields []string) {
 	s.FCST_MODEL.UnmarshalText([]byte(fields[0]))
 	s.REF_MODEL.UnmarshalText([]byte(fields[1]))
@@ -3897,6 +3963,7 @@ func (s *STAT_SSIDX_data) fill(fields []string) {
 	s.SS_INDEX.UnmarshalText([]byte(fields[5]))
 }
 
+// Sets STAT_SSVAR_data struct's fields
 func (s *STAT_SSVAR_data) fill(fields []string) {
 	s.TOTAL.UnmarshalText([]byte(fields[0]))
 	s.N_BIN.UnmarshalText([]byte(fields[1]))
@@ -3935,6 +4002,7 @@ func (s *STAT_SSVAR_data) fill(fields []string) {
 	s.RMSE.UnmarshalText([]byte(fields[34]))
 }
 
+// Sets STAT_VAL1L2_data struct's fields
 func (s *STAT_VAL1L2_data) fill(fields []string) {
 	s.TOTAL.UnmarshalText([]byte(fields[0]))
 	s.UFABAR.UnmarshalText([]byte(fields[1]))
@@ -3946,6 +4014,7 @@ func (s *STAT_VAL1L2_data) fill(fields []string) {
 	s.UVOOABAR.UnmarshalText([]byte(fields[7]))
 }
 
+// Sets STAT_VCNT_data struct's fields
 func (s *STAT_VCNT_data) fill(fields []string) {
 	s.TOTAL.UnmarshalText([]byte(fields[0]))
 	s.FBAR.UnmarshalText([]byte(fields[1]))
@@ -4004,6 +4073,7 @@ func (s *STAT_VCNT_data) fill(fields []string) {
 	s.DIR_ABSERR_BCU.UnmarshalText([]byte(fields[54]))
 }
 
+// Sets STAT_VL1L2_data struct's fields
 func (s *STAT_VL1L2_data) fill(fields []string) {
 	s.TOTAL.UnmarshalText([]byte(fields[0]))
 	s.UFBAR.UnmarshalText([]byte(fields[1]))
@@ -4017,6 +4087,7 @@ func (s *STAT_VL1L2_data) fill(fields []string) {
 	s.O_SPEED_BAR.UnmarshalText([]byte(fields[9]))
 }
 
+// Sets TCST_PROBRIRW_data struct's fields
 func (s *TCST_PROBRIRW_data) fill(fields []string) {
 	s.ALAT.UnmarshalText([]byte(fields[0]))
 	s.ALON.UnmarshalText([]byte(fields[1]))
@@ -4060,6 +4131,7 @@ func (s *TCST_PROBRIRW_data) fill(fields []string) {
 	s.INIT.UnmarshalText([]byte(fields[23]))
 }
 
+// Sets TCST_TCMPR_data struct's fields
 func (s *TCST_TCMPR_data) fill(fields []string) {
 	s.TOTAL.UnmarshalText([]byte(fields[0]))
 	s.INDEX.UnmarshalText([]byte(fields[1]))

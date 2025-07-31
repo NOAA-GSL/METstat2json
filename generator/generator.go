@@ -400,7 +400,7 @@ func getHeaderFillFields(headerFields []string, fileType string, lineType string
 // Generates the header struct "Fill" methods via template
 func createHeaderFillMethod(data headerFillMethodData) string {
 	headerFillMethodTemplate := template.Must(template.New("headerStruct").Parse(`
-{{/* // Sets {{ .HeaderStructName }} struct's fields */}}
+// Sets {{ .HeaderStructName }} struct's fields
 func (s *{{ .HeaderStructName }}) fill(fields []string) {
 	{{/*
 	expectedNumFields := {{ len .Fields }} // Length of the FieldNames slice from the template
@@ -533,7 +533,7 @@ func createDataFillMethod(data dataFillMethodData) string {
 	dataFillMethodTemplate := template.New("dataStruct")
 	dataFillMethodTemplate.Funcs(template.FuncMap{"add": add}) // Add the custom "add" function
 	dataFillMethodTemplate = template.Must(dataFillMethodTemplate.Parse(`
-{{/* // Sets {{ .DataStructName }} struct's fields */}}
+// Sets {{ .DataStructName }} struct's fields
 func (s *{{ .DataStructName }}) fill(fields []string) {
 	{{- range .Fields }}
 	{{- if .IsNCAT }}
