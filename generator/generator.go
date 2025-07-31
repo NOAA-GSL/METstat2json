@@ -95,31 +95,17 @@ func main() {
 		fmt.Println("error setting MET version: ", err)
 		os.Exit(1)
 	}
-	met_header_columns_lines, fieldNameMap := getColumnLinesAndMapForUrl(metHeaderColumnsFileUrl)
+	metLines, fieldNameMap := getColumnLinesAndMapForUrl(metHeaderColumnsFileUrl)
 	metDataTypesForLines := fillMetDataMapFromSrcFiles(make(map[string]string), fieldNameMap)
 	metDataTypesForLines = fillMetDataMapFromUserGuide(metDataTypesForLines, fieldNameMap)
 
 	// 2. Assemble code generation data
-	type DocumentStructs map[string]string
-	type HeaderStructs map[string]string
-	type DataStructs map[string]string
-
-	// Use a map to keep track of unique headerStructs and dataStructs.
-	documentStructs := make(DocumentStructs)
-	dataStructs := make(DataStructs)
-	headerStructs := make(HeaderStructs)
-	// fill...Funcs are the same as header and data Structs but for the fill functions
-	fillHeaderFuncs := make(HeaderStructs)
-	fillDataFuncs := make(DataStructs)
-	// create the getDocFoID function
-	docIDString := `func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []string, dataData []string, dataKey string) (map[string]interface{}, error) {
-	var statDoc any
-	switch fileLineType {`
-	addDataElementString := `func AddDataElement(dataKey string, fileLineType string, dataData []string, doc *map[string]interface{}) (map[string]interface{}, error) {
-	switch fileLineType {`
-	// iterate through every line in the met_header_columns file to create the getDocId case and the structs and functions for each met header column line
-	var structName, structBody, dataStructName, headerStructName, headerStructString, fillHeaderString string
-	for _, line := range met_header_columns_lines {
+	allDocumentStructs := make(map[string]documentStructData)
+	allHeaderStructs := make(map[string]headerStructData)
+	allDataStructs := make(map[string]dataStructData)
+	allHeaderFillFunctions := make(map[string]headerFillMethodData)
+	allDataFillFunctions := make(map[string]dataFillMethodData)
+	for _, line := range metLines {
 		// get the prefix from the line
 		fieldStr, fileType, lineType, err := getFileLineType(line)
 		if err != nil {
@@ -128,58 +114,53 @@ func main() {
 		fileLineType := fileType + "_" + lineType
 		// split the line into header and data fields
 		headerFields, dataFields := util.SplitColumnDefLine(fileLineType, fieldStr)
-		// create the header struct string and the fillHeader function string
-		structName, structBody, dataStructName, headerStructName, headerStructString, fillHeaderString, docIDString, addDataElementString = getHeaderStructureString(fileType, lineType, docIDString, addDataElementString, headerFields, metDataTypesForLines)
-		// add the combined struct string to the slice for printing later
-		documentStructs[structName] = structBody
-		// add the header struct string to the map for printing later
-		headerStructs[headerStructName] = headerStructString
-		// add the fillHeader function string to the map for printing later
-		fillHeaderFuncs[headerStructName] = fillHeaderString
-		// create dataStructure and fillStructure function strings for the data struct
-		fillStructureString, dataStruct := getFillStructureString(dataStructName, dataFields, metDataTypesForLines, fileType, lineType)
-		dataStructs[dataStructName] = dataStruct
-		fillDataFuncs[dataStructName] = fillStructureString
+
+		// Create struct names
+		structNames := createStructNames(fileType, lineType)
+
+		// Build data for header & data structs
+		headerStructFields := getHeaderFields(headerFields, fileType, lineType, metDataTypesForLines)
+		dataStructFields := getDataFields(dataFields, fileType, lineType, metDataTypesForLines)
+
+		// get data for Header & Data fill functions
+		headerFillFields := getHeaderFillFields(headerFields, fileType, lineType)
+		dataFillFields := getDataFillFields(dataFields, metDataTypesForLines, fileType, lineType)
+		// data fill can have the weird repeating things
+
+		// Add to data maps
+		allDocumentStructs[structNames.DocumentStructName] = structNames
+		allHeaderStructs[structNames.HeaderStructName] = headerStructData{
+			DocumentStructName: structNames.DocumentStructName,
+			HeaderStructName:   structNames.HeaderStructName,
+			Fields:             headerStructFields,
+		}
+		allHeaderFillFunctions[structNames.HeaderStructName] = headerFillMethodData{
+			DocumentStructName: structNames.DocumentStructName,
+			HeaderStructName:   structNames.HeaderStructName,
+			Fields:             headerFillFields,
+		}
+		allDataStructs[structNames.DataStructName] = dataStructData{
+			DataStructName: structNames.DataStructName,
+			Fields:         dataStructFields,
+		}
+		allDataFillFunctions[structNames.DataStructName] = dataFillMethodData{
+			DataStructName: structNames.DataStructName,
+			Fields:         dataFillFields,
+		}
 	}
 
 	// 3. Generate code using templates
 
-	// end the switch statements in the getDocForId and addDataElementStrings now that the line loop is over
-	docIDString += fmt.Sprintf(`
-default:
-		return nil, errors.New("GetDocForId: Unknown file_line type:" + fileLineType)
-	}
-	// Convert our types to a map[string]any by marshaling & unmarshaling through JSON
-	// TODO - would it be advantageous to keep the type longer, e.g. for AddDataElement?
-	jsonBytes, err := json.Marshal(statDoc)
-	if err != nil {
-		return nil, fmt.Errorf("error marshalling %s struct: %%w", err)
-	}
-	var doc map[string]any
-	if err := json.Unmarshal(jsonBytes, &doc); err != nil {
-		return nil, fmt.Errorf("error unmarshalling %s to map: %%w", err)
-	}
-	return doc, nil
-	}
-	`, structName, structName,
-	)
-	addDataElementString += `
-	default:
-		return nil, errors.New("AddDataElement: Unknown file_line type:" + fileLineType)
-	}
-	return *doc, nil
-	}
-	`
-
-	// print the package - header structs, fillHeader functions, data structs, fillStructure functions, getDocForId functions, addDataElement functions
+	// print the package declaration & import statements
 	fmt.Printf(`package %s
 import (
-	"strconv"
+	"encoding/json"
 	"errors"
 	"fmt"
-	"time"
-	"github.com/dtcenter/METstat2json/pkg/validtypes"
+	"strconv"
+
 	"github.com/dtcenter/METstat2json/pkg/util"
+	"github.com/dtcenter/METstat2json/pkg/validtypes"
 )
 /*
 THIS CODE IS AUTOMATICALLY GENERATED - DO NOT EDIT THIS CODE
@@ -193,71 +174,67 @@ go run generator -version=v12.0 > pkg/linetypes/v12_0/linetypes.go
 	fmt.Print(`
 // Document struct definitions
 `)
-	sKeys := getSortedKeys(documentStructs)
+	sKeys := getSortedKeys(allDocumentStructs)
 	for _, key := range sKeys {
-		fmt.Println(documentStructs[key])
+		fmt.Println(createDocumentStruct(allDocumentStructs[key]))
 	}
 	// print the header structs in order
 	fmt.Print(`
 // Header struct definitions
 `)
-	hsKeys := getSortedKeys(headerStructs)
+	hsKeys := getSortedKeys(allHeaderStructs)
 	for _, key := range hsKeys {
-		fmt.Println(headerStructs[key])
+		fmt.Println(createHeaderStruct(allHeaderStructs[key]))
 	}
 	// print the fillHeader functions in order
 	fmt.Print(`
 // fillHeader functions
 `)
-	fhKeys := getSortedKeys(fillHeaderFuncs)
+	fhKeys := getSortedKeys(allHeaderFillFunctions)
 	for _, key := range fhKeys {
-		fmt.Println(fillHeaderFuncs[key])
+		fmt.Println(createHeaderFillMethod(allHeaderFillFunctions[key]))
 	}
 
 	// print the data structs in order
 	fmt.Print(`
 // line data struct definitions
 `)
-	dsKeys := getSortedKeys(dataStructs)
+	dsKeys := getSortedKeys(allDataStructs)
 	for _, key := range dsKeys {
-		fmt.Println(dataStructs[key])
+		fmt.Println(createDataStruct(allDataStructs[key]))
 	}
 
 	// print the fillStructure functions in order
 	fmt.Print(`
 // fillStructure functions
 `)
-	fdfKeys := getSortedKeys(fillDataFuncs)
+	fdfKeys := getSortedKeys(allDataFillFunctions)
 	for _, key := range fdfKeys {
 		// print the function
-		fmt.Println(fillDataFuncs[key])
+		fmt.Println(createDataFillMethod(allDataFillFunctions[key]))
 	}
 
 	// print the getDocForId functions
-	fmt.Print(`
-// getDocForId function
-// Creates a new doc, header functions and all.
-`)
-	fmt.Println(docIDString)
+	cfdfIDKeys := getSortedKeys(allDocumentStructs)
+	var data getDocForIDData
+	for _, key := range cfdfIDKeys {
+		data.Documents = append(data.Documents, allDocumentStructs[key])
+	}
+	fmt.Println(createGetDocForIDFunction(data))
 
 	// print the addDataElement functions
-	fmt.Print(`
-// addDataElement function
-// Header info has already been set by GetDocForId. Solely adds a new "data" element to the map.
-// doc is expected to be a map representing the "base" struct (E.g. "STAT_CNT") with header, metadata, & data info
-`)
-	fmt.Println(addDataElementString)
-
-	// print the DateFieldNames
-	fmt.Println("")
-	fmt.Println("var MetHeaderColumnsFileUrl = \"" + metHeaderColumnsFileUrl + "\"")
-	fmt.Println("")
+	adefKeys := getSortedKeys(allDocumentStructs)
+	var adefData addDataElementData
+	for _, key := range adefKeys {
+		adefData.Documents = append(adefData.Documents, allDocumentStructs[key])
+	}
+	fmt.Println(createAddDataElementFunction(adefData))
 }
 
 // private functions
 
 // returns the keys of the map, sorted alphabetically
-func getSortedKeys(m map[string]string) []string {
+func getSortedKeys[T any](m map[string]T) []string {
 	keys := make([]string, 0, len(m))
 	for k := range m {
 		keys = append(keys, k)
@@ -287,30 +264,27 @@ func getFileLineType(line string) (string, string, string, error) {
 	return fieldStr, fileType, lineType, nil
 }
 
-type documentStructData struct {
-	DocumentStructName string
-	HeaderStructName   string
-	DataStructName     string
-}
-
-type headerStructData struct {
-	DocumentStructName string
-	HeaderStructName   string
-	Fields             []structField
-}
-
-type dataStructData struct {
-	DataStructName string
-	Fields         []structField
-}
-
 type structField struct {
 	Name     string
 	Type     string
 	JSONName string
 }
 
-// A wrapper function to generate the "document" struct definitions via template
+type documentStructData struct {
+	DocumentStructName string
+	HeaderStructName   string
+	DataStructName     string
+}
+
+// Assembles the document, header, and data struct names from the fileType & lineType
+func createStructNames(fileType, lineType string) documentStructData {
+	docStructName := fmt.Sprintf("%s_%s", fileType, lineType)
+	dataStructName := fmt.Sprintf("%s_data", docStructName)
+	headerStructName := fmt.Sprintf("%s_header", docStructName)
+	return documentStructData{DocumentStructName: docStructName, DataStructName: dataStructName, HeaderStructName: headerStructName}
+}
+
+// Generates the "document" struct definitions via template
 func createDocumentStruct(data documentStructData) string {
 	structTemplate := template.Must(template.New("struct").Parse(`
 // Represents a complete {{.DocumentStructName}} document
@@ -325,7 +299,41 @@ type {{.DocumentStructName}} struct {
 	return buf.String()
 }
 
-// A wrapper function to generate the "header" struct definitions via template
+type headerStructData struct {
+	DocumentStructName string
+	HeaderStructName   string
+	Fields             []structField
+}
+
+func getHeaderFields(headerFields []string, fileType string, lineType string, metDataTypesForLines map[string]string) []structField {
+	headerStructFields := []structField{}
+	if fileType == "MODE" || fileType == "MTD" {
+		// these file types do not have a LINE_TYPE field in the header definition
+		// from the met_header_columns file. We add a LINE_TYPE field to the header struct
+		// and the fillHeader function
+		headerFields = append(headerFields, `LINE_TYPE`)
+	}
+	dataKeyMap := util.DataKeyMap[fileType+"_"+lineType]
+	keyFields := dataKeyMap.DataKey
+	headerDisallowed := dataKeyMap.HeaderDisallow // list of disallowed fields
+	for _, term := range headerFields {
+		// skip the dataKey fields and disallowed header fields
+		if slices.Contains(keyFields, term) || slices.Contains(headerDisallowed, term) {
+			continue
+		}
+		// change regex type terms
+		term = strings.ReplaceAll(term, "(", "")
+		term = strings.ReplaceAll(term, ")", "")
+		term = strings.ReplaceAll(term, "[0-9]*", "i")
+		name := strings.ToUpper(term)
+		_, dataType := getDataType(term, &metDataTypesForLines)
+		jsonName := strings.ToUpper(name)
+		headerStructFields = append(headerStructFields, structField{Name: name, Type: dataType, JSONName: jsonName})
+	}
+	return headerStructFields
+}
+
+// Generates the "header" struct definitions via template
 func createHeaderStruct(data headerStructData) string {
 	headerStructTemplate := template.Must(template.New("headerStruct").Parse(`
 // Represents the header field of a {{.DocumentStructName}} document
@@ -341,156 +349,322 @@ type {{.HeaderStructName}} struct {
 	return buf.String()
 }
 
-func getHeaderStructureString(fileType string, lineType string, getDocIDString string, addDataElementString string, headerFields []string, metDataTypesForLines map[string]string) (string, string, string, string, string, string, string, string) {
-	/* The header struct is created from the headerFields and the fillHeader function is created from the headerFields
-	There are a few data types that require special attention, i.e
-	the MODE and MTD file types do NOT HAVE a LINE_TYPE field in the header definition
-	from the met_header_columns file. A LINE_TYPE can be inferred from
-	a combination of the header fields and the data fields.
-	Also the TCMPR file type has an INIT, a VALID, and a LEAD field in the header, which means that
-	only one forecast can reside in the data section if it is indexed by the LEAD field. The answer
-	to this is to move the INIT field to the data section.
-	*/
+type headerFillField struct {
+	Name             string
+	HardCodeLineType bool
+	Index            int
+}
 
-	// Create data structure names
-	structName := fmt.Sprintf("%s_%s", fileType, lineType)
-	dataStructName := fmt.Sprintf("%s_data", structName)
-	headerStructName := fmt.Sprintf("%s_header", structName)
+type headerFillMethodData struct {
+	DocumentStructName string
+	HeaderStructName   string
+	Fields             []headerFillField
+}
 
-	structBody := createDocumentStruct(documentStructData{DocumentStructName: structName, HeaderStructName: headerStructName, DataStructName: dataStructName})
+func getHeaderFillFields(headerFields []string, fileType string, lineType string) []headerFillField {
+	var headerFillFields []headerFillField
 
-	dataKeyMap := util.DataKeyMap[fileType+"_"+lineType]
-	keyFields := dataKeyMap.DataKey
-	headerDisallowed := dataKeyMap.HeaderDisallow // list of disallowed fields
 	if fileType == "MODE" || fileType == "MTD" {
 		// these file types do not have a LINE_TYPE field in the header definition
 		// from the met_header_columns file. We add a LINE_TYPE field to the header struct
 		// and the fillHeader function
 		headerFields = append(headerFields, `LINE_TYPE`)
 	}
+	dataKeyMap := util.DataKeyMap[fileType+"_"+lineType]
+	keyFields := dataKeyMap.DataKey
+	headerDisallowed := dataKeyMap.HeaderDisallow // list of disallowed fields
 
-	// Create headerStructs
-	headerStructFields := []structField{}
-
-	fillHeaderString := fmt.Sprintf("func (s *%s) fill(fields []string){\n", headerStructName)
-
-	getDocIDStringTemplate := template.Must(template.New("docIDPart").Parse(`
-case "{{.DocumentStructName}}":
-	elem_header := {{.HeaderStructName}}{}
-	elem_header.fill(headerData)
-	elem_data := {{.DataStructName}}{}
-	elem_data.fill(dataData)
-
-	tmp := {{.DocumentStructName}}{
-		VxMetadata:        metaData,
-		{{.HeaderStructName}}: elem_header,
-		Data:              make(map[string]{{.DataStructName}}),
-	}
-	tmp.Data[dataKey] = elem_data
-	statDoc = tmp`))
-	var buf bytes.Buffer
-	getDocIDStringTemplate.Execute(&buf, documentStructData{DocumentStructName: structName, HeaderStructName: headerStructName, DataStructName: dataStructName})
-	getDocIDString += buf.String()
-
-	addDataElementTemplate := template.Must(template.New("docIDPart").Parse(`
-	case "{{.DocumentStructName}}":
-	elem_data := {{.DataStructName}}{}
-	elem_data.fill(dataData)
-	if val, ok := (*doc)["data"].(map[string]{{.DataStructName}}); ok {
-		val[dataKey] = elem_data
-	}`))
-	var buf2 bytes.Buffer
-	addDataElementTemplate.Execute(&buf2, documentStructData{DocumentStructName: structName, HeaderStructName: headerStructName, DataStructName: dataStructName})
-	addDataElementString += buf2.String()
-
-	for _i, term := range headerFields {
-		// skip the dataKey fields
-		isDataKey := false
-		for _, d := range keyFields {
-			if term == d {
-				isDataKey = true
-				break
-			}
-		}
-		// skip the dataKeyFields and disallowed fields
-		if isDataKey || slices.Contains(headerDisallowed, term) {
+	for i, field := range headerFields {
+		// skip the dataKey fields and disallowed header fields
+		if slices.Contains(keyFields, field) || slices.Contains(headerDisallowed, field) {
 			continue
 		}
+
+		var headerField headerFillField
+		headerField.Index = i
 		// change regex type terms
-		term = strings.ReplaceAll(term, "(", "")
-		term = strings.ReplaceAll(term, ")", "")
-		term = strings.ReplaceAll(term, "[0-9]*", "i")
-		name := strings.ToUpper(term)
-		_, dataType := getDataType(term, &metDataTypesForLines)
-		jsonName := strings.ToUpper(name)
-		headerStructFields = append(headerStructFields, structField{Name: name, Type: dataType, JSONName: jsonName})
-		if term == "LINE_TYPE" && (fileType == "MODE" || fileType == "MTD") {
-			// these file types do not have a LINE_TYPE field in the header definition
-			// from the met_header_columns file. We add a LINE_TYPE field to the header struct
-			// and the fillHeader function
-			fileLineType := `"` + fileType + "_" + lineType + `"`
-			fillHeaderString += fmt.Sprintf("\ts.LINE_TYPE.UnmarshalText([]byte(%s)) // hardcode the LINE_TYPE\n", fileLineType)
+		field = strings.ReplaceAll(field, "(", "")
+		field = strings.ReplaceAll(field, ")", "")
+		field = strings.ReplaceAll(field, "[0-9]*", "i")
+		headerField.Name = strings.ToUpper(field)
+		if field == "LINE_TYPE" && (fileType == "MODE" || fileType == "MTD") {
+			headerField.HardCodeLineType = true
 		} else {
-			fillHeaderString += fmt.Sprintf("\ts.%s.UnmarshalText([]byte(fields[%d]))\n", name, _i)
+			headerField.HardCodeLineType = false
 		}
+		headerFillFields = append(headerFillFields, headerField)
 	}
-	headerStructString := createHeaderStruct(headerStructData{DocumentStructName: structName, HeaderStructName: headerStructName, Fields: headerStructFields})
-	fillHeaderString += "}\n"
-	return structName, structBody, dataStructName, headerStructName, headerStructString, fillHeaderString, getDocIDString, addDataElementString
+	return headerFillFields
 }
 
-func getFillStructureString(docStructName string, dataFields []string, metDataTypesForLines map[string]string, fileType string, lineType string) (string, string) {
-	// returns fillStructureString and the dataStruct
-	fillStructureString := fmt.Sprintf("func (s *%s) fill(fields []string) {\n", docStructName)
-	// create the data struct for this line type
-	dataStruct := fmt.Sprintf("type %s struct {\n", docStructName)
-	// find the maximum length of the data fields for formatting (padding)
-	padding := 0
-	for _, term := range dataFields {
-		if len(term) > padding {
-			padding = len(term)
-		}
+// Generates the header struct "Fill" methods via template
+func createHeaderFillMethod(data headerFillMethodData) string {
+	headerFillMethodTemplate := template.Must(template.New("headerStruct").Parse(`
+{{/* // Sets {{ .HeaderStructName }} struct's fields */}}
+func (s *{{ .HeaderStructName }}) fill(fields []string) {
+	{{/*
+	expectedNumFields := {{ len .Fields }} // Length of the FieldNames slice from the template
+	if len(fields) != expectedNumFields {
+		return // TODO - return an error
 	}
-	padding2 := len("map[string]interface{}")
+	*/}}
+	{{- range .Fields }}
+	{{- if .HardCodeLineType}}
+	s.LINE_TYPE.UnmarshalText([]byte("{{ $.DocumentStructName }}")) //hardcode the LINE_TYPE
+	{{- else}}
+	s.{{ .Name }}.UnmarshalText([]byte(fields[{{ .Index }}]))
+	{{- end }}
+	{{- end }}
+}`))
+	var buf bytes.Buffer
+	headerFillMethodTemplate.Execute(&buf, data)
+	return buf.String()
+}
+
+type dataStructData struct {
+	DataStructName string
+	Fields         []structField
+}
+
+func getDataFields(dataFields []string, fileType string, lineType string, metDataTypesForLines map[string]string) []structField {
+	dataStructFields := []structField{}
+	// reference getFillStructureString
 	// add disallowed field terms to the dataFields and the associated data to the (embedded) fields array
 	dataFields = append(dataFields, util.DataKeyMap[fileType+"_"+lineType].HeaderDisallow...)
-	// iterate through the data fields to create the data struct and the fillStructure function
 	for index := 0; index < len(dataFields); index++ {
-		term := dataFields[index]
-		fillStructureString, dataStruct, index = getFillStructureTerm(term, metDataTypesForLines, dataStruct, padding, padding2, fillStructureString, index, fileType, lineType)
-	}
-	fillStructureString += "}\n"
+		rawFieldName := dataFields[index]
+		cleanedFieldName, fieldType := getDataType(rawFieldName, &metDataTypesForLines)
 
-	dataStruct += "}\n"
-	return fillStructureString, dataStruct
-}
-
-func getFillStructureTerm(term string, metDataTypesForLines map[string]string, dataStruct string, padding int, padding2 int, fillStructureString string, index int, fileType string, lineType string) (string, string, int) {
-	_filledStructureString := fillStructureString
-	_dataStruct := dataStruct
-	cleanTerm, dataType := getDataType(term, &metDataTypesForLines)
-	jsonTerm := strings.ToUpper(cleanTerm)
-
-	_dataStruct += fmt.Sprintf("    %-*s %-*s `json:\"%s,omitzero\"`\n", padding, cleanTerm, padding2, dataType, jsonTerm)
-	var numFields int
-	var err error
-	var repeatFillStructureString string
-	switch dataType {
-	case "map[string]interface{}":
-		// this is a map which means that there are a sequence of fields that are repeated
-		numFields, repeatFillStructureString, err = getRepeatingSequenceStructureString(term, cleanTerm, fileType, lineType, index)
-		if err != nil {
-			fmt.Println("error in getRepeatingSequenceStructureString: ", err)
+		// We need to skip some fields as they end up in a map[string]interface{} instead of as direct
+		// struct members
+		indexOffset := 0
+		if fieldType == "map[string]interface{}" {
+			if rawFieldName == "(N_CAT)" {
+				indexOffset = 1
+			} else {
+				keyPrefixes, _ := getRepeatingKeysAndTypes(rawFieldName, fileType, lineType)
+				indexOffset = len(keyPrefixes)
+			}
 		}
-		_filledStructureString += repeatFillStructureString
-		index += numFields
-	default:
-		_filledStructureString += fmt.Sprintf("s.%s.UnmarshalText([]byte(fields[%d]))\n", cleanTerm, index)
+		jsonTerm := strings.ToUpper(cleanedFieldName)
+		dataStructFields = append(dataStructFields, structField{Name: cleanedFieldName, Type: fieldType, JSONName: jsonTerm})
+		index = index + indexOffset
 	}
-	return _filledStructureString, _dataStruct, index
+	return dataStructFields
 }
 
-func getRepeatingSequenceStructureString(term string, cleanTerm string, fileType string, lineType string, index int) (numFields int, structureString string, err error) {
+// Generates the "data" struct definitions via template
+func createDataStruct(data dataStructData) string {
+	dataStructTemplate := template.Must(template.New("dataStruct").Parse(`
+type {{.DataStructName}} struct {
+	{{- range .Fields }}
+	{{ .Name }} {{ .Type }} ` + "`json:\"{{ .JSONName }},omitzero\"`" + `
+	{{- end }}
+}
+	`))
+	var buf bytes.Buffer
+	dataStructTemplate.Execute(&buf, data)
+	return buf.String()
+}
+
+type dataFillField struct {
+	Name             string
+	Type             string
+	IsNCAT           bool
+	IsRepeatingField bool
+	KeyPrefixes      []string
+	Index            int
+}
+
+type dataFillMethodData struct {
+	DataStructName string
+	Fields         []dataFillField
+}
+
+func getDataFillFields(dataFields []string, metDataTypesForLines map[string]string, fileType string, lineType string) []dataFillField {
+	dataFillFields := []dataFillField{}
+
+	// add disallowed field terms to the dataFields and the associated data to the (embedded) fields array
+	dataFields = append(dataFields, util.DataKeyMap[fileType+"_"+lineType].HeaderDisallow...)
+	// iterate through the data fields to get the information needed for the data fill functions
+	// use a manual for loop instead of a range as the index occasionally needs to be
+	// updated multiple times inside an iteration. (TODO - could we range on this and
+	// just have index as a regular variable?)
+	for index := 0; index < len(dataFields); index++ {
+		// Handle normal fields, we just need the fieldName & fieldType
+		rawFieldName := dataFields[index]
+		cleanedFieldName, fieldType := getDataType(rawFieldName, &metDataTypesForLines)
+		var isNCAT, isRepeatingField bool
+		var keyPrefixes []string
+		indexOffset := 0 // These special cases can add more than one field at a time and will need to increment the index
+		if fieldType == "map[string]interface{}" {
+			// This is a repeating field, set some fields for special handling
+			if rawFieldName == "(N_CAT)" {
+				// special case for N_CAT fields
+				isNCAT = true
+				indexOffset = 1
+			} else {
+				// Handle all other repeating fields
+				isRepeatingField = true
+				keyPrefixes, fieldType = getRepeatingKeysAndTypes(rawFieldName, fileType, lineType)
+				indexOffset = len(keyPrefixes)
+			}
+		}
+		field := dataFillField{
+			Name:             cleanedFieldName,
+			Type:             fieldType,
+			Index:            index,
+			IsNCAT:           isNCAT,
+			IsRepeatingField: isRepeatingField,
+			KeyPrefixes:      keyPrefixes,
+		}
+		dataFillFields = append(dataFillFields, field)
+		index = index + indexOffset
+	}
+
+	return dataFillFields
+}
+
+func add(a, b int) int {
+	return a + b
+}
+
+func createDataFillMethod(data dataFillMethodData) string {
+	dataFillMethodTemplate := template.New("dataStruct")
+	dataFillMethodTemplate.Funcs(template.FuncMap{"add": add}) // Add the custom "add" function
+	dataFillMethodTemplate = template.Must(dataFillMethodTemplate.Parse(`
+{{/* // Sets {{ .DataStructName }} struct's fields */}}
+func (s *{{ .DataStructName }}) fill(fields []string) {
+	{{- range .Fields }}
+	{{- if .IsNCAT }}
+	// these values seem to always be ints (or "NA")
+	var value validtypes.ValidInt
+	count, err := strconv.Atoi(fields[1])
+	if err != nil {
+		count = 0
+	}
+	s.{{ .Name }} = make(map[string]interface{})
+	for i1 := {{ .Index }}; i1 <= count; i1++ {
+		for i2 := 1; i2 <= count; i2++ {
+			// generate the particular key for the map i.e. F1_O1, F1_O2, F1_O3, F1_O4, F2_O1, F2_O2, F2_O3, F2_O4, etc.
+			key := fmt.Sprintf("F%d_O%d", i1, i2)
+			index := (i1-1)*count + i2
+			if index >= len(fields) {
+				value.Reset()
+			} else {
+				value.UnmarshalText([]byte(fields[index]))
+			}
+			s.{{ .Name }}[key] = value
+		}
+	}
+	{{- else if .IsRepeatingField}}
+	// the first field of the repeating fields is the TOTAL, the second field is the 1st dimenSion of the 1st sequence (there might be only one sequence)
+	var value {{ .Type }}
+	count, err := strconv.Atoi(fields[{{ .Index }}])
+	if err != nil {
+		count = 0
+	}
+	keyPrefixes := []string{ {{- range .KeyPrefixes -}} "{{ . }}", {{- end -}}}
+	s.{{ .Name }} = make(map[string]interface{})
+	for group := 1; group <= count; group++ {
+		for index := {{ add .Index 1 }}; index <= len(keyPrefixes); index++ {
+			key := fmt.Sprintf("%s_%d", keyPrefixes[index-1], index)
+			if index > len(fields) { // sometimes the data line is truncated - invalidate that field
+				value.Reset()
+			} else {
+				value.UnmarshalText([]byte(fields[index]))
+			}
+			s.{{ .Name }}[key] = value
+		}
+	}
+	{{- else}}
+	s.{{ .Name }}.UnmarshalText([]byte(fields[{{ .Index }}]))
+	{{- end }}
+	{{- end }}
+}`))
+	var buf bytes.Buffer
+	dataFillMethodTemplate.Execute(&buf, data)
+	return buf.String()
+}
+
+type getDocForIDData struct {
+	Documents []documentStructData
+}
+
+// Generates the GetDocForID function via template
+func createGetDocForIDFunction(data getDocForIDData) string {
+	getDocForIDTemplate := template.Must(template.New("GetDocForID").Parse(`
+// Creates a new doc, header functions and all.
+func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []string, dataData []string, dataKey string) (map[string]interface{}, error) {
+	var statDoc any
+	switch fileLineType {
+	{{- range .Documents }}
+	case "{{ .DocumentStructName }}":
+		elem_header := {{ .HeaderStructName }}{}
+		elem_header.fill(headerData)
+		elem_data := {{ .DataStructName }}{}
+		elem_data.fill(dataData)
+
+		tmp := {{ .DocumentStructName }}{
+			VxMetadata:        metaData,
+			{{ .HeaderStructName }}: elem_header,
+			Data:              make(map[string]{{ .DataStructName }}),
+		}
+		tmp.Data[dataKey] = elem_data
+		statDoc = tmp
+	{{- end }}
+	default:
+		return nil, errors.New("GetDocForId: Unknown file_line type:" + fileLineType)
+	}
+	// Convert our types to a map[string]any by marshaling & unmarshaling through JSON
+	// TODO - would it be advantageous to keep the type longer, e.g. for AddDataElement?
+	jsonBytes, err := json.Marshal(statDoc)
+	if err != nil {
+		return nil, fmt.Errorf("error marshalling statDoc to struct: %w", err)
+	}
+	var doc map[string]any
+	if err := json.Unmarshal(jsonBytes, &doc); err != nil {
+		return nil, fmt.Errorf("error unmarshalling statDoc to map: %w", err)
+	}
+	return doc, nil
+}
+	`))
+	var buf bytes.Buffer
+	getDocForIDTemplate.Execute(&buf, data)
+	return buf.String()
+}
+
+type addDataElementData struct {
+	Documents []documentStructData
+}
+
+// Generates the AddDataElement via template
+func createAddDataElementFunction(data addDataElementData) string {
+	addDataElementTemplate := template.Must(template.New("AddDataElement").Parse(`
+// Header info has already been set by GetDocForId. Solely adds a new "data" element to the map.
+// doc is expected to be a map representing the "base" struct (E.g. "STAT_CNT") with header, metadata, & data info
+func AddDataElement(dataKey string, fileLineType string, dataData []string, doc *map[string]interface{}) (map[string]interface{}, error) {
+	switch fileLineType {
+	{{- range .Documents }}
+	case "{{.DocumentStructName}}":
+		elem_data := {{.DataStructName}}{}
+		elem_data.fill(dataData)
+		if val, ok := (*doc)["data"].(map[string]{{.DataStructName}}); ok {
+			val[dataKey] = elem_data
+		}
+	{{- end }}
+	default:
+		return nil, errors.New("AddDataElement: Unknown file_line type:" + fileLineType)
+	}
+	return *doc, nil
+}
+	`))
+	var buf bytes.Buffer
+	addDataElementTemplate.Execute(&buf, data)
+	return buf.String()
+}
+
+func getRepeatingKeysAndTypes(dataField string, fileType string, lineType string) (keyPrefixes []string, fieldType string) {
 	/*
 
 		The function definition is already in the fillStructureString in the caller so here we just need to return the
@@ -544,127 +718,45 @@ func getRepeatingSequenceStructureString(term string, cleanTerm string, fileType
 			where the keys are DIAG_n and VALUE_n e.g. DIAG_1, VALUE_1, DIAG_2, VALUE_2 etc.
 	*/
 	fileLineType := fileType + "_" + lineType
-	switch term {
-	case "(N_CAT)":
-		/*  MCTC files have a sequence of Fn_On key/values in an n dimensional array of ints.
-		MCTC records - I find these in different file types, e.g. grid_stat_APCP as well as grid_stat...mctc.txt files.
-		The 25th field is the (NCAT) i.e.start of the repeating sequence and the number of dimensions in a n dimensional array.
-		e.g. if NCAT is 4 then there will be 16 fields in this order 4x4...
-		N_CAT F1_O1 F1_O2 F1_O3 F1_O4 F2_O1 F2_O2 F2_O3 F2_O4 F3_O1 F3_O2 F3_O3 F3_O4 F4_O1 F4_O2 F4_O3 F4_O4
-		Cannot depend on there always being a header line that tells us the number of dimensions in the array.
-		The dimensions AND the order must be inferred from the NCAT and the knowledge that they go in sorted
-		order 1st dimension then second dimension. As far as I know these are always ints
-		*/
-		return getNCATStructureString(cleanTerm, index)
+	switch dataField {
 	case "(N_THRESH)": // PCT, PJC, PRC, PSTD, PROBRIRW files
 		switch lineType {
 		case "PCT":
 			// THRESH PCT which is a sequence of THRESH_n OY_n ON_n which are float64 values
-			return getFillStructureSequenceString([]string{"THRESH_", "OY_", "ON_"}, cleanTerm, "validtypes.ValidFloat", index)
+			return []string{"THRESH_", "OY_", "ON_"}, "validtypes.ValidFloat"
 		case "PJC":
 			// PJC files have a sequence of THRESH_n OY_TP_n ON_TP_n CALIBRATION_n REFINEMENT_n LIKELIHOOD_n BASER_n which are float64 values
-			return getFillStructureSequenceString([]string{"THRESH_", "OY_TP_", "ON_TP_", "CALIBRATION_", "REFINEMENT", "LIKELIHOOD_", "BASER_"}, cleanTerm, "validtypes.ValidFloat", index)
+			return []string{"THRESH_", "OY_TP_", "ON_TP_", "CALIBRATION_", "REFINEMENT", "LIKELIHOOD_", "BASER_"}, "validtypes.ValidFloat"
 		case "PRC":
 			// PRC files have a sequence of THRESH_n PODY_n POFD_n which are float64 values
-			return getFillStructureSequenceString([]string{"THRESH_", "PODY_", "POFD_"}, cleanTerm, "validtypes.ValidFloat", index)
+			return []string{"THRESH_", "PODY_", "POFD_"}, "validtypes.ValidFloat"
 		case "PSTD":
 			// PSTD files have a sequence of THRESH_n which are float64 values
-			return getFillStructureSequenceString([]string{"THRESH_"}, cleanTerm, "validtypes.ValidFloat", index)
+			return []string{"THRESH_"}, "validtypes.ValidFloat"
 		case "PROBRIRW":
 			// PROBRIRW files have a sequence of THRESH_n PROB_n which are int values
-			return getFillStructureSequenceString([]string{"THRESH_", "PROB_"}, cleanTerm, "validtypes.ValidInt", index)
+			return []string{"THRESH_", "PROB_"}, "validtypes.ValidInt"
 		}
 
 	case "(N_PTS)": // ECLV files (N_PTS) for ECLV files which is a sequence of CL_n VALUE_n which are float64 values
-		return getFillStructureSequenceString([]string{"CL_", "VALUE_"}, cleanTerm, "validtypes.ValidFloat", index)
+		return []string{"CL_", "VALUE_"}, "validtypes.ValidFloat"
 	case "(N_RANK)": // RHIST files (N_RANK) for RHIST files, the repeated sequence is RANK_n which are int values
-		return getFillStructureSequenceString([]string{"RANK_"}, cleanTerm, "validtypes.ValidInt", index)
+		return []string{"RANK_"}, "validtypes.ValidInt"
 	case "(N_BIN)": // PHIST files (N_BIN) for PHIST files, the repeated sequence is BIN_n which are int values
-		return getFillStructureSequenceString([]string{"BIN_"}, cleanTerm, "validtypes.ValidInt", index)
+		return []string{"BIN_"}, "validtypes.ValidInt"
 	case "(N_ENS)": // ORANK, RELP files (N_ENS) for ORANK files, the repeated sequence is ENS_n
 		if fileLineType == "STAT_ORANK" {
 			// (N_ENS) for ORANK files, the repeated sequence is ENS_n which are ints (can have NA values)
-			return getFillStructureSequenceString([]string{"ENS_"}, cleanTerm, "validtypes.ValidInt", index)
+			return []string{"ENS_"}, "validtypes.ValidInt"
 		}
 		if fileLineType == "STAT_RELP" {
 			// (N_ENS) for RELP files, the repeated sequence is RELP_n which are float64 values
-			return getFillStructureSequenceString([]string{"RELP_"}, cleanTerm, "validtypes.ValidFloat", index)
+			return []string{"RELP_"}, "validtypes.ValidFloat"
 		}
 	case "(N_DIAG)": // TCDIAG files (no sample data for this type)
-		return getFillStructureSequenceString([]string{"DIAG_", "VALUE_"}, cleanTerm, "validtypes.ValidString", index)
+		return []string{"DIAG_", "VALUE_"}, "validtypes.ValidString"
 	}
-	return index, "", nil
-}
-
-func getFillStructureSequenceString(keyPrefixes []string, cleanTerm string, elemType string, index int) (numFields int, structureString string, err error) {
-	var typeStr, invalidStr, convStr string
-	// sometimes we need to do a nilCheck (if it is a conversion to an int) - otherwise we will get a panic
-	keyPrefixesStr := `"` + strings.Join(keyPrefixes, `","`) + `"`
-	switch elemType {
-	case "validtypes.ValidFloat":
-		typeStr = "validtypes.ValidFloat"
-		invalidStr = "value.Reset()"
-		convStr = "value.UnmarshalText([]byte(fields[index]))"
-	case "validtypes.ValidInt":
-		typeStr = "validtypes.ValidInt"
-		invalidStr = "value.Reset()"
-		convStr = "value.UnmarshalText([]byte(fields[index]))"
-	default:
-		typeStr = "validtypes.ValidString"
-		invalidStr = "value.Reset()"
-		convStr = "value.UnmarshalText([]byte(fields[index]))"
-	}
-	str := `    // the first field of the repeating fields is the TOTAL, the second field is the 1st dimenSion of the 1st sequence (there might be only one sequence)
-	var value %s
-	count, err := strconv.Atoi(fields[%d])
-	if err != nil {
-		count = 0
-	}
-	keyPrefixes := []string{%s}
-	s.%s = make(map[string]interface{})
-	for group := 1; group <= count; group++ {
-		for index := %d; index <= len(keyPrefixes); index++ {
-			key := fmt.Sprintf("%%s_%%d",keyPrefixes[index-1], index)
-			if index > len(fields) { // sometimes the data line is truncated - invalidate that field
-				%s
-			} else {
-				%s
-			}
-			s.%s[key] = value
-		}
-	}
-	`
-
-	str = fmt.Sprintf(str, typeStr, index, keyPrefixesStr, cleanTerm, index+1, invalidStr, convStr, cleanTerm)
-	return len(keyPrefixes), str, nil
-}
-
-func getNCATStructureString(cleanTerm string, index int) (numFields int, structureString string, err error) {
-	// these values seem to always be ints (or "NA")
-	str := `    // these values seem to always be ints (or "NA")
-	var value validtypes.ValidInt
-	count, err := strconv.Atoi(fields[1])
-	if err != nil {
-		count = 0
-	}
-	s.%s = make(map[string]interface{})
-	for i1 := %d; i1 <= count; i1++ {
-		for i2 := 1; i2 <= count; i2++ {
-			// generate the particular key for the map i.e. F1_O1, F1_O2, F1_O3, F1_O4, F2_O1, F2_O2, F2_O3, F2_O4, etc.
-			key := fmt.Sprintf("F%%d_O%%d", i1, i2)
-			index := (i1-1)*count + i2
-			if index >= len(fields) {
-				value.Reset()
-			} else {
-				value.UnmarshalText([]byte(fields[index]))
-			}
-			s.%s[key] = value
-		}
-	}
-	`
-
-	str = fmt.Sprintf(str, cleanTerm, index, cleanTerm)
-	return 1, str, nil
+	return []string{}, ""
 }
 
 func fillMetDataMapFromSrcFiles(metDataTypesForLines map[string]string, fieldNameMap map[string]string) map[string]string {
