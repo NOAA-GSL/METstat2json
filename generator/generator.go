@@ -309,7 +309,10 @@ type {{.DocumentStructName}} struct {
 }
 `))
 	var buf bytes.Buffer
-	structTemplate.Execute(&buf, data)
+	err := structTemplate.Execute(&buf, data)
+	if err != nil {
+		panic(fmt.Sprintf("template execution failed: %v", err))
+	}
 	return buf.String()
 }
 
@@ -359,7 +362,10 @@ type {{.HeaderStructName}} struct {
 }
 	`))
 	var buf bytes.Buffer
-	headerStructTemplate.Execute(&buf, data)
+	err := headerStructTemplate.Execute(&buf, data)
+	if err != nil {
+		panic(fmt.Sprintf("template execution failed: %v", err))
+	}
 	return buf.String()
 }
 
@@ -434,7 +440,10 @@ func (s *{{ .HeaderStructName }}) fill(fields []string) error {
 	return errors.Join(errs...)
 }`))
 	var buf bytes.Buffer
-	headerFillMethodTemplate.Execute(&buf, data)
+	err := headerFillMethodTemplate.Execute(&buf, data)
+	if err != nil {
+		panic(fmt.Sprintf("template execution failed: %v", err))
+	}
 	return buf.String()
 }
 
@@ -480,7 +489,10 @@ type {{.DataStructName}} struct {
 }
 	`))
 	var buf bytes.Buffer
-	dataStructTemplate.Execute(&buf, data)
+	err := dataStructTemplate.Execute(&buf, data)
+	if err != nil {
+		panic(fmt.Sprintf("template execution failed: %v", err))
+	}
 	return buf.String()
 }
 
@@ -602,7 +614,10 @@ func (s *{{ .DataStructName }}) fill(fields []string) error {
 	return errors.Join(errs...)
 }`))
 	var buf bytes.Buffer
-	dataFillMethodTemplate.Execute(&buf, data)
+	err := dataFillMethodTemplate.Execute(&buf, data)
+	if err != nil {
+		panic(fmt.Sprintf("template execution failed: %v", err))
+	}
 	return buf.String()
 }
 
@@ -648,7 +663,10 @@ func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []str
 }
 	`))
 	var buf bytes.Buffer
-	getDocForIDTemplate.Execute(&buf, data)
+	err := getDocForIDTemplate.Execute(&buf, data)
+	if err != nil {
+		panic(fmt.Sprintf("template execution failed: %v", err))
+	}
 	return buf.String()
 }
 
@@ -680,7 +698,10 @@ func AddDataElement(dataKey string, fileLineType string, dataData []string, doc 
 }
 	`))
 	var buf bytes.Buffer
-	addDataElementTemplate.Execute(&buf, data)
+	err := addDataElementTemplate.Execute(&buf, data)
+	if err != nil {
+		panic(fmt.Sprintf("template execution failed: %v", err))
+	}
 	return buf.String()
 }
 
