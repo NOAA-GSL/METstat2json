@@ -1258,6 +1258,7 @@ type TCST_TCMPR_header struct {
 }
 
 // fillHeader functions
+
 func (s *MODE_CTS_header) fill(fields []string) {
 	s.VERSION.UnmarshalText([]byte(fields[0]))
 	s.MODEL.UnmarshalText([]byte(fields[1]))
@@ -2171,6 +2172,7 @@ func (s *TCST_TCMPR_header) fill(fields []string) {
 }
 
 // line data struct definitions
+
 type MODE_CTS_data struct {
 	FIELD validtypes.ValidString `json:"FIELD,omitzero"`
 	TOTAL validtypes.ValidInt    `json:"TOTAL,omitzero"`
@@ -3050,6 +3052,7 @@ type TCST_TCMPR_data struct {
 }
 
 // fillStructure functions
+
 func (s *MODE_CTS_data) fill(fields []string) {
 	s.FIELD.UnmarshalText([]byte(fields[0]))
 	s.TOTAL.UnmarshalText([]byte(fields[1]))
@@ -4127,11 +4130,36 @@ func (s *TCST_TCMPR_data) fill(fields []string) {
 	s.INIT.UnmarshalText([]byte(fields[66]))
 }
 
-// getDocForId function
 // Creates a new doc, header functions and all.
 func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []string, dataData []string, dataKey string) (map[string]interface{}, error) {
 	var statDoc any
 	switch fileLineType {
+	case "MODE_CTS":
+		elem_header := MODE_CTS_header{}
+		elem_header.fill(headerData)
+		elem_data := MODE_CTS_data{}
+		elem_data.fill(dataData)
+
+		tmp := MODE_CTS{
+			VxMetadata:      metaData,
+			MODE_CTS_header: elem_header,
+			Data:            make(map[string]MODE_CTS_data),
+		}
+		tmp.Data[dataKey] = elem_data
+		statDoc = tmp
+	case "MODE_OBJ":
+		elem_header := MODE_OBJ_header{}
+		elem_header.fill(headerData)
+		elem_data := MODE_OBJ_data{}
+		elem_data.fill(dataData)
+
+		tmp := MODE_OBJ{
+			VxMetadata:      metaData,
+			MODE_OBJ_header: elem_header,
+			Data:            make(map[string]MODE_OBJ_data),
+		}
+		tmp.Data[dataKey] = elem_data
+		statDoc = tmp
 	case "STAT_CNT":
 		elem_header := STAT_CNT_header{}
 		elem_header.fill(headerData)
@@ -4171,6 +4199,45 @@ func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []str
 		}
 		tmp.Data[dataKey] = elem_data
 		statDoc = tmp
+	case "STAT_DMAP":
+		elem_header := STAT_DMAP_header{}
+		elem_header.fill(headerData)
+		elem_data := STAT_DMAP_data{}
+		elem_data.fill(dataData)
+
+		tmp := STAT_DMAP{
+			VxMetadata:       metaData,
+			STAT_DMAP_header: elem_header,
+			Data:             make(map[string]STAT_DMAP_data),
+		}
+		tmp.Data[dataKey] = elem_data
+		statDoc = tmp
+	case "STAT_ECLV":
+		elem_header := STAT_ECLV_header{}
+		elem_header.fill(headerData)
+		elem_data := STAT_ECLV_data{}
+		elem_data.fill(dataData)
+
+		tmp := STAT_ECLV{
+			VxMetadata:       metaData,
+			STAT_ECLV_header: elem_header,
+			Data:             make(map[string]STAT_ECLV_data),
+		}
+		tmp.Data[dataKey] = elem_data
+		statDoc = tmp
+	case "STAT_ECNT":
+		elem_header := STAT_ECNT_header{}
+		elem_header.fill(headerData)
+		elem_data := STAT_ECNT_data{}
+		elem_data.fill(dataData)
+
+		tmp := STAT_ECNT{
+			VxMetadata:       metaData,
+			STAT_ECNT_header: elem_header,
+			Data:             make(map[string]STAT_ECNT_data),
+		}
+		tmp.Data[dataKey] = elem_data
+		statDoc = tmp
 	case "STAT_FHO":
 		elem_header := STAT_FHO_header{}
 		elem_header.fill(headerData)
@@ -4181,6 +4248,32 @@ func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []str
 			VxMetadata:      metaData,
 			STAT_FHO_header: elem_header,
 			Data:            make(map[string]STAT_FHO_data),
+		}
+		tmp.Data[dataKey] = elem_data
+		statDoc = tmp
+	case "STAT_GENMPR":
+		elem_header := STAT_GENMPR_header{}
+		elem_header.fill(headerData)
+		elem_data := STAT_GENMPR_data{}
+		elem_data.fill(dataData)
+
+		tmp := STAT_GENMPR{
+			VxMetadata:         metaData,
+			STAT_GENMPR_header: elem_header,
+			Data:               make(map[string]STAT_GENMPR_data),
+		}
+		tmp.Data[dataKey] = elem_data
+		statDoc = tmp
+	case "STAT_GRAD":
+		elem_header := STAT_GRAD_header{}
+		elem_header.fill(headerData)
+		elem_data := STAT_GRAD_data{}
+		elem_data.fill(dataData)
+
+		tmp := STAT_GRAD{
+			VxMetadata:       metaData,
+			STAT_GRAD_header: elem_header,
+			Data:             make(map[string]STAT_GRAD_data),
 		}
 		tmp.Data[dataKey] = elem_data
 		statDoc = tmp
@@ -4275,32 +4368,6 @@ func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []str
 		}
 		tmp.Data[dataKey] = elem_data
 		statDoc = tmp
-	case "STAT_GRAD":
-		elem_header := STAT_GRAD_header{}
-		elem_header.fill(headerData)
-		elem_data := STAT_GRAD_data{}
-		elem_data.fill(dataData)
-
-		tmp := STAT_GRAD{
-			VxMetadata:       metaData,
-			STAT_GRAD_header: elem_header,
-			Data:             make(map[string]STAT_GRAD_data),
-		}
-		tmp.Data[dataKey] = elem_data
-		statDoc = tmp
-	case "STAT_DMAP":
-		elem_header := STAT_DMAP_header{}
-		elem_header.fill(headerData)
-		elem_data := STAT_DMAP_data{}
-		elem_data.fill(dataData)
-
-		tmp := STAT_DMAP{
-			VxMetadata:       metaData,
-			STAT_DMAP_header: elem_header,
-			Data:             make(map[string]STAT_DMAP_data),
-		}
-		tmp.Data[dataKey] = elem_data
-		statDoc = tmp
 	case "STAT_ORANK":
 		elem_header := STAT_ORANK_header{}
 		elem_header.fill(headerData)
@@ -4324,6 +4391,19 @@ func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []str
 			VxMetadata:      metaData,
 			STAT_PCT_header: elem_header,
 			Data:            make(map[string]STAT_PCT_data),
+		}
+		tmp.Data[dataKey] = elem_data
+		statDoc = tmp
+	case "STAT_PHIST":
+		elem_header := STAT_PHIST_header{}
+		elem_header.fill(headerData)
+		elem_data := STAT_PHIST_data{}
+		elem_data.fill(dataData)
+
+		tmp := STAT_PHIST{
+			VxMetadata:        metaData,
+			STAT_PHIST_header: elem_header,
+			Data:              make(map[string]STAT_PHIST_data),
 		}
 		tmp.Data[dataKey] = elem_data
 		statDoc = tmp
@@ -4366,42 +4446,16 @@ func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []str
 		}
 		tmp.Data[dataKey] = elem_data
 		statDoc = tmp
-	case "STAT_ECLV":
-		elem_header := STAT_ECLV_header{}
+	case "STAT_RELP":
+		elem_header := STAT_RELP_header{}
 		elem_header.fill(headerData)
-		elem_data := STAT_ECLV_data{}
+		elem_data := STAT_RELP_data{}
 		elem_data.fill(dataData)
 
-		tmp := STAT_ECLV{
+		tmp := STAT_RELP{
 			VxMetadata:       metaData,
-			STAT_ECLV_header: elem_header,
-			Data:             make(map[string]STAT_ECLV_data),
-		}
-		tmp.Data[dataKey] = elem_data
-		statDoc = tmp
-	case "STAT_ECNT":
-		elem_header := STAT_ECNT_header{}
-		elem_header.fill(headerData)
-		elem_data := STAT_ECNT_data{}
-		elem_data.fill(dataData)
-
-		tmp := STAT_ECNT{
-			VxMetadata:       metaData,
-			STAT_ECNT_header: elem_header,
-			Data:             make(map[string]STAT_ECNT_data),
-		}
-		tmp.Data[dataKey] = elem_data
-		statDoc = tmp
-	case "STAT_RPS":
-		elem_header := STAT_RPS_header{}
-		elem_header.fill(headerData)
-		elem_data := STAT_RPS_data{}
-		elem_data.fill(dataData)
-
-		tmp := STAT_RPS{
-			VxMetadata:      metaData,
-			STAT_RPS_header: elem_header,
-			Data:            make(map[string]STAT_RPS_data),
+			STAT_RELP_header: elem_header,
+			Data:             make(map[string]STAT_RELP_data),
 		}
 		tmp.Data[dataKey] = elem_data
 		statDoc = tmp
@@ -4418,29 +4472,16 @@ func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []str
 		}
 		tmp.Data[dataKey] = elem_data
 		statDoc = tmp
-	case "STAT_PHIST":
-		elem_header := STAT_PHIST_header{}
+	case "STAT_RPS":
+		elem_header := STAT_RPS_header{}
 		elem_header.fill(headerData)
-		elem_data := STAT_PHIST_data{}
+		elem_data := STAT_RPS_data{}
 		elem_data.fill(dataData)
 
-		tmp := STAT_PHIST{
-			VxMetadata:        metaData,
-			STAT_PHIST_header: elem_header,
-			Data:              make(map[string]STAT_PHIST_data),
-		}
-		tmp.Data[dataKey] = elem_data
-		statDoc = tmp
-	case "STAT_RELP":
-		elem_header := STAT_RELP_header{}
-		elem_header.fill(headerData)
-		elem_data := STAT_RELP_data{}
-		elem_data.fill(dataData)
-
-		tmp := STAT_RELP{
-			VxMetadata:       metaData,
-			STAT_RELP_header: elem_header,
-			Data:             make(map[string]STAT_RELP_data),
+		tmp := STAT_RPS{
+			VxMetadata:      metaData,
+			STAT_RPS_header: elem_header,
+			Data:            make(map[string]STAT_RPS_data),
 		}
 		tmp.Data[dataKey] = elem_data
 		statDoc = tmp
@@ -4470,6 +4511,19 @@ func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []str
 		}
 		tmp.Data[dataKey] = elem_data
 		statDoc = tmp
+	case "STAT_SSIDX":
+		elem_header := STAT_SSIDX_header{}
+		elem_header.fill(headerData)
+		elem_data := STAT_SSIDX_data{}
+		elem_data.fill(dataData)
+
+		tmp := STAT_SSIDX{
+			VxMetadata:        metaData,
+			STAT_SSIDX_header: elem_header,
+			Data:              make(map[string]STAT_SSIDX_data),
+		}
+		tmp.Data[dataKey] = elem_data
+		statDoc = tmp
 	case "STAT_SSVAR":
 		elem_header := STAT_SSVAR_header{}
 		elem_header.fill(headerData)
@@ -4496,19 +4550,6 @@ func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []str
 		}
 		tmp.Data[dataKey] = elem_data
 		statDoc = tmp
-	case "STAT_VL1L2":
-		elem_header := STAT_VL1L2_header{}
-		elem_header.fill(headerData)
-		elem_data := STAT_VL1L2_data{}
-		elem_data.fill(dataData)
-
-		tmp := STAT_VL1L2{
-			VxMetadata:        metaData,
-			STAT_VL1L2_header: elem_header,
-			Data:              make(map[string]STAT_VL1L2_data),
-		}
-		tmp.Data[dataKey] = elem_data
-		statDoc = tmp
 	case "STAT_VCNT":
 		elem_header := STAT_VCNT_header{}
 		elem_header.fill(headerData)
@@ -4522,68 +4563,16 @@ func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []str
 		}
 		tmp.Data[dataKey] = elem_data
 		statDoc = tmp
-	case "STAT_GENMPR":
-		elem_header := STAT_GENMPR_header{}
+	case "STAT_VL1L2":
+		elem_header := STAT_VL1L2_header{}
 		elem_header.fill(headerData)
-		elem_data := STAT_GENMPR_data{}
+		elem_data := STAT_VL1L2_data{}
 		elem_data.fill(dataData)
 
-		tmp := STAT_GENMPR{
-			VxMetadata:         metaData,
-			STAT_GENMPR_header: elem_header,
-			Data:               make(map[string]STAT_GENMPR_data),
-		}
-		tmp.Data[dataKey] = elem_data
-		statDoc = tmp
-	case "STAT_SSIDX":
-		elem_header := STAT_SSIDX_header{}
-		elem_header.fill(headerData)
-		elem_data := STAT_SSIDX_data{}
-		elem_data.fill(dataData)
-
-		tmp := STAT_SSIDX{
+		tmp := STAT_VL1L2{
 			VxMetadata:        metaData,
-			STAT_SSIDX_header: elem_header,
-			Data:              make(map[string]STAT_SSIDX_data),
-		}
-		tmp.Data[dataKey] = elem_data
-		statDoc = tmp
-	case "MODE_OBJ":
-		elem_header := MODE_OBJ_header{}
-		elem_header.fill(headerData)
-		elem_data := MODE_OBJ_data{}
-		elem_data.fill(dataData)
-
-		tmp := MODE_OBJ{
-			VxMetadata:      metaData,
-			MODE_OBJ_header: elem_header,
-			Data:            make(map[string]MODE_OBJ_data),
-		}
-		tmp.Data[dataKey] = elem_data
-		statDoc = tmp
-	case "MODE_CTS":
-		elem_header := MODE_CTS_header{}
-		elem_header.fill(headerData)
-		elem_data := MODE_CTS_data{}
-		elem_data.fill(dataData)
-
-		tmp := MODE_CTS{
-			VxMetadata:      metaData,
-			MODE_CTS_header: elem_header,
-			Data:            make(map[string]MODE_CTS_data),
-		}
-		tmp.Data[dataKey] = elem_data
-		statDoc = tmp
-	case "TCST_TCMPR":
-		elem_header := TCST_TCMPR_header{}
-		elem_header.fill(headerData)
-		elem_data := TCST_TCMPR_data{}
-		elem_data.fill(dataData)
-
-		tmp := TCST_TCMPR{
-			VxMetadata:        metaData,
-			TCST_TCMPR_header: elem_header,
-			Data:              make(map[string]TCST_TCMPR_data),
+			STAT_VL1L2_header: elem_header,
+			Data:              make(map[string]STAT_VL1L2_data),
 		}
 		tmp.Data[dataKey] = elem_data
 		statDoc = tmp
@@ -4600,6 +4589,19 @@ func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []str
 		}
 		tmp.Data[dataKey] = elem_data
 		statDoc = tmp
+	case "TCST_TCMPR":
+		elem_header := TCST_TCMPR_header{}
+		elem_header.fill(headerData)
+		elem_data := TCST_TCMPR_data{}
+		elem_data.fill(dataData)
+
+		tmp := TCST_TCMPR{
+			VxMetadata:        metaData,
+			TCST_TCMPR_header: elem_header,
+			Data:              make(map[string]TCST_TCMPR_data),
+		}
+		tmp.Data[dataKey] = elem_data
+		statDoc = tmp
 	default:
 		return nil, errors.New("GetDocForId: Unknown file_line type:" + fileLineType)
 	}
@@ -4607,20 +4609,31 @@ func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []str
 	// TODO - would it be advantageous to keep the type longer, e.g. for AddDataElement?
 	jsonBytes, err := json.Marshal(statDoc)
 	if err != nil {
-		return nil, fmt.Errorf("error marshalling TCST_PROBRIRW struct: %w", err)
+		return nil, fmt.Errorf("error marshalling statDoc to struct: %w", err)
 	}
 	var doc map[string]any
 	if err := json.Unmarshal(jsonBytes, &doc); err != nil {
-		return nil, fmt.Errorf("error unmarshalling TCST_PROBRIRW to map: %w", err)
+		return nil, fmt.Errorf("error unmarshalling statDoc to map: %w", err)
 	}
 	return doc, nil
 }
 
-// addDataElement function
 // Header info has already been set by GetDocForId. Solely adds a new "data" element to the map.
 // doc is expected to be a map representing the "base" struct (E.g. "STAT_CNT") with header, metadata, & data info
 func AddDataElement(dataKey string, fileLineType string, dataData []string, doc *map[string]interface{}) (map[string]interface{}, error) {
 	switch fileLineType {
+	case "MODE_CTS":
+		elem_data := MODE_CTS_data{}
+		elem_data.fill(dataData)
+		if val, ok := (*doc)["data"].(map[string]MODE_CTS_data); ok {
+			val[dataKey] = elem_data
+		}
+	case "MODE_OBJ":
+		elem_data := MODE_OBJ_data{}
+		elem_data.fill(dataData)
+		if val, ok := (*doc)["data"].(map[string]MODE_OBJ_data); ok {
+			val[dataKey] = elem_data
+		}
 	case "STAT_CNT":
 		elem_data := STAT_CNT_data{}
 		elem_data.fill(dataData)
@@ -4639,10 +4652,40 @@ func AddDataElement(dataKey string, fileLineType string, dataData []string, doc 
 		if val, ok := (*doc)["data"].(map[string]STAT_CTS_data); ok {
 			val[dataKey] = elem_data
 		}
+	case "STAT_DMAP":
+		elem_data := STAT_DMAP_data{}
+		elem_data.fill(dataData)
+		if val, ok := (*doc)["data"].(map[string]STAT_DMAP_data); ok {
+			val[dataKey] = elem_data
+		}
+	case "STAT_ECLV":
+		elem_data := STAT_ECLV_data{}
+		elem_data.fill(dataData)
+		if val, ok := (*doc)["data"].(map[string]STAT_ECLV_data); ok {
+			val[dataKey] = elem_data
+		}
+	case "STAT_ECNT":
+		elem_data := STAT_ECNT_data{}
+		elem_data.fill(dataData)
+		if val, ok := (*doc)["data"].(map[string]STAT_ECNT_data); ok {
+			val[dataKey] = elem_data
+		}
 	case "STAT_FHO":
 		elem_data := STAT_FHO_data{}
 		elem_data.fill(dataData)
 		if val, ok := (*doc)["data"].(map[string]STAT_FHO_data); ok {
+			val[dataKey] = elem_data
+		}
+	case "STAT_GENMPR":
+		elem_data := STAT_GENMPR_data{}
+		elem_data.fill(dataData)
+		if val, ok := (*doc)["data"].(map[string]STAT_GENMPR_data); ok {
+			val[dataKey] = elem_data
+		}
+	case "STAT_GRAD":
+		elem_data := STAT_GRAD_data{}
+		elem_data.fill(dataData)
+		if val, ok := (*doc)["data"].(map[string]STAT_GRAD_data); ok {
 			val[dataKey] = elem_data
 		}
 	case "STAT_ISC":
@@ -4687,18 +4730,6 @@ func AddDataElement(dataKey string, fileLineType string, dataData []string, doc 
 		if val, ok := (*doc)["data"].(map[string]STAT_NBRCTS_data); ok {
 			val[dataKey] = elem_data
 		}
-	case "STAT_GRAD":
-		elem_data := STAT_GRAD_data{}
-		elem_data.fill(dataData)
-		if val, ok := (*doc)["data"].(map[string]STAT_GRAD_data); ok {
-			val[dataKey] = elem_data
-		}
-	case "STAT_DMAP":
-		elem_data := STAT_DMAP_data{}
-		elem_data.fill(dataData)
-		if val, ok := (*doc)["data"].(map[string]STAT_DMAP_data); ok {
-			val[dataKey] = elem_data
-		}
 	case "STAT_ORANK":
 		elem_data := STAT_ORANK_data{}
 		elem_data.fill(dataData)
@@ -4709,6 +4740,12 @@ func AddDataElement(dataKey string, fileLineType string, dataData []string, doc 
 		elem_data := STAT_PCT_data{}
 		elem_data.fill(dataData)
 		if val, ok := (*doc)["data"].(map[string]STAT_PCT_data); ok {
+			val[dataKey] = elem_data
+		}
+	case "STAT_PHIST":
+		elem_data := STAT_PHIST_data{}
+		elem_data.fill(dataData)
+		if val, ok := (*doc)["data"].(map[string]STAT_PHIST_data); ok {
 			val[dataKey] = elem_data
 		}
 	case "STAT_PJC":
@@ -4729,22 +4766,10 @@ func AddDataElement(dataKey string, fileLineType string, dataData []string, doc 
 		if val, ok := (*doc)["data"].(map[string]STAT_PSTD_data); ok {
 			val[dataKey] = elem_data
 		}
-	case "STAT_ECLV":
-		elem_data := STAT_ECLV_data{}
+	case "STAT_RELP":
+		elem_data := STAT_RELP_data{}
 		elem_data.fill(dataData)
-		if val, ok := (*doc)["data"].(map[string]STAT_ECLV_data); ok {
-			val[dataKey] = elem_data
-		}
-	case "STAT_ECNT":
-		elem_data := STAT_ECNT_data{}
-		elem_data.fill(dataData)
-		if val, ok := (*doc)["data"].(map[string]STAT_ECNT_data); ok {
-			val[dataKey] = elem_data
-		}
-	case "STAT_RPS":
-		elem_data := STAT_RPS_data{}
-		elem_data.fill(dataData)
-		if val, ok := (*doc)["data"].(map[string]STAT_RPS_data); ok {
+		if val, ok := (*doc)["data"].(map[string]STAT_RELP_data); ok {
 			val[dataKey] = elem_data
 		}
 	case "STAT_RHIST":
@@ -4753,16 +4778,10 @@ func AddDataElement(dataKey string, fileLineType string, dataData []string, doc 
 		if val, ok := (*doc)["data"].(map[string]STAT_RHIST_data); ok {
 			val[dataKey] = elem_data
 		}
-	case "STAT_PHIST":
-		elem_data := STAT_PHIST_data{}
+	case "STAT_RPS":
+		elem_data := STAT_RPS_data{}
 		elem_data.fill(dataData)
-		if val, ok := (*doc)["data"].(map[string]STAT_PHIST_data); ok {
-			val[dataKey] = elem_data
-		}
-	case "STAT_RELP":
-		elem_data := STAT_RELP_data{}
-		elem_data.fill(dataData)
-		if val, ok := (*doc)["data"].(map[string]STAT_RELP_data); ok {
+		if val, ok := (*doc)["data"].(map[string]STAT_RPS_data); ok {
 			val[dataKey] = elem_data
 		}
 	case "STAT_SAL1L2":
@@ -4777,6 +4796,12 @@ func AddDataElement(dataKey string, fileLineType string, dataData []string, doc 
 		if val, ok := (*doc)["data"].(map[string]STAT_SL1L2_data); ok {
 			val[dataKey] = elem_data
 		}
+	case "STAT_SSIDX":
+		elem_data := STAT_SSIDX_data{}
+		elem_data.fill(dataData)
+		if val, ok := (*doc)["data"].(map[string]STAT_SSIDX_data); ok {
+			val[dataKey] = elem_data
+		}
 	case "STAT_SSVAR":
 		elem_data := STAT_SSVAR_data{}
 		elem_data.fill(dataData)
@@ -4789,46 +4814,16 @@ func AddDataElement(dataKey string, fileLineType string, dataData []string, doc 
 		if val, ok := (*doc)["data"].(map[string]STAT_VAL1L2_data); ok {
 			val[dataKey] = elem_data
 		}
-	case "STAT_VL1L2":
-		elem_data := STAT_VL1L2_data{}
-		elem_data.fill(dataData)
-		if val, ok := (*doc)["data"].(map[string]STAT_VL1L2_data); ok {
-			val[dataKey] = elem_data
-		}
 	case "STAT_VCNT":
 		elem_data := STAT_VCNT_data{}
 		elem_data.fill(dataData)
 		if val, ok := (*doc)["data"].(map[string]STAT_VCNT_data); ok {
 			val[dataKey] = elem_data
 		}
-	case "STAT_GENMPR":
-		elem_data := STAT_GENMPR_data{}
+	case "STAT_VL1L2":
+		elem_data := STAT_VL1L2_data{}
 		elem_data.fill(dataData)
-		if val, ok := (*doc)["data"].(map[string]STAT_GENMPR_data); ok {
-			val[dataKey] = elem_data
-		}
-	case "STAT_SSIDX":
-		elem_data := STAT_SSIDX_data{}
-		elem_data.fill(dataData)
-		if val, ok := (*doc)["data"].(map[string]STAT_SSIDX_data); ok {
-			val[dataKey] = elem_data
-		}
-	case "MODE_OBJ":
-		elem_data := MODE_OBJ_data{}
-		elem_data.fill(dataData)
-		if val, ok := (*doc)["data"].(map[string]MODE_OBJ_data); ok {
-			val[dataKey] = elem_data
-		}
-	case "MODE_CTS":
-		elem_data := MODE_CTS_data{}
-		elem_data.fill(dataData)
-		if val, ok := (*doc)["data"].(map[string]MODE_CTS_data); ok {
-			val[dataKey] = elem_data
-		}
-	case "TCST_TCMPR":
-		elem_data := TCST_TCMPR_data{}
-		elem_data.fill(dataData)
-		if val, ok := (*doc)["data"].(map[string]TCST_TCMPR_data); ok {
+		if val, ok := (*doc)["data"].(map[string]STAT_VL1L2_data); ok {
 			val[dataKey] = elem_data
 		}
 	case "TCST_PROBRIRW":
@@ -4837,10 +4832,14 @@ func AddDataElement(dataKey string, fileLineType string, dataData []string, doc 
 		if val, ok := (*doc)["data"].(map[string]TCST_PROBRIRW_data); ok {
 			val[dataKey] = elem_data
 		}
+	case "TCST_TCMPR":
+		elem_data := TCST_TCMPR_data{}
+		elem_data.fill(dataData)
+		if val, ok := (*doc)["data"].(map[string]TCST_TCMPR_data); ok {
+			val[dataKey] = elem_data
+		}
 	default:
 		return nil, errors.New("AddDataElement: Unknown file_line type:" + fileLineType)
 	}
 	return *doc, nil
 }
-
-var MetHeaderColumnsFileUrl = "https://raw.githubusercontent.com/dtcenter/MET/refs/heads/main_v12.0/data/table_files/met_header_columns_V10.1.txt"
