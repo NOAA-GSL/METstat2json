@@ -90,7 +90,7 @@ func isValidFileType(filename string) (bool, string) {
 // (docPtr is a map[string]interface where key = docID & value = doc struct with header & data)
 // Uses the fileName to deduce the doc type.
 // dataSetName should be a <=10 char name which identifies the dataset.
-func ParseLine(dataSetName string, headerLine string, dataLine string, docPtr *map[string]util.METdocument, fileName string, getExternalDocForId func(id string) (util.METdocument, error)) (map[string]util.METdocument, error) {
+func ParseLine(dataSetName string, headerLine string, dataLine string, docs *map[string]util.METdocument, fileName string, getExternalDocForId func(id string) (util.METdocument, error)) (map[string]util.METdocument, error) {
 	// recover from unexpected errors
 	defer func() {
 		if r := recover(); r != nil {
@@ -99,28 +99,28 @@ func ParseLine(dataSetName string, headerLine string, dataLine string, docPtr *m
 	}()
 
 	if dataSetName == "" {
-		return *docPtr, fmt.Errorf("dataSetName is empty")
+		return *docs, fmt.Errorf("dataSetName is empty")
 	}
 	if len(dataSetName) > 10 {
-		return *docPtr, fmt.Errorf("dataSetName is too long - must be <= 10 characters")
+		return *docs, fmt.Errorf("dataSetName is too long - must be <= 10 characters")
 	}
 	// get line version e.g. V12.0.0 -> v12_0
 	parserVersion, _err := getParserVersion(dataLine)
 	if _err != nil {
-		return *docPtr, fmt.Errorf("error getting parser version from line %s: %w", dataLine, _err)
+		return *docs, fmt.Errorf("error getting parser version from line %s: %w", dataLine, _err)
 	}
 	if headerLine == "" {
-		return *docPtr, fmt.Errorf("empty header line")
+		return *docs, fmt.Errorf("empty header line")
 	}
 	if dataLine == "" {
-		return *docPtr, fmt.Errorf("empty data line")
+		return *docs, fmt.Errorf("empty data line")
 	}
 
 	// Filter out undesired files.
 	valid, filetype := isValidFileType(fileName)
 	if !valid {
 		// Skip undesired files
-		return *docPtr, fmt.Errorf("Skipping %s file", filetype)
+		return *docs, fmt.Errorf("Skipping %s file", filetype)
 	}
 
 	// get the lineType
@@ -128,7 +128,7 @@ func ParseLine(dataSetName string, headerLine string, dataLine string, docPtr *m
 	if err != nil {
 		// cannot process this line so return the docPtr as is - it is probably a truncated line
 		fmt.Println("Error getting line type: ", err)
-		return *docPtr, err
+		return *docs, err
 	}
 	// if there are any disallowed fields in this linetype then add the disallowed data to the dataData array - in order
 	disallowedFields := util.DataKeyMap[fileLineType].HeaderDisallow
@@ -146,26 +146,26 @@ func ParseLine(dataSetName string, headerLine string, dataLine string, docPtr *m
 
 	// get the tmpHeaderData without the NA values
 	tmpHeaderData := getTmpHeaderSanNA(headerData, descIndex)
-	if *docPtr == nil {
+	if *docs == nil {
 		newDoc := make(map[string]util.METdocument)
-		docPtr = &newDoc
+		docs = &newDoc
 	}
 	// GetId will fill in the id field of the metaData struct with the constructed id
 	// metadata doesn't change between versions, we just use the latest one. Same with DOC
 	metaData, _err := util.GetId(tmpHeaderData, &util.VxMetadata{Subset: "MET", Type: "DD", SubType: "MET", DataSetName: dataSetName})
 	if _err != nil {
-		return *docPtr, fmt.Errorf("error getting id from line %s: %w", dataLine, _err)
+		return *docs, fmt.Errorf("error getting id from line %s: %w", dataLine, _err)
 	}
-	_, exists := (*docPtr)[metaData.ID]
+	_, exists := (*docs)[metaData.ID]
 	if !exists {
 		// check to see if there is an existing external document for this id
 		externalExistingDoc, err := (getExternalDocForId)(metaData.ID)
 		if err != nil && !strings.HasPrefix(err.Error(), DOC_NOT_FOUND) {
-			return *docPtr, err
+			return *docs, err
 		}
 		// if there is an external document for this id, use it, we will add the data into it
 		if externalExistingDoc != nil {
-			(*docPtr)[metaData.ID] = externalExistingDoc
+			(*docs)[metaData.ID] = externalExistingDoc
 		} else {
 			// have to create a new document for this id
 
@@ -175,34 +175,34 @@ func ParseLine(dataSetName string, headerLine string, dataLine string, docPtr *m
 			// The document needs to be of the correct version.
 			switch parserVersion {
 			case "v10_0":
-				(*docPtr)[metaData.ID], _err = v10_0.GetDocForId(fileLineType, metaData, headerData, dataData, dataKey)
+				(*docs)[metaData.ID], _err = v10_0.GetDocForId(fileLineType, metaData, headerData, dataData, dataKey)
 			case "v10_1":
-				(*docPtr)[metaData.ID], _err = v10_1.GetDocForId(fileLineType, metaData, headerData, dataData, dataKey)
+				(*docs)[metaData.ID], _err = v10_1.GetDocForId(fileLineType, metaData, headerData, dataData, dataKey)
 			case "v11_0":
-				(*docPtr)[metaData.ID], _err = v11_0.GetDocForId(fileLineType, metaData, headerData, dataData, dataKey)
+				(*docs)[metaData.ID], _err = v11_0.GetDocForId(fileLineType, metaData, headerData, dataData, dataKey)
 			case "v11_1":
-				(*docPtr)[metaData.ID], _err = v11_1.GetDocForId(fileLineType, metaData, headerData, dataData, dataKey)
+				(*docs)[metaData.ID], _err = v11_1.GetDocForId(fileLineType, metaData, headerData, dataData, dataKey)
 			case "v12_0":
-				(*docPtr)[metaData.ID], _err = v12_0.GetDocForId(fileLineType, metaData, headerData, dataData, dataKey)
+				(*docs)[metaData.ID], _err = v12_0.GetDocForId(fileLineType, metaData, headerData, dataData, dataKey)
 			default:
-				return *docPtr, fmt.Errorf("unsupported version %s", parserVersion)
+				return *docs, fmt.Errorf("unsupported version %s", parserVersion)
 			}
-			if _err != nil || (*docPtr)[metaData.ID] == nil {
-				return *docPtr, fmt.Errorf("error creating doc for file: %s error: %w", fileName, _err)
+			if _err != nil || (*docs)[metaData.ID] == nil {
+				return *docs, fmt.Errorf("error creating doc for file: %s error: %w", fileName, _err)
 			}
 			// return the new doc - the doc was created and the data was added to it
-			return *docPtr, _err
+			return *docs, _err
 		}
 	} else {
 		// we either had the doc already, got it externally, or created it
 		// now we need to add the data to the document
-		doc := (*docPtr)[metaData.ID]
+		doc := (*docs)[metaData.ID]
 		if _err := doc.AddDataElement(dataKey, dataData); _err != nil {
-			return *docPtr, fmt.Errorf("problem adding data to document %v", err)
+			return *docs, fmt.Errorf("problem adding data to document %v", err)
 		}
-		return *docPtr, _err
+		return *docs, _err
 	}
-	return *docPtr, _err
+	return *docs, _err
 }
 
 /*
