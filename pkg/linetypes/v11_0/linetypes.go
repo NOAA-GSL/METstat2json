@@ -10,7 +10,6 @@ and, if there is, add an override to the overRideDefinedMetDataTypes function in
 package v11_0
 
 import (
-	"encoding/json"
 	"errors"
 	"fmt"
 	"strconv"
@@ -39,273 +38,704 @@ func appendErrorWithContext(errs *[]error, fieldName string, err error) {
 type MODE_CTS struct {
 	util.VxMetadata
 	MODE_CTS_header
-	Data map[string]MODE_CTS_data `json:"data"` //nolint:tagliatelle
+	Data map[string]MODE_CTS_data `json:"data"` //nolint:tagliatelle // "data" is a common JSON field in MATS
 }
 
 // Represents a complete MODE_OBJ document
 type MODE_OBJ struct {
 	util.VxMetadata
 	MODE_OBJ_header
-	Data map[string]MODE_OBJ_data `json:"data"` //nolint:tagliatelle
+	Data map[string]MODE_OBJ_data `json:"data"` //nolint:tagliatelle // "data" is a common JSON field in MATS
 }
 
 // Represents a complete STAT_CNT document
 type STAT_CNT struct {
 	util.VxMetadata
 	STAT_CNT_header
-	Data map[string]STAT_CNT_data `json:"data"` //nolint:tagliatelle
+	Data map[string]STAT_CNT_data `json:"data"` //nolint:tagliatelle // "data" is a common JSON field in MATS
 }
 
 // Represents a complete STAT_CTC document
 type STAT_CTC struct {
 	util.VxMetadata
 	STAT_CTC_header
-	Data map[string]STAT_CTC_data `json:"data"` //nolint:tagliatelle
+	Data map[string]STAT_CTC_data `json:"data"` //nolint:tagliatelle // "data" is a common JSON field in MATS
 }
 
 // Represents a complete STAT_CTS document
 type STAT_CTS struct {
 	util.VxMetadata
 	STAT_CTS_header
-	Data map[string]STAT_CTS_data `json:"data"` //nolint:tagliatelle
+	Data map[string]STAT_CTS_data `json:"data"` //nolint:tagliatelle // "data" is a common JSON field in MATS
 }
 
 // Represents a complete STAT_DMAP document
 type STAT_DMAP struct {
 	util.VxMetadata
 	STAT_DMAP_header
-	Data map[string]STAT_DMAP_data `json:"data"` //nolint:tagliatelle
+	Data map[string]STAT_DMAP_data `json:"data"` //nolint:tagliatelle // "data" is a common JSON field in MATS
 }
 
 // Represents a complete STAT_ECLV document
 type STAT_ECLV struct {
 	util.VxMetadata
 	STAT_ECLV_header
-	Data map[string]STAT_ECLV_data `json:"data"` //nolint:tagliatelle
+	Data map[string]STAT_ECLV_data `json:"data"` //nolint:tagliatelle // "data" is a common JSON field in MATS
 }
 
 // Represents a complete STAT_ECNT document
 type STAT_ECNT struct {
 	util.VxMetadata
 	STAT_ECNT_header
-	Data map[string]STAT_ECNT_data `json:"data"` //nolint:tagliatelle
+	Data map[string]STAT_ECNT_data `json:"data"` //nolint:tagliatelle // "data" is a common JSON field in MATS
 }
 
 // Represents a complete STAT_FHO document
 type STAT_FHO struct {
 	util.VxMetadata
 	STAT_FHO_header
-	Data map[string]STAT_FHO_data `json:"data"` //nolint:tagliatelle
+	Data map[string]STAT_FHO_data `json:"data"` //nolint:tagliatelle // "data" is a common JSON field in MATS
 }
 
 // Represents a complete STAT_GENMPR document
 type STAT_GENMPR struct {
 	util.VxMetadata
 	STAT_GENMPR_header
-	Data map[string]STAT_GENMPR_data `json:"data"` //nolint:tagliatelle
+	Data map[string]STAT_GENMPR_data `json:"data"` //nolint:tagliatelle // "data" is a common JSON field in MATS
 }
 
 // Represents a complete STAT_GRAD document
 type STAT_GRAD struct {
 	util.VxMetadata
 	STAT_GRAD_header
-	Data map[string]STAT_GRAD_data `json:"data"` //nolint:tagliatelle
+	Data map[string]STAT_GRAD_data `json:"data"` //nolint:tagliatelle // "data" is a common JSON field in MATS
 }
 
 // Represents a complete STAT_ISC document
 type STAT_ISC struct {
 	util.VxMetadata
 	STAT_ISC_header
-	Data map[string]STAT_ISC_data `json:"data"` //nolint:tagliatelle
+	Data map[string]STAT_ISC_data `json:"data"` //nolint:tagliatelle // "data" is a common JSON field in MATS
 }
 
 // Represents a complete STAT_MCTC document
 type STAT_MCTC struct {
 	util.VxMetadata
 	STAT_MCTC_header
-	Data map[string]STAT_MCTC_data `json:"data"` //nolint:tagliatelle
+	Data map[string]STAT_MCTC_data `json:"data"` //nolint:tagliatelle // "data" is a common JSON field in MATS
 }
 
 // Represents a complete STAT_MCTS document
 type STAT_MCTS struct {
 	util.VxMetadata
 	STAT_MCTS_header
-	Data map[string]STAT_MCTS_data `json:"data"` //nolint:tagliatelle
+	Data map[string]STAT_MCTS_data `json:"data"` //nolint:tagliatelle // "data" is a common JSON field in MATS
 }
 
 // Represents a complete STAT_MPR document
 type STAT_MPR struct {
 	util.VxMetadata
 	STAT_MPR_header
-	Data map[string]STAT_MPR_data `json:"data"` //nolint:tagliatelle
+	Data map[string]STAT_MPR_data `json:"data"` //nolint:tagliatelle // "data" is a common JSON field in MATS
 }
 
 // Represents a complete STAT_NBRCNT document
 type STAT_NBRCNT struct {
 	util.VxMetadata
 	STAT_NBRCNT_header
-	Data map[string]STAT_NBRCNT_data `json:"data"` //nolint:tagliatelle
+	Data map[string]STAT_NBRCNT_data `json:"data"` //nolint:tagliatelle // "data" is a common JSON field in MATS
 }
 
 // Represents a complete STAT_NBRCTC document
 type STAT_NBRCTC struct {
 	util.VxMetadata
 	STAT_NBRCTC_header
-	Data map[string]STAT_NBRCTC_data `json:"data"` //nolint:tagliatelle
+	Data map[string]STAT_NBRCTC_data `json:"data"` //nolint:tagliatelle // "data" is a common JSON field in MATS
 }
 
 // Represents a complete STAT_NBRCTS document
 type STAT_NBRCTS struct {
 	util.VxMetadata
 	STAT_NBRCTS_header
-	Data map[string]STAT_NBRCTS_data `json:"data"` //nolint:tagliatelle
+	Data map[string]STAT_NBRCTS_data `json:"data"` //nolint:tagliatelle // "data" is a common JSON field in MATS
 }
 
 // Represents a complete STAT_ORANK document
 type STAT_ORANK struct {
 	util.VxMetadata
 	STAT_ORANK_header
-	Data map[string]STAT_ORANK_data `json:"data"` //nolint:tagliatelle
+	Data map[string]STAT_ORANK_data `json:"data"` //nolint:tagliatelle // "data" is a common JSON field in MATS
 }
 
 // Represents a complete STAT_PCT document
 type STAT_PCT struct {
 	util.VxMetadata
 	STAT_PCT_header
-	Data map[string]STAT_PCT_data `json:"data"` //nolint:tagliatelle
+	Data map[string]STAT_PCT_data `json:"data"` //nolint:tagliatelle // "data" is a common JSON field in MATS
 }
 
 // Represents a complete STAT_PHIST document
 type STAT_PHIST struct {
 	util.VxMetadata
 	STAT_PHIST_header
-	Data map[string]STAT_PHIST_data `json:"data"` //nolint:tagliatelle
+	Data map[string]STAT_PHIST_data `json:"data"` //nolint:tagliatelle // "data" is a common JSON field in MATS
 }
 
 // Represents a complete STAT_PJC document
 type STAT_PJC struct {
 	util.VxMetadata
 	STAT_PJC_header
-	Data map[string]STAT_PJC_data `json:"data"` //nolint:tagliatelle
+	Data map[string]STAT_PJC_data `json:"data"` //nolint:tagliatelle // "data" is a common JSON field in MATS
 }
 
 // Represents a complete STAT_PRC document
 type STAT_PRC struct {
 	util.VxMetadata
 	STAT_PRC_header
-	Data map[string]STAT_PRC_data `json:"data"` //nolint:tagliatelle
+	Data map[string]STAT_PRC_data `json:"data"` //nolint:tagliatelle // "data" is a common JSON field in MATS
 }
 
 // Represents a complete STAT_PSTD document
 type STAT_PSTD struct {
 	util.VxMetadata
 	STAT_PSTD_header
-	Data map[string]STAT_PSTD_data `json:"data"` //nolint:tagliatelle
+	Data map[string]STAT_PSTD_data `json:"data"` //nolint:tagliatelle // "data" is a common JSON field in MATS
 }
 
 // Represents a complete STAT_RELP document
 type STAT_RELP struct {
 	util.VxMetadata
 	STAT_RELP_header
-	Data map[string]STAT_RELP_data `json:"data"` //nolint:tagliatelle
+	Data map[string]STAT_RELP_data `json:"data"` //nolint:tagliatelle // "data" is a common JSON field in MATS
 }
 
 // Represents a complete STAT_RHIST document
 type STAT_RHIST struct {
 	util.VxMetadata
 	STAT_RHIST_header
-	Data map[string]STAT_RHIST_data `json:"data"` //nolint:tagliatelle
+	Data map[string]STAT_RHIST_data `json:"data"` //nolint:tagliatelle // "data" is a common JSON field in MATS
 }
 
 // Represents a complete STAT_RPS document
 type STAT_RPS struct {
 	util.VxMetadata
 	STAT_RPS_header
-	Data map[string]STAT_RPS_data `json:"data"` //nolint:tagliatelle
+	Data map[string]STAT_RPS_data `json:"data"` //nolint:tagliatelle // "data" is a common JSON field in MATS
 }
 
 // Represents a complete STAT_SAL1L2 document
 type STAT_SAL1L2 struct {
 	util.VxMetadata
 	STAT_SAL1L2_header
-	Data map[string]STAT_SAL1L2_data `json:"data"` //nolint:tagliatelle
+	Data map[string]STAT_SAL1L2_data `json:"data"` //nolint:tagliatelle // "data" is a common JSON field in MATS
 }
 
 // Represents a complete STAT_SEEPS document
 type STAT_SEEPS struct {
 	util.VxMetadata
 	STAT_SEEPS_header
-	Data map[string]STAT_SEEPS_data `json:"data"` //nolint:tagliatelle
+	Data map[string]STAT_SEEPS_data `json:"data"` //nolint:tagliatelle // "data" is a common JSON field in MATS
 }
 
 // Represents a complete STAT_SEEPS_MPR document
 type STAT_SEEPS_MPR struct {
 	util.VxMetadata
 	STAT_SEEPS_MPR_header
-	Data map[string]STAT_SEEPS_MPR_data `json:"data"` //nolint:tagliatelle
+	Data map[string]STAT_SEEPS_MPR_data `json:"data"` //nolint:tagliatelle // "data" is a common JSON field in MATS
 }
 
 // Represents a complete STAT_SL1L2 document
 type STAT_SL1L2 struct {
 	util.VxMetadata
 	STAT_SL1L2_header
-	Data map[string]STAT_SL1L2_data `json:"data"` //nolint:tagliatelle
+	Data map[string]STAT_SL1L2_data `json:"data"` //nolint:tagliatelle // "data" is a common JSON field in MATS
 }
 
 // Represents a complete STAT_SSIDX document
 type STAT_SSIDX struct {
 	util.VxMetadata
 	STAT_SSIDX_header
-	Data map[string]STAT_SSIDX_data `json:"data"` //nolint:tagliatelle
+	Data map[string]STAT_SSIDX_data `json:"data"` //nolint:tagliatelle // "data" is a common JSON field in MATS
 }
 
 // Represents a complete STAT_SSVAR document
 type STAT_SSVAR struct {
 	util.VxMetadata
 	STAT_SSVAR_header
-	Data map[string]STAT_SSVAR_data `json:"data"` //nolint:tagliatelle
+	Data map[string]STAT_SSVAR_data `json:"data"` //nolint:tagliatelle // "data" is a common JSON field in MATS
 }
 
 // Represents a complete STAT_VAL1L2 document
 type STAT_VAL1L2 struct {
 	util.VxMetadata
 	STAT_VAL1L2_header
-	Data map[string]STAT_VAL1L2_data `json:"data"` //nolint:tagliatelle
+	Data map[string]STAT_VAL1L2_data `json:"data"` //nolint:tagliatelle // "data" is a common JSON field in MATS
 }
 
 // Represents a complete STAT_VCNT document
 type STAT_VCNT struct {
 	util.VxMetadata
 	STAT_VCNT_header
-	Data map[string]STAT_VCNT_data `json:"data"` //nolint:tagliatelle
+	Data map[string]STAT_VCNT_data `json:"data"` //nolint:tagliatelle // "data" is a common JSON field in MATS
 }
 
 // Represents a complete STAT_VL1L2 document
 type STAT_VL1L2 struct {
 	util.VxMetadata
 	STAT_VL1L2_header
-	Data map[string]STAT_VL1L2_data `json:"data"` //nolint:tagliatelle
+	Data map[string]STAT_VL1L2_data `json:"data"` //nolint:tagliatelle // "data" is a common JSON field in MATS
 }
 
 // Represents a complete TCST_PROBRIRW document
 type TCST_PROBRIRW struct {
 	util.VxMetadata
 	TCST_PROBRIRW_header
-	Data map[string]TCST_PROBRIRW_data `json:"data"` //nolint:tagliatelle
+	Data map[string]TCST_PROBRIRW_data `json:"data"` //nolint:tagliatelle // "data" is a common JSON field in MATS
 }
 
 // Represents a complete TCST_TCDIAG document
 type TCST_TCDIAG struct {
 	util.VxMetadata
 	TCST_TCDIAG_header
-	Data map[string]TCST_TCDIAG_data `json:"data"` //nolint:tagliatelle
+	Data map[string]TCST_TCDIAG_data `json:"data"` //nolint:tagliatelle // "data" is a common JSON field in MATS
 }
 
 // Represents a complete TCST_TCMPR document
 type TCST_TCMPR struct {
 	util.VxMetadata
 	TCST_TCMPR_header
-	Data map[string]TCST_TCMPR_data `json:"data"` //nolint:tagliatelle
+	Data map[string]TCST_TCMPR_data `json:"data"` //nolint:tagliatelle // "data" is a common JSON field in MATS
+}
+
+// AddDataElement functions
+
+// Adds a new "data" element to MODE_CTS
+func (doc *MODE_CTS) AddDataElement(dataKey string, dataData []string) error {
+	data := MODE_CTS_data{}
+	if err := data.fill(dataData); err != nil {
+		return err
+	}
+	doc.Data[dataKey] = data
+
+	return nil
+}
+
+// Adds a new "data" element to MODE_OBJ
+func (doc *MODE_OBJ) AddDataElement(dataKey string, dataData []string) error {
+	data := MODE_OBJ_data{}
+	if err := data.fill(dataData); err != nil {
+		return err
+	}
+	doc.Data[dataKey] = data
+
+	return nil
+}
+
+// Adds a new "data" element to STAT_CNT
+func (doc *STAT_CNT) AddDataElement(dataKey string, dataData []string) error {
+	data := STAT_CNT_data{}
+	if err := data.fill(dataData); err != nil {
+		return err
+	}
+	doc.Data[dataKey] = data
+
+	return nil
+}
+
+// Adds a new "data" element to STAT_CTC
+func (doc *STAT_CTC) AddDataElement(dataKey string, dataData []string) error {
+	data := STAT_CTC_data{}
+	if err := data.fill(dataData); err != nil {
+		return err
+	}
+	doc.Data[dataKey] = data
+
+	return nil
+}
+
+// Adds a new "data" element to STAT_CTS
+func (doc *STAT_CTS) AddDataElement(dataKey string, dataData []string) error {
+	data := STAT_CTS_data{}
+	if err := data.fill(dataData); err != nil {
+		return err
+	}
+	doc.Data[dataKey] = data
+
+	return nil
+}
+
+// Adds a new "data" element to STAT_DMAP
+func (doc *STAT_DMAP) AddDataElement(dataKey string, dataData []string) error {
+	data := STAT_DMAP_data{}
+	if err := data.fill(dataData); err != nil {
+		return err
+	}
+	doc.Data[dataKey] = data
+
+	return nil
+}
+
+// Adds a new "data" element to STAT_ECLV
+func (doc *STAT_ECLV) AddDataElement(dataKey string, dataData []string) error {
+	data := STAT_ECLV_data{}
+	if err := data.fill(dataData); err != nil {
+		return err
+	}
+	doc.Data[dataKey] = data
+
+	return nil
+}
+
+// Adds a new "data" element to STAT_ECNT
+func (doc *STAT_ECNT) AddDataElement(dataKey string, dataData []string) error {
+	data := STAT_ECNT_data{}
+	if err := data.fill(dataData); err != nil {
+		return err
+	}
+	doc.Data[dataKey] = data
+
+	return nil
+}
+
+// Adds a new "data" element to STAT_FHO
+func (doc *STAT_FHO) AddDataElement(dataKey string, dataData []string) error {
+	data := STAT_FHO_data{}
+	if err := data.fill(dataData); err != nil {
+		return err
+	}
+	doc.Data[dataKey] = data
+
+	return nil
+}
+
+// Adds a new "data" element to STAT_GENMPR
+func (doc *STAT_GENMPR) AddDataElement(dataKey string, dataData []string) error {
+	data := STAT_GENMPR_data{}
+	if err := data.fill(dataData); err != nil {
+		return err
+	}
+	doc.Data[dataKey] = data
+
+	return nil
+}
+
+// Adds a new "data" element to STAT_GRAD
+func (doc *STAT_GRAD) AddDataElement(dataKey string, dataData []string) error {
+	data := STAT_GRAD_data{}
+	if err := data.fill(dataData); err != nil {
+		return err
+	}
+	doc.Data[dataKey] = data
+
+	return nil
+}
+
+// Adds a new "data" element to STAT_ISC
+func (doc *STAT_ISC) AddDataElement(dataKey string, dataData []string) error {
+	data := STAT_ISC_data{}
+	if err := data.fill(dataData); err != nil {
+		return err
+	}
+	doc.Data[dataKey] = data
+
+	return nil
+}
+
+// Adds a new "data" element to STAT_MCTC
+func (doc *STAT_MCTC) AddDataElement(dataKey string, dataData []string) error {
+	data := STAT_MCTC_data{}
+	if err := data.fill(dataData); err != nil {
+		return err
+	}
+	doc.Data[dataKey] = data
+
+	return nil
+}
+
+// Adds a new "data" element to STAT_MCTS
+func (doc *STAT_MCTS) AddDataElement(dataKey string, dataData []string) error {
+	data := STAT_MCTS_data{}
+	if err := data.fill(dataData); err != nil {
+		return err
+	}
+	doc.Data[dataKey] = data
+
+	return nil
+}
+
+// Adds a new "data" element to STAT_MPR
+func (doc *STAT_MPR) AddDataElement(dataKey string, dataData []string) error {
+	data := STAT_MPR_data{}
+	if err := data.fill(dataData); err != nil {
+		return err
+	}
+	doc.Data[dataKey] = data
+
+	return nil
+}
+
+// Adds a new "data" element to STAT_NBRCNT
+func (doc *STAT_NBRCNT) AddDataElement(dataKey string, dataData []string) error {
+	data := STAT_NBRCNT_data{}
+	if err := data.fill(dataData); err != nil {
+		return err
+	}
+	doc.Data[dataKey] = data
+
+	return nil
+}
+
+// Adds a new "data" element to STAT_NBRCTC
+func (doc *STAT_NBRCTC) AddDataElement(dataKey string, dataData []string) error {
+	data := STAT_NBRCTC_data{}
+	if err := data.fill(dataData); err != nil {
+		return err
+	}
+	doc.Data[dataKey] = data
+
+	return nil
+}
+
+// Adds a new "data" element to STAT_NBRCTS
+func (doc *STAT_NBRCTS) AddDataElement(dataKey string, dataData []string) error {
+	data := STAT_NBRCTS_data{}
+	if err := data.fill(dataData); err != nil {
+		return err
+	}
+	doc.Data[dataKey] = data
+
+	return nil
+}
+
+// Adds a new "data" element to STAT_ORANK
+func (doc *STAT_ORANK) AddDataElement(dataKey string, dataData []string) error {
+	data := STAT_ORANK_data{}
+	if err := data.fill(dataData); err != nil {
+		return err
+	}
+	doc.Data[dataKey] = data
+
+	return nil
+}
+
+// Adds a new "data" element to STAT_PCT
+func (doc *STAT_PCT) AddDataElement(dataKey string, dataData []string) error {
+	data := STAT_PCT_data{}
+	if err := data.fill(dataData); err != nil {
+		return err
+	}
+	doc.Data[dataKey] = data
+
+	return nil
+}
+
+// Adds a new "data" element to STAT_PHIST
+func (doc *STAT_PHIST) AddDataElement(dataKey string, dataData []string) error {
+	data := STAT_PHIST_data{}
+	if err := data.fill(dataData); err != nil {
+		return err
+	}
+	doc.Data[dataKey] = data
+
+	return nil
+}
+
+// Adds a new "data" element to STAT_PJC
+func (doc *STAT_PJC) AddDataElement(dataKey string, dataData []string) error {
+	data := STAT_PJC_data{}
+	if err := data.fill(dataData); err != nil {
+		return err
+	}
+	doc.Data[dataKey] = data
+
+	return nil
+}
+
+// Adds a new "data" element to STAT_PRC
+func (doc *STAT_PRC) AddDataElement(dataKey string, dataData []string) error {
+	data := STAT_PRC_data{}
+	if err := data.fill(dataData); err != nil {
+		return err
+	}
+	doc.Data[dataKey] = data
+
+	return nil
+}
+
+// Adds a new "data" element to STAT_PSTD
+func (doc *STAT_PSTD) AddDataElement(dataKey string, dataData []string) error {
+	data := STAT_PSTD_data{}
+	if err := data.fill(dataData); err != nil {
+		return err
+	}
+	doc.Data[dataKey] = data
+
+	return nil
+}
+
+// Adds a new "data" element to STAT_RELP
+func (doc *STAT_RELP) AddDataElement(dataKey string, dataData []string) error {
+	data := STAT_RELP_data{}
+	if err := data.fill(dataData); err != nil {
+		return err
+	}
+	doc.Data[dataKey] = data
+
+	return nil
+}
+
+// Adds a new "data" element to STAT_RHIST
+func (doc *STAT_RHIST) AddDataElement(dataKey string, dataData []string) error {
+	data := STAT_RHIST_data{}
+	if err := data.fill(dataData); err != nil {
+		return err
+	}
+	doc.Data[dataKey] = data
+
+	return nil
+}
+
+// Adds a new "data" element to STAT_RPS
+func (doc *STAT_RPS) AddDataElement(dataKey string, dataData []string) error {
+	data := STAT_RPS_data{}
+	if err := data.fill(dataData); err != nil {
+		return err
+	}
+	doc.Data[dataKey] = data
+
+	return nil
+}
+
+// Adds a new "data" element to STAT_SAL1L2
+func (doc *STAT_SAL1L2) AddDataElement(dataKey string, dataData []string) error {
+	data := STAT_SAL1L2_data{}
+	if err := data.fill(dataData); err != nil {
+		return err
+	}
+	doc.Data[dataKey] = data
+
+	return nil
+}
+
+// Adds a new "data" element to STAT_SEEPS
+func (doc *STAT_SEEPS) AddDataElement(dataKey string, dataData []string) error {
+	data := STAT_SEEPS_data{}
+	if err := data.fill(dataData); err != nil {
+		return err
+	}
+	doc.Data[dataKey] = data
+
+	return nil
+}
+
+// Adds a new "data" element to STAT_SEEPS_MPR
+func (doc *STAT_SEEPS_MPR) AddDataElement(dataKey string, dataData []string) error {
+	data := STAT_SEEPS_MPR_data{}
+	if err := data.fill(dataData); err != nil {
+		return err
+	}
+	doc.Data[dataKey] = data
+
+	return nil
+}
+
+// Adds a new "data" element to STAT_SL1L2
+func (doc *STAT_SL1L2) AddDataElement(dataKey string, dataData []string) error {
+	data := STAT_SL1L2_data{}
+	if err := data.fill(dataData); err != nil {
+		return err
+	}
+	doc.Data[dataKey] = data
+
+	return nil
+}
+
+// Adds a new "data" element to STAT_SSIDX
+func (doc *STAT_SSIDX) AddDataElement(dataKey string, dataData []string) error {
+	data := STAT_SSIDX_data{}
+	if err := data.fill(dataData); err != nil {
+		return err
+	}
+	doc.Data[dataKey] = data
+
+	return nil
+}
+
+// Adds a new "data" element to STAT_SSVAR
+func (doc *STAT_SSVAR) AddDataElement(dataKey string, dataData []string) error {
+	data := STAT_SSVAR_data{}
+	if err := data.fill(dataData); err != nil {
+		return err
+	}
+	doc.Data[dataKey] = data
+
+	return nil
+}
+
+// Adds a new "data" element to STAT_VAL1L2
+func (doc *STAT_VAL1L2) AddDataElement(dataKey string, dataData []string) error {
+	data := STAT_VAL1L2_data{}
+	if err := data.fill(dataData); err != nil {
+		return err
+	}
+	doc.Data[dataKey] = data
+
+	return nil
+}
+
+// Adds a new "data" element to STAT_VCNT
+func (doc *STAT_VCNT) AddDataElement(dataKey string, dataData []string) error {
+	data := STAT_VCNT_data{}
+	if err := data.fill(dataData); err != nil {
+		return err
+	}
+	doc.Data[dataKey] = data
+
+	return nil
+}
+
+// Adds a new "data" element to STAT_VL1L2
+func (doc *STAT_VL1L2) AddDataElement(dataKey string, dataData []string) error {
+	data := STAT_VL1L2_data{}
+	if err := data.fill(dataData); err != nil {
+		return err
+	}
+	doc.Data[dataKey] = data
+
+	return nil
+}
+
+// Adds a new "data" element to TCST_PROBRIRW
+func (doc *TCST_PROBRIRW) AddDataElement(dataKey string, dataData []string) error {
+	data := TCST_PROBRIRW_data{}
+	if err := data.fill(dataData); err != nil {
+		return err
+	}
+	doc.Data[dataKey] = data
+
+	return nil
+}
+
+// Adds a new "data" element to TCST_TCDIAG
+func (doc *TCST_TCDIAG) AddDataElement(dataKey string, dataData []string) error {
+	data := TCST_TCDIAG_data{}
+	if err := data.fill(dataData); err != nil {
+		return err
+	}
+	doc.Data[dataKey] = data
+
+	return nil
+}
+
+// Adds a new "data" element to TCST_TCMPR
+func (doc *TCST_TCMPR) AddDataElement(dataKey string, dataData []string) error {
+	data := TCST_TCMPR_data{}
+	if err := data.fill(dataData); err != nil {
+		return err
+	}
+	doc.Data[dataKey] = data
+
+	return nil
 }
 
 // Header struct definitions
@@ -4708,8 +5138,8 @@ func (s *TCST_TCMPR_data) fill(fields []string) error {
 }
 
 // Creates a new doc, header functions and all.
-func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []string, dataData []string, dataKey string) (map[string]interface{}, error) {
-	var statDoc any
+func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []string, dataData []string, dataKey string) (util.METdocument, error) {
+	var statDoc util.METdocument
 	var errs []error
 
 	switch fileLineType {
@@ -4725,7 +5155,7 @@ func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []str
 			Data:            make(map[string]MODE_CTS_data),
 		}
 		tmp.Data[dataKey] = elem_data
-		statDoc = tmp
+		statDoc = &tmp
 	case "MODE_OBJ":
 		elem_header := MODE_OBJ_header{}
 		appendErrorWithContext(&errs, "MODE_OBJ_header", elem_header.fill(headerData))
@@ -4738,7 +5168,7 @@ func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []str
 			Data:            make(map[string]MODE_OBJ_data),
 		}
 		tmp.Data[dataKey] = elem_data
-		statDoc = tmp
+		statDoc = &tmp
 	case "STAT_CNT":
 		elem_header := STAT_CNT_header{}
 		appendErrorWithContext(&errs, "STAT_CNT_header", elem_header.fill(headerData))
@@ -4751,7 +5181,7 @@ func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []str
 			Data:            make(map[string]STAT_CNT_data),
 		}
 		tmp.Data[dataKey] = elem_data
-		statDoc = tmp
+		statDoc = &tmp
 	case "STAT_CTC":
 		elem_header := STAT_CTC_header{}
 		appendErrorWithContext(&errs, "STAT_CTC_header", elem_header.fill(headerData))
@@ -4764,7 +5194,7 @@ func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []str
 			Data:            make(map[string]STAT_CTC_data),
 		}
 		tmp.Data[dataKey] = elem_data
-		statDoc = tmp
+		statDoc = &tmp
 	case "STAT_CTS":
 		elem_header := STAT_CTS_header{}
 		appendErrorWithContext(&errs, "STAT_CTS_header", elem_header.fill(headerData))
@@ -4777,7 +5207,7 @@ func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []str
 			Data:            make(map[string]STAT_CTS_data),
 		}
 		tmp.Data[dataKey] = elem_data
-		statDoc = tmp
+		statDoc = &tmp
 	case "STAT_DMAP":
 		elem_header := STAT_DMAP_header{}
 		appendErrorWithContext(&errs, "STAT_DMAP_header", elem_header.fill(headerData))
@@ -4790,7 +5220,7 @@ func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []str
 			Data:             make(map[string]STAT_DMAP_data),
 		}
 		tmp.Data[dataKey] = elem_data
-		statDoc = tmp
+		statDoc = &tmp
 	case "STAT_ECLV":
 		elem_header := STAT_ECLV_header{}
 		appendErrorWithContext(&errs, "STAT_ECLV_header", elem_header.fill(headerData))
@@ -4803,7 +5233,7 @@ func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []str
 			Data:             make(map[string]STAT_ECLV_data),
 		}
 		tmp.Data[dataKey] = elem_data
-		statDoc = tmp
+		statDoc = &tmp
 	case "STAT_ECNT":
 		elem_header := STAT_ECNT_header{}
 		appendErrorWithContext(&errs, "STAT_ECNT_header", elem_header.fill(headerData))
@@ -4816,7 +5246,7 @@ func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []str
 			Data:             make(map[string]STAT_ECNT_data),
 		}
 		tmp.Data[dataKey] = elem_data
-		statDoc = tmp
+		statDoc = &tmp
 	case "STAT_FHO":
 		elem_header := STAT_FHO_header{}
 		appendErrorWithContext(&errs, "STAT_FHO_header", elem_header.fill(headerData))
@@ -4829,7 +5259,7 @@ func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []str
 			Data:            make(map[string]STAT_FHO_data),
 		}
 		tmp.Data[dataKey] = elem_data
-		statDoc = tmp
+		statDoc = &tmp
 	case "STAT_GENMPR":
 		elem_header := STAT_GENMPR_header{}
 		appendErrorWithContext(&errs, "STAT_GENMPR_header", elem_header.fill(headerData))
@@ -4842,7 +5272,7 @@ func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []str
 			Data:               make(map[string]STAT_GENMPR_data),
 		}
 		tmp.Data[dataKey] = elem_data
-		statDoc = tmp
+		statDoc = &tmp
 	case "STAT_GRAD":
 		elem_header := STAT_GRAD_header{}
 		appendErrorWithContext(&errs, "STAT_GRAD_header", elem_header.fill(headerData))
@@ -4855,7 +5285,7 @@ func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []str
 			Data:             make(map[string]STAT_GRAD_data),
 		}
 		tmp.Data[dataKey] = elem_data
-		statDoc = tmp
+		statDoc = &tmp
 	case "STAT_ISC":
 		elem_header := STAT_ISC_header{}
 		appendErrorWithContext(&errs, "STAT_ISC_header", elem_header.fill(headerData))
@@ -4868,7 +5298,7 @@ func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []str
 			Data:            make(map[string]STAT_ISC_data),
 		}
 		tmp.Data[dataKey] = elem_data
-		statDoc = tmp
+		statDoc = &tmp
 	case "STAT_MCTC":
 		elem_header := STAT_MCTC_header{}
 		appendErrorWithContext(&errs, "STAT_MCTC_header", elem_header.fill(headerData))
@@ -4881,7 +5311,7 @@ func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []str
 			Data:             make(map[string]STAT_MCTC_data),
 		}
 		tmp.Data[dataKey] = elem_data
-		statDoc = tmp
+		statDoc = &tmp
 	case "STAT_MCTS":
 		elem_header := STAT_MCTS_header{}
 		appendErrorWithContext(&errs, "STAT_MCTS_header", elem_header.fill(headerData))
@@ -4894,7 +5324,7 @@ func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []str
 			Data:             make(map[string]STAT_MCTS_data),
 		}
 		tmp.Data[dataKey] = elem_data
-		statDoc = tmp
+		statDoc = &tmp
 	case "STAT_MPR":
 		elem_header := STAT_MPR_header{}
 		appendErrorWithContext(&errs, "STAT_MPR_header", elem_header.fill(headerData))
@@ -4907,7 +5337,7 @@ func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []str
 			Data:            make(map[string]STAT_MPR_data),
 		}
 		tmp.Data[dataKey] = elem_data
-		statDoc = tmp
+		statDoc = &tmp
 	case "STAT_NBRCNT":
 		elem_header := STAT_NBRCNT_header{}
 		appendErrorWithContext(&errs, "STAT_NBRCNT_header", elem_header.fill(headerData))
@@ -4920,7 +5350,7 @@ func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []str
 			Data:               make(map[string]STAT_NBRCNT_data),
 		}
 		tmp.Data[dataKey] = elem_data
-		statDoc = tmp
+		statDoc = &tmp
 	case "STAT_NBRCTC":
 		elem_header := STAT_NBRCTC_header{}
 		appendErrorWithContext(&errs, "STAT_NBRCTC_header", elem_header.fill(headerData))
@@ -4933,7 +5363,7 @@ func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []str
 			Data:               make(map[string]STAT_NBRCTC_data),
 		}
 		tmp.Data[dataKey] = elem_data
-		statDoc = tmp
+		statDoc = &tmp
 	case "STAT_NBRCTS":
 		elem_header := STAT_NBRCTS_header{}
 		appendErrorWithContext(&errs, "STAT_NBRCTS_header", elem_header.fill(headerData))
@@ -4946,7 +5376,7 @@ func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []str
 			Data:               make(map[string]STAT_NBRCTS_data),
 		}
 		tmp.Data[dataKey] = elem_data
-		statDoc = tmp
+		statDoc = &tmp
 	case "STAT_ORANK":
 		elem_header := STAT_ORANK_header{}
 		appendErrorWithContext(&errs, "STAT_ORANK_header", elem_header.fill(headerData))
@@ -4959,7 +5389,7 @@ func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []str
 			Data:              make(map[string]STAT_ORANK_data),
 		}
 		tmp.Data[dataKey] = elem_data
-		statDoc = tmp
+		statDoc = &tmp
 	case "STAT_PCT":
 		elem_header := STAT_PCT_header{}
 		appendErrorWithContext(&errs, "STAT_PCT_header", elem_header.fill(headerData))
@@ -4972,7 +5402,7 @@ func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []str
 			Data:            make(map[string]STAT_PCT_data),
 		}
 		tmp.Data[dataKey] = elem_data
-		statDoc = tmp
+		statDoc = &tmp
 	case "STAT_PHIST":
 		elem_header := STAT_PHIST_header{}
 		appendErrorWithContext(&errs, "STAT_PHIST_header", elem_header.fill(headerData))
@@ -4985,7 +5415,7 @@ func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []str
 			Data:              make(map[string]STAT_PHIST_data),
 		}
 		tmp.Data[dataKey] = elem_data
-		statDoc = tmp
+		statDoc = &tmp
 	case "STAT_PJC":
 		elem_header := STAT_PJC_header{}
 		appendErrorWithContext(&errs, "STAT_PJC_header", elem_header.fill(headerData))
@@ -4998,7 +5428,7 @@ func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []str
 			Data:            make(map[string]STAT_PJC_data),
 		}
 		tmp.Data[dataKey] = elem_data
-		statDoc = tmp
+		statDoc = &tmp
 	case "STAT_PRC":
 		elem_header := STAT_PRC_header{}
 		appendErrorWithContext(&errs, "STAT_PRC_header", elem_header.fill(headerData))
@@ -5011,7 +5441,7 @@ func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []str
 			Data:            make(map[string]STAT_PRC_data),
 		}
 		tmp.Data[dataKey] = elem_data
-		statDoc = tmp
+		statDoc = &tmp
 	case "STAT_PSTD":
 		elem_header := STAT_PSTD_header{}
 		appendErrorWithContext(&errs, "STAT_PSTD_header", elem_header.fill(headerData))
@@ -5024,7 +5454,7 @@ func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []str
 			Data:             make(map[string]STAT_PSTD_data),
 		}
 		tmp.Data[dataKey] = elem_data
-		statDoc = tmp
+		statDoc = &tmp
 	case "STAT_RELP":
 		elem_header := STAT_RELP_header{}
 		appendErrorWithContext(&errs, "STAT_RELP_header", elem_header.fill(headerData))
@@ -5037,7 +5467,7 @@ func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []str
 			Data:             make(map[string]STAT_RELP_data),
 		}
 		tmp.Data[dataKey] = elem_data
-		statDoc = tmp
+		statDoc = &tmp
 	case "STAT_RHIST":
 		elem_header := STAT_RHIST_header{}
 		appendErrorWithContext(&errs, "STAT_RHIST_header", elem_header.fill(headerData))
@@ -5050,7 +5480,7 @@ func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []str
 			Data:              make(map[string]STAT_RHIST_data),
 		}
 		tmp.Data[dataKey] = elem_data
-		statDoc = tmp
+		statDoc = &tmp
 	case "STAT_RPS":
 		elem_header := STAT_RPS_header{}
 		appendErrorWithContext(&errs, "STAT_RPS_header", elem_header.fill(headerData))
@@ -5063,7 +5493,7 @@ func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []str
 			Data:            make(map[string]STAT_RPS_data),
 		}
 		tmp.Data[dataKey] = elem_data
-		statDoc = tmp
+		statDoc = &tmp
 	case "STAT_SAL1L2":
 		elem_header := STAT_SAL1L2_header{}
 		appendErrorWithContext(&errs, "STAT_SAL1L2_header", elem_header.fill(headerData))
@@ -5076,7 +5506,7 @@ func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []str
 			Data:               make(map[string]STAT_SAL1L2_data),
 		}
 		tmp.Data[dataKey] = elem_data
-		statDoc = tmp
+		statDoc = &tmp
 	case "STAT_SEEPS":
 		elem_header := STAT_SEEPS_header{}
 		appendErrorWithContext(&errs, "STAT_SEEPS_header", elem_header.fill(headerData))
@@ -5089,7 +5519,7 @@ func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []str
 			Data:              make(map[string]STAT_SEEPS_data),
 		}
 		tmp.Data[dataKey] = elem_data
-		statDoc = tmp
+		statDoc = &tmp
 	case "STAT_SEEPS_MPR":
 		elem_header := STAT_SEEPS_MPR_header{}
 		appendErrorWithContext(&errs, "STAT_SEEPS_MPR_header", elem_header.fill(headerData))
@@ -5102,7 +5532,7 @@ func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []str
 			Data:                  make(map[string]STAT_SEEPS_MPR_data),
 		}
 		tmp.Data[dataKey] = elem_data
-		statDoc = tmp
+		statDoc = &tmp
 	case "STAT_SL1L2":
 		elem_header := STAT_SL1L2_header{}
 		appendErrorWithContext(&errs, "STAT_SL1L2_header", elem_header.fill(headerData))
@@ -5115,7 +5545,7 @@ func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []str
 			Data:              make(map[string]STAT_SL1L2_data),
 		}
 		tmp.Data[dataKey] = elem_data
-		statDoc = tmp
+		statDoc = &tmp
 	case "STAT_SSIDX":
 		elem_header := STAT_SSIDX_header{}
 		appendErrorWithContext(&errs, "STAT_SSIDX_header", elem_header.fill(headerData))
@@ -5128,7 +5558,7 @@ func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []str
 			Data:              make(map[string]STAT_SSIDX_data),
 		}
 		tmp.Data[dataKey] = elem_data
-		statDoc = tmp
+		statDoc = &tmp
 	case "STAT_SSVAR":
 		elem_header := STAT_SSVAR_header{}
 		appendErrorWithContext(&errs, "STAT_SSVAR_header", elem_header.fill(headerData))
@@ -5141,7 +5571,7 @@ func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []str
 			Data:              make(map[string]STAT_SSVAR_data),
 		}
 		tmp.Data[dataKey] = elem_data
-		statDoc = tmp
+		statDoc = &tmp
 	case "STAT_VAL1L2":
 		elem_header := STAT_VAL1L2_header{}
 		appendErrorWithContext(&errs, "STAT_VAL1L2_header", elem_header.fill(headerData))
@@ -5154,7 +5584,7 @@ func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []str
 			Data:               make(map[string]STAT_VAL1L2_data),
 		}
 		tmp.Data[dataKey] = elem_data
-		statDoc = tmp
+		statDoc = &tmp
 	case "STAT_VCNT":
 		elem_header := STAT_VCNT_header{}
 		appendErrorWithContext(&errs, "STAT_VCNT_header", elem_header.fill(headerData))
@@ -5167,7 +5597,7 @@ func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []str
 			Data:             make(map[string]STAT_VCNT_data),
 		}
 		tmp.Data[dataKey] = elem_data
-		statDoc = tmp
+		statDoc = &tmp
 	case "STAT_VL1L2":
 		elem_header := STAT_VL1L2_header{}
 		appendErrorWithContext(&errs, "STAT_VL1L2_header", elem_header.fill(headerData))
@@ -5180,7 +5610,7 @@ func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []str
 			Data:              make(map[string]STAT_VL1L2_data),
 		}
 		tmp.Data[dataKey] = elem_data
-		statDoc = tmp
+		statDoc = &tmp
 	case "TCST_PROBRIRW":
 		elem_header := TCST_PROBRIRW_header{}
 		appendErrorWithContext(&errs, "TCST_PROBRIRW_header", elem_header.fill(headerData))
@@ -5193,7 +5623,7 @@ func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []str
 			Data:                 make(map[string]TCST_PROBRIRW_data),
 		}
 		tmp.Data[dataKey] = elem_data
-		statDoc = tmp
+		statDoc = &tmp
 	case "TCST_TCDIAG":
 		elem_header := TCST_TCDIAG_header{}
 		appendErrorWithContext(&errs, "TCST_TCDIAG_header", elem_header.fill(headerData))
@@ -5206,7 +5636,7 @@ func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []str
 			Data:               make(map[string]TCST_TCDIAG_data),
 		}
 		tmp.Data[dataKey] = elem_data
-		statDoc = tmp
+		statDoc = &tmp
 	case "TCST_TCMPR":
 		elem_header := TCST_TCMPR_header{}
 		appendErrorWithContext(&errs, "TCST_TCMPR_header", elem_header.fill(headerData))
@@ -5219,262 +5649,9 @@ func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []str
 			Data:              make(map[string]TCST_TCMPR_data),
 		}
 		tmp.Data[dataKey] = elem_data
-		statDoc = tmp
+		statDoc = &tmp
 	default:
 		return nil, errors.New("GetDocForId: Unknown file_line type:" + fileLineType)
 	}
-	// Convert our types to a map[string]any by marshaling & unmarshaling through JSON
-	// TODO - would it be advantageous to keep the type longer, e.g. for AddDataElement?
-	jsonBytes, err := json.Marshal(statDoc)
-	appendErrorWithContext(&errs, "MarshalJSON", err)
-	var doc map[string]any
-	err = json.Unmarshal(jsonBytes, &doc)
-	appendErrorWithContext(&errs, "UnmarshalJSON", err)
-	return doc, errors.Join(errs...)
-}
-
-// Header info has already been set by GetDocForId. Solely adds a new "data" element to the map.
-// doc is expected to be a map representing the "base" struct (E.g. "STAT_CNT") with header, metadata, & data info
-func AddDataElement(dataKey string, fileLineType string, dataData []string, doc *map[string]interface{}) (map[string]interface{}, error) {
-	var errs []error
-
-	switch fileLineType {
-	case "MODE_CTS":
-		elem_data := MODE_CTS_data{}
-		appendErrorWithContext(&errs, "MODE_CTS_data", elem_data.fill(dataData))
-		if val, ok := (*doc)["data"].(map[string]MODE_CTS_data); ok {
-			val[dataKey] = elem_data
-		}
-	case "MODE_OBJ":
-		elem_data := MODE_OBJ_data{}
-		appendErrorWithContext(&errs, "MODE_OBJ_data", elem_data.fill(dataData))
-		if val, ok := (*doc)["data"].(map[string]MODE_OBJ_data); ok {
-			val[dataKey] = elem_data
-		}
-	case "STAT_CNT":
-		elem_data := STAT_CNT_data{}
-		appendErrorWithContext(&errs, "STAT_CNT_data", elem_data.fill(dataData))
-		if val, ok := (*doc)["data"].(map[string]STAT_CNT_data); ok {
-			val[dataKey] = elem_data
-		}
-	case "STAT_CTC":
-		elem_data := STAT_CTC_data{}
-		appendErrorWithContext(&errs, "STAT_CTC_data", elem_data.fill(dataData))
-		if val, ok := (*doc)["data"].(map[string]STAT_CTC_data); ok {
-			val[dataKey] = elem_data
-		}
-	case "STAT_CTS":
-		elem_data := STAT_CTS_data{}
-		appendErrorWithContext(&errs, "STAT_CTS_data", elem_data.fill(dataData))
-		if val, ok := (*doc)["data"].(map[string]STAT_CTS_data); ok {
-			val[dataKey] = elem_data
-		}
-	case "STAT_DMAP":
-		elem_data := STAT_DMAP_data{}
-		appendErrorWithContext(&errs, "STAT_DMAP_data", elem_data.fill(dataData))
-		if val, ok := (*doc)["data"].(map[string]STAT_DMAP_data); ok {
-			val[dataKey] = elem_data
-		}
-	case "STAT_ECLV":
-		elem_data := STAT_ECLV_data{}
-		appendErrorWithContext(&errs, "STAT_ECLV_data", elem_data.fill(dataData))
-		if val, ok := (*doc)["data"].(map[string]STAT_ECLV_data); ok {
-			val[dataKey] = elem_data
-		}
-	case "STAT_ECNT":
-		elem_data := STAT_ECNT_data{}
-		appendErrorWithContext(&errs, "STAT_ECNT_data", elem_data.fill(dataData))
-		if val, ok := (*doc)["data"].(map[string]STAT_ECNT_data); ok {
-			val[dataKey] = elem_data
-		}
-	case "STAT_FHO":
-		elem_data := STAT_FHO_data{}
-		appendErrorWithContext(&errs, "STAT_FHO_data", elem_data.fill(dataData))
-		if val, ok := (*doc)["data"].(map[string]STAT_FHO_data); ok {
-			val[dataKey] = elem_data
-		}
-	case "STAT_GENMPR":
-		elem_data := STAT_GENMPR_data{}
-		appendErrorWithContext(&errs, "STAT_GENMPR_data", elem_data.fill(dataData))
-		if val, ok := (*doc)["data"].(map[string]STAT_GENMPR_data); ok {
-			val[dataKey] = elem_data
-		}
-	case "STAT_GRAD":
-		elem_data := STAT_GRAD_data{}
-		appendErrorWithContext(&errs, "STAT_GRAD_data", elem_data.fill(dataData))
-		if val, ok := (*doc)["data"].(map[string]STAT_GRAD_data); ok {
-			val[dataKey] = elem_data
-		}
-	case "STAT_ISC":
-		elem_data := STAT_ISC_data{}
-		appendErrorWithContext(&errs, "STAT_ISC_data", elem_data.fill(dataData))
-		if val, ok := (*doc)["data"].(map[string]STAT_ISC_data); ok {
-			val[dataKey] = elem_data
-		}
-	case "STAT_MCTC":
-		elem_data := STAT_MCTC_data{}
-		appendErrorWithContext(&errs, "STAT_MCTC_data", elem_data.fill(dataData))
-		if val, ok := (*doc)["data"].(map[string]STAT_MCTC_data); ok {
-			val[dataKey] = elem_data
-		}
-	case "STAT_MCTS":
-		elem_data := STAT_MCTS_data{}
-		appendErrorWithContext(&errs, "STAT_MCTS_data", elem_data.fill(dataData))
-		if val, ok := (*doc)["data"].(map[string]STAT_MCTS_data); ok {
-			val[dataKey] = elem_data
-		}
-	case "STAT_MPR":
-		elem_data := STAT_MPR_data{}
-		appendErrorWithContext(&errs, "STAT_MPR_data", elem_data.fill(dataData))
-		if val, ok := (*doc)["data"].(map[string]STAT_MPR_data); ok {
-			val[dataKey] = elem_data
-		}
-	case "STAT_NBRCNT":
-		elem_data := STAT_NBRCNT_data{}
-		appendErrorWithContext(&errs, "STAT_NBRCNT_data", elem_data.fill(dataData))
-		if val, ok := (*doc)["data"].(map[string]STAT_NBRCNT_data); ok {
-			val[dataKey] = elem_data
-		}
-	case "STAT_NBRCTC":
-		elem_data := STAT_NBRCTC_data{}
-		appendErrorWithContext(&errs, "STAT_NBRCTC_data", elem_data.fill(dataData))
-		if val, ok := (*doc)["data"].(map[string]STAT_NBRCTC_data); ok {
-			val[dataKey] = elem_data
-		}
-	case "STAT_NBRCTS":
-		elem_data := STAT_NBRCTS_data{}
-		appendErrorWithContext(&errs, "STAT_NBRCTS_data", elem_data.fill(dataData))
-		if val, ok := (*doc)["data"].(map[string]STAT_NBRCTS_data); ok {
-			val[dataKey] = elem_data
-		}
-	case "STAT_ORANK":
-		elem_data := STAT_ORANK_data{}
-		appendErrorWithContext(&errs, "STAT_ORANK_data", elem_data.fill(dataData))
-		if val, ok := (*doc)["data"].(map[string]STAT_ORANK_data); ok {
-			val[dataKey] = elem_data
-		}
-	case "STAT_PCT":
-		elem_data := STAT_PCT_data{}
-		appendErrorWithContext(&errs, "STAT_PCT_data", elem_data.fill(dataData))
-		if val, ok := (*doc)["data"].(map[string]STAT_PCT_data); ok {
-			val[dataKey] = elem_data
-		}
-	case "STAT_PHIST":
-		elem_data := STAT_PHIST_data{}
-		appendErrorWithContext(&errs, "STAT_PHIST_data", elem_data.fill(dataData))
-		if val, ok := (*doc)["data"].(map[string]STAT_PHIST_data); ok {
-			val[dataKey] = elem_data
-		}
-	case "STAT_PJC":
-		elem_data := STAT_PJC_data{}
-		appendErrorWithContext(&errs, "STAT_PJC_data", elem_data.fill(dataData))
-		if val, ok := (*doc)["data"].(map[string]STAT_PJC_data); ok {
-			val[dataKey] = elem_data
-		}
-	case "STAT_PRC":
-		elem_data := STAT_PRC_data{}
-		appendErrorWithContext(&errs, "STAT_PRC_data", elem_data.fill(dataData))
-		if val, ok := (*doc)["data"].(map[string]STAT_PRC_data); ok {
-			val[dataKey] = elem_data
-		}
-	case "STAT_PSTD":
-		elem_data := STAT_PSTD_data{}
-		appendErrorWithContext(&errs, "STAT_PSTD_data", elem_data.fill(dataData))
-		if val, ok := (*doc)["data"].(map[string]STAT_PSTD_data); ok {
-			val[dataKey] = elem_data
-		}
-	case "STAT_RELP":
-		elem_data := STAT_RELP_data{}
-		appendErrorWithContext(&errs, "STAT_RELP_data", elem_data.fill(dataData))
-		if val, ok := (*doc)["data"].(map[string]STAT_RELP_data); ok {
-			val[dataKey] = elem_data
-		}
-	case "STAT_RHIST":
-		elem_data := STAT_RHIST_data{}
-		appendErrorWithContext(&errs, "STAT_RHIST_data", elem_data.fill(dataData))
-		if val, ok := (*doc)["data"].(map[string]STAT_RHIST_data); ok {
-			val[dataKey] = elem_data
-		}
-	case "STAT_RPS":
-		elem_data := STAT_RPS_data{}
-		appendErrorWithContext(&errs, "STAT_RPS_data", elem_data.fill(dataData))
-		if val, ok := (*doc)["data"].(map[string]STAT_RPS_data); ok {
-			val[dataKey] = elem_data
-		}
-	case "STAT_SAL1L2":
-		elem_data := STAT_SAL1L2_data{}
-		appendErrorWithContext(&errs, "STAT_SAL1L2_data", elem_data.fill(dataData))
-		if val, ok := (*doc)["data"].(map[string]STAT_SAL1L2_data); ok {
-			val[dataKey] = elem_data
-		}
-	case "STAT_SEEPS":
-		elem_data := STAT_SEEPS_data{}
-		appendErrorWithContext(&errs, "STAT_SEEPS_data", elem_data.fill(dataData))
-		if val, ok := (*doc)["data"].(map[string]STAT_SEEPS_data); ok {
-			val[dataKey] = elem_data
-		}
-	case "STAT_SEEPS_MPR":
-		elem_data := STAT_SEEPS_MPR_data{}
-		appendErrorWithContext(&errs, "STAT_SEEPS_MPR_data", elem_data.fill(dataData))
-		if val, ok := (*doc)["data"].(map[string]STAT_SEEPS_MPR_data); ok {
-			val[dataKey] = elem_data
-		}
-	case "STAT_SL1L2":
-		elem_data := STAT_SL1L2_data{}
-		appendErrorWithContext(&errs, "STAT_SL1L2_data", elem_data.fill(dataData))
-		if val, ok := (*doc)["data"].(map[string]STAT_SL1L2_data); ok {
-			val[dataKey] = elem_data
-		}
-	case "STAT_SSIDX":
-		elem_data := STAT_SSIDX_data{}
-		appendErrorWithContext(&errs, "STAT_SSIDX_data", elem_data.fill(dataData))
-		if val, ok := (*doc)["data"].(map[string]STAT_SSIDX_data); ok {
-			val[dataKey] = elem_data
-		}
-	case "STAT_SSVAR":
-		elem_data := STAT_SSVAR_data{}
-		appendErrorWithContext(&errs, "STAT_SSVAR_data", elem_data.fill(dataData))
-		if val, ok := (*doc)["data"].(map[string]STAT_SSVAR_data); ok {
-			val[dataKey] = elem_data
-		}
-	case "STAT_VAL1L2":
-		elem_data := STAT_VAL1L2_data{}
-		appendErrorWithContext(&errs, "STAT_VAL1L2_data", elem_data.fill(dataData))
-		if val, ok := (*doc)["data"].(map[string]STAT_VAL1L2_data); ok {
-			val[dataKey] = elem_data
-		}
-	case "STAT_VCNT":
-		elem_data := STAT_VCNT_data{}
-		appendErrorWithContext(&errs, "STAT_VCNT_data", elem_data.fill(dataData))
-		if val, ok := (*doc)["data"].(map[string]STAT_VCNT_data); ok {
-			val[dataKey] = elem_data
-		}
-	case "STAT_VL1L2":
-		elem_data := STAT_VL1L2_data{}
-		appendErrorWithContext(&errs, "STAT_VL1L2_data", elem_data.fill(dataData))
-		if val, ok := (*doc)["data"].(map[string]STAT_VL1L2_data); ok {
-			val[dataKey] = elem_data
-		}
-	case "TCST_PROBRIRW":
-		elem_data := TCST_PROBRIRW_data{}
-		appendErrorWithContext(&errs, "TCST_PROBRIRW_data", elem_data.fill(dataData))
-		if val, ok := (*doc)["data"].(map[string]TCST_PROBRIRW_data); ok {
-			val[dataKey] = elem_data
-		}
-	case "TCST_TCDIAG":
-		elem_data := TCST_TCDIAG_data{}
-		appendErrorWithContext(&errs, "TCST_TCDIAG_data", elem_data.fill(dataData))
-		if val, ok := (*doc)["data"].(map[string]TCST_TCDIAG_data); ok {
-			val[dataKey] = elem_data
-		}
-	case "TCST_TCMPR":
-		elem_data := TCST_TCMPR_data{}
-		appendErrorWithContext(&errs, "TCST_TCMPR_data", elem_data.fill(dataData))
-		if val, ok := (*doc)["data"].(map[string]TCST_TCMPR_data); ok {
-			val[dataKey] = elem_data
-		}
-	default:
-		return nil, errors.New("AddDataElement: Unknown file_line type:" + fileLineType)
-	}
-	return *doc, errors.Join(errs...)
+	return statDoc, errors.Join(errs...)
 }

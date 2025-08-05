@@ -30,6 +30,11 @@ import (
 	"time"
 )
 
+// interface to describe MET document structs in linetypes.go
+type METdocument interface {
+	AddDataElement(key string, dataData []string) error
+}
+
 type HeaderFields struct {
 	Header         string
 	Version        string

@@ -156,12 +156,12 @@ func main() {
 
 	// Generate the various code sections
 	printDocumentStructs(allDocumentStructs)
+	printAddDataElementFunctions(allDocumentStructs)
 	printHeaderStructs(allHeaderStructs)
 	printHeaderFillFunctions(allHeaderFillFunctions)
 	printDataStructs(allDataStructs)
 	printDataFillFunctions(allDataFillFunctions)
 	printGetDocForIDFunction(allDocumentStructs)
-	printAddDataElementFunction(allDocumentStructs)
 }
 
 // --- Code generation helper functions ---
@@ -169,7 +169,6 @@ func main() {
 func printPackageAndImports(parserVersion string) {
 	fmt.Printf(`package %s
 import (
-    "encoding/json"
     "errors"
     "fmt"
     "strconv"
@@ -198,6 +197,13 @@ func printDocumentStructs(allDocumentStructs map[string]documentStructData) {
 	fmt.Print("\n// Document struct definitions\n")
 	for _, key := range getSortedKeys(allDocumentStructs) {
 		fmt.Println(createDocumentStruct(allDocumentStructs[key]))
+	}
+}
+
+func printAddDataElementFunctions(allDocumentStructs map[string]documentStructData) {
+	fmt.Print("\n// AddDataElement functions\n")
+	for _, key := range getSortedKeys(allDocumentStructs) {
+		fmt.Println(createAddDataElementFunction(allDocumentStructs[key]))
 	}
 }
 
@@ -235,14 +241,6 @@ func printGetDocForIDFunction(allDocumentStructs map[string]documentStructData) 
 		data.Documents = append(data.Documents, allDocumentStructs[key])
 	}
 	fmt.Println(createGetDocForIDFunction(data))
-}
-
-func printAddDataElementFunction(allDocumentStructs map[string]documentStructData) {
-	var adefData addDataElementData
-	for _, key := range getSortedKeys(allDocumentStructs) {
-		adefData.Documents = append(adefData.Documents, allDocumentStructs[key])
-	}
-	fmt.Println(createAddDataElementFunction(adefData))
 }
 
 // private functions
@@ -305,7 +303,7 @@ func createDocumentStruct(data documentStructData) string {
 type {{.DocumentStructName}} struct {
     util.VxMetadata
     {{.HeaderStructName}}
-    Data map[string]{{.DataStructName}} ` + "`json:\"data\"` //nolint:tagliatelle" + `
+    Data map[string]{{.DataStructName}} ` + "`json:\"data\"` //nolint:tagliatelle // \"data\" is a common JSON field in MATS" + `
 }
 `))
 	var buf bytes.Buffer
@@ -423,6 +421,7 @@ func createHeaderFillMethod(data headerFillMethodData) string {
 // Sets {{ .HeaderStructName }} struct's fields
 func (s *{{ .HeaderStructName }}) fill(fields []string) error {
 	{{/*
+	// TODO - this doesn't work for dynamic Fields
 	expectedNumFields := {{ len .Fields }} // Length of the FieldNames slice from the template
 	if len(fields) != expectedNumFields {
 		return // TODO - return an error
@@ -629,8 +628,8 @@ type getDocForIDData struct {
 func createGetDocForIDFunction(data getDocForIDData) string {
 	getDocForIDTemplate := template.Must(template.New("GetDocForID").Parse(`
 // Creates a new doc, header functions and all.
-func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []string, dataData []string, dataKey string) (map[string]interface{}, error) {
-	var statDoc any
+func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []string, dataData []string, dataKey string) (util.METdocument, error) {
+	var statDoc util.METdocument
 	var errs []error
 
 	switch fileLineType {
@@ -647,19 +646,12 @@ func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []str
 			Data:              make(map[string]{{ .DataStructName }}),
 		}
 		tmp.Data[dataKey] = elem_data
-		statDoc = tmp
+		statDoc = &tmp
 	{{- end }}
 	default:
 		return nil, errors.New("GetDocForId: Unknown file_line type:" + fileLineType)
 	}
-	// Convert our types to a map[string]any by marshaling & unmarshaling through JSON
-	// TODO - would it be advantageous to keep the type longer, e.g. for AddDataElement?
-	jsonBytes, err := json.Marshal(statDoc)
-	appendErrorWithContext(&errs, "MarshalJSON", err)
-	var doc map[string]any
-	err = json.Unmarshal(jsonBytes, &doc)
-	appendErrorWithContext(&errs, "UnmarshalJSON", err)
-	return doc, errors.Join(errs...)
+	return statDoc, errors.Join(errs...)
 }
 	`))
 	var buf bytes.Buffer
@@ -670,31 +662,18 @@ func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []str
 	return buf.String()
 }
 
-type addDataElementData struct {
-	Documents []documentStructData
-}
-
 // Generates the AddDataElement via template
-func createAddDataElementFunction(data addDataElementData) string {
+func createAddDataElementFunction(data documentStructData) string {
 	addDataElementTemplate := template.Must(template.New("AddDataElement").Parse(`
-// Header info has already been set by GetDocForId. Solely adds a new "data" element to the map.
-// doc is expected to be a map representing the "base" struct (E.g. "STAT_CNT") with header, metadata, & data info
-func AddDataElement(dataKey string, fileLineType string, dataData []string, doc *map[string]interface{}) (map[string]interface{}, error) {
-	var errs []error
-
-	switch fileLineType {
-	{{- range .Documents }}
-	case "{{.DocumentStructName}}":
-		elem_data := {{.DataStructName}}{}
-		appendErrorWithContext(&errs, "{{ .DataStructName }}", elem_data.fill(dataData))
-		if val, ok := (*doc)["data"].(map[string]{{ .DataStructName }}); ok {
-			val[dataKey] = elem_data
-		}
-	{{- end }}
-	default:
-		return nil, errors.New("AddDataElement: Unknown file_line type:" + fileLineType)
+// Adds a new "data" element to {{ .DocumentStructName }}
+func (doc *{{.DocumentStructName}}) AddDataElement(dataKey string, dataData []string) error {
+	data := {{.DataStructName}}{}
+	if err := data.fill(dataData); err != nil {
+		return err
 	}
-	return *doc, errors.Join(errs...)
+	doc.Data[dataKey] = data
+
+	return nil
 }
 	`))
 	var buf bytes.Buffer
