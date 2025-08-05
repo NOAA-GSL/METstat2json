@@ -90,7 +90,7 @@ func isValidFileType(filename string) (bool, string) {
 // (docPtr is a map[string]interface where key = docID & value = doc struct with header & data)
 // Uses the fileName to deduce the doc type.
 // dataSetName should be a <=10 char name which identifies the dataset.
-func ParseLine(dataSetName string, headerLine string, dataLine string, docPtr *map[string]interface{}, fileName string, getExternalDocForId func(id string) (map[string]interface{}, error)) (map[string]interface{}, error) {
+func ParseLine(dataSetName string, headerLine string, dataLine string, docPtr *map[string]util.METdocument, fileName string, getExternalDocForId func(id string) (util.METdocument, error)) (map[string]util.METdocument, error) {
 	// recover from unexpected errors
 	defer func() {
 		if r := recover(); r != nil {
@@ -120,11 +120,11 @@ func ParseLine(dataSetName string, headerLine string, dataLine string, docPtr *m
 	valid, filetype := isValidFileType(fileName)
 	if !valid {
 		// Skip undesired files
-		return *docs, fmt.Errorf("Skipping %s file", filetype)
+		return *docPtr, fmt.Errorf("Skipping %s file", filetype)
 	}
 
 	// get the lineType
-	fileLineType, headerData, dataData, dataKey, descIndex, err := util.GetLineType(headerLine, dataLine, fileName, parserVersion)
+	fileLineType, headerData, dataData, dataKey, descIndex, err := util.GetLineType(headerLine, dataLine, fileName, parserVersion) // Doesn't access file - uses fileName to deduce file type.
 	if err != nil {
 		// cannot process this line so return the docPtr as is - it is probably a truncated line
 		fmt.Println("Error getting line type: ", err)
@@ -147,7 +147,7 @@ func ParseLine(dataSetName string, headerLine string, dataLine string, docPtr *m
 	// get the tmpHeaderData without the NA values
 	tmpHeaderData := getTmpHeaderSanNA(headerData, descIndex)
 	if *docPtr == nil {
-		newDoc := make(map[string]interface{})
+		newDoc := make(map[string]util.METdocument)
 		docPtr = &newDoc
 	}
 	// GetId will fill in the id field of the metaData struct with the constructed id
@@ -196,47 +196,13 @@ func ParseLine(dataSetName string, headerLine string, dataLine string, docPtr *m
 	} else {
 		// we either had the doc already, got it externally, or created it
 		// now we need to add the data to the document
-		docMap := (*docPtr)[metaData.ID].(map[string]interface{})
-		switch parserVersion {
-		case "v10_0":
-			// add the data to the document
-			(*docPtr)[metaData.ID], _err = v10_0.AddDataElement(dataKey, fileLineType, dataData, &docMap)
-		case "v10_1":
-			// add the data to the document
-			(*docPtr)[metaData.ID], _err = v10_1.AddDataElement(dataKey, fileLineType, dataData, &docMap)
-		case "v11_0":
-			// add the data to the document
-			(*docPtr)[metaData.ID], _err = v11_0.AddDataElement(dataKey, fileLineType, dataData, &docMap)
-		case "v11_1":
-			// add the data to the document
-			(*docPtr)[metaData.ID], _err = v11_1.AddDataElement(dataKey, fileLineType, dataData, &docMap)
-		case "v12_0":
-			// add the data to the document
-			(*docPtr)[metaData.ID], _err = v12_0.AddDataElement(dataKey, fileLineType, dataData, &docMap)
-		default:
-			return *docPtr, fmt.Errorf("unsupported version %s", parserVersion)
+		doc := (*docPtr)[metaData.ID]
+		if _err := doc.AddDataElement(dataKey, dataData); _err != nil {
+			return *docPtr, fmt.Errorf("problem adding data to document %v", err)
 		}
-		if _err != nil {
-			return *docPtr, fmt.Errorf("error getting doc for file: %s error: %w", fileName, _err)
-		}
+		return *docPtr, _err
 	}
 	return *docPtr, _err
-}
-
-/*
-convert the fields of the metaData to a map[string]interface{} so it can be added to the doc without needing the VxMetadata struct type definition
-*/
-func getMetaDataMap(metaData util.VxMetadata) (map[string]interface{}, error) {
-	var metaDataMap map[string]interface{}
-	jsonBytes, err := json.Marshal(metaData)
-	if err != nil {
-		return nil, err
-	}
-	err = json.Unmarshal(jsonBytes, &metaDataMap)
-	if err != nil {
-		return nil, err
-	}
-	return metaDataMap, nil
 }
 
 /*
@@ -265,13 +231,13 @@ func getTmpHeaderSanNA(headerData []string, descIndex int) []string {
 	return tmpHeaderData
 }
 
-func WriteJsonToCompressedFile(doc map[string]interface{}, filename string) error {
+func WriteJsonToCompressedFile(docs map[string]util.METdocument, filename string) error {
 	// get the documents as a list
 	// Defines the Slice capacity to match the Map elements count
-	docList := make([]interface{}, 0, len(doc))
+	docList := make([]util.METdocument, 0, len(docs))
 
-	for _, tx := range doc {
-		docList = append(docList, tx)
+	for _, doc := range docs {
+		docList = append(docList, doc)
 	}
 	// Marshal the document struct to JSON
 	jsonBytes, err := json.Marshal(docList)

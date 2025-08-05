@@ -17,6 +17,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 
 	"github.com/dtcenter/METstat2json/pkg/linetypes/v10_0"
 	"github.com/dtcenter/METstat2json/pkg/linetypes/v10_1"
@@ -64,14 +65,14 @@ func getTestDataDir() (string, error) {
 }
 
 // dummy function to satisfy the function signature of getExternalDocForId
-func getMissingExternalDocForId(id string) (map[string]interface{}, error) {
+func getMissingExternalDocForId(id string) (util.METdocument, error) {
 	// fmt.Println("getExternalDocForId called with id:", id)
 	// Put your own code here in this method but always return this exact error if the document is not found
 	return nil, fmt.Errorf("%s: %s", DOC_NOT_FOUND, id)
 }
 
 // dummy function to satisfy the function signature of getExternalDocForId
-func getExistingExternalDocForId(id string) (map[string]interface{}, error) {
+func getExistingExternalDocForId(id string) (util.METdocument, error) {
 	// fmt.Println("getExternalDocForId called with id:", id)
 	fileLineType := "STAT_VAL1L2"
 	metaData := util.VxMetadata{
@@ -89,7 +90,7 @@ func getExistingExternalDocForId(id string) (map[string]interface{}, error) {
 	metVersion := strings.ReplaceAll(strings.ToLower(versionField), ".", "_")
 	versionParts := strings.Split(metVersion, `_`)
 	parserVersion := strings.Join(versionParts[0:2], "_")
-	var doc map[string]interface{}
+	var doc util.METdocument
 	switch parserVersion {
 	case "v12_0":
 		doc, _err = v12_0.GetDocForId(fileLineType, metaData, headerData, dataData, dataKey)
@@ -142,7 +143,7 @@ func TestGetMissingExternalDocForId(t *testing.T) {
 	headerLine := "VERSION MODEL DESC FCST_LEAD FCST_VALID_BEG  FCST_VALID_END  OBS_LEAD OBS_VALID_BEG   OBS_VALID_END   FCST_VAR  FCST_UNITS FCST_LEV OBS_VAR   OBS_UNITS OBS_LEV  OBTYPE VX_MASK INTERP_MTHD INTERP_PNTS FCST_THRESH OBS_THRESH COV_THRESH ALPHA LINE_TYPE"
 	dataLine := "V12.0.0 FCST  NA   120000    20120409_120000 20120409_120000 000000   20120409_113000 20120409_123000 UGRD_VGRD m/s        Z10      UGRD_VGRD NA        Z10      ADPSFC LAND_L0 NEAREST     1           NA          NA         NA         NA    VAL1L2    4114    0.022881     -0.055846      -0.23975       0.11316       1.40894     2.39774     6.07755      1.35071    2.1488    4114           12.11241   65.18733  6744.28012"
 	fName := "grid_stat_GFS_TMP_vs_ANLYS_TMP_Z2_900000L_20241104_180000V.stat"
-	var doc map[string]interface{}
+	var doc map[string]util.METdocument
 	doc, err := ParseLine("test", headerLine, dataLine, &doc, fName, getMissingExternalDocForId)
 	if err != nil {
 		t.Fatalf("Expected no error, got %v", err)
@@ -156,7 +157,7 @@ func TestUnsupportedVersion(t *testing.T) {
 	headerLine := "VERSION MODEL DESC FCST_LEAD FCST_VALID_BEG FCST_VALID_END OBS_LEAD OBS_VALID_BEG OBS_VALID_END FCST_VAR FCST_UNITS FCST_LEV OBS_VAR OBS_UNITS OBS_LEV OBTYPE VX_MASK INTERP_MTHD INTERP_PNTS FCST_THRESH OBS_THRESH COV_THRESH ALPHA LINE_TYPE"
 	dataLine := "V9.0 FCST NA 120000 20120409_120000 20120409_120000 000000 20120409_113000 20120409_123000 UGRD_VGRD m/s Z10 UGRD_VGRD NA Z10 ADPSFC LAND_L0 NEAREST 1 NA NA NA NA VAL1L2 4114 0.022881 -0.055846 -0.23975 0.11316 1.40894 2.39774 6.07755 1.35071 2.1488 4114 12.11241 65.18733 6744.28012"
 	fName := "grid_stat_NO_WEIGHT_240000L_20120410_000000V.stat"
-	var doc map[string]interface{}
+	var doc map[string]util.METdocument
 	doc, err := ParseLine("test", headerLine, dataLine, &doc, fName, getMissingExternalDocForId)
 	if err == nil {
 		t.Fatalf("Expected error, got %v", err)
@@ -173,7 +174,7 @@ func TestGetExistingExternalDocForId(t *testing.T) {
 	headerLine := "VERSION MODEL DESC FCST_LEAD FCST_VALID_BEG  FCST_VALID_END  OBS_LEAD OBS_VALID_BEG   OBS_VALID_END   FCST_VAR  FCST_UNITS FCST_LEV OBS_VAR   OBS_UNITS OBS_LEV  OBTYPE VX_MASK INTERP_MTHD INTERP_PNTS FCST_THRESH OBS_THRESH COV_THRESH ALPHA LINE_TYPE"
 	dataLine := "V12.0.0 FCST  NA   120000    20120409_120000 20120409_120000 000000   20120409_113000 20120409_123000 UGRD_VGRD m/s        Z10      UGRD_VGRD NA        Z10      ADPSFC LAND_L0 NEAREST     1           NA          NA         NA         NA    VAL1L2    4114    0.022881     -0.055846      -0.23975       0.11316       1.40894     2.39774     6.07755      1.35071    2.1488    4114           12.11241   65.18733  6744.28012"
 	fName := "grid_stat_GFS_TMP_vs_ANLYS_TMP_Z2_900000L_20241104_180000V.stat"
-	var doc map[string]interface{}
+	var doc map[string]util.METdocument
 	doc, err := ParseLine("test", headerLine, dataLine, &doc, fName, getExistingExternalDocForId)
 	if err != nil {
 		t.Fatalf("Expected no error, got %v", err)
@@ -192,28 +193,28 @@ func TestParseVAL1L2(t *testing.T) {
 	dataLine4 := "V12.0.0 FCST  this_is_a_long_description_field   180000    20120409_120000 20120409_120000 000000   20120409_113000 20120409_123000 UGRD_VGRD m/s        Z10      UGRD_VGRD NA        Z10      ADPSFC LMV     NEAREST     1           NA          NA         NA         NA    VAL1L2     393   -0.32297       0.32197       -0.79039       0.14006       1.34214     1.86519     3.95307      1.23297    1.78245    393           26.10387   54.98572  4500.31836"
 	tmpDir := t.TempDir()
 	fName := "grid_stat_ECMWF_TMP_vs_ANLYS_TMP_P1000_anom_360000L_20241031_000000V.stat"
-	var doc map[string]interface{}
-	doc, err := ParseLine("test", headerLine, dataLine, &doc, fName, getMissingExternalDocForId)
+	var docs map[string]util.METdocument
+	docs, err := ParseLine("test", headerLine, dataLine, &docs, fName, getMissingExternalDocForId)
 	if err != nil {
 		t.Fatalf("Expected no error, got %v", err)
 	}
-	doc, err = ParseLine("test", headerLine, dataLine2, &doc, fName, getMissingExternalDocForId)
+	docs, err = ParseLine("test", headerLine, dataLine2, &docs, fName, getMissingExternalDocForId)
 	if err != nil {
 		t.Fatalf("Expected no error, got %v", err)
 	}
-	doc, err = ParseLine("test", headerLine, dataLine3, &doc, fName, getMissingExternalDocForId)
+	docs, err = ParseLine("test", headerLine, dataLine3, &docs, fName, getMissingExternalDocForId)
 	if err != nil {
 		t.Fatalf("Expected no error, got %v", err)
 	}
-	doc, err = ParseLine("test", headerLine, dataLine4, &doc, fName, getMissingExternalDocForId)
+	docs, err = ParseLine("test", headerLine, dataLine4, &docs, fName, getMissingExternalDocForId)
 	if err != nil {
 		t.Fatalf("Expected no error, got %v", err)
 	}
 
-	if doc == nil {
+	if docs == nil {
 		t.Fatalf("Expected parsed document, got nil")
 	}
-	err = WriteJsonToCompressedFile(doc, tmpDir+"/test_output.json.gz")
+	err = WriteJsonToCompressedFile(docs, tmpDir+"/test_output.json.gz")
 	if err != nil {
 		t.Fatalf("Expected no error, got %v", err)
 	}
@@ -225,15 +226,15 @@ func TestParseVAL1L2(t *testing.T) {
 	}
 
 	assert.NotNil(t, parsedDoc)
-	assert.Len(t, parsedDoc, 3, "expected 3 subDocs but got %d", len(parsedDoc)) // two top level elements
+	assert.Len(t, parsedDoc, 3, "expected 3 subDocs but got %d", len(parsedDoc))
 
 	// Get documents from the map
 	// TODO(IAN): Bugfix - do we need "NA" fields in the header/ID? Or was this a bug in the test?
 	// doc0Interface, ok0 := doc["MET:DD:MET:test:V12.0.0:FCST:NA:1333972800:1333972800:000000:1333971000:1333974600:UGRD_VGRD:m/s:Z10:UGRD_VGRD:NA:Z10:ADPSFC:LAND_L0:NEAREST:1:NA:NA:NA:NA:VAL1L2"]
-	doc0Interface, ok0 := doc["MET:DD:MET:test:V12.0.0:FCST:1333972800:1333972800:000000:1333971000:1333974600:UGRD_VGRD:m/s:Z10:UGRD_VGRD:Z10:ADPSFC:LAND_L0:NEAREST:1:VAL1L2"]
+	doc0Interface, ok0 := docs["MET:DD:MET:test:V12.0.0:FCST:1333972800:1333972800:000000:1333971000:1333974600:UGRD_VGRD:m/s:Z10:UGRD_VGRD:Z10:ADPSFC:LAND_L0:NEAREST:1:VAL1L2"]
 	assert.True(t, ok0)
 	// doc2Interface, ok2 := doc["MET:DD:MET:test:V12.0.0:FCST:this_is_a_long_description_field:1333972800:1333972800:000000:1333971000:1333974600:UGRD_VGRD:m/s:Z10:UGRD_VGRD:NA:Z10:ADPSFC:LMV:NEAREST:1:NA:NA:NA:NA:VAL1L2"]
-	doc2Interface, ok2 := doc["MET:DD:MET:test:V12.0.0:FCST:this_is_a_:1333972800:1333972800:000000:1333971000:1333974600:UGRD_VGRD:m/s:Z10:UGRD_VGRD:Z10:ADPSFC:LMV:NEAREST:1:VAL1L2"]
+	doc2Interface, ok2 := docs["MET:DD:MET:test:V12.0.0:FCST:this_is_a_:1333972800:1333972800:000000:1333971000:1333974600:UGRD_VGRD:m/s:Z10:UGRD_VGRD:Z10:ADPSFC:LMV:NEAREST:1:VAL1L2"]
 	assert.True(t, ok2)
 
 	// Convert the map to concrete types
@@ -279,7 +280,7 @@ func TestParseVAL1L2(t *testing.T) {
 /*
 This test tests a data field dataKey.
 */
-func TestParseMODE_OBJ(t *testing.T) {
+func TestParseMODE_CTS(t *testing.T) {
 	if testing.Short() {
 		t.Skip("Skipping integration tests in short mode")
 	}
@@ -289,7 +290,7 @@ func TestParseMODE_OBJ(t *testing.T) {
 	tmpDir := t.TempDir()
 	// fileType := "MODE_OBJ"
 	fName := "mode_python_mixed_300000L_20120410_180000V_060000A_cts.txt"
-	var doc map[string]interface{}
+	var doc map[string]util.METdocument
 	doc, err := ParseLine("test", headerLine, dataLine, &doc, fName, getMissingExternalDocForId)
 	if err != nil {
 		t.Fatalf("Expected no error, got %v", err)
@@ -311,8 +312,8 @@ func TestParseMODE_OBJ(t *testing.T) {
 
 	assert.NotNil(t, parsedDoc)
 	assert.Len(t, parsedDoc, 2, "expected 3 but got %d", len(parsedDoc)) // two top level elements
-	doc0I := doc["MET:DD:MET:test:V12.0.0:FCST:26026:9:20120410_180000:060000:120000:20050807_120000:120000:2:>=5.0:2:>=5.0:APCP_06:kg/m^2:A6:OBS:None:Surface:STAGE4"].(map[string]interface{})
-	doc2I := doc["MET:DD:MET:test:V12.0.0:FCST:26026:9:this_is_a_:20120410_180000:060000:120000:20050807_120000:120000:2:>=5.0:2:>=5.0:APCP_06:kg/m^2:A6:OBS:None:Surface:STAGE4"].(map[string]interface{})
+	doc0I := doc["MET:DD:MET:test:V12.0.0:FCST:26026:9:20120410_180000:060000:120000:20050807_120000:120000:2:>=5.0:2:>=5.0:APCP_06:kg/m^2:A6:OBS:None:Surface:STAGE4"]
+	doc2I := doc["MET:DD:MET:test:V12.0.0:FCST:26026:9:this_is_a_:20120410_180000:060000:120000:20050807_120000:120000:2:>=5.0:2:>=5.0:APCP_06:kg/m^2:A6:OBS:None:Surface:STAGE4"]
 	// Convert the map to concrete types
 	var doc0, doc2 v12_0.MODE_CTS
 	jsonBytes0, _ := json.Marshal(doc0I)
@@ -351,7 +352,7 @@ func TestParseMODE_OBJ_V11_1_0(t *testing.T) {
 	tmpDir := t.TempDir()
 	// fileType := "MODE_OBJ"
 	fName := "MODE_compref/20241201-13/mode_compref_010000L_20241201_130000V_000000A_R1_T2_obj.txt"
-	var doc map[string]interface{}
+	var doc map[string]util.METdocument
 	var err error
 	doc, err = ParseLine("test", headerLine, dataLine, &doc, fName, getMissingExternalDocForId)
 	if err != nil {
@@ -375,10 +376,12 @@ func TestParseMODE_OBJ_V11_1_0(t *testing.T) {
 	assert.NotNil(t, parsedDoc)
 	assert.Len(t, parsedDoc, 1, "expected 1 but got %d", len(parsedDoc)) // two top level elements
 
-	tmpDoc := doc["MET:DD:MET:test:V11.1.0:HRRR_OPS:656523:3:E_CONUS:20241201_130000:000000:000000:20241201_125839:000000:1:>=30:1:>=30:REFC:dB:L0:REFC:dB:R1:MRMS"].(map[string]interface{})
+	tmpDoc := doc["MET:DD:MET:test:V11.1.0:HRRR_OPS:656523:3:E_CONUS:20241201_130000:000000:000000:20241201_125839:000000:1:>=30:1:>=30:REFC:dB:L0:REFC:dB:R1:MRMS"]
+	assert.Len(t, doc, 1)
 	var mode_doc v12_0.MODE_OBJ
 	jsonBytes0, _ := json.Marshal(tmpDoc)
 	_ = json.Unmarshal(jsonBytes0, &mode_doc)
+	require.Len(t, mode_doc.Data, 2, "Expected the MODE_OBJ document to have 2 data sections")
 	data := mode_doc.Data
 	// t.Logf("MODE DOC: %s", mode_doc)
 	elem1Data := data["010000_F001"]
