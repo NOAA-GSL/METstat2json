@@ -71,6 +71,20 @@ func getParserVersion(dataLine string) (string, error) {
 	return lineVersion, nil
 }
 
+// Filter out VIM *.swp and MacOS DS_STORE files.
+func isValidFileType(filename string) (bool, string) {
+	filename = filepath.Base(filename)
+	filePathParts := strings.Split(filename, ".")
+	fileType := filePathParts[1]
+	switch strings.ToUpper(fileType) {
+	case "SWP":
+		return false, fileType
+	case "DS_STORE":
+		return false, fileType
+	}
+	return true, fileType
+}
+
 // Main entrypoint to the library. Ideally, this should be the only thing consumers need to call.
 // Parses the headerLine & dataLine passed to it and adds it to the collection of JSON docs pointed to by docPtr.
 // (docPtr is a map[string]interface where key = docID & value = doc struct with header & data)
@@ -102,17 +116,11 @@ func ParseLine(dataSetName string, headerLine string, dataLine string, docPtr *m
 		return *docPtr, fmt.Errorf("empty data line")
 	}
 
-	// Filter out VIM *.swp and MacOS DS_STORE files.
-	fileName = filepath.Base(fileName)
-	filePathParts := strings.Split(fileName, ".")
-	fileType := strings.ToUpper(filePathParts[1])
-	if fileType == "SWP" {
-		// skip the swp files - might be editing a file and don't want to parse the .swp file
-		return *docPtr, fmt.Errorf("skipping swp file")
-	}
-	if fileType == "DS_STORE" {
-		// skip the .DS_Store files
-		return *docPtr, fmt.Errorf("skipping .DS_Store file")
+	// Filter out undesired files.
+	valid, filetype := isValidFileType(fileName)
+	if !valid {
+		// Skip undesired files
+		return *docs, fmt.Errorf("Skipping %s file", filetype)
 	}
 
 	// get the lineType
