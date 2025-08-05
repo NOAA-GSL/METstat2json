@@ -45,7 +45,7 @@ The descIndex is used to trim the desc field to 10 characters.
 The parseLine function also uses the
 GetId function to determine the id of the data line. The id is derived from the headerData minus the dataKey fields and
 is returned in the form of a VxMetadata struct. The VxMetadata struct is then converted to a map[string]interface{}
-so that it can be passed to the GetDocForId function without the GetDocForId function needing to know the VxMetadata struct type.
+so that it can be passed to the NewDocForId function without the NewDocForId function needing to know the VxMetadata struct type.
 
 There are a couple of utility functions that are used to get the headerData without the NA values and to convert the VxMetadata struct.
 A document pointer is required as a place to store the parsed data. If the document is nil, a new document is created.
@@ -175,15 +175,15 @@ func ParseLine(dataSetName string, headerLine string, dataLine string, docs *map
 			// The document needs to be of the correct version.
 			switch parserVersion {
 			case "v10_0":
-				(*docs)[metaData.ID], _err = v10_0.GetDocForId(fileLineType, metaData, headerData, dataData, dataKey)
+				(*docs)[metaData.ID], _err = v10_0.NewDocForId(fileLineType, metaData, headerData, dataData, dataKey)
 			case "v10_1":
-				(*docs)[metaData.ID], _err = v10_1.GetDocForId(fileLineType, metaData, headerData, dataData, dataKey)
+				(*docs)[metaData.ID], _err = v10_1.NewDocForId(fileLineType, metaData, headerData, dataData, dataKey)
 			case "v11_0":
-				(*docs)[metaData.ID], _err = v11_0.GetDocForId(fileLineType, metaData, headerData, dataData, dataKey)
+				(*docs)[metaData.ID], _err = v11_0.NewDocForId(fileLineType, metaData, headerData, dataData, dataKey)
 			case "v11_1":
-				(*docs)[metaData.ID], _err = v11_1.GetDocForId(fileLineType, metaData, headerData, dataData, dataKey)
+				(*docs)[metaData.ID], _err = v11_1.NewDocForId(fileLineType, metaData, headerData, dataData, dataKey)
 			case "v12_0":
-				(*docs)[metaData.ID], _err = v12_0.GetDocForId(fileLineType, metaData, headerData, dataData, dataKey)
+				(*docs)[metaData.ID], _err = v12_0.NewDocForId(fileLineType, metaData, headerData, dataData, dataKey)
 			default:
 				return *docs, fmt.Errorf("unsupported version %s", parserVersion)
 			}
@@ -207,7 +207,7 @@ func ParseLine(dataSetName string, headerLine string, dataLine string, docs *map
 
 /*
 create a tmpHeaderData and remove the "" and the NA values fromm the headerData.
-This also has to be done in the GetDocForId i.e. (fill_XXXX_Header) functions,
+This also has to be done in the NewDocForId i.e. (fill_XXXX_Header) functions,
 and trim the desc field data to 10 chars, if it isn't empty ("")
 */
 func getTmpHeaderSanNA(headerData []string, descIndex int) []string {

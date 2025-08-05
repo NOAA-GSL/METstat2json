@@ -63,7 +63,7 @@ The ParseLine function uses the GetLineType function to determine the lineType o
 
 The descIndex is used to trim the desc field to 10 characters.
 
-The parseLine function also uses the GetId function to determine the id of the data line. The id is derived from the headerData minus the dataKey fields and is returned in the form of a VxMetaDa ta struct. The VxMetaData struct is then converted to a map[string]interface{} so that it can be passed to the GetDocForId function without the GetDocForId function needing to know the VxMetaData struct type.
+The parseLine function also uses the GetId function to determine the id of the data line. The id is derived from the headerData minus the dataKey fields and is returned in the form of a VxMetaData struct. The VxMetaData struct is then converted to a map[string]interface{} so that it can be passed to the NewDocForId function without the NewDocForId function needing to know the VxMetaData struct type.
 
 There are a couple of utility functions that are used to get the headerData without the NA values and to convert the VxMetaData struct.
 A document pointer is required as a place to store the parsed data. If the document is nil, a new document is created.
@@ -121,7 +121,7 @@ The ParseLine function uses the GetLineType function to determine the lineType o
 
 The descIndex is used to trim the desc field to 10 characters.
 
-The parseLine function also uses the GetId function to determine the id of the data line. The id is derived from the headerData minus the dataKey fields and is returned in the form of a VxMetaData struct. The VxMetaData struct is then converted to a map[string]interface{} so that it can be passed to the GetDocForId function without the GetDocForId function needing to know the VxMetaData struct type.
+The parseLine function also uses the GetId function to determine the id of the data line. The id is derived from the headerData minus the dataKey fields and is returned in the form of a VxMetaData struct. The VxMetaData struct is then converted to a map[string]interface{} so that it can be passed to the NewDocForId function without the NewDocForId function needing to know the VxMetaData struct type.
 
 There are a couple of utility functions that are used to get the headerData without the NA values and to convert the VxMetaData struct. A document pointer is required as a place to store the parsed data. If the document is nil, a new document is created. The header line values (minus the dataKey fields) are used to derive the id, with date fields converted to epochs. If the data section of of the document[id] is nil, a new data section is created. The data section is then populated with the data fields from the data line. If the data section is not nil, the data fields are added to the existing data map.
 

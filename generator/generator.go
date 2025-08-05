@@ -161,7 +161,7 @@ func main() {
 	printHeaderFillFunctions(allHeaderFillFunctions)
 	printDataStructs(allDataStructs)
 	printDataFillFunctions(allDataFillFunctions)
-	printGetDocForIDFunction(allDocumentStructs)
+	printNewDocForIDFunction(allDocumentStructs)
 }
 
 // --- Code generation helper functions ---
@@ -235,12 +235,12 @@ func printDataFillFunctions(allDataFillFunctions map[string]dataFillMethodData) 
 	}
 }
 
-func printGetDocForIDFunction(allDocumentStructs map[string]documentStructData) {
-	var data getDocForIDData
+func printNewDocForIDFunction(allDocumentStructs map[string]documentStructData) {
+	var data newDocForIDData
 	for _, key := range getSortedKeys(allDocumentStructs) {
 		data.Documents = append(data.Documents, allDocumentStructs[key])
 	}
-	fmt.Println(createGetDocForIDFunction(data))
+	fmt.Println(createNewDocForIDFunction(data))
 }
 
 // private functions
@@ -620,15 +620,16 @@ func (s *{{ .DataStructName }}) fill(fields []string) error {
 	return buf.String()
 }
 
-type getDocForIDData struct {
+type newDocForIDData struct {
 	Documents []documentStructData
 }
 
-// Generates the GetDocForID function via template
-func createGetDocForIDFunction(data getDocForIDData) string {
-	getDocForIDTemplate := template.Must(template.New("GetDocForID").Parse(`
-// Creates a new doc, header functions and all.
-func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []string, dataData []string, dataKey string) (util.METdocument, error) {
+// Generates the NewDocForID function via template
+func createNewDocForIDFunction(data newDocForIDData) string {
+	newDocForIDTemplate := template.Must(template.New("NewDocForID").Parse(`
+// Creates an appropriate MET document struct based on the fileLineType. The MET document struct is filled in with
+// vx team metadata, MET header data, and MET "data" data. The MET "data" entry is associated with the dataKey provided.
+func NewDocForId(fileLineType string, metaData util.VxMetadata, headerData []string, dataData []string, dataKey string) (util.METdocument, error) {
 	var statDoc util.METdocument
 	var errs []error
 
@@ -649,13 +650,13 @@ func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []str
 		statDoc = &tmp
 	{{- end }}
 	default:
-		return nil, errors.New("GetDocForId: Unknown file_line type:" + fileLineType)
+		return nil, errors.New("NewDocForId: Unknown file_line type:" + fileLineType)
 	}
 	return statDoc, errors.Join(errs...)
 }
 	`))
 	var buf bytes.Buffer
-	err := getDocForIDTemplate.Execute(&buf, data)
+	err := newDocForIDTemplate.Execute(&buf, data)
 	if err != nil {
 		panic(fmt.Sprintf("template execution failed: %v", err))
 	}

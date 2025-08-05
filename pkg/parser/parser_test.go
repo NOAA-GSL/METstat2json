@@ -93,15 +93,15 @@ func getExistingExternalDocForId(id string) (util.METdocument, error) {
 	var doc util.METdocument
 	switch parserVersion {
 	case "v12_0":
-		doc, _err = v12_0.GetDocForId(fileLineType, metaData, headerData, dataData, dataKey)
+		doc, _err = v12_0.NewDocForId(fileLineType, metaData, headerData, dataData, dataKey)
 	case "v11_1":
-		doc, _err = v11_1.GetDocForId(fileLineType, metaData, headerData, dataData, dataKey)
+		doc, _err = v11_1.NewDocForId(fileLineType, metaData, headerData, dataData, dataKey)
 	case "v11_0":
-		doc, _err = v11_0.GetDocForId(fileLineType, metaData, headerData, dataData, dataKey)
+		doc, _err = v11_0.NewDocForId(fileLineType, metaData, headerData, dataData, dataKey)
 	case "v10_1":
-		doc, _err = v10_1.GetDocForId(fileLineType, metaData, headerData, dataData, dataKey)
+		doc, _err = v10_1.NewDocForId(fileLineType, metaData, headerData, dataData, dataKey)
 	case "v10_0":
-		doc, _err = v10_0.GetDocForId(fileLineType, metaData, headerData, dataData, dataKey)
+		doc, _err = v10_0.NewDocForId(fileLineType, metaData, headerData, dataData, dataKey)
 	default:
 		return nil, fmt.Errorf("unsupported parser version: %s", parserVersion)
 	}

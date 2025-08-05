@@ -5137,8 +5137,9 @@ func (s *TCST_TCMPR_data) fill(fields []string) error {
 	return errors.Join(errs...)
 }
 
-// Creates a new doc, header functions and all.
-func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []string, dataData []string, dataKey string) (util.METdocument, error) {
+// Creates an appropriate MET document struct based on the fileLineType. The MET document struct is filled in with
+// vx team metadata, MET header data, and MET "data" data. The MET "data" entry is associated with the dataKey provided.
+func NewDocForId(fileLineType string, metaData util.VxMetadata, headerData []string, dataData []string, dataKey string) (util.METdocument, error) {
 	var statDoc util.METdocument
 	var errs []error
 
@@ -5651,7 +5652,7 @@ func GetDocForId(fileLineType string, metaData util.VxMetadata, headerData []str
 		tmp.Data[dataKey] = elem_data
 		statDoc = &tmp
 	default:
-		return nil, errors.New("GetDocForId: Unknown file_line type:" + fileLineType)
+		return nil, errors.New("NewDocForId: Unknown file_line type:" + fileLineType)
 	}
 	return statDoc, errors.Join(errs...)
 }
