@@ -311,7 +311,8 @@ func TestParseMODE_CTS(t *testing.T) {
 
 	parsedDoc0I := parsedDoc["MET:DD:MET:test:V12.0.0:FCST:26026:9:20120410_180000:060000:120000:20050807_120000:120000:2:>=5.0:2:>=5.0:APCP_06:kg/m^2:A6:OBS:None:Surface:STAGE4"].(map[string]interface{})
 	parsedDoc2I := parsedDoc["MET:DD:MET:test:V12.0.0:FCST:26026:9:this_is_a_:20120410_180000:060000:120000:20050807_120000:120000:2:>=5.0:2:>=5.0:APCP_06:kg/m^2:A6:OBS:None:Surface:STAGE4"].(map[string]interface{})
-	var parsedDoc0, parsedDoc2 v12_0.STAT_VAL1L2
+	// var parsedDoc0, parsedDoc2 v12_0.STAT_VAL1L2 // TODO - why didn't this fail?
+	var parsedDoc0, parsedDoc2 v12_0.MODE_CTS // TODO - why didn't this fail?
 	pjsonBytes0, _ := json.Marshal(parsedDoc0I)
 	_ = json.Unmarshal(pjsonBytes0, &parsedDoc0)
 	pjsonBytes2, _ := json.Marshal(parsedDoc2I)
@@ -359,7 +360,8 @@ func TestParseMODE_OBJ_V11_1_0(t *testing.T) {
 
 	tmpDoc := doc["MET:DD:MET:test:V11.1.0:HRRR_OPS:656523:3:E_CONUS:20241201_130000:000000:000000:20241201_125839:000000:1:>=30:1:>=30:REFC:dB:L0:REFC:dB:R1:MRMS"]
 	assert.Len(t, doc, 1)
-	var mode_doc v12_0.MODE_OBJ
+	// var mode_doc v12_0.MODE_OBJ // TODO - why didn't this fail?
+	var mode_doc v11_1.MODE_OBJ
 	jsonBytes0, _ := json.Marshal(tmpDoc)
 	_ = json.Unmarshal(jsonBytes0, &mode_doc)
 	require.Len(t, mode_doc.Data, 2, "Expected the MODE_OBJ document to have 2 data sections")
