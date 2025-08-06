@@ -157,6 +157,7 @@ func main() {
 	// Generate the various code sections
 	printDocumentStructs(allDocumentStructs)
 	printAddDataElementFunctions(allDocumentStructs)
+	printGetIDFunctions(allDocumentStructs)
 	printHeaderStructs(allHeaderStructs)
 	printHeaderFillFunctions(allHeaderFillFunctions)
 	printDataStructs(allDataStructs)
@@ -204,6 +205,13 @@ func printAddDataElementFunctions(allDocumentStructs map[string]documentStructDa
 	fmt.Print("\n// AddDataElement functions\n")
 	for _, key := range getSortedKeys(allDocumentStructs) {
 		fmt.Println(createAddDataElementFunction(allDocumentStructs[key]))
+	}
+}
+
+func printGetIDFunctions(allDocumentStructs map[string]documentStructData) {
+	fmt.Print("\n// GetID functions\n")
+	for _, key := range getSortedKeys(allDocumentStructs) {
+		fmt.Println(createGetIDFunction(allDocumentStructs[key]))
 	}
 }
 
@@ -663,7 +671,7 @@ func NewDocForId(fileLineType string, metaData util.VxMetadata, headerData []str
 	return buf.String()
 }
 
-// Generates the AddDataElement via template
+// Generates the AddDataElement method via template
 func createAddDataElementFunction(data documentStructData) string {
 	addDataElementTemplate := template.Must(template.New("AddDataElement").Parse(`
 // Adds a new "data" element to {{ .DocumentStructName }}
@@ -679,6 +687,22 @@ func (doc *{{.DocumentStructName}}) AddDataElement(dataKey string, dataData []st
 	`))
 	var buf bytes.Buffer
 	err := addDataElementTemplate.Execute(&buf, data)
+	if err != nil {
+		panic(fmt.Sprintf("template execution failed: %v", err))
+	}
+	return buf.String()
+}
+
+// Generates the GetID method via template
+func createGetIDFunction(data documentStructData) string {
+	addGetIDTemplate := template.Must(template.New("GetID").Parse(`
+// Returns the ID field of {{ .DocumentStructName }}
+func (doc *{{.DocumentStructName}}) GetID() string {
+	return doc.ID
+}
+	`))
+	var buf bytes.Buffer
+	err := addGetIDTemplate.Execute(&buf, data)
 	if err != nil {
 		panic(fmt.Sprintf("template execution failed: %v", err))
 	}

@@ -33,6 +33,7 @@ import (
 // interface to describe MET document structs in linetypes.go
 type METdocument interface {
 	AddDataElement(key string, dataData []string) error
+	GetID() string
 }
 
 type HeaderFields struct {
