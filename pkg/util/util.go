@@ -6,8 +6,6 @@ MET output files that contain a header section and a data section. The header se
 are used to identify the document. The data section contains the data fields that are used to populate the document.
 This package is separate from the linetypes packages because the linetypes package is automatically
 generated from the buildHeaderLineTypes.go program and there is a desire to avoid a circular dependency.
-This package defines a VxMetaData struct that is used to store the metadata for the mapped documents.
-The metadata is used to uniquely identify each document and is used to merge documents with the same metadata.
 
 This package also defines the DataKeyMap that is used to determine the key data fields for a given line type.
 The key data fields are used to merge documents with the same header field values excluding the key data fields.
@@ -29,12 +27,6 @@ import (
 	"strings"
 	"time"
 )
-
-// interface to describe MET document structs in linetypes.go
-type METdocument interface {
-	AddDataElement(key string, dataData []string) error
-	GetID() string
-}
 
 type HeaderFields struct {
 	Header         string
@@ -75,17 +67,6 @@ var MetSrcFiles = []string{
 	"https://raw.githubusercontent.com/dtcenter/MET/refs/heads/main_v12.0/src/libcode/vx_tc_util/track_pair_info.cc",
 	"https://raw.githubusercontent.com/dtcenter/MET/refs/heads/main_v12.0/src/tools/core/stat_analysis/parse_stat_line.cc",
 	"https://raw.githubusercontent.com/dtcenter/MET/refs/heads/main_v12.0/src/tools/tc_utils/tc_stat/tc_stat_job.cc",
-}
-
-// vxMetadata struct definition
-//
-//nolint:tagliatelle // We need these fields to match other metadata fields in our documents.
-type VxMetadata struct {
-	ID          string `json:"id"`
-	Subset      string `json:"subset"`
-	Type        string `json:"type"`
-	SubType     string `json:"subtype"`
-	DataSetName string `json:"dataSetName"`
 }
 
 type DataKeyEntry struct {

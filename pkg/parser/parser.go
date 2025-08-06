@@ -14,6 +14,7 @@ import (
 	"github.com/dtcenter/METstat2json/pkg/linetypes/v11_0"
 	"github.com/dtcenter/METstat2json/pkg/linetypes/v11_1"
 	"github.com/dtcenter/METstat2json/pkg/linetypes/v12_0"
+	"github.com/dtcenter/METstat2json/pkg/mettypes"
 	"github.com/dtcenter/METstat2json/pkg/util"
 )
 
@@ -90,7 +91,7 @@ func isValidFileType(filename string) (bool, string) {
 // (docPtr is a map[string]interface where key = docID & value = doc struct with header & data)
 // Uses the fileName to deduce the doc type.
 // dataSetName should be a <=10 char name which identifies the dataset.
-func ParseLine(dataSetName string, headerLine string, dataLine string, docs *map[string]util.METdocument, fileName string, getExternalDocForId func(id string) (util.METdocument, error)) (map[string]util.METdocument, error) {
+func ParseLine(dataSetName string, headerLine string, dataLine string, docs *map[string]mettypes.METdocument, fileName string, getExternalDocForId func(id string) (mettypes.METdocument, error)) (map[string]mettypes.METdocument, error) {
 	// recover from unexpected errors
 	defer func() {
 		if r := recover(); r != nil {
@@ -147,7 +148,7 @@ func ParseLine(dataSetName string, headerLine string, dataLine string, docs *map
 	// get the tmpHeaderData without the NA values
 	tmpHeaderData := getTmpHeaderSanNA(headerData, descIndex)
 	if *docs == nil {
-		newDoc := make(map[string]util.METdocument)
+		newDoc := make(map[string]mettypes.METdocument)
 		docs = &newDoc
 	}
 
@@ -157,7 +158,7 @@ func ParseLine(dataSetName string, headerLine string, dataLine string, docs *map
 		return *docs, fmt.Errorf("error getting id from line %s: %w", dataLine, err)
 	}
 
-	metadata := util.VxMetadata{
+	metadata := mettypes.VxMetadata{
 		Subset:      "MET",
 		Type:        "DD",
 		SubType:     "MET",
@@ -240,10 +241,10 @@ func getTmpHeaderSanNA(headerData []string, descIndex int) []string {
 	return tmpHeaderData
 }
 
-func WriteJsonToCompressedFile(docs map[string]util.METdocument, filename string) error {
+func WriteJsonToCompressedFile(docs map[string]mettypes.METdocument, filename string) error {
 	// get the documents as a list
 	// Defines the Slice capacity to match the Map elements count
-	docList := make([]util.METdocument, 0, len(docs))
+	docList := make([]mettypes.METdocument, 0, len(docs))
 
 	for _, doc := range docs {
 		docList = append(docList, doc)

@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/dtcenter/METstat2json/pkg/util"
+	"github.com/dtcenter/METstat2json/pkg/mettypes"
 	"github.com/dtcenter/METstat2json/pkg/validtypes"
 )
 
@@ -17,6 +17,7 @@ go run generator -version=v12.0 > pkg/linetypes/v12_0/linetypes.go
 */
 
 // Helper function to reduce boilerplate for using errors.Join()
+// appends the given error to the error slice, and adds the field name as context
 func appendErrorWithContext(errs *[]error, fieldName string, err error) {
 	if err != nil {
 		*errs = append(*errs, fmt.Errorf("%s: %w", fieldName, err))
@@ -27,294 +28,294 @@ func appendErrorWithContext(errs *[]error, fieldName string, err error) {
 
 // Represents a complete MODE_CTS document
 type MODE_CTS struct {
-	util.VxMetadata
+	mettypes.VxMetadata
 	MODE_CTS_header
 	Data map[string]MODE_CTS_data `json:"data"` //nolint:tagliatelle // "data" is a common JSON field in MATS
 }
 
 // Represents a complete MODE_OBJ document
 type MODE_OBJ struct {
-	util.VxMetadata
+	mettypes.VxMetadata
 	MODE_OBJ_header
 	Data map[string]MODE_OBJ_data `json:"data"` //nolint:tagliatelle // "data" is a common JSON field in MATS
 }
 
 // Represents a complete MTD_2DSINGLE document
 type MTD_2DSINGLE struct {
-	util.VxMetadata
+	mettypes.VxMetadata
 	MTD_2DSINGLE_header
 	Data map[string]MTD_2DSINGLE_data `json:"data"` //nolint:tagliatelle // "data" is a common JSON field in MATS
 }
 
 // Represents a complete MTD_3DPAIR document
 type MTD_3DPAIR struct {
-	util.VxMetadata
+	mettypes.VxMetadata
 	MTD_3DPAIR_header
 	Data map[string]MTD_3DPAIR_data `json:"data"` //nolint:tagliatelle // "data" is a common JSON field in MATS
 }
 
 // Represents a complete MTD_3DSINGLE document
 type MTD_3DSINGLE struct {
-	util.VxMetadata
+	mettypes.VxMetadata
 	MTD_3DSINGLE_header
 	Data map[string]MTD_3DSINGLE_data `json:"data"` //nolint:tagliatelle // "data" is a common JSON field in MATS
 }
 
 // Represents a complete STAT_CNT document
 type STAT_CNT struct {
-	util.VxMetadata
+	mettypes.VxMetadata
 	STAT_CNT_header
 	Data map[string]STAT_CNT_data `json:"data"` //nolint:tagliatelle // "data" is a common JSON field in MATS
 }
 
 // Represents a complete STAT_CTC document
 type STAT_CTC struct {
-	util.VxMetadata
+	mettypes.VxMetadata
 	STAT_CTC_header
 	Data map[string]STAT_CTC_data `json:"data"` //nolint:tagliatelle // "data" is a common JSON field in MATS
 }
 
 // Represents a complete STAT_CTS document
 type STAT_CTS struct {
-	util.VxMetadata
+	mettypes.VxMetadata
 	STAT_CTS_header
 	Data map[string]STAT_CTS_data `json:"data"` //nolint:tagliatelle // "data" is a common JSON field in MATS
 }
 
 // Represents a complete STAT_DMAP document
 type STAT_DMAP struct {
-	util.VxMetadata
+	mettypes.VxMetadata
 	STAT_DMAP_header
 	Data map[string]STAT_DMAP_data `json:"data"` //nolint:tagliatelle // "data" is a common JSON field in MATS
 }
 
 // Represents a complete STAT_ECLV document
 type STAT_ECLV struct {
-	util.VxMetadata
+	mettypes.VxMetadata
 	STAT_ECLV_header
 	Data map[string]STAT_ECLV_data `json:"data"` //nolint:tagliatelle // "data" is a common JSON field in MATS
 }
 
 // Represents a complete STAT_ECNT document
 type STAT_ECNT struct {
-	util.VxMetadata
+	mettypes.VxMetadata
 	STAT_ECNT_header
 	Data map[string]STAT_ECNT_data `json:"data"` //nolint:tagliatelle // "data" is a common JSON field in MATS
 }
 
 // Represents a complete STAT_FHO document
 type STAT_FHO struct {
-	util.VxMetadata
+	mettypes.VxMetadata
 	STAT_FHO_header
 	Data map[string]STAT_FHO_data `json:"data"` //nolint:tagliatelle // "data" is a common JSON field in MATS
 }
 
 // Represents a complete STAT_GENMPR document
 type STAT_GENMPR struct {
-	util.VxMetadata
+	mettypes.VxMetadata
 	STAT_GENMPR_header
 	Data map[string]STAT_GENMPR_data `json:"data"` //nolint:tagliatelle // "data" is a common JSON field in MATS
 }
 
 // Represents a complete STAT_GRAD document
 type STAT_GRAD struct {
-	util.VxMetadata
+	mettypes.VxMetadata
 	STAT_GRAD_header
 	Data map[string]STAT_GRAD_data `json:"data"` //nolint:tagliatelle // "data" is a common JSON field in MATS
 }
 
 // Represents a complete STAT_ISC document
 type STAT_ISC struct {
-	util.VxMetadata
+	mettypes.VxMetadata
 	STAT_ISC_header
 	Data map[string]STAT_ISC_data `json:"data"` //nolint:tagliatelle // "data" is a common JSON field in MATS
 }
 
 // Represents a complete STAT_MCTC document
 type STAT_MCTC struct {
-	util.VxMetadata
+	mettypes.VxMetadata
 	STAT_MCTC_header
 	Data map[string]STAT_MCTC_data `json:"data"` //nolint:tagliatelle // "data" is a common JSON field in MATS
 }
 
 // Represents a complete STAT_MCTS document
 type STAT_MCTS struct {
-	util.VxMetadata
+	mettypes.VxMetadata
 	STAT_MCTS_header
 	Data map[string]STAT_MCTS_data `json:"data"` //nolint:tagliatelle // "data" is a common JSON field in MATS
 }
 
 // Represents a complete STAT_MPR document
 type STAT_MPR struct {
-	util.VxMetadata
+	mettypes.VxMetadata
 	STAT_MPR_header
 	Data map[string]STAT_MPR_data `json:"data"` //nolint:tagliatelle // "data" is a common JSON field in MATS
 }
 
 // Represents a complete STAT_NBRCNT document
 type STAT_NBRCNT struct {
-	util.VxMetadata
+	mettypes.VxMetadata
 	STAT_NBRCNT_header
 	Data map[string]STAT_NBRCNT_data `json:"data"` //nolint:tagliatelle // "data" is a common JSON field in MATS
 }
 
 // Represents a complete STAT_NBRCTC document
 type STAT_NBRCTC struct {
-	util.VxMetadata
+	mettypes.VxMetadata
 	STAT_NBRCTC_header
 	Data map[string]STAT_NBRCTC_data `json:"data"` //nolint:tagliatelle // "data" is a common JSON field in MATS
 }
 
 // Represents a complete STAT_NBRCTS document
 type STAT_NBRCTS struct {
-	util.VxMetadata
+	mettypes.VxMetadata
 	STAT_NBRCTS_header
 	Data map[string]STAT_NBRCTS_data `json:"data"` //nolint:tagliatelle // "data" is a common JSON field in MATS
 }
 
 // Represents a complete STAT_ORANK document
 type STAT_ORANK struct {
-	util.VxMetadata
+	mettypes.VxMetadata
 	STAT_ORANK_header
 	Data map[string]STAT_ORANK_data `json:"data"` //nolint:tagliatelle // "data" is a common JSON field in MATS
 }
 
 // Represents a complete STAT_PCT document
 type STAT_PCT struct {
-	util.VxMetadata
+	mettypes.VxMetadata
 	STAT_PCT_header
 	Data map[string]STAT_PCT_data `json:"data"` //nolint:tagliatelle // "data" is a common JSON field in MATS
 }
 
 // Represents a complete STAT_PHIST document
 type STAT_PHIST struct {
-	util.VxMetadata
+	mettypes.VxMetadata
 	STAT_PHIST_header
 	Data map[string]STAT_PHIST_data `json:"data"` //nolint:tagliatelle // "data" is a common JSON field in MATS
 }
 
 // Represents a complete STAT_PJC document
 type STAT_PJC struct {
-	util.VxMetadata
+	mettypes.VxMetadata
 	STAT_PJC_header
 	Data map[string]STAT_PJC_data `json:"data"` //nolint:tagliatelle // "data" is a common JSON field in MATS
 }
 
 // Represents a complete STAT_PRC document
 type STAT_PRC struct {
-	util.VxMetadata
+	mettypes.VxMetadata
 	STAT_PRC_header
 	Data map[string]STAT_PRC_data `json:"data"` //nolint:tagliatelle // "data" is a common JSON field in MATS
 }
 
 // Represents a complete STAT_PSTD document
 type STAT_PSTD struct {
-	util.VxMetadata
+	mettypes.VxMetadata
 	STAT_PSTD_header
 	Data map[string]STAT_PSTD_data `json:"data"` //nolint:tagliatelle // "data" is a common JSON field in MATS
 }
 
 // Represents a complete STAT_RELP document
 type STAT_RELP struct {
-	util.VxMetadata
+	mettypes.VxMetadata
 	STAT_RELP_header
 	Data map[string]STAT_RELP_data `json:"data"` //nolint:tagliatelle // "data" is a common JSON field in MATS
 }
 
 // Represents a complete STAT_RHIST document
 type STAT_RHIST struct {
-	util.VxMetadata
+	mettypes.VxMetadata
 	STAT_RHIST_header
 	Data map[string]STAT_RHIST_data `json:"data"` //nolint:tagliatelle // "data" is a common JSON field in MATS
 }
 
 // Represents a complete STAT_RPS document
 type STAT_RPS struct {
-	util.VxMetadata
+	mettypes.VxMetadata
 	STAT_RPS_header
 	Data map[string]STAT_RPS_data `json:"data"` //nolint:tagliatelle // "data" is a common JSON field in MATS
 }
 
 // Represents a complete STAT_SAL1L2 document
 type STAT_SAL1L2 struct {
-	util.VxMetadata
+	mettypes.VxMetadata
 	STAT_SAL1L2_header
 	Data map[string]STAT_SAL1L2_data `json:"data"` //nolint:tagliatelle // "data" is a common JSON field in MATS
 }
 
 // Represents a complete STAT_SEEPS document
 type STAT_SEEPS struct {
-	util.VxMetadata
+	mettypes.VxMetadata
 	STAT_SEEPS_header
 	Data map[string]STAT_SEEPS_data `json:"data"` //nolint:tagliatelle // "data" is a common JSON field in MATS
 }
 
 // Represents a complete STAT_SEEPS_MPR document
 type STAT_SEEPS_MPR struct {
-	util.VxMetadata
+	mettypes.VxMetadata
 	STAT_SEEPS_MPR_header
 	Data map[string]STAT_SEEPS_MPR_data `json:"data"` //nolint:tagliatelle // "data" is a common JSON field in MATS
 }
 
 // Represents a complete STAT_SL1L2 document
 type STAT_SL1L2 struct {
-	util.VxMetadata
+	mettypes.VxMetadata
 	STAT_SL1L2_header
 	Data map[string]STAT_SL1L2_data `json:"data"` //nolint:tagliatelle // "data" is a common JSON field in MATS
 }
 
 // Represents a complete STAT_SSIDX document
 type STAT_SSIDX struct {
-	util.VxMetadata
+	mettypes.VxMetadata
 	STAT_SSIDX_header
 	Data map[string]STAT_SSIDX_data `json:"data"` //nolint:tagliatelle // "data" is a common JSON field in MATS
 }
 
 // Represents a complete STAT_SSVAR document
 type STAT_SSVAR struct {
-	util.VxMetadata
+	mettypes.VxMetadata
 	STAT_SSVAR_header
 	Data map[string]STAT_SSVAR_data `json:"data"` //nolint:tagliatelle // "data" is a common JSON field in MATS
 }
 
 // Represents a complete STAT_VAL1L2 document
 type STAT_VAL1L2 struct {
-	util.VxMetadata
+	mettypes.VxMetadata
 	STAT_VAL1L2_header
 	Data map[string]STAT_VAL1L2_data `json:"data"` //nolint:tagliatelle // "data" is a common JSON field in MATS
 }
 
 // Represents a complete STAT_VCNT document
 type STAT_VCNT struct {
-	util.VxMetadata
+	mettypes.VxMetadata
 	STAT_VCNT_header
 	Data map[string]STAT_VCNT_data `json:"data"` //nolint:tagliatelle // "data" is a common JSON field in MATS
 }
 
 // Represents a complete STAT_VL1L2 document
 type STAT_VL1L2 struct {
-	util.VxMetadata
+	mettypes.VxMetadata
 	STAT_VL1L2_header
 	Data map[string]STAT_VL1L2_data `json:"data"` //nolint:tagliatelle // "data" is a common JSON field in MATS
 }
 
 // Represents a complete TCST_PROBRIRW document
 type TCST_PROBRIRW struct {
-	util.VxMetadata
+	mettypes.VxMetadata
 	TCST_PROBRIRW_header
 	Data map[string]TCST_PROBRIRW_data `json:"data"` //nolint:tagliatelle // "data" is a common JSON field in MATS
 }
 
 // Represents a complete TCST_TCDIAG document
 type TCST_TCDIAG struct {
-	util.VxMetadata
+	mettypes.VxMetadata
 	TCST_TCDIAG_header
 	Data map[string]TCST_TCDIAG_data `json:"data"` //nolint:tagliatelle // "data" is a common JSON field in MATS
 }
 
 // Represents a complete TCST_TCMPR document
 type TCST_TCMPR struct {
-	util.VxMetadata
+	mettypes.VxMetadata
 	TCST_TCMPR_header
 	Data map[string]TCST_TCMPR_data `json:"data"` //nolint:tagliatelle // "data" is a common JSON field in MATS
 }
@@ -5758,8 +5759,8 @@ func (s *TCST_TCMPR_data) fill(fields []string) error {
 
 // Creates an appropriate MET document struct based on the fileLineType. The MET document struct is filled in with
 // vx team metadata, MET header data, and MET "data" data. The MET "data" entry is associated with the dataKey provided.
-func NewDocForId(fileLineType string, metaData util.VxMetadata, headerData []string, dataData []string, dataKey string) (util.METdocument, error) {
-	var statDoc util.METdocument
+func NewDocForId(fileLineType string, metaData mettypes.VxMetadata, headerData []string, dataData []string, dataKey string) (mettypes.METdocument, error) {
+	var statDoc mettypes.METdocument
 	var errs []error
 
 	switch fileLineType {

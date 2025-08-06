@@ -174,7 +174,7 @@ import (
     "fmt"
     "strconv"
 
-    "github.com/dtcenter/METstat2json/pkg/util"
+	"github.com/dtcenter/METstat2json/pkg/mettypes"
     "github.com/dtcenter/METstat2json/pkg/validtypes"
 )
 /*
@@ -310,7 +310,7 @@ func createDocumentStruct(data documentStructData) string {
 	structTemplate := template.Must(template.New("struct").Parse(`
 // Represents a complete {{.DocumentStructName}} document
 type {{.DocumentStructName}} struct {
-    util.VxMetadata
+    mettypes.VxMetadata
     {{.HeaderStructName}}
     Data map[string]{{.DataStructName}} ` + "`json:\"data\"` //nolint:tagliatelle // \"data\" is a common JSON field in MATS" + `
 }
@@ -638,8 +638,8 @@ func createNewDocForIDFunction(data newDocForIDData) string {
 	newDocForIDTemplate := template.Must(template.New("NewDocForID").Parse(`
 // Creates an appropriate MET document struct based on the fileLineType. The MET document struct is filled in with
 // vx team metadata, MET header data, and MET "data" data. The MET "data" entry is associated with the dataKey provided.
-func NewDocForId(fileLineType string, metaData util.VxMetadata, headerData []string, dataData []string, dataKey string) (util.METdocument, error) {
-	var statDoc util.METdocument
+func NewDocForId(fileLineType string, metaData mettypes.VxMetadata, headerData []string, dataData []string, dataKey string) (mettypes.METdocument, error) {
+	var statDoc mettypes.METdocument
 	var errs []error
 
 	switch fileLineType {
