@@ -105,9 +105,9 @@ func ParseLine(dataSetName string, headerLine string, dataLine string, docs *map
 		return *docs, fmt.Errorf("dataSetName is too long - must be <= 10 characters")
 	}
 	// get line version e.g. V12.0.0 -> v12_0
-	parserVersion, _err := getParserVersion(dataLine)
-	if _err != nil {
-		return *docs, fmt.Errorf("error getting parser version from line %s: %w", dataLine, _err)
+	parserVersion, err := getParserVersion(dataLine)
+	if err != nil {
+		return *docs, fmt.Errorf("error getting parser version from line %s: %w", dataLine, err)
 	}
 	if headerLine == "" {
 		return *docs, fmt.Errorf("empty header line")
@@ -152,9 +152,9 @@ func ParseLine(dataSetName string, headerLine string, dataLine string, docs *map
 	}
 
 	// metadata doesn't change between versions, we just use the latest one. Same with DOC
-	docID, _err := util.BuildId("MET", "DD", "MET", dataSetName, tmpHeaderData)
-	if _err != nil {
-		return *docs, fmt.Errorf("error getting id from line %s: %w", dataLine, _err)
+	docID, err := util.BuildId("MET", "DD", "MET", dataSetName, tmpHeaderData)
+	if err != nil {
+		return *docs, fmt.Errorf("error getting id from line %s: %w", dataLine, err)
 	}
 
 	metadata := util.VxMetadata{
@@ -184,34 +184,34 @@ func ParseLine(dataSetName string, headerLine string, dataLine string, docs *map
 			// The document needs to be of the correct version.
 			switch parserVersion {
 			case "v10_0":
-				(*docs)[metadata.ID], _err = v10_0.NewDocForId(fileLineType, metadata, headerData, dataData, dataKey)
+				(*docs)[metadata.ID], err = v10_0.NewDocForId(fileLineType, metadata, headerData, dataData, dataKey)
 			case "v10_1":
-				(*docs)[metadata.ID], _err = v10_1.NewDocForId(fileLineType, metadata, headerData, dataData, dataKey)
+				(*docs)[metadata.ID], err = v10_1.NewDocForId(fileLineType, metadata, headerData, dataData, dataKey)
 			case "v11_0":
-				(*docs)[metadata.ID], _err = v11_0.NewDocForId(fileLineType, metadata, headerData, dataData, dataKey)
+				(*docs)[metadata.ID], err = v11_0.NewDocForId(fileLineType, metadata, headerData, dataData, dataKey)
 			case "v11_1":
-				(*docs)[metadata.ID], _err = v11_1.NewDocForId(fileLineType, metadata, headerData, dataData, dataKey)
+				(*docs)[metadata.ID], err = v11_1.NewDocForId(fileLineType, metadata, headerData, dataData, dataKey)
 			case "v12_0":
-				(*docs)[metadata.ID], _err = v12_0.NewDocForId(fileLineType, metadata, headerData, dataData, dataKey)
+				(*docs)[metadata.ID], err = v12_0.NewDocForId(fileLineType, metadata, headerData, dataData, dataKey)
 			default:
 				return *docs, fmt.Errorf("unsupported version %s", parserVersion)
 			}
-			if _err != nil || (*docs)[metadata.ID] == nil {
-				return *docs, fmt.Errorf("error creating doc for file: %s error: %w", fileName, _err)
+			if err != nil || (*docs)[metadata.ID] == nil {
+				return *docs, fmt.Errorf("error creating doc for file: %s error: %w", fileName, err)
 			}
 			// return the new doc - the doc was created and the data was added to it
-			return *docs, _err
+			return *docs, err
 		}
 	} else {
 		// we either had the doc already, got it externally, or created it
 		// now we need to add the data to the document
 		doc := (*docs)[metadata.ID]
-		if _err := doc.AddDataElement(dataKey, dataData); _err != nil {
+		if err := doc.AddDataElement(dataKey, dataData); err != nil {
 			return *docs, fmt.Errorf("problem adding data to document %w", err)
 		}
-		return *docs, _err
+		return *docs, err
 	}
-	return *docs, _err
+	return *docs, err
 }
 
 /*
