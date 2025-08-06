@@ -150,22 +150,31 @@ func ParseLine(dataSetName string, headerLine string, dataLine string, docs *map
 		newDoc := make(map[string]util.METdocument)
 		docs = &newDoc
 	}
-	// GetId will fill in the id field of the metaData struct with the constructed id
+
 	// metadata doesn't change between versions, we just use the latest one. Same with DOC
-	metaData, _err := util.GetId(tmpHeaderData, &util.VxMetadata{Subset: "MET", Type: "DD", SubType: "MET", DataSetName: dataSetName})
+	docID, _err := util.BuildId("MET", "DD", "MET", dataSetName, tmpHeaderData)
 	if _err != nil {
 		return *docs, fmt.Errorf("error getting id from line %s: %w", dataLine, _err)
 	}
-	_, exists := (*docs)[metaData.ID]
+
+	metadata := util.VxMetadata{
+		Subset:      "MET",
+		Type:        "DD",
+		SubType:     "MET",
+		DataSetName: dataSetName,
+		ID:          docID,
+	}
+
+	_, exists := (*docs)[metadata.ID]
 	if !exists {
 		// check to see if there is an existing external document for this id
-		externalExistingDoc, err := (getExternalDocForId)(metaData.ID)
+		externalExistingDoc, err := (getExternalDocForId)(metadata.ID)
 		if err != nil && !strings.HasPrefix(err.Error(), DOC_NOT_FOUND) {
 			return *docs, err
 		}
 		// if there is an external document for this id, use it, we will add the data into it
 		if externalExistingDoc != nil {
-			(*docs)[metaData.ID] = externalExistingDoc
+			(*docs)[metadata.ID] = externalExistingDoc
 		} else {
 			// have to create a new document for this id
 
@@ -175,19 +184,19 @@ func ParseLine(dataSetName string, headerLine string, dataLine string, docs *map
 			// The document needs to be of the correct version.
 			switch parserVersion {
 			case "v10_0":
-				(*docs)[metaData.ID], _err = v10_0.NewDocForId(fileLineType, metaData, headerData, dataData, dataKey)
+				(*docs)[metadata.ID], _err = v10_0.NewDocForId(fileLineType, metadata, headerData, dataData, dataKey)
 			case "v10_1":
-				(*docs)[metaData.ID], _err = v10_1.NewDocForId(fileLineType, metaData, headerData, dataData, dataKey)
+				(*docs)[metadata.ID], _err = v10_1.NewDocForId(fileLineType, metadata, headerData, dataData, dataKey)
 			case "v11_0":
-				(*docs)[metaData.ID], _err = v11_0.NewDocForId(fileLineType, metaData, headerData, dataData, dataKey)
+				(*docs)[metadata.ID], _err = v11_0.NewDocForId(fileLineType, metadata, headerData, dataData, dataKey)
 			case "v11_1":
-				(*docs)[metaData.ID], _err = v11_1.NewDocForId(fileLineType, metaData, headerData, dataData, dataKey)
+				(*docs)[metadata.ID], _err = v11_1.NewDocForId(fileLineType, metadata, headerData, dataData, dataKey)
 			case "v12_0":
-				(*docs)[metaData.ID], _err = v12_0.NewDocForId(fileLineType, metaData, headerData, dataData, dataKey)
+				(*docs)[metadata.ID], _err = v12_0.NewDocForId(fileLineType, metadata, headerData, dataData, dataKey)
 			default:
 				return *docs, fmt.Errorf("unsupported version %s", parserVersion)
 			}
-			if _err != nil || (*docs)[metaData.ID] == nil {
+			if _err != nil || (*docs)[metadata.ID] == nil {
 				return *docs, fmt.Errorf("error creating doc for file: %s error: %w", fileName, _err)
 			}
 			// return the new doc - the doc was created and the data was added to it
@@ -196,7 +205,7 @@ func ParseLine(dataSetName string, headerLine string, dataLine string, docs *map
 	} else {
 		// we either had the doc already, got it externally, or created it
 		// now we need to add the data to the document
-		doc := (*docs)[metaData.ID]
+		doc := (*docs)[metadata.ID]
 		if _err := doc.AddDataElement(dataKey, dataData); _err != nil {
 			return *docs, fmt.Errorf("problem adding data to document %w", err)
 		}

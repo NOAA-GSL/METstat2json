@@ -457,16 +457,16 @@ func GetHeaderValue(headerFields []string, headerData []string, field string) (s
 	return "", nil
 }
 
-// Creates the doc ID - joins all header & metadata fields with ":" as a separator.
-func GetId(tmpHeaderData []string, metaData *VxMetadata) (VxMetadata, error) {
-	idElems := []string{metaData.Subset, metaData.Type, metaData.SubType, metaData.DataSetName}
+// Creates the MET document ID - joins all header & metadata fields with ":" as a separator.
+func BuildId(subset, docType, subType, dataSetName string, tmpHeaderData []string) (string, error) {
+	// TODO - validation on subset/docType/subType/dataSetName?
+	idElems := []string{subset, docType, subType, dataSetName}
 	idElems = append(idElems, tmpHeaderData...)
 	id := strings.Join(idElems, ":")
 	if len(id) > 250 {
-		return VxMetadata{}, fmt.Errorf("calculated ID is too long: %d - id:\"%s\"", len(id), id)
+		return "", fmt.Errorf("calculated ID is too long: %d - id:\"%s\"", len(id), id)
 	}
-	metaData.ID = id
-	return *metaData, nil
+	return id, nil
 }
 
 func getLineTypeFromColumnDefsFile(headerLine string, version string) (HeaderFields, error) {
