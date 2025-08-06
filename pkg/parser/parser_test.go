@@ -11,8 +11,10 @@ import (
 	"compress/gzip"
 	"encoding/json"
 	"fmt"
+	"io"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"strings"
 	"testing"
 
@@ -373,12 +375,11 @@ func TestParseMODE_OBJ_V11_1_0(t *testing.T) {
 	assert.InDelta(t, 46.21429, elem2Data.CENTROID_LAT.Value, tolerance, "expected data[\"010000_F002\"].CENTROID_LAT to be 46.21429")
 }
 
-/*
 func TestModeFile(t *testing.T) {
 	if testing.Short() {
 		t.Skip("Skipping integration tests in short mode")
 	}
-	var doc map[string]interface{}
+	var doc map[string]util.METdocument
 	tmpDir := t.TempDir()
 	dir, err := getTestDataDir()
 	if err != nil {
@@ -435,6 +436,7 @@ func TestModeFile(t *testing.T) {
 	// add other test assertions here
 }
 
+/*
 func TestMC_PCP_File(t *testing.T) {
 	if testing.Short() {
 		t.Skip("Skipping integration tests in short mode")
