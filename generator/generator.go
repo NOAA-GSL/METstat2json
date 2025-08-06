@@ -185,6 +185,7 @@ go run generator -version=v12.0 > pkg/linetypes/v12_0/linetypes.go
 */
 
 // Helper function to reduce boilerplate for using errors.Join()
+// appends the given error to the error slice, and adds the field name as context
 func appendErrorWithContext(errs *[]error, fieldName string, err error) {
     if err != nil {
         *errs = append(*errs, fmt.Errorf("%%s: %%w", fieldName, err))
