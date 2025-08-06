@@ -438,12 +438,11 @@ func TestModeFile(t *testing.T) {
 	// add other test assertions here
 }
 
-/*
 func TestMC_PCP_File(t *testing.T) {
 	if testing.Short() {
 		t.Skip("Skipping integration tests in short mode")
 	}
-	var doc map[string]interface{}
+	var doc map[string]mettypes.METdocument
 	tmpDir := t.TempDir()
 	dir, err := getTestDataDir()
 	if err != nil {
@@ -493,7 +492,7 @@ func TestTC_CTS_File(t *testing.T) {
 	if testing.Short() {
 		t.Skip("Skipping integration tests in short mode")
 	}
-	var doc map[string]interface{}
+	var doc map[string]mettypes.METdocument
 	tmpDir := t.TempDir()
 	dir, err := getTestDataDir()
 	if err != nil {
@@ -543,7 +542,7 @@ func TestMC_CTS_File(t *testing.T) {
 	if testing.Short() {
 		t.Skip("Skipping integration tests in short mode")
 	}
-	var doc map[string]interface{}
+	var doc map[string]mettypes.METdocument
 	tmpDir := t.TempDir()
 	dir, err := getTestDataDir()
 	if err != nil {
@@ -595,7 +594,7 @@ func Test_TCST_File(t *testing.T) {
 	if testing.Short() {
 		t.Skip("Skipping integration tests in short mode")
 	}
-	var doc map[string]interface{}
+	var doc map[string]mettypes.METdocument
 	tmpDir := t.TempDir()
 	dir, err := getTestDataDir()
 	if err != nil {
@@ -647,7 +646,7 @@ func Test_TCDATA_File(t *testing.T) {
 	if testing.Short() {
 		t.Skip("Skipping integration tests in short mode")
 	}
-	var doc map[string]interface{}
+	var doc map[string]mettypes.METdocument
 	tmpDir := t.TempDir()
 	dir, err := getTestDataDir()
 	if err != nil {
@@ -698,7 +697,7 @@ func Test_TCDATA_File_V10_1_1_NA_VALS(t *testing.T) {
 	if testing.Short() {
 		t.Skip("Skipping integration tests in short mode")
 	}
-	var doc map[string]interface{}
+	var doc map[string]mettypes.METdocument
 	tmpDir := t.TempDir()
 	dir, err := getTestDataDir()
 	if err != nil {
@@ -750,7 +749,7 @@ func Test_TCDATA_File_V10_1_1(t *testing.T) {
 	if testing.Short() {
 		t.Skip("Skipping integration tests in short mode")
 	}
-	var doc map[string]interface{}
+	var doc map[string]mettypes.METdocument
 	tmpDir := t.TempDir()
 	dir, err := getTestDataDir()
 	if err != nil {
@@ -801,7 +800,7 @@ func Test_TCPAIRS_File(t *testing.T) {
 	if testing.Short() {
 		t.Skip("Skipping integration tests in short mode")
 	}
-	var doc map[string]interface{}
+	var doc map[string]mettypes.METdocument
 	tmpDir := t.TempDir()
 	dir, err := getTestDataDir()
 	if err != nil {
@@ -851,7 +850,7 @@ func TestMC_SAL1L2_File(t *testing.T) {
 	if testing.Short() {
 		t.Skip("Skipping integration tests in short mode")
 	}
-	var doc map[string]interface{}
+	var doc map[string]mettypes.METdocument
 	tmpDir := t.TempDir()
 	dir, err := getTestDataDir()
 	if err != nil {
@@ -901,7 +900,7 @@ func TestParseRegressionSuite(t *testing.T) {
 	if testing.Short() {
 		t.Skip("Skipping integration tests in short mode")
 	}
-	var doc map[string]interface{}
+	var doc map[string]mettypes.METdocument
 	var err error
 	tmpDir := t.TempDir()
 	dir, err := getTestDataDir()
@@ -976,7 +975,7 @@ func TestParseG2G_v12_Suite(t *testing.T) {
 	if testing.Short() {
 		t.Skip("Skipping integration tests in short mode")
 	}
-	var doc map[string]interface{}
+	var doc map[string]mettypes.METdocument
 	var err error
 	tmpDir := t.TempDir()
 	dir, err := getTestDataDir()
@@ -1059,7 +1058,7 @@ func TestParse_tc_data_Suite(t *testing.T) {
 	if testing.Short() {
 		t.Skip("Skipping integration tests in short mode")
 	}
-	var doc map[string]interface{}
+	var doc map[string]mettypes.METdocument
 	var err error
 	tmpDir := t.TempDir()
 	dir, err := getTestDataDir()
@@ -1142,7 +1141,7 @@ func TestParse_tcst_Suite(t *testing.T) {
 	if testing.Short() {
 		t.Skip("Skipping integration tests in short mode")
 	}
-	var doc map[string]interface{}
+	var doc map[string]mettypes.METdocument
 	var err error
 	tmpDir := t.TempDir()
 	dir, err := getTestDataDir()
@@ -1229,7 +1228,7 @@ func TestParse_textfiles_Suite(t *testing.T) {
 	if testing.Short() {
 		t.Skip("Skipping integration tests in short mode")
 	}
-	var doc map[string]interface{}
+	var doc map[string]mettypes.METdocument
 	var err error
 	tmpDir := t.TempDir()
 	dir, err := getTestDataDir()
@@ -1307,4 +1306,3 @@ func TestParse_textfiles_Suite(t *testing.T) {
 	assert.NotNil(t, parsedDoc)
 	// add other test assertions here
 }
-*/
