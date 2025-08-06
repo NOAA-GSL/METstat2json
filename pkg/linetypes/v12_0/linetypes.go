@@ -783,6 +783,218 @@ func (doc *TCST_TCMPR) AddDataElement(dataKey string, dataData []string) error {
 	return nil
 }
 
+// GetID functions
+
+// Returns the ID field of MODE_CTS
+func (doc *MODE_CTS) GetID() string {
+	return doc.ID
+}
+
+// Returns the ID field of MODE_OBJ
+func (doc *MODE_OBJ) GetID() string {
+	return doc.ID
+}
+
+// Returns the ID field of MTD_2DSINGLE
+func (doc *MTD_2DSINGLE) GetID() string {
+	return doc.ID
+}
+
+// Returns the ID field of MTD_3DPAIR
+func (doc *MTD_3DPAIR) GetID() string {
+	return doc.ID
+}
+
+// Returns the ID field of MTD_3DSINGLE
+func (doc *MTD_3DSINGLE) GetID() string {
+	return doc.ID
+}
+
+// Returns the ID field of STAT_CNT
+func (doc *STAT_CNT) GetID() string {
+	return doc.ID
+}
+
+// Returns the ID field of STAT_CTC
+func (doc *STAT_CTC) GetID() string {
+	return doc.ID
+}
+
+// Returns the ID field of STAT_CTS
+func (doc *STAT_CTS) GetID() string {
+	return doc.ID
+}
+
+// Returns the ID field of STAT_DMAP
+func (doc *STAT_DMAP) GetID() string {
+	return doc.ID
+}
+
+// Returns the ID field of STAT_ECLV
+func (doc *STAT_ECLV) GetID() string {
+	return doc.ID
+}
+
+// Returns the ID field of STAT_ECNT
+func (doc *STAT_ECNT) GetID() string {
+	return doc.ID
+}
+
+// Returns the ID field of STAT_FHO
+func (doc *STAT_FHO) GetID() string {
+	return doc.ID
+}
+
+// Returns the ID field of STAT_GENMPR
+func (doc *STAT_GENMPR) GetID() string {
+	return doc.ID
+}
+
+// Returns the ID field of STAT_GRAD
+func (doc *STAT_GRAD) GetID() string {
+	return doc.ID
+}
+
+// Returns the ID field of STAT_ISC
+func (doc *STAT_ISC) GetID() string {
+	return doc.ID
+}
+
+// Returns the ID field of STAT_MCTC
+func (doc *STAT_MCTC) GetID() string {
+	return doc.ID
+}
+
+// Returns the ID field of STAT_MCTS
+func (doc *STAT_MCTS) GetID() string {
+	return doc.ID
+}
+
+// Returns the ID field of STAT_MPR
+func (doc *STAT_MPR) GetID() string {
+	return doc.ID
+}
+
+// Returns the ID field of STAT_NBRCNT
+func (doc *STAT_NBRCNT) GetID() string {
+	return doc.ID
+}
+
+// Returns the ID field of STAT_NBRCTC
+func (doc *STAT_NBRCTC) GetID() string {
+	return doc.ID
+}
+
+// Returns the ID field of STAT_NBRCTS
+func (doc *STAT_NBRCTS) GetID() string {
+	return doc.ID
+}
+
+// Returns the ID field of STAT_ORANK
+func (doc *STAT_ORANK) GetID() string {
+	return doc.ID
+}
+
+// Returns the ID field of STAT_PCT
+func (doc *STAT_PCT) GetID() string {
+	return doc.ID
+}
+
+// Returns the ID field of STAT_PHIST
+func (doc *STAT_PHIST) GetID() string {
+	return doc.ID
+}
+
+// Returns the ID field of STAT_PJC
+func (doc *STAT_PJC) GetID() string {
+	return doc.ID
+}
+
+// Returns the ID field of STAT_PRC
+func (doc *STAT_PRC) GetID() string {
+	return doc.ID
+}
+
+// Returns the ID field of STAT_PSTD
+func (doc *STAT_PSTD) GetID() string {
+	return doc.ID
+}
+
+// Returns the ID field of STAT_RELP
+func (doc *STAT_RELP) GetID() string {
+	return doc.ID
+}
+
+// Returns the ID field of STAT_RHIST
+func (doc *STAT_RHIST) GetID() string {
+	return doc.ID
+}
+
+// Returns the ID field of STAT_RPS
+func (doc *STAT_RPS) GetID() string {
+	return doc.ID
+}
+
+// Returns the ID field of STAT_SAL1L2
+func (doc *STAT_SAL1L2) GetID() string {
+	return doc.ID
+}
+
+// Returns the ID field of STAT_SEEPS
+func (doc *STAT_SEEPS) GetID() string {
+	return doc.ID
+}
+
+// Returns the ID field of STAT_SEEPS_MPR
+func (doc *STAT_SEEPS_MPR) GetID() string {
+	return doc.ID
+}
+
+// Returns the ID field of STAT_SL1L2
+func (doc *STAT_SL1L2) GetID() string {
+	return doc.ID
+}
+
+// Returns the ID field of STAT_SSIDX
+func (doc *STAT_SSIDX) GetID() string {
+	return doc.ID
+}
+
+// Returns the ID field of STAT_SSVAR
+func (doc *STAT_SSVAR) GetID() string {
+	return doc.ID
+}
+
+// Returns the ID field of STAT_VAL1L2
+func (doc *STAT_VAL1L2) GetID() string {
+	return doc.ID
+}
+
+// Returns the ID field of STAT_VCNT
+func (doc *STAT_VCNT) GetID() string {
+	return doc.ID
+}
+
+// Returns the ID field of STAT_VL1L2
+func (doc *STAT_VL1L2) GetID() string {
+	return doc.ID
+}
+
+// Returns the ID field of TCST_PROBRIRW
+func (doc *TCST_PROBRIRW) GetID() string {
+	return doc.ID
+}
+
+// Returns the ID field of TCST_TCDIAG
+func (doc *TCST_TCDIAG) GetID() string {
+	return doc.ID
+}
+
+// Returns the ID field of TCST_TCMPR
+func (doc *TCST_TCMPR) GetID() string {
+	return doc.ID
+}
+
 // Header struct definitions
 
 // Represents the header field of a MODE_CTS document
