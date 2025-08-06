@@ -120,7 +120,7 @@ func ParseLine(dataSetName string, headerLine string, dataLine string, docs *map
 	valid, filetype := isValidFileType(fileName)
 	if !valid {
 		// Skip undesired files
-		return *docs, fmt.Errorf("Skipping %s file", filetype)
+		return *docs, fmt.Errorf("skipping %s file", filetype)
 	}
 
 	// get the lineType
@@ -198,7 +198,7 @@ func ParseLine(dataSetName string, headerLine string, dataLine string, docs *map
 		// now we need to add the data to the document
 		doc := (*docs)[metaData.ID]
 		if _err := doc.AddDataElement(dataKey, dataData); _err != nil {
-			return *docs, fmt.Errorf("problem adding data to document %v", err)
+			return *docs, fmt.Errorf("problem adding data to document %w", err)
 		}
 		return *docs, _err
 	}
