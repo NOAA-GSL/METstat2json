@@ -1007,7 +1007,10 @@ func overRideDefinedMetDataTypes(metDataTypesForLines map[string]string, fieldNa
 	metDataTypesForLines["EIQR_BCU"] = "validtypes.ValidFloat"
 	metDataTypesForLines["ASPEED"] = "validtypes.ValidInt"
 	metDataTypesForLines["ARRP"] = "validtypes.ValidInt"
-	metDataTypesForLines["ADEPTH"] = "validtypes.ValidInt"
+	metDataTypesForLines["ADEPTH"] = "validtypes.ValidString"         // TCST_TCMPR - Should be one of "D,M,S,X" per the link from the met-tc overview: https://science.nrlmry.navy.mil/atcf/docs/database/new/abdeck.txt
+	metDataTypesForLines["BDEPTH"] = "validtypes.ValidString"         // TCST_TCMPR - Should be one of "D,M,S,X" per the link from the met-tc overview: https://science.nrlmry.navy.mil/atcf/docs/database/new/abdeck.txt
+	metDataTypesForLines["DIAG_SOURCE"] = "validtypes.ValidString"    // TCST_TCDIAG
+	metDataTypesForLines["OBS_CLIMO_MEAN"] = "validtypes.ValidString" // STAT_ORANK
 
 	fieldNameMap["RIRW_WINDOW"] = "validtypes.ValidInt"
 	fieldNameMap["F[0-9]*_O[0-9]*"] = "validtypes.ValidString"
@@ -1024,7 +1027,10 @@ func overRideDefinedMetDataTypes(metDataTypesForLines map[string]string, fieldNa
 	fieldNameMap["EIQR_BCU"] = "validtypes.ValidFloat"
 	fieldNameMap["ASPEED"] = "validtypes.ValidInt"
 	fieldNameMap["ARRP"] = "validtypes.ValidInt"
-	fieldNameMap["ADEPTH"] = "validtypes.ValidInt"
+	fieldNameMap["ADEPTH"] = "validtypes.ValidString"         // TCST_TCMPR - Should be one of "D,M,S,X" per the link from the met-tc overview: https://science.nrlmry.navy.mil/atcf/docs/database/new/abdeck.txt
+	fieldNameMap["BDEPTH"] = "validtypes.ValidString"         // TCST_TCMPR - Should be one of "D,M,S,X" per the link from the met-tc overview: https://science.nrlmry.navy.mil/atcf/docs/database/new/abdeck.txt
+	fieldNameMap["DIAG_SOURCE"] = "validtypes.ValidString"    // TCST_TCDIAG
+	fieldNameMap["OBS_CLIMO_MEAN"] = "validtypes.ValidString" // STAT_ORANK
 
 	// Uncomment the following to look for missing data types in the MET user guide files.
 	var found bool
@@ -1096,11 +1102,11 @@ func getPatterns() []Pattern {
 		{match: regexp.MustCompile(`(N_DIAG)`), dType: "validtypes.ValidInt", structField: "DIAG", structType: "map[string]interface{}"},
 		// single patterns
 		{match: regexp.MustCompile("BASER_[0-9]*"), dType: "validtypes.ValidFloat", structField: "BASER_I", structType: "map[string]interface{}"},
-		{match: regexp.MustCompile("BIN_[0-9]*"), dType: "validtypes.ValidInt", structField: "BIN_I", structType: "validtypes.ValidInt"},
+		{match: regexp.MustCompile("BIN_[0-9]*"), dType: "validtypes.ValidFloat", structField: "BIN_I", structType: "validtypes.ValidInt"}, // float? STAT_PHIST - BIN_SIZE 0.05 - see getRepeatingKeysAndType as well
 		{match: regexp.MustCompile("CALIBRATION_[0-9]*"), dType: "validtypes.ValidFloat", structField: "CALIBRATION_I", structType: "validtypes.ValidFloat"},
 		{match: regexp.MustCompile("CL_[0-9]*"), dType: "validtypes.ValidFloat", structField: "CL_I", structType: "validtypes.ValidFloat"},
 		{match: regexp.MustCompile("DIAG_[0-9]*"), dType: "validtypes.ValidFloat", structField: "DIAG_I", structType: "validtypes.ValidFloat"},
-		{match: regexp.MustCompile("ENS_[0-9]*"), dType: "validtypes.ValidInt", structField: "ENS_I", structType: "validtypes.ValidInt"},
+		{match: regexp.MustCompile("ENS_[0-9]*"), dType: "validtypes.ValidFloat", structField: "ENS_I", structType: "validtypes.ValidFloat"}, // float? STAT_ORANK - ENS_MEAN 272.52432
 		{match: regexp.MustCompile("F[0-9]*_O[0-9]*"), dType: "validtypes.ValidString", structField: "FI_OI", structType: "validtypes.ValidString"},
 		{match: regexp.MustCompile("[A-Z]F[0-9]*_[A-Z]O[0-9]*"), dType: "validtypes.ValidString", structField: "AZFI_AZOI", structType: "validtypes.ValidString"},
 		{match: regexp.MustCompile("LIKELIHOOD_[0-9]*"), dType: "validtypes.ValidFloat", structField: "LIKELIHOOD_I", structType: "validtypes.ValidFloat"},
@@ -1120,7 +1126,7 @@ func getPatterns() []Pattern {
 		{match: regexp.MustCompile("REFINEMENT_[0-9]*"), dType: "validtypes.ValidFloat", structField: "REFINEMENT_I", structType: "validtypes.ValidFloat"},
 		{match: regexp.MustCompile("RELP_[0-9]*"), dType: "validtypes.ValidFloat", structField: "RELP_I", structType: "validtypes.ValidFloat"},
 		{match: regexp.MustCompile("THRESH_[0-9]*"), dType: "validtypes.ValidInt", structField: "THRESH_I", structType: "validtypes.ValidInt"},
-		{match: regexp.MustCompile("VALUE_[0-9]*"), dType: "validtypes.ValidInt", structField: "VALUE_I", structType: "validtypes.ValidInt"},
+		{match: regexp.MustCompile("VALUE_[0-9]*"), dType: "validtypes.ValidFloat", structField: "VALUE_I", structType: "validtypes.ValidFloat"},
 	}
 }
 

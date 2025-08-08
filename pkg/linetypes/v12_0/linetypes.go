@@ -2165,7 +2165,7 @@ func (s *MODE_CTS_header) fill(fields []string) error {
 	appendErrorWithContext(&errs, "OBS_UNITS", s.OBS_UNITS.UnmarshalText([]byte(fields[19])))
 	appendErrorWithContext(&errs, "OBS_LEV", s.OBS_LEV.UnmarshalText([]byte(fields[20])))
 	appendErrorWithContext(&errs, "OBTYPE", s.OBTYPE.UnmarshalText([]byte(fields[21])))
-	appendErrorWithContext(&errs, "LINE_TYPE", s.LINE_TYPE.UnmarshalText([]byte("MODE_CTS"))) // hardcode the LINE_TYPE
+	appendErrorWithContext(&errs, "LINE_TYPE", s.LINE_TYPE.UnmarshalText([]byte("MODE_CTS"))) // hardcode the LINE_TYPE - it doesn't exist in the stat file fields
 	return errors.Join(errs...)
 }
 
@@ -2193,7 +2193,7 @@ func (s *MODE_OBJ_header) fill(fields []string) error {
 	appendErrorWithContext(&errs, "OBS_UNITS", s.OBS_UNITS.UnmarshalText([]byte(fields[19])))
 	appendErrorWithContext(&errs, "OBS_LEV", s.OBS_LEV.UnmarshalText([]byte(fields[20])))
 	appendErrorWithContext(&errs, "OBTYPE", s.OBTYPE.UnmarshalText([]byte(fields[21])))
-	appendErrorWithContext(&errs, "LINE_TYPE", s.LINE_TYPE.UnmarshalText([]byte("MODE_OBJ"))) // hardcode the LINE_TYPE
+	appendErrorWithContext(&errs, "LINE_TYPE", s.LINE_TYPE.UnmarshalText([]byte("MODE_OBJ"))) // hardcode the LINE_TYPE - it doesn't exist in the stat file fields
 	return errors.Join(errs...)
 }
 
@@ -2222,7 +2222,7 @@ func (s *MTD_2DSINGLE_header) fill(fields []string) error {
 	appendErrorWithContext(&errs, "OBS_VAR", s.OBS_VAR.UnmarshalText([]byte(fields[19])))
 	appendErrorWithContext(&errs, "OBS_UNITS", s.OBS_UNITS.UnmarshalText([]byte(fields[20])))
 	appendErrorWithContext(&errs, "OBS_LEV", s.OBS_LEV.UnmarshalText([]byte(fields[21])))
-	appendErrorWithContext(&errs, "LINE_TYPE", s.LINE_TYPE.UnmarshalText([]byte("MTD_2DSINGLE"))) // hardcode the LINE_TYPE
+	appendErrorWithContext(&errs, "LINE_TYPE", s.LINE_TYPE.UnmarshalText([]byte("MTD_2DSINGLE"))) // hardcode the LINE_TYPE - it doesn't exist in the stat file fields
 	return errors.Join(errs...)
 }
 
@@ -2251,7 +2251,7 @@ func (s *MTD_3DPAIR_header) fill(fields []string) error {
 	appendErrorWithContext(&errs, "OBS_VAR", s.OBS_VAR.UnmarshalText([]byte(fields[19])))
 	appendErrorWithContext(&errs, "OBS_UNITS", s.OBS_UNITS.UnmarshalText([]byte(fields[20])))
 	appendErrorWithContext(&errs, "OBS_LEV", s.OBS_LEV.UnmarshalText([]byte(fields[21])))
-	appendErrorWithContext(&errs, "LINE_TYPE", s.LINE_TYPE.UnmarshalText([]byte("MTD_3DPAIR"))) // hardcode the LINE_TYPE
+	appendErrorWithContext(&errs, "LINE_TYPE", s.LINE_TYPE.UnmarshalText([]byte("MTD_3DPAIR"))) // hardcode the LINE_TYPE - it doesn't exist in the stat file fields
 	return errors.Join(errs...)
 }
 
@@ -2280,7 +2280,7 @@ func (s *MTD_3DSINGLE_header) fill(fields []string) error {
 	appendErrorWithContext(&errs, "OBS_VAR", s.OBS_VAR.UnmarshalText([]byte(fields[19])))
 	appendErrorWithContext(&errs, "OBS_UNITS", s.OBS_UNITS.UnmarshalText([]byte(fields[20])))
 	appendErrorWithContext(&errs, "OBS_LEV", s.OBS_LEV.UnmarshalText([]byte(fields[21])))
-	appendErrorWithContext(&errs, "LINE_TYPE", s.LINE_TYPE.UnmarshalText([]byte("MTD_3DSINGLE"))) // hardcode the LINE_TYPE
+	appendErrorWithContext(&errs, "LINE_TYPE", s.LINE_TYPE.UnmarshalText([]byte("MTD_3DSINGLE"))) // hardcode the LINE_TYPE - it doesn't exist in the stat file fields
 	return errors.Join(errs...)
 }
 
@@ -3693,7 +3693,7 @@ type STAT_DMAP_data struct {
 type STAT_ECLV_data struct {
 	TOTAL       validtypes.ValidInt    `json:"TOTAL,omitzero"`
 	BASER       validtypes.ValidFloat  `json:"BASER,omitzero"`
-	VALUE_BASER validtypes.ValidInt    `json:"VALUE_BASER,omitzero"`
+	VALUE_BASER validtypes.ValidFloat  `json:"VALUE_BASER,omitzero"`
 	PTS         map[string]interface{} `json:"PTS,omitzero"`
 }
 
@@ -3823,7 +3823,7 @@ type STAT_MPR_data struct {
 	FCST             validtypes.ValidFloat  `json:"FCST,omitzero"`
 	OBS              validtypes.ValidFloat  `json:"OBS,omitzero"`
 	OBS_QC           validtypes.ValidString `json:"OBS_QC,omitzero"`
-	OBS_CLIMO_MEAN   validtypes.ValidFloat  `json:"OBS_CLIMO_MEAN,omitzero"`
+	OBS_CLIMO_MEAN   validtypes.ValidString `json:"OBS_CLIMO_MEAN,omitzero"`
 	OBS_CLIMO_STDEV  validtypes.ValidFloat  `json:"OBS_CLIMO_STDEV,omitzero"`
 	OBS_CLIMO_CDF    validtypes.ValidFloat  `json:"OBS_CLIMO_CDF,omitzero"`
 	FCST_CLIMO_MEAN  validtypes.ValidFloat  `json:"FCST_CLIMO_MEAN,omitzero"`
@@ -3970,10 +3970,10 @@ type STAT_ORANK_data struct {
 	N_ENS_VLD        validtypes.ValidInt    `json:"N_ENS_VLD,omitzero"`
 	ENS              map[string]interface{} `json:"ENS,omitzero"`
 	OBS_QC           validtypes.ValidString `json:"OBS_QC,omitzero"`
-	ENS_MEAN         validtypes.ValidInt    `json:"ENS_MEAN,omitzero"`
-	OBS_CLIMO_MEAN   validtypes.ValidFloat  `json:"OBS_CLIMO_MEAN,omitzero"`
+	ENS_MEAN         validtypes.ValidFloat  `json:"ENS_MEAN,omitzero"`
+	OBS_CLIMO_MEAN   validtypes.ValidString `json:"OBS_CLIMO_MEAN,omitzero"`
 	SPREAD           validtypes.ValidFloat  `json:"SPREAD,omitzero"`
-	ENS_MEAN_OERR    validtypes.ValidInt    `json:"ENS_MEAN_OERR,omitzero"`
+	ENS_MEAN_OERR    validtypes.ValidFloat  `json:"ENS_MEAN_OERR,omitzero"`
 	SPREAD_OERR      validtypes.ValidFloat  `json:"SPREAD_OERR,omitzero"`
 	SPREAD_PLUS_OERR validtypes.ValidFloat  `json:"SPREAD_PLUS_OERR,omitzero"`
 	OBS_CLIMO_STDEV  validtypes.ValidFloat  `json:"OBS_CLIMO_STDEV,omitzero"`
@@ -3988,7 +3988,7 @@ type STAT_PCT_data struct {
 
 type STAT_PHIST_data struct {
 	TOTAL    validtypes.ValidInt    `json:"TOTAL,omitzero"`
-	BIN_SIZE validtypes.ValidInt    `json:"BIN_SIZE,omitzero"`
+	BIN_SIZE validtypes.ValidFloat  `json:"BIN_SIZE,omitzero"`
 	BIN      map[string]interface{} `json:"BIN,omitzero"`
 }
 
@@ -4111,8 +4111,8 @@ type STAT_SSIDX_data struct {
 type STAT_SSVAR_data struct {
 	TOTAL       validtypes.ValidInt   `json:"TOTAL,omitzero"`
 	N_BIN       validtypes.ValidInt   `json:"N_BIN,omitzero"`
-	BIN_I       validtypes.ValidInt   `json:"BIN_I,omitzero"`
-	BIN_N       validtypes.ValidInt   `json:"BIN_N,omitzero"`
+	BIN_I       validtypes.ValidFloat `json:"BIN_I,omitzero"`
+	BIN_N       validtypes.ValidFloat `json:"BIN_N,omitzero"`
 	VAR_MIN     validtypes.ValidFloat `json:"VAR_MIN,omitzero"`
 	VAR_MAX     validtypes.ValidFloat `json:"VAR_MAX,omitzero"`
 	VAR_MEAN    validtypes.ValidFloat `json:"VAR_MEAN,omitzero"`
@@ -4359,8 +4359,8 @@ type TCST_TCMPR_data struct {
 	BDIR           validtypes.ValidFloat  `json:"BDIR,omitzero"`
 	ASPEED         validtypes.ValidInt    `json:"ASPEED,omitzero"`
 	BSPEED         validtypes.ValidFloat  `json:"BSPEED,omitzero"`
-	ADEPTH         validtypes.ValidInt    `json:"ADEPTH,omitzero"`
-	BDEPTH         validtypes.ValidFloat  `json:"BDEPTH,omitzero"`
+	ADEPTH         validtypes.ValidString `json:"ADEPTH,omitzero"`
+	BDEPTH         validtypes.ValidString `json:"BDEPTH,omitzero"`
 	NUM_MEMBERS    validtypes.ValidFloat  `json:"NUM_MEMBERS,omitzero"`
 	TRACK_SPREAD   validtypes.ValidFloat  `json:"TRACK_SPREAD,omitzero"`
 	TRACK_STDEV    validtypes.ValidFloat  `json:"TRACK_STDEV,omitzero"`
