@@ -2,10 +2,13 @@ package util
 
 import (
 	"testing"
+
+	"github.com/stretchr/testify/require"
 )
 
 func TestGetLineType(t *testing.T) {
 	tests := []struct {
+		name          string
 		headerLine    string
 		dataLine      string
 		fileType      string
@@ -19,6 +22,7 @@ func TestGetLineType(t *testing.T) {
 		wantErr       bool
 	}{
 		{
+			name:          "Valid SAL1L2 line 1",
 			headerLine:    "VERSION MODEL DESC FCST_LEAD FCST_VALID_BEG  FCST_VALID_END  OBS_LEAD OBS_VALID_BEG   OBS_VALID_END   FCST_VAR  FCST_UNITS FCST_LEV OBS_VAR   OBS_UNITS OBS_LEV OBTYPE VX_MASK INTERP_MTHD INTERP_PNTS FCST_THRESH OBS_THRESH COV_THRESH ALPHA LINE_TYPE",
 			dataLine:      "V12.0.0 ECMWF NA   060000    20241031_000000 20241031_000000 000000   20241031_000000 20241031_000000 TMP       K          P1000    TMP       K         P1000   ANLYS  FULL    NEAREST     1           NA          NA         NA         NA    SAL1L2    1038240   0.84332      0.45998         6.19154        7.38574        7.9421     1.02924",
 			fileType:      "STAT",
@@ -32,6 +36,7 @@ func TestGetLineType(t *testing.T) {
 			wantErr:       false,
 		},
 		{
+			name:          "Valid SAL1L2 line 2",
 			headerLine:    "VERSION MODEL DESC FCST_LEAD FCST_VALID_BEG  FCST_VALID_END  OBS_LEAD OBS_VALID_BEG   OBS_VALID_END   FCST_VAR  FCST_UNITS FCST_LEV OBS_VAR   OBS_UNITS OBS_LEV OBTYPE VX_MASK INTERP_MTHD INTERP_PNTS FCST_THRESH OBS_THRESH COV_THRESH ALPHA LINE_TYPE",
 			dataLine:      "V12.0.0 ECMWF NA   060000    20241031_000000 20241031_000000 000000   20241031_000000 20241031_000000 TMP       K          P1000    TMP       K         P1000   ANLYS  NAO     NEAREST     1           NA          NA         NA         NA    SAL1L2      18444  -0.56214     -0.71048        12.15072       12.51109       12.28397    0.54932",
 			fileType:      "STAT",
@@ -45,6 +50,7 @@ func TestGetLineType(t *testing.T) {
 			wantErr:       false,
 		},
 		{
+			name:          "Valid SAL1L2 line 3",
 			headerLine:    "VERSION MODEL DESC FCST_LEAD FCST_VALID_BEG  FCST_VALID_END  OBS_LEAD OBS_VALID_BEG   OBS_VALID_END   FCST_VAR  FCST_UNITS FCST_LEV OBS_VAR   OBS_UNITS OBS_LEV OBTYPE VX_MASK INTERP_MTHD INTERP_PNTS FCST_THRESH OBS_THRESH COV_THRESH ALPHA LINE_TYPE",
 			dataLine:      "V12.0.0 ECMWF NA   060000    20241031_000000 20241031_000000 000000   20241031_000000 20241031_000000 TMP       K          P850     TMP       K         P850    ANLYS  FULL    NEAREST     1           NA          NA         NA         NA    SAL1L2    1038240   0.82265      0.63798        11.1637        11.68235       12.24054    0.8205",
 			fileType:      "STAT",
@@ -57,30 +63,49 @@ func TestGetLineType(t *testing.T) {
 			wantDescIndex: 2,
 			wantErr:       false,
 		},
+		{
+			name:          "Valid SL1L2 line",
+			headerLine:    "VERSION MODEL DESC FCST_LEAD FCST_VALID_BEG  FCST_VALID_END  OBS_LEAD OBS_VALID_BEG   OBS_VALID_END   FCST_VAR  FCST_UNITS FCST_LEV OBS_VAR   OBS_UNITS OBS_LEV OBTYPE VX_MASK INTERP_MTHD INTERP_PNTS FCST_THRESH OBS_THRESH COV_THRESH ALPHA LINE_TYPE",
+			dataLine:      "V12.0.0 GFS   NA   1080000   20241101_180000 20241101_180000 000000   20241101_180000 20241101_180000 TMP       K          P1000    TMP       K         P1000   ANLYS  FULL    NEAREST     1           NA          NA         NA         NA    SL1L2     1038240   288.60858      288.60569        83462.47768        83465.15638        83462.22807       0.96574",
+			fileType:      "STAT",
+			fileName:      "grid_stat_GFS_TMP_vs_ANLYS_TMP_Z2_1080000L_20241101_180000V.stat",
+			version:       "V12.0.0",
+			wantType:      "STAT_SL1L2",
+			wantHeader:    []string{"V12.0.0", "GFS", "NA", "", "1730484000", "1730484000", "000000", "1730484000", "1730484000", "TMP", "K", "P1000", "TMP", "K", "P1000", "ANLYS", "FULL", "NEAREST", "1", "NA", "NA", "NA", "NA", "SL1L2"},
+			wantData:      []string{"1038240", "288.60858", "288.60569", "83462.47768", "83465.15638", "83462.22807", "0.96574"},
+			wantKey:       "1080000",
+			wantDescIndex: 2,
+			wantErr:       false,
+		},
+		{
+			name:          "Truncated SL1L2 data line",
+			headerLine:    "VERSION MODEL DESC FCST_LEAD FCST_VALID_BEG  FCST_VALID_END  OBS_LEAD OBS_VALID_BEG   OBS_VALID_END   FCST_VAR  FCST_UNITS FCST_LEV OBS_VAR   OBS_UNITS OBS_LEV OBTYPE VX_MASK INTERP_MTHD INTERP_PNTS FCST_THRESH OBS_THRESH COV_THRESH ALPHA LINE_TYPE",
+			dataLine:      "V12.0.0 GFS   NA   1080000   20241101_180000 20241101_180000 000000   20241101_180000 20241101_180000 RH",
+			fileType:      "STAT",
+			fileName:      "grid_stat_GFS_TMP_vs_ANLYS_TMP_Z2_1080000L_20241101_180000V.stat",
+			version:       "V12.0.0",
+			wantType:      "",
+			wantHeader:    []string{},
+			wantData:      []string{},
+			wantKey:       "",
+			wantDescIndex: -1,
+			wantErr:       true,
+		},
 	}
 
 	for _, tt := range tests {
-		t.Run(tt.headerLine, func(t *testing.T) {
+		t.Run(tt.name, func(t *testing.T) {
 			// sometimes (like this one) the gotData is not returned because the header fields for the data are not there
 			gotType, gotHeader, gotData, gotKey, gotDescIndex, err := GetLineType(tt.headerLine, tt.dataLine, tt.fileName, tt.version)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("GetLineType() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if gotType != tt.wantType {
-				t.Errorf("GetLineType() gotType = %v, want %v", gotType, tt.wantType)
-			}
-			if !equal(gotHeader, tt.wantHeader) {
-				t.Errorf("GetLineType() gotHeader = %v, want %v", gotHeader, tt.wantHeader)
-			}
-			if !equal(gotData, tt.wantData) {
-				t.Errorf("GetLineType() gotData = %v, want %v", gotData, tt.wantData)
-			}
-			if gotKey != tt.wantKey {
-				t.Errorf("GetLineType() gotKey = %v, want %v", gotKey, tt.wantKey)
-			}
-			if gotDescIndex != tt.wantDescIndex {
-				t.Errorf("GetLineType() gotKey = %v, want %v", gotDescIndex, tt.wantDescIndex)
+			if tt.wantErr {
+				require.Error(t, err)
+			} else {
+				require.NoError(t, err)
+				require.Equal(t, tt.wantType, gotType)
+				require.Equal(t, tt.wantHeader, gotHeader)
+				require.Equal(t, tt.wantData, gotData)
+				require.Equal(t, tt.wantKey, gotKey)
+				require.Equal(t, tt.wantDescIndex, gotDescIndex)
 			}
 		})
 	}
@@ -127,12 +152,8 @@ func TestSplitColumnDefLine(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.fileType, func(t *testing.T) {
 			gotHeader, gotData := SplitColumnDefLine(tt.fileType, tt.fieldStr)
-			if !equal(gotHeader, tt.wantHeader) {
-				t.Errorf("SplitColumnDefLine() gotHeader = %v, want %v", gotHeader, tt.wantHeader)
-			}
-			if !equal(gotData, tt.wantData) {
-				t.Errorf("SplitColumnDefLine() gotData = %v, want %v", gotData, tt.wantData)
-			}
+			require.Equal(t, tt.wantHeader, gotHeader)
+			require.Equal(t, tt.wantData, gotData)
 		})
 	}
 }
@@ -186,60 +207,70 @@ func TestFindType(t *testing.T) {
 
 func TestGetLeadFromInitValid(t *testing.T) {
 	tests := []struct {
+		name           string
 		headerFields   []string
 		data           []string
 		dataFieldIndex int
 		want           string
 	}{
 		{
+			name:           "Test1",
 			headerFields:   []string{"INIT", "LEAD", "VALID"},
 			data:           []string{"20241031_000000", "NA", "20241031_060000"},
 			dataFieldIndex: 1,
 			want:           "060000",
 		},
 		{
+			name:           "Test2",
 			headerFields:   []string{"INIT", "FCST_LEAD", "VALID"},
 			data:           []string{"20241031_000000", "NA", "20241031_120000"},
 			dataFieldIndex: 1,
 			want:           "120000",
 		},
 		{
+			name:           "Test3",
 			headerFields:   []string{"INIT", "FCST_LEAD", "VALID"},
 			data:           []string{"20241031_000000", "NA", "20241105_000000"},
 			dataFieldIndex: 1,
 			want:           "1200000",
 		},
 		{
+			name:           "Test4",
 			headerFields:   []string{"INIT", "LEAD", "VALID"},
 			data:           []string{"20241031_000000", "NA", "20241030_180000"},
 			dataFieldIndex: 1,
 			want:           "-060000",
 		},
 		{
+			name:           "Test5",
 			headerFields:   []string{"INIT", "LEAD", "VALID"},
 			data:           []string{"INVALID_DATE", "NA", "20241031_060000"},
 			dataFieldIndex: 1,
 			want:           "MISSING",
 		},
 		{
+			name:           "Test6",
 			headerFields:   []string{"INIT", "LEAD", "VALID"},
 			data:           []string{"20241031_000000", "NA", "INVALID_DATE"},
 			dataFieldIndex: 1,
 			want:           "MISSING",
 		},
 		{
+			name:           "Test7",
 			headerFields:   []string{"INIT", "LEAD", "VALID"},
 			data:           []string{"20241031_000000", "NA"},
 			dataFieldIndex: 1,
 			want:           "MISSING",
 		},
 		{
+			name:           "Test8",
 			headerFields:   []string{"INIT", "LEAD", "OTHER"},
 			data:           []string{"20241031_000000", "NA", "20241031_060000"},
 			dataFieldIndex: 1,
 			want:           "MISSING",
 		},
 		{
+			name:           "Test9",
 			headerFields:   []string{"OTHER", "LEAD", "VALID"},
 			data:           []string{"20241031_000000", "NA", "20241031_060000"},
 			dataFieldIndex: 1,
@@ -248,23 +279,9 @@ func TestGetLeadFromInitValid(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		t.Run("", func(t *testing.T) {
+		t.Run(tt.name, func(t *testing.T) {
 			got := getLeadFromInitValid(tt.headerFields, tt.data, tt.dataFieldIndex)
-			if got != tt.want {
-				t.Errorf("getLeadFromInitValid() = %v, want %v", got, tt.want)
-			}
+			require.Equal(t, tt.want, got)
 		})
 	}
-}
-
-func equal(a, b []string) bool {
-	if len(a) != len(b) {
-		return false
-	}
-	for i := range a {
-		if a[i] != b[i] {
-			return false
-		}
-	}
-	return true
 }

@@ -261,10 +261,13 @@ func GetLineType(headerLine string, dataLine string, fileName string, version st
 	}
 	headerStringFields, _ := SplitColumnDefLine(fileLineType, headerLine)
 	dataStartIndex := len(headerStringFields)
+	if dataStartIndex > len(allData) {
+		return "", nil, nil, "", desc_index, fmt.Errorf("UNPARSABLE_LINE: header fields (%d) > data fields (%d). In file: %s", dataStartIndex, len(allData), fileName)
+	}
 	dataData := allData[dataStartIndex:]
 	lineTypeIndex := len(headerStringFields) - 1
 	if lineTypeIndex > len(allData) {
-		return "", nil, nil, "", desc_index, fmt.Errorf("UNPARSABLE_LINE: lineTypeIndex is greater than the length of the data line")
+		return "", nil, nil, "", desc_index, fmt.Errorf("UNPARSABLE_LINE: lineTypeIndex is greater than the length of the data line. In file: %s", fileName)
 	}
 	// now we know the lineType for  files.
 	if separatorField == "LINE_TYPE" {
