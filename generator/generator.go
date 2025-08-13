@@ -46,28 +46,21 @@ type Pattern struct {
 	structType  string
 }
 
-var metHeaderColumnsFileUrl = util.MetHeaderColumnsFileUrl_v12_0
-
-var metSrcFiles = util.MetSrcFiles
-
-var metUserDocFiles = util.MetUserDocFiles
-
-func setMetVersion(parserVersion string) error {
+func getMetHeaderColumnsFileURL(parserVersion string) (string, error) {
 	switch parserVersion {
 	case "v12_0":
-		metHeaderColumnsFileUrl = util.MetHeaderColumnsFileUrl_v12_0
+		return util.MetHeaderColumnsFileUrl_v12_0, nil
 	case "v11_1":
-		metHeaderColumnsFileUrl = util.MetHeaderColumnsFileUrl_v11_1
+		return util.MetHeaderColumnsFileUrl_v11_1, nil
 	case "v11_0":
-		metHeaderColumnsFileUrl = util.MetHeaderColumnsFileUrl_v11_0
+		return util.MetHeaderColumnsFileUrl_v11_0, nil
 	case "v10_1":
-		metHeaderColumnsFileUrl = util.MetHeaderColumnsFileUrl_v10_1
+		return util.MetHeaderColumnsFileUrl_v10_1, nil
 	case "v10_0":
-		metHeaderColumnsFileUrl = util.MetHeaderColumnsFileUrl_v10_0
+		return util.MetHeaderColumnsFileUrl_v10_0, nil
 	default:
-		return fmt.Errorf("unsupported MET parserVersion: %s - supported are v12_0, v11_1, v11_0, v10_1, v10_0", parserVersion)
+		return "", fmt.Errorf("unsupported MET parserVersion: %s - supported are v12_0, v11_1, v11_0, v10_1, v10_0", parserVersion)
 	}
-	return nil
 }
 
 /*
@@ -91,13 +84,14 @@ func main() {
 	flag.StringVar(&version, "version", "", "Specify the parser version (e.g., -version=v12.0|v11.1|v11.0|v10.1|v10.0)")
 	flag.Parse()
 	parserVersion := strings.ReplaceAll(version, ".", "_")
-	if err := setMetVersion(parserVersion); err != nil {
+	metHeaderColumnsFileUrl, err := getMetHeaderColumnsFileURL(parserVersion)
+	if err != nil {
 		fmt.Println("error setting MET version: ", err)
 		os.Exit(1)
 	}
 	metLines, fieldNameMap := getColumnLinesAndMapForUrl(metHeaderColumnsFileUrl)
-	metDataTypesForLines := fillMetDataMapFromSrcFiles(make(map[string]string), fieldNameMap)
-	metDataTypesForLines = fillMetDataMapFromUserGuide(metDataTypesForLines, fieldNameMap)
+	metDataTypesForLines := fillMetDataMapFromSrcFiles(util.MetSrcFiles, make(map[string]string), fieldNameMap)
+	metDataTypesForLines = fillMetDataMapFromUserGuide(util.MetUserDocFiles, metDataTypesForLines, fieldNameMap)
 
 	// 2. Assemble code generation data
 	allDocumentStructs := make(map[string]documentStructData)
@@ -805,12 +799,13 @@ func getRepeatingKeysAndTypes(dataField string, fileType string, lineType string
 	return []string{}, ""
 }
 
-func fillMetDataMapFromSrcFiles(metDataTypesForLines map[string]string, fieldNameMap map[string]string) map[string]string {
+// Fetches & scans the given MET source files for specific C/C++ type conversion fields, and then sets the token type based on the results
+func fillMetDataMapFromSrcFiles(srcFileURLs []string, metDataTypesForLines map[string]string, fieldNameMap map[string]string) map[string]string {
 	// use a map (atoLines) as a set to avoid duplicate lines
 	atoLines := make(map[string]bool)
-	// iterate through the metSrcFiles to get the data types for the fields
+	// iterate through the srcFileURLs to get the data types for the fields
 	matchConvertLine := regexp.MustCompile(`= ato[fi]\(l.get_item\(`)
-	for _, url := range metSrcFiles {
+	for _, url := range srcFileURLs {
 		lines := getLinesForUrl(url)
 		// iterate through the lines to find the data types
 		for _, line := range lines {
@@ -846,7 +841,7 @@ func fillMetDataMapFromSrcFiles(metDataTypesForLines map[string]string, fieldNam
 	return metDataTypesForLines
 }
 
-func fillMetDataMapFromUserGuide(metDataTypesForLines, fieldNameMap map[string]string) map[string]string {
+func fillMetDataMapFromUserGuide(userGuideURLS []string, metDataTypesForLines, fieldNameMap map[string]string) map[string]string {
 	// MET user guide files with data type definitions
 	// Using the slower regexp instead of a string match because I don't know if the line will have
 	// extra leading spaces or not. These documents might get reformatted and the leading spaces might
@@ -855,7 +850,7 @@ func fillMetDataMapFromUserGuide(metDataTypesForLines, fieldNameMap map[string]s
 	linePrefix := regexp.MustCompile(`^ *- `)
 	// The regexp to identify the start of a column header
 	lineColumnStart := regexp.MustCompile(`^\s*\* - Column`)
-	for _, url := range metUserDocFiles {
+	for _, url := range userGuideURLS {
 		docFileLines := getLinesForUrl(url)
 		var parts []string
 		for i := 0; i < len(docFileLines)-1; i++ {
@@ -989,8 +984,8 @@ func fillMetDataMapFromUserGuide(metDataTypesForLines, fieldNameMap map[string]s
 	return metDataTypesForLines
 }
 
-// overRideDefinedMetDataTypes is used to manually override the data types for specific fields that are defined in, or missing from the MET source
-// code & documentation that we reference.
+// overRideDefinedMetDataTypes manually overrides the data types for specific fields in the fieldNameMap & metDataTypesForLines that are incorrectly
+// defined in, or missing from the MET source code & documentation that we reference.
 func overRideDefinedMetDataTypes(metDataTypesForLines map[string]string, fieldNameMap map[string]string) (map[string]string, map[string]string) {
 	metDataTypesForLines["RIRW_WINDOW"] = "validtypes.ValidInt"
 	metDataTypesForLines["F[0-9]*_O[0-9]*"] = "validtypes.ValidString"
@@ -1130,11 +1125,19 @@ func getPatterns() []Pattern {
 	}
 }
 
+// reads the met_header_columns plaintext files published by the MET team, and returns the raw lines plus a map of each token in
+// the lines, with values initialized to UNDEFINED.
+//
+// Assumptions - each entry in the map is assumed to be unique or, if conflicts arise, is assumed to be of the same type.
+//
+// Returns:
+// - headerLines: All raw lines from the met_header_file
+// - fieldTypeByToken: map[token]type initialized to "UNDEFINED" for each token in the met_header_file
 func getColumnLinesAndMapForUrl(fileUrl string) ([]string, map[string]string) {
-	fieldNameMap := make(map[string]string)
-	lines := getLinesForUrl(fileUrl)
+	fieldTypeByToken := make(map[string]string)
+	headerLines := getLinesForUrl(fileUrl)
 	// split out all the fields to get a map of required fields
-	for _, line := range lines {
+	for _, line := range headerLines {
 		// get the prefix from the line
 		parts := strings.Split(line, ": VERSION")
 		if len(parts) < 2 {
@@ -1150,12 +1153,19 @@ func getColumnLinesAndMapForUrl(fileUrl string) ([]string, map[string]string) {
 		// the field names have the same data type all the different structs i.e. columnDef lines.
 		for _, field := range fields {
 			name := strings.ToLower(field)
-			fieldNameMap[strings.ToUpper(name)] = "UNDEFINED"
+			fieldTypeByToken[strings.ToUpper(name)] = "UNDEFINED"
 		}
 	}
-	return lines, fieldNameMap
+	return headerLines, fieldTypeByToken
 }
 
+// Fetches a plain-text file from a URL, and returns its contents split by newline
+//
+// E.g. - https://raw.githubusercontent.com/dtcenter/MET/refs/heads/main_v12.0/data/table_files/met_header_columns_V12.0.txt
+// E.g. - https://raw.githubusercontent.com/dtcenter/MET/refs/heads/main_v12.0/src/libcode/vx_analysis_util/mode_line.cc
+//
+// returns:
+//   - lines: File content split on '\n'
 func getLinesForUrl(fileUrl string) []string {
 	resp, err := http.Get(fileUrl)
 	if err != nil {
