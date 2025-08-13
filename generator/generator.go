@@ -434,7 +434,7 @@ func (s *{{ .HeaderStructName }}) fill(fields []string) error {
 
 	{{- range .Fields }}
 	{{- if .HardCodeLineType}}
-	appendErrorWithContext(&errs, "LINE_TYPE", s.LINE_TYPE.UnmarshalText([]byte("{{ $.DocumentStructName }}"))) //hardcode the LINE_TYPE
+	appendErrorWithContext(&errs, "LINE_TYPE", s.LINE_TYPE.UnmarshalText([]byte("{{ $.DocumentStructName }}"))) //hardcode the LINE_TYPE - it doesn't exist in the stat file fields
 	{{- else}}
 	appendErrorWithContext(&errs, "{{ .Name }}", s.{{ .Name }}.UnmarshalText([]byte(fields[{{ .Index }}])))
 	{{- end }}
