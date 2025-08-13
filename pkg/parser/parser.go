@@ -14,6 +14,7 @@ import (
 	"github.com/dtcenter/METstat2json/pkg/linetypes/v11_0"
 	"github.com/dtcenter/METstat2json/pkg/linetypes/v11_1"
 	"github.com/dtcenter/METstat2json/pkg/linetypes/v12_0"
+	"github.com/dtcenter/METstat2json/pkg/mettypes"
 	"github.com/dtcenter/METstat2json/pkg/util"
 )
 
@@ -45,7 +46,7 @@ The descIndex is used to trim the desc field to 10 characters.
 The parseLine function also uses the
 GetId function to determine the id of the data line. The id is derived from the headerData minus the dataKey fields and
 is returned in the form of a VxMetadata struct. The VxMetadata struct is then converted to a map[string]interface{}
-so that it can be passed to the GetDocForId function without the GetDocForId function needing to know the VxMetadata struct type.
+so that it can be passed to the NewDocForId function without the NewDocForId function needing to know the VxMetadata struct type.
 
 There are a couple of utility functions that are used to get the headerData without the NA values and to convert the VxMetadata struct.
 A document pointer is required as a place to store the parsed data. If the document is nil, a new document is created.
@@ -60,6 +61,7 @@ is not nil, it is added to the document map. If the external document is nil, a 
 
 const DOC_NOT_FOUND = "document not found"
 
+// Gets the MET version from the stat file data line so that we can determine which linetypes module to use.
 func getParserVersion(dataLine string) (string, error) {
 	metVersion := strings.ToLower(strings.Fields(dataLine)[0])
 	metVersionParts := strings.Split(metVersion, ".")
@@ -70,7 +72,26 @@ func getParserVersion(dataLine string) (string, error) {
 	return lineVersion, nil
 }
 
-func ParseLine(dataSetName string, headerLine string, dataLine string, docPtr *map[string]interface{}, fileName string, getExternalDocForId func(id string) (map[string]interface{}, error)) (map[string]interface{}, error) {
+// Filter out VIM *.swp and MacOS DS_STORE files.
+func isValidFileType(filename string) (bool, string) {
+	filename = filepath.Base(filename)
+	filePathParts := strings.Split(filename, ".")
+	fileType := filePathParts[1]
+	switch strings.ToUpper(fileType) {
+	case "SWP":
+		return false, fileType
+	case "DS_STORE":
+		return false, fileType
+	}
+	return true, fileType
+}
+
+// Main entrypoint to the library. Ideally, this should be the only thing consumers need to call.
+// Parses the headerLine & dataLine passed to it and adds it to the collection of JSON docs pointed to by docPtr.
+// (docPtr is a map[string]interface where key = docID & value = doc struct with header & data)
+// Uses the fileName to deduce the doc type.
+// dataSetName should be a <=10 char name which identifies the dataset.
+func ParseLine(dataSetName string, headerLine string, dataLine string, docs *map[string]mettypes.METdocument, fileName string, getExternalDocForId func(id string) (mettypes.METdocument, error)) (map[string]mettypes.METdocument, error) {
 	// recover from unexpected errors
 	defer func() {
 		if r := recover(); r != nil {
@@ -79,41 +100,36 @@ func ParseLine(dataSetName string, headerLine string, dataLine string, docPtr *m
 	}()
 
 	if dataSetName == "" {
-		return *docPtr, fmt.Errorf("dataSetName is empty")
+		return *docs, fmt.Errorf("dataSetName is empty")
 	}
 	if len(dataSetName) > 10 {
-		return *docPtr, fmt.Errorf("dataSetName is too long - must be <= 10 characters")
+		return *docs, fmt.Errorf("dataSetName is too long - must be <= 10 characters")
 	}
 	// get line version e.g. V12.0.0 -> v12_0
-	parserVersion, _err := getParserVersion(dataLine)
-	if _err != nil {
-		return *docPtr, fmt.Errorf("error getting parser version from line %s: %w", dataLine, _err)
+	parserVersion, err := getParserVersion(dataLine)
+	if err != nil {
+		return *docs, fmt.Errorf("error getting parser version from line %s: %w", dataLine, err)
 	}
 	if headerLine == "" {
-		return *docPtr, fmt.Errorf("empty header line")
+		return *docs, fmt.Errorf("empty header line")
 	}
 	if dataLine == "" {
-		return *docPtr, fmt.Errorf("empty data line")
+		return *docs, fmt.Errorf("empty data line")
 	}
-	// make sure we have the basename here
-	fileName = filepath.Base(fileName)
-	filePathParts := strings.Split(fileName, ".")
-	fileType := strings.ToUpper(filePathParts[1])
-	if fileType == "SWP" {
-		// skip the swp files - might be editing a file and don't want to parse the .swp file
-		return *docPtr, fmt.Errorf("skipping swp file")
-	}
-	if fileType == "DS_STORE" {
-		// skip the .DS_Store files
-		return *docPtr, fmt.Errorf("skipping .DS_Store file")
+
+	// Filter out undesired files.
+	valid, filetype := isValidFileType(fileName)
+	if !valid {
+		// Skip undesired files
+		return *docs, fmt.Errorf("skipping %s file", filetype)
 	}
 
 	// get the lineType
-	fileLineType, headerData, dataData, dataKey, descIndex, err := util.GetLineType(headerLine, dataLine, fileName, parserVersion)
+	fileLineType, headerData, dataData, dataKey, descIndex, err := util.GetLineType(headerLine, dataLine, fileName, parserVersion) // Doesn't access file - uses fileName to deduce file type.
 	if err != nil {
 		// cannot process this line so return the docPtr as is - it is probably a truncated line
 		fmt.Println("Error getting line type: ", err)
-		return *docPtr, err
+		return *docs, err
 	}
 	// if there are any disallowed fields in this linetype then add the disallowed data to the dataData array - in order
 	disallowedFields := util.DataKeyMap[fileLineType].HeaderDisallow
@@ -131,107 +147,77 @@ func ParseLine(dataSetName string, headerLine string, dataLine string, docPtr *m
 
 	// get the tmpHeaderData without the NA values
 	tmpHeaderData := getTmpHeaderSanNA(headerData, descIndex)
-	if *docPtr == nil {
-		newDoc := make(map[string]interface{})
-		docPtr = &newDoc
+	if *docs == nil {
+		newDoc := make(map[string]mettypes.METdocument)
+		docs = &newDoc
 	}
-	// GetId will fill in the id field of the metaData struct with the constructed id
+
 	// metadata doesn't change between versions, we just use the latest one. Same with DOC
-	metaData, _err := util.GetId(dataSetName, tmpHeaderData, &util.VxMetadata{Subset: "MET", Type: "DD", SubType: "MET"})
-	if _err != nil {
-		return *docPtr, fmt.Errorf("error getting id from line %s: %w", dataLine, _err)
+	docID, err := util.BuildId("MET", "DD", "MET", dataSetName, tmpHeaderData)
+	if err != nil {
+		return *docs, fmt.Errorf("error getting id from line %s: %w", dataLine, err)
 	}
-	_, exists := (*docPtr)[metaData.ID]
+
+	metadata := mettypes.VxMetadata{
+		Subset:      "MET",
+		Type:        "DD",
+		SubType:     "MET",
+		DataSetName: dataSetName,
+		ID:          docID,
+	}
+
+	_, exists := (*docs)[metadata.ID]
 	if !exists {
 		// check to see if there is an existing external document for this id
-		externalExistingDoc, err := (getExternalDocForId)(metaData.ID)
+		externalExistingDoc, err := (getExternalDocForId)(metadata.ID)
 		if err != nil && !strings.HasPrefix(err.Error(), DOC_NOT_FOUND) {
-			return *docPtr, err
+			return *docs, err
 		}
 		// if there is an external document for this id, use it, we will add the data into it
 		if externalExistingDoc != nil {
-			(*docPtr)[metaData.ID] = externalExistingDoc
+			(*docs)[metadata.ID] = externalExistingDoc
 		} else {
 			// have to create a new document for this id
-			metaDataMap, _err := getMetaDataMap(metaData)
-			if _err != nil {
-				return *docPtr, _err
-			}
+
 			// create a new document for the new metaData.ID
 			// This function will also fill in the headerData fields
 			// indexed by dataKey value in the document.
 			// The document needs to be of the correct version.
 			switch parserVersion {
 			case "v10_0":
-				(*docPtr)[metaData.ID], _err = v10_0.GetDocForId(fileLineType, metaDataMap, headerData, dataData, dataKey)
+				(*docs)[metadata.ID], err = v10_0.NewDocForId(fileLineType, metadata, headerData, dataData, dataKey)
 			case "v10_1":
-				(*docPtr)[metaData.ID], _err = v10_1.GetDocForId(fileLineType, metaDataMap, headerData, dataData, dataKey)
+				(*docs)[metadata.ID], err = v10_1.NewDocForId(fileLineType, metadata, headerData, dataData, dataKey)
 			case "v11_0":
-				(*docPtr)[metaData.ID], _err = v11_0.GetDocForId(fileLineType, metaDataMap, headerData, dataData, dataKey)
+				(*docs)[metadata.ID], err = v11_0.NewDocForId(fileLineType, metadata, headerData, dataData, dataKey)
 			case "v11_1":
-				(*docPtr)[metaData.ID], _err = v11_1.GetDocForId(fileLineType, metaDataMap, headerData, dataData, dataKey)
+				(*docs)[metadata.ID], err = v11_1.NewDocForId(fileLineType, metadata, headerData, dataData, dataKey)
 			case "v12_0":
-				(*docPtr)[metaData.ID], _err = v12_0.GetDocForId(fileLineType, metaDataMap, headerData, dataData, dataKey)
+				(*docs)[metadata.ID], err = v12_0.NewDocForId(fileLineType, metadata, headerData, dataData, dataKey)
 			default:
-				return *docPtr, fmt.Errorf("unsupported version %s", parserVersion)
+				return *docs, fmt.Errorf("unsupported version %s", parserVersion)
 			}
-			if _err != nil || (*docPtr)[metaData.ID] == nil {
-				return *docPtr, fmt.Errorf("error creating doc for file: %s error: %w", fileName, _err)
+			if err != nil || (*docs)[metadata.ID] == nil {
+				return *docs, fmt.Errorf("error creating doc for file: %s error: %w", fileName, err)
 			}
-			// add the dataSetName to the header - dataSetName is not part of the structure
-			(*docPtr)[metaData.ID].(map[string]interface{})["dataSetName"] = dataSetName
 			// return the new doc - the doc was created and the data was added to it
-			return *docPtr, _err
+			return *docs, err
 		}
 	} else {
 		// we either had the doc already, got it externally, or created it
 		// now we need to add the data to the document
-		docMap := (*docPtr)[metaData.ID].(map[string]interface{})
-		switch parserVersion {
-		case "v10_0":
-			// add the data to the document
-			(*docPtr)[metaData.ID], _err = v10_0.AddDataElement(dataKey, fileLineType, dataData, &docMap)
-		case "v10_1":
-			// add the data to the document
-			(*docPtr)[metaData.ID], _err = v10_1.AddDataElement(dataKey, fileLineType, dataData, &docMap)
-		case "v11_0":
-			// add the data to the document
-			(*docPtr)[metaData.ID], _err = v11_0.AddDataElement(dataKey, fileLineType, dataData, &docMap)
-		case "v11_1":
-			// add the data to the document
-			(*docPtr)[metaData.ID], _err = v11_1.AddDataElement(dataKey, fileLineType, dataData, &docMap)
-		case "v12_0":
-			// add the data to the document
-			(*docPtr)[metaData.ID], _err = v12_0.AddDataElement(dataKey, fileLineType, dataData, &docMap)
-		default:
-			return *docPtr, fmt.Errorf("unsupported version %s", parserVersion)
+		doc := (*docs)[metadata.ID]
+		if err := doc.AddDataElement(dataKey, dataData); err != nil {
+			return *docs, fmt.Errorf("problem adding data to document %w", err)
 		}
-		if _err != nil {
-			return *docPtr, fmt.Errorf("error getting doc for file: %s error: %w", fileName, _err)
-		}
+		return *docs, err
 	}
-	return *docPtr, _err
-}
-
-/*
-convert the fields of the metaData to a map[string]interface{} so it can be added to the doc without needing the VxMetadata struct type definition
-*/
-func getMetaDataMap(metaData util.VxMetadata) (map[string]interface{}, error) {
-	var metaDataMap map[string]interface{}
-	jsonBytes, err := json.Marshal(metaData)
-	if err != nil {
-		return nil, err
-	}
-	err = json.Unmarshal(jsonBytes, &metaDataMap)
-	if err != nil {
-		return nil, err
-	}
-	return metaDataMap, nil
+	return *docs, err
 }
 
 /*
 create a tmpHeaderData and remove the "" and the NA values fromm the headerData.
-This also has to be done in the GetDocForId i.e. (fill_XXXX_Header) functions,
+This also has to be done in the NewDocForId i.e. (fill_XXXX_Header) functions,
 and trim the desc field data to 10 chars, if it isn't empty ("")
 */
 func getTmpHeaderSanNA(headerData []string, descIndex int) []string {
@@ -255,13 +241,13 @@ func getTmpHeaderSanNA(headerData []string, descIndex int) []string {
 	return tmpHeaderData
 }
 
-func WriteJsonToCompressedFile(doc map[string]interface{}, filename string) error {
+func WriteJsonToCompressedFile(docs map[string]mettypes.METdocument, filename string) error {
 	// get the documents as a list
 	// Defines the Slice capacity to match the Map elements count
-	docList := make([]interface{}, 0, len(doc))
+	docList := make([]mettypes.METdocument, 0, len(docs))
 
-	for _, tx := range doc {
-		docList = append(docList, tx)
+	for _, doc := range docs {
+		docList = append(docList, doc)
 	}
 	// Marshal the document struct to JSON
 	jsonBytes, err := json.Marshal(docList)

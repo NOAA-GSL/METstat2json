@@ -12,17 +12,19 @@ import (
 	"runtime"
 	"strings"
 
+	"github.com/dtcenter/METstat2json/pkg/mettypes"
 	"github.com/dtcenter/METstat2json/pkg/parser"
 )
 
 // dummy function to satisfy the function signature of getExternalDocForId
-func getExternalDocForId(id string) (map[string]interface{}, error) {
+func getExternalDocForId(id string) (mettypes.METdocument, error) {
 	// fmt.Println("getExternalDocForId called with id:", id)
 	// Put your own code here in this method but always return this exact error if the document is not found
 	return nil, fmt.Errorf("%s: %s", parser.DOC_NOT_FOUND, id)
 }
 
-func ReadJsonFromGzipFile(filename string) (map[string]interface{}, error) {
+// Parses the JSON in a gzip into a map of "document.ID: document" key-value pairs.
+func ReadJsonFromGzipFile(filename string) (map[string]mettypes.METdocument, error) {
 	file, err := os.Open(filename)
 	if err != nil {
 		return nil, err
@@ -34,21 +36,20 @@ func ReadJsonFromGzipFile(filename string) (map[string]interface{}, error) {
 	}
 	defer gz.Close()
 	decoder := json.NewDecoder(gz)
-	var result []interface{}
+	var result []mettypes.METdocument
 	err = decoder.Decode(&result)
 	if err != nil {
 		return nil, err
 	}
-	parsedDoc := make(map[string]interface{})
-	for _, v := range result {
-		elem := v.(map[string]interface{})
-		parsedDoc[elem["id"].(string)] = elem
+	parsedDoc := make(map[string]mettypes.METdocument)
+	for _, elem := range result {
+		parsedDoc[elem.GetID()] = elem
 	}
 	return parsedDoc, nil
 }
 
 func ParseRegressionSuite() error {
-	var doc map[string]interface{}
+	var doc map[string]mettypes.METdocument
 	var err error
 	var testdata_directory string
 	var dataSetName string
@@ -102,7 +103,7 @@ func ParseRegressionSuite() error {
 	return nil
 }
 
-func parseFile(dataSetName string, fPath string, fileInfos os.FileInfo, doc map[string]interface{}) map[string]interface{} {
+func parseFile(dataSetName string, fPath string, fileInfos os.FileInfo, doc map[string]mettypes.METdocument) map[string]mettypes.METdocument {
 	file, err := os.Open(fPath) // open the file
 	if err != nil {
 		log.Fatal(err)
