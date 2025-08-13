@@ -89,9 +89,11 @@ func main() {
 		fmt.Println("error setting MET version: ", err)
 		os.Exit(1)
 	}
-	metLines, fieldNameMap := getColumnLinesAndMapForUrl(metHeaderColumnsFileUrl)
-	metDataTypesForLines := fillMetDataMapFromSrcFiles(util.MetSrcFiles, make(map[string]string), fieldNameMap)
-	metDataTypesForLines = fillMetDataMapFromUserGuide(util.MetUserDocFiles, metDataTypesForLines, fieldNameMap)
+	metDataTypesForLines := make(map[string]string)
+	metLines, metTokenTypes := getRawLinesAndTokensForUrl(metHeaderColumnsFileUrl)
+	fillTokenTypesFromSrcFiles(util.MetSrcFiles, metDataTypesForLines, metTokenTypes)
+	fillTokenTypesFromUserGuide(util.MetUserDocFiles, metDataTypesForLines, metTokenTypes)
+	overrideDefinedTokenTypes(metDataTypesForLines, metTokenTypes)
 
 	// 2. Assemble code generation data
 	allDocumentStructs := make(map[string]documentStructData)
@@ -800,7 +802,7 @@ func getRepeatingKeysAndTypes(dataField string, fileType string, lineType string
 }
 
 // Fetches & scans the given MET source files for specific C/C++ type conversion fields, and then sets the token type based on the results
-func fillMetDataMapFromSrcFiles(srcFileURLs []string, metDataTypesForLines map[string]string, fieldNameMap map[string]string) map[string]string {
+func fillTokenTypesFromSrcFiles(srcFileURLs []string, metDataTypesForLines map[string]string, metTokenTypes map[string]string) {
 	// use a map (atoLines) as a set to avoid duplicate lines
 	atoLines := make(map[string]bool)
 	// iterate through the srcFileURLs to get the data types for the fields
@@ -816,7 +818,7 @@ func fillMetDataMapFromSrcFiles(srcFileURLs []string, metDataTypesForLines map[s
 		}
 	}
 	// iterate the fieldNames to see if we can find data types in the atoLines from the src code files
-	for token := range fieldNameMap {
+	for token := range metTokenTypes {
 		// iterate through the atoLines to get any data types
 		for line := range atoLines {
 			if matched, err := regexp.Match(token, []byte(line)); err == nil && matched {
@@ -832,16 +834,15 @@ func fillMetDataMapFromSrcFiles(srcFileURLs []string, metDataTypesForLines map[s
 					default:
 						dataType = "validtypes.ValidString"
 					}
-					fieldNameMap[token] = dataType
+					metTokenTypes[token] = dataType
 					metDataTypesForLines[token] = dataType
 				}
 			}
 		}
 	}
-	return metDataTypesForLines
 }
 
-func fillMetDataMapFromUserGuide(userGuideURLS []string, metDataTypesForLines, fieldNameMap map[string]string) map[string]string {
+func fillTokenTypesFromUserGuide(userGuideURLS []string, metDataTypesForLines, metTokenTypes map[string]string) {
 	// MET user guide files with data type definitions
 	// Using the slower regexp instead of a string match because I don't know if the line will have
 	// extra leading spaces or not. These documents might get reformatted and the leading spaces might
@@ -970,23 +971,19 @@ func fillMetDataMapFromUserGuide(userGuideURLS []string, metDataTypesForLines, f
 								the missing data types, but it is not used in the code generation.
 							*/
 							metDataTypesForLines[fieldName] = dataType
-							fieldNameMap[fieldName] = dataType
+							metTokenTypes[fieldName] = dataType
 						}
 					}
 				}
 			}
 		}
 	}
-	// Fill undefined's that I have not found in the MET user guide files in text (not column tables), or in data files themselves.
-	// NOTE: These will overwrite any previous data types for specific named fields that were found in the MET source files.
-	metDataTypesForLines, _ = overRideDefinedMetDataTypes(metDataTypesForLines, fieldNameMap)
-
-	return metDataTypesForLines
 }
 
-// overRideDefinedMetDataTypes manually overrides the data types for specific fields in the fieldNameMap & metDataTypesForLines that are incorrectly
+// overrideDefinedTokenTypes manually overrides the data types for specific fields in the fieldNameMap & metDataTypesForLines that are incorrectly
 // defined in, or missing from the MET source code & documentation that we reference.
-func overRideDefinedMetDataTypes(metDataTypesForLines map[string]string, fieldNameMap map[string]string) (map[string]string, map[string]string) {
+// NOTE: These will overwrite any previous data types for specific named fields that were found in the MET source files.
+func overrideDefinedTokenTypes(metDataTypesForLines map[string]string, fieldNameMap map[string]string) {
 	metDataTypesForLines["RIRW_WINDOW"] = "validtypes.ValidInt"
 	metDataTypesForLines["F[0-9]*_O[0-9]*"] = "validtypes.ValidString"
 	metDataTypesForLines["INTENSITY_USER"] = "validtypes.ValidFloat"
@@ -1058,7 +1055,6 @@ and, if there is, add an override to the overRideDefinedMetDataTypes function in
 */
 `, undefineds)
 	}
-	return metDataTypesForLines, fieldNameMap
 }
 
 // Returns a slice of regex patterns that identify dynamic field sequences in MET data
@@ -1133,7 +1129,7 @@ func getPatterns() []Pattern {
 // Returns:
 // - headerLines: All raw lines from the met_header_file
 // - fieldTypeByToken: map[token]type initialized to "UNDEFINED" for each token in the met_header_file
-func getColumnLinesAndMapForUrl(fileUrl string) ([]string, map[string]string) {
+func getRawLinesAndTokensForUrl(fileUrl string) ([]string, map[string]string) {
 	fieldTypeByToken := make(map[string]string)
 	headerLines := getLinesForUrl(fileUrl)
 	// split out all the fields to get a map of required fields
