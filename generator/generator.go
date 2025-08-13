@@ -94,6 +94,7 @@ func main() {
 	fillTokenTypesFromSrcFiles(util.MetSrcFiles, metDataTypesForLines, metTokenTypes)
 	fillTokenTypesFromUserGuide(util.MetUserDocFiles, metDataTypesForLines, metTokenTypes)
 	overrideDefinedTokenTypes(metDataTypesForLines, metTokenTypes)
+	undefinedTokens := getUndefinedTokens(metTokenTypes)
 
 	// 2. Assemble code generation data
 	allDocumentStructs := make(map[string]documentStructData)
@@ -148,6 +149,7 @@ func main() {
 	// 3. Generate code using templates
 
 	// Generate the package declaration & import statements
+	printUndefinedTokens(undefinedTokens)
 	printPackageAndImports(parserVersion)
 
 	// Generate the various code sections
@@ -162,6 +164,22 @@ func main() {
 }
 
 // --- Code generation helper functions ---
+
+func printUndefinedTokens(undefinedTokens []string) {
+	if len(undefinedTokens) > 0 {
+		fmt.Printf(`
+/*
+The following data types were not found in the MET user guide files or the MET source code files.
+For simplicity, the values of these data types will be treated as strings in the generated code.
+
+    Undefined data types: %v
+
+To resolve this, consult the github.com/dtcenter/MET repo to determine if there is a more appropriate type, 
+and, if there is, add an override to the overRideDefinedMetDataTypes function in generator/generator.go.
+*/
+`, undefinedTokens)
+	}
+}
 
 func printPackageAndImports(parserVersion string) {
 	fmt.Printf(`package %s
@@ -980,10 +998,32 @@ func fillTokenTypesFromUserGuide(userGuideURLS []string, metDataTypesForLines, m
 	}
 }
 
+// Look for missing data types in metTokenTypes.
+func getUndefinedTokens(metTokenTypes map[string]string) []string {
+	var found bool
+	undefineds := []string{}
+	for k, v := range metTokenTypes {
+		if v == "UNDEFINED" {
+			found = false
+			for _, v1 := range getPatterns() {
+				if v1.match.MatchString(strings.ToUpper(k)) {
+					found = true
+					break
+				}
+			}
+			if !found {
+				undefineds = append(undefineds, k)
+			}
+		}
+	}
+	slices.Sort(undefineds)
+	return undefineds
+}
+
 // overrideDefinedTokenTypes manually overrides the data types for specific fields in the fieldNameMap & metDataTypesForLines that are incorrectly
 // defined in, or missing from the MET source code & documentation that we reference.
 // NOTE: These will overwrite any previous data types for specific named fields that were found in the MET source files.
-func overrideDefinedTokenTypes(metDataTypesForLines map[string]string, fieldNameMap map[string]string) {
+func overrideDefinedTokenTypes(metDataTypesForLines map[string]string, metTokenTypes map[string]string) {
 	metDataTypesForLines["RIRW_WINDOW"] = "validtypes.ValidInt"
 	metDataTypesForLines["F[0-9]*_O[0-9]*"] = "validtypes.ValidString"
 	metDataTypesForLines["INTENSITY_USER"] = "validtypes.ValidFloat"
@@ -1004,57 +1044,25 @@ func overrideDefinedTokenTypes(metDataTypesForLines map[string]string, fieldName
 	metDataTypesForLines["DIAG_SOURCE"] = "validtypes.ValidString"    // TCST_TCDIAG
 	metDataTypesForLines["OBS_CLIMO_MEAN"] = "validtypes.ValidString" // STAT_ORANK
 
-	fieldNameMap["RIRW_WINDOW"] = "validtypes.ValidInt"
-	fieldNameMap["F[0-9]*_O[0-9]*"] = "validtypes.ValidString"
-	fieldNameMap["INTENSITY_USER"] = "validtypes.ValidFloat"
-	fieldNameMap["INTENSITY_USER_MIN"] = "validtypes.ValidFloat"
-	fieldNameMap["INTENSITY_USER_MAX"] = "validtypes.ValidFloat"
-	fieldNameMap["RPS_COMP"] = "validtypes.ValidFloat"
-	fieldNameMap["ARADP"] = "validtypes.ValidString"
-	fieldNameMap["AMRD"] = "validtypes.ValidInt"
-	fieldNameMap["AGUSTS"] = "validtypes.ValidInt"
-	fieldNameMap["ADIR"] = "validtypes.ValidInt"
-	fieldNameMap["AEYE"] = "validtypes.ValidInt"
-	fieldNameMap["EIQR_BCL"] = "validtypes.ValidFloat"
-	fieldNameMap["EIQR_BCU"] = "validtypes.ValidFloat"
-	fieldNameMap["ASPEED"] = "validtypes.ValidInt"
-	fieldNameMap["ARRP"] = "validtypes.ValidInt"
-	fieldNameMap["ADEPTH"] = "validtypes.ValidString"         // TCST_TCMPR - Should be one of "D,M,S,X" per the link from the met-tc overview: https://science.nrlmry.navy.mil/atcf/docs/database/new/abdeck.txt
-	fieldNameMap["BDEPTH"] = "validtypes.ValidString"         // TCST_TCMPR - Should be one of "D,M,S,X" per the link from the met-tc overview: https://science.nrlmry.navy.mil/atcf/docs/database/new/abdeck.txt
-	fieldNameMap["DIAG_SOURCE"] = "validtypes.ValidString"    // TCST_TCDIAG
-	fieldNameMap["OBS_CLIMO_MEAN"] = "validtypes.ValidString" // STAT_ORANK
-
-	// Uncomment the following to look for missing data types in the MET user guide files.
-	var found bool
-	undefineds := []string{}
-	for k, v := range fieldNameMap {
-		if v == "UNDEFINED" {
-			found = false
-			for _, v1 := range getPatterns() {
-				if v1.match.MatchString(strings.ToUpper(k)) {
-					found = true
-					break
-				}
-			}
-			if !found {
-				undefineds = append(undefineds, k)
-			}
-		}
-	}
-	if len(undefineds) > 0 {
-		slices.Sort(undefineds)
-		fmt.Printf(`
-/*
-The following data types were not found in the MET user guide files or the MET source code files.
-For simplicity, the values of these data types will be treated as strings in the generated code.
-
-    Undefined data types: %v
-
-To resolve this, consult the github.com/dtcenter/MET repo to determine if there is a more appropriate type, 
-and, if there is, add an override to the overRideDefinedMetDataTypes function in generator/generator.go.
-*/
-`, undefineds)
-	}
+	metTokenTypes["RIRW_WINDOW"] = "validtypes.ValidInt"
+	metTokenTypes["F[0-9]*_O[0-9]*"] = "validtypes.ValidString"
+	metTokenTypes["INTENSITY_USER"] = "validtypes.ValidFloat"
+	metTokenTypes["INTENSITY_USER_MIN"] = "validtypes.ValidFloat"
+	metTokenTypes["INTENSITY_USER_MAX"] = "validtypes.ValidFloat"
+	metTokenTypes["RPS_COMP"] = "validtypes.ValidFloat"
+	metTokenTypes["ARADP"] = "validtypes.ValidString"
+	metTokenTypes["AMRD"] = "validtypes.ValidInt"
+	metTokenTypes["AGUSTS"] = "validtypes.ValidInt"
+	metTokenTypes["ADIR"] = "validtypes.ValidInt"
+	metTokenTypes["AEYE"] = "validtypes.ValidInt"
+	metTokenTypes["EIQR_BCL"] = "validtypes.ValidFloat"
+	metTokenTypes["EIQR_BCU"] = "validtypes.ValidFloat"
+	metTokenTypes["ASPEED"] = "validtypes.ValidInt"
+	metTokenTypes["ARRP"] = "validtypes.ValidInt"
+	metTokenTypes["ADEPTH"] = "validtypes.ValidString"         // TCST_TCMPR - Should be one of "D,M,S,X" per the link from the met-tc overview: https://science.nrlmry.navy.mil/atcf/docs/database/new/abdeck.txt
+	metTokenTypes["BDEPTH"] = "validtypes.ValidString"         // TCST_TCMPR - Should be one of "D,M,S,X" per the link from the met-tc overview: https://science.nrlmry.navy.mil/atcf/docs/database/new/abdeck.txt
+	metTokenTypes["DIAG_SOURCE"] = "validtypes.ValidString"    // TCST_TCDIAG
+	metTokenTypes["OBS_CLIMO_MEAN"] = "validtypes.ValidString" // STAT_ORANK
 }
 
 // Returns a slice of regex patterns that identify dynamic field sequences in MET data
